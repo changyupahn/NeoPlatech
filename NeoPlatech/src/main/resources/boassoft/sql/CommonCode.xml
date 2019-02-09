@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommonCodeMapper">
+
+   <select id="getCommonCodeList" parameterType="cmap" resultType="cmap" >
+   <![CDATA[
+    	SELECT 	A.*
+    	FROM 	RFID_CMMN_CODE A
+    	WHERE	A.CODE_ID = #{paramCodeId}
+    			AND A.CODE_LEVEL > 0
+    	ORDER BY SORT_NUM ASC
+    ]]>	
+    </select>
+    
+    
+    <select id="getCmmnCodeListCnt" parameterType="cmap" resultType="int">
+    <![CDATA[
+    	SELECT 	COUNT(*)
+    	FROM 	RFID_CMMN_CODE A
+    	WHERE	A.CODE_ID = #{paramCodeId}
+    			AND A.CODE_LEVEL > 0
+    ]]>
+    </select>    
+    
+    <select id="getCommonCodeView" parameterType="cmap" resultType="cmap" >
+    	SELECT 	A.*
+    	FROM 	RFID_CMMN_CODE A
+    	WHERE	A.CODE_ID = #{codeId}
+    			AND A.CODE = #{code}
+    	ORDER BY SORT_NUM ASC
+    </select>
+    
+    <insert id="insertCmmnCode" parameterType="cmap" >
+        INSERT INTO rfid_cmmn_code (
+        		CODE_ID
+				,CODE
+				,CODE_NAME
+				,CODE_LEVEL
+				,PCODE
+				,CODE_DESC
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{codeId}
+				,#{code}
+				,#{codeName}
+				,#{codeLevel}
+				,#{pcode}
+				,#{codeDesc}
+				,#{sortNum}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+    
+    <update id="CmmnCode.updateCmmnCode" parameterType="cmap" >
+        UPDATE 	rfid_cmmn_code
+        SET
+				CODE = #{code}
+				,CODE_NAME = #{codeName}
+				,CODE_LEVEL = #{codeLevel}
+				,PCODE = #{pcode}
+				,CODE_DESC = #{codeDesc}
+				,SORT_NUM = #{sortNum}
+				,USE_YN = #{useYn}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	CODE_ID = #{codeId}
+    </update>
+    
+    <update id="deleteCmmnCode" parameterType="cmap" >
+        UPDATE 	rfid_cmmn_code
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	CODE_ID = #{codeId}
+    </update>
+
+    <delete id="deleteCmmnCode2" parameterType="cmap" >
+        DELETE
+        FROM 	rfid_cmmn_code
+        WHERE 	CODE_ID = #{codeId}
+    </delete>
+
+</mapper>

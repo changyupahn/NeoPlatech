@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppMapper">
+
+    <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+     <sql id="getOrgListXmlWhere">
+    	and org.use_yn = 'Y'
+    	<if test="org_name != null and org_name != ''"> 		
+			and org.org_name = #{org_name}
+		</if>
+    </sql>
+
+
+    <select id="getRfidAdminView" parameterType="cmap" resultType="cmap" >
+		SELECT a.user_id,
+		       a.user_pw,
+		       a.user_name,
+		       a.org_no,
+		       b.org_name,
+		       b.cnfm_status_cd,
+		       b.cnfm_start_dt,
+		       b.cnfm_end_dt,
+		       b.device_qnt max_device_qnt,
+		       (select count(*) from rfid_device where org_no = b.org_no and use_yn = 'Y') use_device_qnt
+		  FROM rfid_admin a
+		  	   INNER JOIN rfid_org b ON a.org_no = b.org_no
+		 WHERE a.user_id = #{userId}
+		       AND a.use_yn = 'Y'
+    </select>
+    
+    <select id="getRfidDeviceView" parameterType="cmap" resultType="cmap" >
+		SELECT a.deviceno,
+		       a.devicenm,
+		       a.org_no,
+		       a.device_token,
+		       a.token_invalid_dt,
+		       b.org_name,
+		       b.org_rfidno_size
+		  FROM rfid_device a
+		  	   INNER JOIN rfid_org b ON a.org_no = b.org_no
+		 WHERE a.deviceno = #{deviceno}
+		 	   AND a.use_yn = 'Y'
+    </select>
+    
+      <select id="getRfidOrgView" parameterType="cmap" resultType="cmap" >
+		SELECT *
+		  FROM rfid_org
+		 WHERE org_no = #{orgNo}
+    </select>
+    
+    <update id="updateRfidDeviceToken" parameterType="cmap" >
+		UPDATE rfid_device
+		       SET device_token = #{deviceToken},
+		       token_invalid_dt = #{tokenInvalidDt}
+		 WHERE deviceno = #{deviceno}
+		 	   AND use_yn = 'Y'
+    </update>
+    
+     <select id="getRfidsysAstcolMngList" parameterType="cmap" resultType="cmap" >
+		SELECT aam_seq,
+		       column_type,
+		       logical_name,
+		       physical_name,
+		       cmcode_yn,
+		       data_type,
+		       data_size,
+		       data_disp_type,
+		       null_yn,
+		       order_idx
+		  FROM rfidsys_astcol_mng
+		 WHERE org_no = #orgNo#
+		 	   AND use_yn = 'Y'
+		ORDER BY order_idx
+    </select>
+    
+     <update id="updateRfidsysAstcolMng" parameterType="cmap" >
+		UPDATE rfidsys_astcol_mng
+		       SET column_type = #{columnType}
+		 WHERE org_no = #{orgNo}
+		 	   AND aam_seq = #{aamSeq}
+    </update>
+    
+    <select id="getRfidsysInvencolMngList" parameterType="cmap" resultType="cmap" >
+		SELECT aam_seq,
+		       column_type,
+		       logical_name,
+		       physical_name,
+		       cmcode_yn,
+		       data_type,
+		       data_size,
+		       data_disp_type,
+		       null_yn,
+		       order_idx
+		  FROM rfidsys_astcol_mng
+		 WHERE org_no IN ('00000', #{orgNo})
+		 	   AND use_yn = 'Y'
+		ORDER BY order_idx
+    </select>
+    
+    
+    <update id="updateRfidsysAstcolMng" parameterType="cmap" >
+		UPDATE rfidsys_astcol_mng
+		       SET column_type = #{columnType}
+		 WHERE org_no = #{orgNo}
+		 	   AND aam_seq = #{aamSeq}
+    </update>
+    
+    <select id="getInventoryLast" parameterType="cmap" resultType="cmap" >
+		SELECT invm.inv_year,
+		       max(invm.inv_no) inv_no
+		  FROM rfid_inven_master invm
+		   INNER JOIN
+		       (SELECT max(inv_year) inv_year
+		         FROM rfid_inven_master
+		        WHERE use_yn = 'Y'
+		       ) invmtmp
+		       ON invm.inv_year = invmtmp.inv_year
+		 WHERE 1=1
+		       AND invm.use_yn = 'Y'
+		 GROUP BY invm.inv_year
+    </select>
+    
+    <select id="getCmcodeList" parameterType="cmap" resultType="cmap" >
+		SELECT #{codeName} as code_name
+		  FROM rfid_asset ast
+		 WHERE ast.use_yn = 'Y'
+		 GROUP BY #{codeName}
+		 ORDER BY 1
+    </select>
+    
+    <select id="getInventoryDetailList" parameterType="cmap" resultType="appcmap">
+		SELECT #{colList},
+		       invc.tag_read_dt,
+		       af.image_url
+		  FROM rfid_asset ast
+		   INNER JOIN rfid_inven_target invt
+		       ON invt.inv_year = #{invYear}
+		       AND invt.inv_no = #{invNo}
+		       AND invt.asset_no = ast.asset_no
+		   LEFT OUTER JOIN
+		       (SELECT asset_no,
+		              max(tag_read_dt) tag_read_dt
+		         FROM rfid_inven_check
+		        WHERE inv_year = #{invYear}
+		              AND inv_no = #{invNo}
+		        GROUP BY asset_no
+		       ) invc
+		       ON invc.asset_no = ast.asset_no
+		   LEFT OUTER JOIN (
+			   SELECT af.asset_no, concat(IFNULL(af.web_file_path,''), '/', af.file_nm) as image_url
+				 FROM rfid_asset_file af
+				  INNER JOIN (
+				      SELECT asset_no, max(file_dt) file_dt
+				      FROM rfid_asset_file
+				      WHERE use_yn = 'Y'
+				      GROUP BY asset_no
+				      ) af2
+				      ON af.asset_no = af2.asset_no
+				      AND af.file_dt = af2.file_dt
+			   ) af
+			   ON af.asset_no = ast.asset_no
+		 WHERE ast.use_yn = 'Y'
+		 	   AND invt.inv_target_yn = 'Y'
+    </select>
+    
+    <select id="getAssetImg" parameterType="cmap" resultType="cmap">
+		SELECT af.asset_no,
+		       af.file_dt,
+		       af.file_path,
+		       af.web_file_path,
+		       af.file_nm,
+		       af.orignl_file_nm,
+		       af.file_extsn
+		  FROM rfid_asset_file af
+		 WHERE use_yn = 'Y'
+		       AND asset_no = #{assetNo}
+		       AND file_dt = #{fileDt}
+	</select>
+	
+	  <select id="getAssetImgList" parameterType="cmap" resultType="cmap">
+		SELECT concat(IFNULL(af.web_file_path,''), '/', af.file_nm) as imageUrl,
+			   af.file_extsn,
+			   af.file_dt
+		  FROM rfid_asset_file af
+		 WHERE use_yn = 'Y'
+		       AND asset_no = #{assetNo}
+	</select>
+	
+		<insert id="insertAssetImage" parameterType="cmap" >
+		INSERT
+		  INTO rfid_asset_file
+		       (
+		           asset_no,
+		           file_dt,
+		           file_path,
+		           web_file_path,
+		           file_nm,
+		           orignl_file_nm,
+		           file_extsn,
+		           use_yn
+		       )
+		       VALUES
+		       (
+		           #{assetNo},
+		           #{fileDt},
+		           #{filePath},
+		           #{webFilePath},
+		           #{fileNm},
+		           #{orignlFileNm},
+		           #{ileExt},
+		           'Y'
+		       )
+    </insert>
+    
+     <update id="deleteAssetImage" parameterType="cmap" >
+		UPDATE rfid_asset_file
+		       SET use_yn = 'N'
+		 WHERE asset_no = #{assetNo}
+		       AND file_dt = #{fileDt}
+    </update>
+    
+     <insert id="insertRfidInventoryCheck" parameterType="cmap" >
+		INSERT
+		  INTO rfid_inven_check
+		       (
+		           inv_year,
+		           inv_no,
+		           asset_no,
+		           tag_read_dt
+		       )
+		SELECT
+		           #{invYear} inv_year,
+		           #{invNo} inv_no,
+		           #{assetNo} asset_no,
+		           #{tagReadDt} tag_read_dt
+		FROM DUAL
+		WHERE NOT EXISTS (
+			SELECT 1
+			FROM rfid_inven_check
+			WHERE inv_year = #{invYear}
+			AND inv_no = #{invNo}
+			AND asset_no = #{assetNo}
+			AND tag_read_dt = #{tagReadDt}
+			)
+    </insert>
+    
+     <sql id="getUserListXmlWhere">
+        <if test="user_name != null and user_name != ''">		
+			and usr.user_name like concat('%',#{user_name},'%')
+		
+		</if>
+		<if test="dept_no != null and dept_no != ''">			
+			and dpt.dept_no like concat('%',#{dept_no},'%')		
+		</if>
+		<if test="dept_name != null and dept_nameo != ''">		
+			and dpt.dept_name like concat('%',#{dept_name},'%')		
+		</if>
+		<if test="org_no != null and org_no != ''">		
+			and org.org_no like concat('%',#{org_no},'%')		
+		</if>
+		<if test="org_name != null and org_name != ''">				
+			and org.org_name like concat('%',#{org_name},'%')		
+		</if>
+    </sql>
+    
+    <!-- <select id="getUserListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+        select
+			IFNULL(usr.user_no,' ') user_no,
+			IFNULL(usr.user_name,' ') user_name,
+			IFNULL(dpt.dept_no,' ') dept_no,
+			IFNULL(dpt.dept_name,' ') dept_name,
+			IFNULL(org.org_no,' ') org_no,
+			IFNULL(org.org_name,' ') org_name
+		from rfid_user usr inner join rfid_dept dpt on usr.dept_no = dpt.dept_no
+						   inner join rfid_org org on dpt.org_no = org.org_no
+		where 1=1
+		<include refid="getUserListXmlWhere"/>		
+		<if test="dataOrder != null and dataOrder != ''">	
+        	ORDER BY #{dataOrder} ${dataOrderArrow}
+        </if>        
+        <if test="dataOrder == null or dataOrder == ''">        
+        	ORDER BY user_name        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getUserListXmlCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		from rfid_user usr inner join rfid_dept dpt on usr.dept_no = dpt.dept_no
+						   inner join rfid_org org on dpt.org_no = org.org_no
+		where 1=1
+		<include refid="getUserListXmlWhere"/>
+    </select>
+    
+      <sql id="getDeptListXmlWhere">
+        <if test="dept_name != null and dept_name != ''">		
+			and dpt.dept_name like concat('%',#dept_name#,'%')		
+		</if>
+		<if test="org_no != null and org_no != ''">		
+			and org.org_no like concat('%',#org_no#,'%')		
+		</if>
+		<if test="org_name != null and org_name != ''">
+		 	and org.org_name like concat('%',#org_name#,'%')
+	   </if>
+    </sql>
+    
+	  <select id="getDeptListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+        select
+			IFNULL(dpt.dept_no,' ') dept_no,
+			IFNULL(dpt.dept_name,' ') dept_name,
+			IFNULL(org.org_no,' ') org_no,
+			IFNULL(org.org_name,' ') org_name
+		from rfid_dept dpt inner join rfid_org org on dpt.org_no = org.org_no
+		where 1=1
+		<include refid="getDeptListXmlWhere"/>
+		<if test="dataOrder != null and dataOrder != ''">		
+           ORDER BY #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">        
+        	ORDER BY dept_name
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getPosListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	select
+    		IFNULL(pos.pos_no,' ') pos_no,
+    		IFNULL(pos.pos_name,' ') pos_name
+		from rfid_position pos
+		where 1=1
+		<include refid="getPosListXmlWhere"/>		
+		<if test="dataOrder != null and dataOrder != ''">	
+        	ORDER BY #{dataOrder} #{dataOrderArrow}
+        </if>        
+        <if test="dataOrder == null or dataOrder == ''">        
+        	ORDER BY pos.pos_name       
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getPosListXmlCnt" parameterType="cmap" resultType="int" >
+    	select count(*)
+		from rfid_position pos
+		where 1=1
+		<include refid="getPosListXmlWhere"/>
+    </select>        
+    
+    <select id="getOrgListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	select
+    		IFNULL(org.org_no,' ') org_no,
+    		IFNULL(org.org_name,' ') org_name
+		from rfid_org org
+		where 1=1
+		<include refid="getOrgListXmlWhere"/>
+		<if test="dataOrder != null and dataOrder != ''"> 		
+        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">         
+        	ORDER BY org.org_name        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+     <select id="getOrgListXmlCnt" parameterType="cmap" resultType="int" >
+    	select count(*)
+		from rfid_org org
+		where 1=1
+		<include refid="getOrgListXmlWhere"/>
+    </select>
+    
+     <sql id="getImageListXml.Where">
+    	and af.use_yn = 'Y'
+    	<if test="asset_no != null and asset_no != ''"> 			
+			and af.asset_no = #{asset_no}		
+		</if>
+		<if test="file_dt != null and file_dt != ''"> 	 		
+			and af.file_dt = #{file_dt}		
+		</if>
+    </sql>
+    
+    <select id="getImageListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	<![CDATA[
+		select
+			IFNULL(af.asset_no,' ') asset_no,
+			IFNULL(af.file_dt,' ') file_dt,
+			IFNULL(af.file_path,' ') file_path,
+			IFNULL(af.file_nm,' ') file_nm,
+			IFNULL(af.orignl_file_nm,' ') orignl_file_nm,
+			IFNULL(af.file_extsn,' ') file_extsn,
+			IFNULL(af.use_yn,' ') use_yn,
+			concat( #{sHttpDomain} , '/asset/getImage.do?asset_no=' , af.asset_no , '&file_dt=' , af.file_dt ) file_url
+		from rfid_asset_file af
+		where 1=1
+		]]>
+		<include refid="getImageListXmlWhere"/>
+		order by af.asset_no, af.file_dt
+        <include refid="pagingFooter"/>
+    </select>
+    
+      <select id="getImageListXmlCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		from rfid_asset_file af
+		where 1=1
+		<include refid="getImageListXmlWhere"/>
+    </select>
+    
+    
+    <update id="updateInventoryDetail" parameterType="cmap" >
+    	<![CDATA[
+    	update rfid_inventory set
+    		cng_asset_size = #{cng_asset_size}
+    		, cng_org_no = #{cng_org_no}
+    		, cng_org_name = #{cng_org_name}
+    		, cng_dept_no = #{cng_dept_no}
+    		, cng_dept_name = #{cng_dept_name}
+    		, cng_user_no = #{cng_user_no}
+    		, cng_user_name = #{cng_user_name}
+    		, cng_pos_no = #{cng_pos_no}
+    		, cng_pos_name = #{cng_pos_name}
+    		, cng_hosil = #{cng_hosil}
+    		, cng_remark = #{cng_remark}
+    		, cng_basic_dt = #{cng_basic_dt}
+    		, tag_read_yn = #{tag_read_yn}
+    		, tag_read_dt = #{tag_read_dt}
+    		, tag_insp_name = #{tag_insp_name}
+    		, update_dt = #{update_dt}
+    	where inv_year = #{inv_year}
+    	and inv_no = #{inv_no}
+    	and asset_no = #{asset_no}
+    	and (
+    		update_dt is null
+    		or
+    		update_dt < #{update_dt}
+    		)
+        ]]>
+    </update>
+    
+      <update id="updateInventoryDetailComp" parameterType="cmap" >
+    	<![CDATA[
+    	update rfid_inventory set
+    		cng_asset_size = case when cng_asset_size = '' then null else cng_asset_size end
+    		, cng_org_no = case when cng_org_no = '' then null else cng_org_no end
+    		, cng_org_name = case when cng_org_name = '' then null else cng_org_name end
+    		, cng_dept_no = case when cng_dept_no = '' then null else cng_dept_no end
+    		, cng_dept_name = case when cng_dept_name = '' then null else cng_dept_name end
+    		, cng_user_no = case when cng_user_no = '' then null else cng_user_no end
+    		, cng_user_name = case when cng_user_name = '' then null else cng_user_name end
+    		, cng_pos_no = case when cng_pos_no = '' then null else cng_pos_no end
+    		, cng_pos_name = case when cng_pos_name = '' then null else cng_pos_name end
+    		, cng_hosil = case when cng_hosil = '' then null else cng_hosil end
+    		, cng_remark = case when cng_remark = '' then null else cng_remark end
+    		, cng_basic_dt = case when cng_basic_dt = '' then null else cng_basic_dt end
+    		, tag_read_yn = case when tag_read_yn = '' then null else tag_read_yn end
+    		, tag_read_dt = case when tag_read_dt = '' then null else tag_read_dt end
+    		, tag_insp_name = case when tag_insp_name = '' then null else tag_insp_name end
+    		, update_dt = case when update_dt = '' then null else update_dt end
+    	where inv_year = #{inv_year}
+    	and inv_no = #{inv_no}
+        ]]>
+    </update>
+
+    <select id="getNewAssetListXml" parameterType="cmap" resultType="commonXml" >
+    	select IFNULL(na.asset_no,' ') asset_no,
+		       IFNULL(na.dept_name,' ') dept_name,
+		       IFNULL(na.asset_name,' ') asset_name,
+		       IFNULL(na.asset_cnt,' ') asset_cnt,
+		       IFNULL(na.update_dt,' ') update_dt,
+		       IFNULL(na.use_yn,' ') use_yn
+		  from rfid_new_asset na
+    </select>
+
+    <insert id="insertNewAsset" parameterType="cmap" >
+    	insert into rfid_new_asset( asset_no,dept_name,asset_name,asset_cnt,update_dt,use_yn )
+		values( #{asset_no},#{dept_name},#{asset_name},#{asset_cnt},#{update_dt},#{se_yn} )
+    </insert> -->
+    
+</mapper>

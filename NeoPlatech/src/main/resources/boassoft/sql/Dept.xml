@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DeptMapper">
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <sql id="getDeptListWhere">
+        <if test="sParentDeptNo != null and sParentDeptNo != ''">		
+		   AND dept.PARENT_DEPT_NO = #{sParentDeptNo}		
+		</if>
+		<if test="sDeptNoArr != null and sDeptNoArr != ''">
+		
+           AND dept.DEPT_NO IN (
+                        <foreach item="sDeptNo" index="index" collection="sDeptNoArr" open="(" close=")" separator=",">                         
+                        #{sDeptNoArr[]}                        
+                        </foreach>
+                        )        
+        </if>
+	</sql>
+	
+   <select id="getDeptList" parameterType="cmap" resultType="cmap">
+		<include refid="pagingHeader" />
+		SELECT 	dept.*
+				,d2.DEPT_NAME AS PARENT_DEPT_NAME
+		FROM 	rfid_dept dept
+				LEFT OUTER JOIN rfid_dept d2 ON dept.PARENT_DEPT_NO = d2.DEPT_NO
+		WHERE 	1=1
+		<include refid="getDeptListWhere" />
+		ORDER BY dept.dept_level, dept.sort_num
+		<include refid="pagingFooter" />
+	</select>
+	
+	<select id="getDeptListCnt" parameterType="cmap" resultType="int">
+		SELECT	count(*)
+		FROM 	rfid_dept dept
+		WHERE 	1=1
+		<include refid="getDeptListWhere" />
+	</select>
+	
+	<select id="getDeptNoList" parameterType="cmap" resultType="cmap" >
+		SELECT 	T1.dept_no    AS dept_no01
+	            , T2.dept_no  AS dept_no02
+	            , T3.dept_no  AS dept_no03
+	            , T4.dept_no  AS dept_no04
+	            , T5.dept_no  AS dept_no05
+	            , T6.dept_no  AS dept_no06
+	            , T7.dept_no  AS dept_no07
+	            , T8.dept_no  AS dept_no08
+		FROM 	rfid_dept T1
+				LEFT OUTER JOIN rfid_dept T2 ON T1.parent_dept_no = T2.dept_no
+				LEFT OUTER JOIN rfid_dept T3 ON T2.parent_dept_no = T3.dept_no
+				LEFT OUTER JOIN rfid_dept T4 ON T3.parent_dept_no = T4.dept_no
+				LEFT OUTER JOIN rfid_dept T5 ON T4.parent_dept_no = T5.dept_no
+				LEFT OUTER JOIN rfid_dept T6 ON T5.parent_dept_no = T6.dept_no
+				LEFT OUTER JOIN rfid_dept T7 ON T6.parent_dept_no = T7.dept_no
+				LEFT OUTER JOIN rfid_dept T8 ON T7.parent_dept_no = T8.dept_no
+		WHERE 	1=1
+		<if test="searchKeyword != null and searchKeyword != ''">         
+            AND (
+                T1.dept_no LIKE concat('%', #{searchKeyword} ,'%')
+                OR
+                T1.dept_name LIKE concat('%', #{searchKeyword} ,'%')
+                )        
+        </if>
+        <if test="searchKeyword == null or searchKeyword == ''">         
+			AND 1 = 2        
+        </if>
+ 	</select>
+
+ 	<select id="getDeptNoList2" parameterType="cmap" resultType="cmap" >
+		SELECT 	T1.dept_no    AS dept_no01
+	            , T2.dept_no  AS dept_no02
+	            , T3.dept_no  AS dept_no03
+	            , T4.dept_no  AS dept_no04
+	            , T5.dept_no  AS dept_no05
+	            , T6.dept_no  AS dept_no06
+	            , T7.dept_no  AS dept_no07
+	            , T8.dept_no  AS dept_no08
+		FROM 	rfid_dept T1
+				LEFT OUTER JOIN rfid_dept T2 ON T1.dept_no = T2.parent_dept_no
+				LEFT OUTER JOIN rfid_dept T3 ON T2.dept_no = T3.parent_dept_no
+				LEFT OUTER JOIN rfid_dept T4 ON T3.dept_no = T4.parent_dept_no
+				LEFT OUTER JOIN rfid_dept T5 ON T4.dept_no = T5.parent_dept_no
+				LEFT OUTER JOIN rfid_dept T6 ON T5.dept_no = T6.parent_dept_no
+				LEFT OUTER JOIN rfid_dept T7 ON T6.dept_no = T7.parent_dept_no
+				LEFT OUTER JOIN rfid_dept T8 ON T7.dept_no = T8.parent_dept_no
+		WHERE 	1=1
+		<if test="searchKeyword != null and searchKeyword != ''">         
+            AND (
+                T1.dept_no LIKE concat('%', #{searchKeyword} ,'%')
+                OR
+                T1.dept_name LIKE concat('%', #{searchKeyword} ,'%')
+                )        
+        </if>
+        <if test="searchKeyword == null or searchKeyword == ''">         
+			AND 1 = 2        
+        </if>
+ 	</select>
+
+	<select id="getDeptView" parameterType="cmap" resultType="cmap">
+		SELECT 	dept.*
+				,T2.dept_name as parent_dept_name
+				,T3.user_name as dept_head_user_name
+		FROM 	rfid_dept dept
+				LEFT OUTER JOIN rfid_dept T2 ON dept.parent_dept_no = T2.dept_no
+				LEFT OUTER JOIN rfid_user T3 ON dept.dept_head_user_no = T3.user_no
+		WHERE 	dept.DEPT_NO = #{deptNo}
+	</select>
+
+	<insert id="insertDept" parameterType="cmap" >
+        INSERT INTO RFID_DEPT (
+        		DEPT_NO
+				,DEPT_NAME
+				,DEPT_LEVEL
+				,PARENT_DEPT_NO
+				,DEPT_HEAD_USER_NO
+				,SORT_NUM
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{deptNo}
+				,#{deptName}
+				,#{deptLevel}
+				,#{parentDeptNo}
+				,#{deptHeadUserNo}
+				,#{sortNum}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+	</insert>
+
+	<update id="updateDept" parameterType="cmap">
+        UPDATE 	RFID_DEPT
+        SET
+				DEPT_NAME = #{deptName}
+				,DEPT_LEVEL = #{deptLevel}
+				,PARENT_DEPT_NO = #{parentDeptNo}
+				,DEPT_HEAD_USER_NO = #{deptHeadUserNo}
+				,SORT_NUM = #{sortNum}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	DEPT_NO = #{deptNo}
+	</update>
+
+    <update id="deleteDept" parameterType="cmap" >
+        UPDATE 	RFID_DEPT
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	DEPT_NO = #{deptNo}
+    </update>
+
+    <delete id="deleteDept2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_DEPT
+        WHERE 	DEPT_NO = #{deptNo}
+    </delete>
+	
+</mapper>

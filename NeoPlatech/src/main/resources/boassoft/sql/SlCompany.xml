@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SlCompanyMapper">
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+  
+
+ <sql id="getSlCompanyListWhere">
+		AND com.use_yn = 'Y'
+		<if test="searchKeyword != null and searchKeyword !== ''">	
+		<choose>
+		    <when test="searchGubun == '1'">	       
+            AND com.COMP_NAME like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '2'">            
+            AND com.COMP_CD like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '3'">            
+            AND com.COMP_BIZ_NO like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '4'">            
+            AND com.COMP_OWNER_NAME like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '5'">             
+            AND com.COMP_BIZ_TYPE1 like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '6'">          
+            AND com.COMP_BIZ_TYPE2 like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '7'">            
+            AND com.COMP_ADDR like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '8'">            
+            AND com.COMP_TEL like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchGubun == '9'">            
+            AND com.COMP_EMAIL like concat('%', #{searchKeyword} ,'%')            
+            </when>
+          </choose>
+        </if>             
+	</sql>
+
+	<select id="getSlCompanyList" parameterType="cmap" resultType="cmap">
+		<include refid="pagingHeader" />
+		SELECT 	com.*
+		FROM 	rfid_sl_company com
+		WHERE 	1=1
+		<include refid="getSlCompanyListWhere" />
+		ORDER BY com.comp_level, com.sort_num asc
+		<include refid="pagingFooter" />
+	</select>
+
+	<select id="getSlCompanyListCnt" parameterType="cmap" resultType="int">
+		SELECT	count(*)
+		FROM 	rfid_sl_company com
+		WHERE 	1=1
+		<include refid="getSlCompanyListWhere" />
+	</select>
+	
+	<select id="getSlCompanyCdList" parameterType="cmap" resultType="cmap" >
+		SELECT 	T1.comp_seq    AS comp_seq01
+	            , T2.comp_seq  AS comp_seq02
+	            , T3.comp_seq  AS comp_seq03
+	            , T4.comp_seq  AS comp_seq04
+	            , T5.comp_seq  AS comp_seq05
+	            , T6.comp_seq  AS comp_seq06
+	            , T7.comp_seq  AS comp_seq07
+	            , T8.comp_seq  AS comp_seq08
+		FROM 	rfid_sl_company T1
+				LEFT OUTER JOIN rfid_sl_company T2 ON T1.parent_comp_seq = T2.comp_seq
+				LEFT OUTER JOIN rfid_sl_company T3 ON T2.parent_comp_seq = T3.comp_seq
+				LEFT OUTER JOIN rfid_sl_company T4 ON T3.parent_comp_seq = T4.comp_seq
+				LEFT OUTER JOIN rfid_sl_company T5 ON T4.parent_comp_seq = T5.comp_seq
+				LEFT OUTER JOIN rfid_sl_company T6 ON T5.parent_comp_seq = T6.comp_seq
+				LEFT OUTER JOIN rfid_sl_company T7 ON T6.parent_comp_seq = T7.comp_seq
+				LEFT OUTER JOIN rfid_sl_company T8 ON T7.parent_comp_seq = T8.comp_seq
+		WHERE 	T1.use_yn = 'Y'
+		<if test="searchKeyword != null and searchKeyword !== ''">	        
+            AND (
+                T1.comp_cd LIKE concat('%', #{searchKeyword} ,'%')
+                OR
+                T1.comp_name LIKE concat('%', #{searchKeyword} ,'%')
+                OR
+                T1.remark LIKE concat('%', #{searchKeyword} ,'%')
+                )        
+        </if>
+        <if test="searchKeyword == null or searchKeyword === ''">       
+			AND 1 = 2        
+        </if>
+ 	</select>
+
+	<select id="getSlCompanyView" parameterType="cmap" resultType="cmap">
+		SELECT 	com.*
+				,T2.comp_name as parent_comp_name
+				,FN_GET_CMMNCODENAME('COM002', com.use_yn) AS use_yn_str
+		FROM 	rfid_sl_company com
+				LEFT OUTER JOIN rfid_sl_company T2 ON com.parent_comp_seq = T2.comp_seq
+		WHERE 	com.COMP_SEQ = #{compSeq}
+	</select>
+	
+    <insert id="insertSlCompany" parameterType="cmap" >
+        INSERT INTO RFID_SL_COMPANY (
+        		COMP_SEQ
+				,COMP_CD
+				,COMP_NAME
+				,COMP_LEVEL
+				,COMP_BIZ_NO
+				,COMP_OWNER_NAME
+				,COMP_BIZ_TYPE1
+				,COMP_BIZ_TYPE2
+				,COMP_ADDR
+				,COMP_TEL
+				,COMP_EMAIL
+				,REMARK
+				,PARENT_COMP_SEQ
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{compSeq}
+				,#{compCd}
+				,#{compName}
+				,#{compLevel}
+				,#{compBizNo}
+				,#{compOwnerName}
+				,#{compBizType1}
+				,#{compBizType2}
+				,#{compAddr}
+				,#{compTel}
+				,#{compEmail}
+				,#{remark}
+				,#{parentCompSeq}
+				,#{sortNum}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+    
+    <update id="updateSlCompany" paramceterType="cmap" >
+        UPDATE 	RFID_SL_COMPANY 
+        SET
+				COMP_CD = #{compCd}
+				,COMP_NAME = #{compName}
+				,COMP_LEVEL = #{compLevel}
+				,COMP_BIZ_NO = #{compBizNo}
+				,COMP_OWNER_NAME = #{compOwnerName}
+				,COMP_BIZ_TYPE1 = #{compBizType1}
+				,COMP_BIZ_TYPE2 = #{compBizType2}
+				,COMP_ADDR = #{compAddr}
+				,COMP_TEL = #{compTel}
+				,COMP_EMAIL = #{compEmail}
+				,REMARK = #{remark}
+				,PARENT_COMP_SEQ = #{parentCompSeq}
+				,SORT_NUM = #{sortNum}
+				,USE_YN = #{useYn}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	COMP_SEQ = #{compSeq}
+    </update>
+    
+    <update id="deleteSlCompany" parameterType="cmap" >
+        UPDATE 	RFID_SL_COMPANY 
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	COMP_SEQ = #{compSeq}
+    </update>
+    
+    <delete id="deleteSlCompany2" parameterType="cmap" >
+        DELETE 
+        FROM 	RFID_SL_COMPANY
+        WHERE 	COMP_SEQ = #{compSeq}
+    </delete>
+
+</mapper>

@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TabMapper">
+
+    <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <select id="getRfidLoginView" parameterType="cmap" resultType="cmap" >
+    	SELECT 	*
+    	FROM 	rfid_user
+    	WHERE 	user_id = #{userId}
+    			AND user_pw = #{userPw}    	
+    </select>
+
+    <select id="getInventoryLast" parameterType="cmap" resultType="cmap" >
+    	select invm.inv_year, max(invm.inv_no) inv_no
+    	from rfid_inventory_master invm inner join (
+        											select max(inv_year) inv_year
+                                                    from rfid_inventory_master
+                                                    where use_yn = 'Y'
+        											) invmtmp on invm.inv_year = invmtmp.inv_year
+		where 1=1
+        and invm.use_yn = 'Y'
+        group by invm.inv_year
+    </select>
+
+    <sql id=".getAssetListXmlWhere">
+    	and ast.use_yn = 'Y'
+    	<if test="assetNo != null and assetNo != ''">	    
+		   and ast.asset_no like concat('%',#{assetNo},'%')		
+		</if>
+		<if test="assetName != null and assetName != ''">		
+		   and ast.asset_name like concat('%',#{assetName},'%')		
+		</if>
+		<if test="aqusitDtS != null and aqusitDtS != ''">			
+		   and ast.aqusit_dt &gt;= #{aqusitDtS}		
+		</if>
+		<if test="aqusitDtE != null and aqusitDtE != ''">		
+		   and ast.aqusit_dt &lt;= #{aqusitDtE}		
+		</if>
+		<if test="deptName != null and deptName != ''">		
+		   and ast.dept_name like concat('%',#{deptName},'%')		
+		</if>
+		<if test="userName != null and userName != ''">			
+		   and ast.user_name like concat('%',#{userName},'%')		
+		</if>
+		<if test="posName != null and posName != ''">		
+		   and ast.pos_name like concat('%',#{posName},'%')		
+		</if>
+	</sql>
+
+    <select id="getAssetListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	select
+			ifnull(ast.asset_type,' ') asset_type,
+			ifnull(ast.asset_cate,' ') asset_cate,
+			ifnull(ast.asset_no,' ') asset_no,
+			ifnull(ast.rfid_no,' ') rfid_no,
+			ifnull(ast.asset_name,' ') asset_name,
+			ifnull(ast.aqusit_dt,' ') aqusit_dt,
+			ifnull(ast.asset_size,' ') asset_size,
+			ifnull(ast.org_no,' ') org_no,
+			ifnull(ast.org_name,' ') org_name,
+			ifnull(ast.dept_no,' ') dept_no,
+			ifnull(ast.dept_name,' ') dept_name,
+			ifnull(ast.user_no,' ') user_no,
+			ifnull(ast.user_name,' ') user_name,
+			ifnull(ast.pos_no,' ') pos_no,
+			ifnull(ast.pos_name,' ') pos_name,
+			ifnull(ast.hosil,' ') hosil,
+			ifnull(ast.remark,' ') remark
+		from rfid_asset ast
+		where 1=1
+        <include refid="getAssetListXmlWhere"/>
+        <if test="dataOrder != null and dataOrder != ''">        
+        	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.asset_no        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">       
+        	ORDER BY ast.asset_no        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getAssetListXmlCnt" parameterType="cmap" resultType="int" >
+    	select count(*)
+		from rfid_asset ast
+		where 1=1
+        <include refid="getAssetListXmlWhere"/>
+    </select>
+
+    <sql id="getInventoryListWhere">
+    	and invm.use_yn = 'Y'
+    	<if test="invYear == null or invYear == ''">     
+    	and invm.inv_year = #{invYear}    	
+    	</if>
+	</sql>
+
+    <select id="Tab.getInventoryListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+        select
+        	ifnull(invm.inv_year,' ') inv_year,
+        	ifnull(invm.inv_no,'0') inv_no,
+        	ifnull(invm.inv_start_dt,' ') inv_start_dt,
+        	(
+        	select count(*) from rfid_inventory where inv_year = invm.inv_year and inv_no = invm.inv_no
+        	) total_count,
+        	(
+        	select count(*) from rfid_inventory where inv_year = invm.inv_year and inv_no = invm.inv_no and inv_target_yn = 'Y'
+        	) inv_target_count
+		from rfid_inventory_master invm
+		where 1=1
+		<include refid="getInventoryListWhere"/>
+		 <if test="dataOrder != null and dataOrder != ''">  		
+        	ORDER BY invm.inv_year #{dataOrderArrow}, #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">         
+        	ORDER BY invm.inv_year desc, invm.inv_no desc        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getInventoryListXmlCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+        from rfid_inventory_master invm
+		where 1=1
+		<include refid="getInventoryListWhere"/>
+    </select>
+
+    <sql id="getInventoryDetailListWhere">
+    	and ast.use_yn = 'Y'
+    	and inv.inv_year = #{invYear}
+		and inv.inv_no = #{invNo}
+		and inv.inv_target_yn = 'Y'
+		<if test="deptNameArr != null and deptNameArr != ''">       
+            AND ast.TOP_DEPT_NAME IN (
+                       <foreach item="deptName" index="index" collection="deptNameArr" open="(" close=")" separator=",">                   
+                        #{deptNameArr[]}                        
+                       </foreach> 
+                        )        
+        </if>
+	</sql>
+
+    <select id="getInventoryDetailListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+		select
+			ifnull(inv.inv_year,' ') inv_year,
+			ifnull(inv.inv_no,'0') inv_no,
+			ifnull(ast.asset_no,' ') asset_no,
+			ifnull(ast.rfid_no,' ') rfid_no,
+			ifnull(ast.asset_name,' ') asset_name,
+			ifnull(ast.aqusit_dt,' ') aqusit_dt,
+			ifnull(ast.asset_size,' ') asset_size,
+			ifnull(ast.org_no,' ') org_no,
+			ifnull(ast.org_name,' ') org_name,
+			ifnull(ast.top_dept_no,' ') top_dept_no,
+			ifnull(ast.top_dept_name,' ') top_dept_name,
+			ifnull(ast.top_user_no,' ') top_user_no,
+			ifnull(ast.top_user_name,' ') top_user_name,
+			ifnull(ast.dept_no,' ') dept_no,
+			ifnull(ast.dept_name,' ') dept_name,
+			ifnull(ast.user_no,' ') user_no,
+			ifnull(ast.user_name,' ') user_name,
+			ifnull(ast.bldng_no,' ') bldng_no,
+			ifnull(ast.bldng_name,' ') bldng_name,
+			ifnull(ast.floor_no,' ') floor_no,
+			ifnull(ast.floor_name,' ') floor_name,
+			ifnull(ast.hosil,' ') hosil,
+			ifnull(ast.pos_no,' ') pos_no,
+			ifnull(ast.pos_name,' ') pos_name,
+			ifnull(ast.remark,' ') remark,
+      		ifnull(ast.asset_type_name,' ') asset_type_name,
+			ifnull(ast.item_name,' ') item_name,
+			ifnull(ast.asset_cnt,' ') asset_cnt,
+			ifnull(ast.aqusit_amt,' ') aqusit_amt,
+			ifnull(inv.cng_org_no,' ') cng_org_no,
+			ifnull(inv.cng_org_name,' ') cng_org_name,
+			ifnull(inv.cng_top_dept_no,' ') cng_top_dept_no,
+			ifnull(inv.cng_top_dept_name,' ') cng_top_dept_name,
+			ifnull(inv.cng_top_user_no,' ') cng_top_user_no,
+			ifnull(inv.cng_top_user_name,' ') cng_top_user_name,			
+			ifnull(inv.cng_dept_no,' ') cng_dept_no,
+			ifnull(inv.cng_dept_name,' ') cng_dept_name,
+			ifnull(inv.cng_user_no,' ') cng_user_no,
+			ifnull(inv.cng_user_name,' ') cng_user_name,			
+			ifnull(inv.cng_bldng_no,' ') cng_bldng_no,
+			ifnull(inv.cng_bldng_name,' ') cng_bldng_name,
+			ifnull(inv.cng_floor_no,' ') cng_floor_no,
+			ifnull(inv.cng_floor_name,' ') cng_floor_name,
+			ifnull(inv.cng_hosil,' ') cng_hosil,			
+			ifnull(inv.cng_pos_no,' ') cng_pos_no,
+			ifnull(inv.cng_pos_name,' ') cng_pos_name,
+			ifnull(inv.cng_remark,' ') cng_remark,
+			ifnull(inv.cng_basic_dt,' ') cng_basic_dt,
+			ifnull(inv.cng_asset_size,' ') cng_asset_size,
+			ifnull(ast.tag_print_cnt,'0') tag_print_cnt,
+			ifnull(inv.tag_read_yn,' ') tag_read_yn,
+			ifnull(inv.tag_read_dt,' ') tag_read_dt,
+			ifnull(inv.tag_insp_name,' ') tag_insp_name,
+			ifnull(inv.inv_target_yn,' ') inv_target_yn,
+			ifnull(inv.update_dt,' ') update_dt,
+			ifnull(ast.top_asset_no,' ') top_asset_no,
+			ifnull(ast.asset_status_cd,' ') asset_status_cd,
+			ifnull(ast.disuse_dt,' ') disuse_dt,
+			ifnull(ast.disuse_cont,' ') disuse_cont
+		from rfid_inventory inv inner join rfid_asset ast on inv.asset_no = ast.asset_no
+		where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+		 <if test="dataOrder != null and dataOrder != ''">         
+        	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.aqusit_dt desc        
+          </if>
+        <if test="dataOrder == null or dataOrder == ''">           
+        	ORDER BY ast.aqusit_dt desc        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getInventoryDetailListXmlCnt" parameterType="cmap" resultType="int" >
+		select count(*)
+		from rfid_inventory inv inner join rfid_asset ast on inv.asset_no = ast.asset_no
+		where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+    </select>
+
+    <sql id="getUserListXmlWhere">
+        <if test="userName != null and userName != ''"> 		
+			and usr.user_name like concat('%',#{userName},'%')		
+		</if>
+		<if test="deptNo != null and deptNo != ''">		
+			and dpt.dept_no like concat('%',#{deptNo},'%')		
+		</if>
+		<if test="deptName != null and deptName != ''">		
+			and dpt.dept_name like concat('%',#{deptName},'%')		
+		</if>
+    </sql>
+
+    <select id="getUserListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+        select
+			ifnull(usr.user_no,' ') user_no,
+			ifnull(usr.user_name,' ') user_name,
+			ifnull(dpt.dept_no,' ') dept_no,
+			ifnull(dpt.dept_name,' ') dept_name,
+			' ' org_no,
+			' ' org_name
+		from rfid_user usr inner join rfid_dept dpt on usr.dept_no = dpt.dept_no
+		where 1=1
+		<include refid="getUserListXmlWhere"/>
+		<if test="dataOrder != null and dataOrder != ''">		
+        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">          
+        	ORDER BY user_name        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="Tab.getUserListXmlCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		from rfid_user usr inner join rfid_dept dpt on usr.dept_no = dpt.dept_no
+		where 1=1
+		<include refid="getUserListXmlWhere"/>
+    </select>
+
+    <sql id="getDeptListXmlWhere">
+       <if test="deptName != null and deptName != ''">		
+			and dpt.dept_name like concat('%',#{deptName},'%')		
+		</if>
+    </sql>
+
+    <select id="getDeptListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+        select
+			ifnull(dpt.dept_no,' ') dept_no,
+			ifnull(dpt.dept_name,' ') dept_name,
+			' ' org_no,
+			' ' org_name
+		from rfid_dept dpt
+		where 1=1
+		<include refid="getDeptListXmlWhere"/>
+		<if test="dataOrder != null and dataOrder != ''">		
+        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">         
+        	ORDER BY dept_name        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="Tab.getDeptListXmlCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		from rfid_dept dpt inner join rfid_org org on dpt.org_no = org.org_no
+		where 1=1
+		<include refid="getDeptListXmlWhere"/>
+    </select>
+
+    <sql id="getPosListXmlWhere">
+    	and pos.use_yn = 'Y'
+    	<if test="posName != null and posName != ''">		
+			and pos.pos_name = #{posName}		
+		</if>
+    </sql>
+
+    <select id="getPosListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	select
+    		ifnull(pos.pos_no,' ') pos_no,
+    		ifnull(pos.pos_name,' ') pos_name
+		from rfid_position pos
+		where 1=1
+		<include refid="getPosListXmlWhere"/>
+		<if test="dataOrder != null and dataOrder != ''">			
+        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">         
+        	ORDER BY pos.pos_name        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="Tab.getPosListXmlCnt" parameterType="cmap" resultType="int" >
+    	select count(*)
+		from rfid_position pos
+		where 1=1
+		<include refid="getPosListXmlWhere"/>
+    </select>
+
+    <sql id="getOrgListXmlWhere">
+    	and org.use_yn = 'Y'
+    	<if test="orgName != null and orgName != ''">			
+			and org.org_name = #{orgName}		
+		</if>
+    </sql>
+
+    <select id="getOrgListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	select
+    		ifnull(org.org_no,' ') org_no,
+    		ifnull(org.org_name,' ') org_name
+		from rfid_org org
+		where 1=1
+		<include refid="getOrgListXmlWhere"/>
+		<if test="dataOrder != null and dataOrder != ''">		
+        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">       
+        	ORDER BY org.org_name        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getOrgListXmlCnt" parameterType="cmap" resultType="int" >
+    	select count(*)
+		from rfid_org org
+		where 1=1
+		<include refid="getOrgListXmlWhere"/>
+    </select>
+
+    <sql id="getImageListXmlWhere">
+    	and af.use_yn = 'Y'
+    	<if test="asset_no != null and asset_no != ''">		
+			and af.asset_no = #{assetNo}		
+		</if>
+		<if test="file_dt != null and file_dt != ''">			
+			and af.file_dt = #{fileDt}		
+		</if>
+    </sql>
+
+    <select id="getImageListXml" parameterType="cmap" resultType="commonXml" >
+    	<include refid="pagingHeader"/>
+    	<![CDATA[
+		select
+			ifnull(af.asset_no,' ') asset_no,
+			ifnull(af.file_dt,' ') file_dt,
+			ifnull(af.file_path,' ') file_path,
+			ifnull(af.file_nm,' ') file_nm,
+			ifnull(af.orignl_file_nm,' ') orignl_file_nm,
+			ifnull(af.file_extsn,' ') file_extsn,
+			ifnull(af.use_yn,' ') use_yn,
+			' ' file_url
+		from rfid_asset_file af
+		where 1=1
+		]]>
+		<include refid="getImageListXmlWhere"/>
+		order by af.asset_no, af.file_dt
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getImageListXmlCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		from rfid_asset_file af
+		where 1=1
+		<include refid="getImageListXmlWhere"/>
+    </select>
+
+    <insert id="insertAssetImage" parameterType="cmap" >
+		insert ignore into rfid_asset_file ( asset_no,file_dt,file_path,file_nm,orignl_file_nm,file_extsn,use_yn,web_file_path )
+		values ( #{assetNo},#{fileDt},#{filePath},#{fileNm},#{orignlFileNm},#{fileExt},'Y',#{webFilePath} )
+    </insert>
+
+    <update id="deleteAssetImage" parameterType="cmap" >
+    	update rfid_asset_file set
+    		use_yn = 'N'
+    	where asset_no = #{assetNo}
+    	and file_dt = #{fileDt}
+    </update>
+
+    <update id="updateInventoryDetail" parameterType="cmap" >
+    	<![CDATA[
+    	update rfid_inventory set
+    		cng_asset_size = #{cngAssetSize}
+    		, cng_org_no = #{cngOrgNo}
+    		, cng_org_name = #{cngOrgName}
+    		, cng_dept_no = #{cngDeptNo}
+    		, cng_dept_name = #{cngDeptName}
+    		, cng_user_no = #{cngUserNo}
+    		, cng_user_name = #{cngUserName}
+    		, cng_pos_no = #{cngPosNo}
+    		, cng_pos_name = #{cngPosName}
+    		, cng_hosil = #{cngHosil}
+    		, cng_remark = #{cngRemark}
+    		, cng_basic_dt = #{cngBasicDt}
+    		, tag_read_yn = #{tagReadYn}
+    		, tag_read_dt = #{tagReadDt}
+    		, tag_insp_name = #{tagInspName}
+    		, update_dt = #{updateDt}
+    	where inv_year = #{invYear}
+    	and inv_no = #{invNo}
+    	and asset_no = #{assetNo}
+    	and (
+    		update_dt is null
+    		or
+    		update_dt < #{updateDt}
+    		)
+        ]]>
+    </update>
+
+    <update id="updateInventoryDetailComp" parameterType="cmap" >
+    	<![CDATA[
+    	update rfid_inventory set
+    		cng_asset_size = case when cng_asset_size = '' then null else cng_asset_size end
+    		, cng_org_no = case when cng_org_no = '' then null else cng_org_no end
+    		, cng_org_name = case when cng_org_name = '' then null else cng_org_name end
+    		, cng_dept_no = case when cng_dept_no = '' then null else cng_dept_no end
+    		, cng_dept_name = case when cng_dept_name = '' then null else cng_dept_name end
+    		, cng_user_no = case when cng_user_no = '' then null else cng_user_no end
+    		, cng_user_name = case when cng_user_name = '' then null else cng_user_name end
+    		, cng_pos_no = case when cng_pos_no = '' then null else cng_pos_no end
+    		, cng_pos_name = case when cng_pos_name = '' then null else cng_pos_name end
+    		, cng_hosil = case when cng_hosil = '' then null else cng_hosil end
+    		, cng_remark = case when cng_remark = '' then null else cng_remark end
+    		, cng_basic_dt = case when cng_basic_dt = '' then null else cng_basic_dt end
+    		, tag_read_yn = case when tag_read_yn = '' then null else tag_read_yn end
+    		, tag_read_dt = case when tag_read_dt = '' then null else tag_read_dt end
+    		, tag_insp_name = case when tag_insp_name = '' then null else tag_insp_name end
+    		, update_dt = case when update_dt = '' then null else update_dt end
+    	where inv_year = #{invYear}
+    	and inv_no = #{invNo}
+        ]]>
+    </update>
+
+    <select id="getNewAssetListXml" parameterType="cmap" resultType="commonXml" >
+    	select ifnull(na.asset_no,' ') asset_no,
+		       ifnull(na.dept_name,' ') dept_name,
+		       ifnull(na.asset_name,' ') asset_name,
+		       ifnull(na.asset_cnt,' ') asset_cnt,
+		       ifnull(na.update_dt,' ') update_dt,
+		       ifnull(na.use_yn,' ') use_yn
+		  from rfid_new_asset na
+    </select>
+
+    <insert id="insertNewAsset" parameterType="cmap" >
+    	insert into rfid_new_asset( asset_no,dept_name,asset_name,asset_cnt,update_dt,use_yn )
+		values( #{asset_no},#{dept_name},#{asset_name},#{asset_cnt},#{update_dt},#{use_yn} )
+    </insert>
+    
+    <select id="getUserDeptList" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	rfid_user_dept A
+        WHERE 	USER_ID = #{userId}
+    </select>
+
+</mapper>

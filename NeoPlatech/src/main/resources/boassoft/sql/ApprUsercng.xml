@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprUsercngMapper">
+
+   <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+   
+   <sql id="getApprUsercngListWhere">
+
+    	AND B.RQST_STATUS_CD NOT IN ('4')
+    <if test="ssGrantRead != null and ssGrantRead != ''">
+          <choose>
+		    <when test="ssGrantRead == 'GRANT_USR'">		           
+				AND B.RQST_USER_NO = #{sUserNo}			
+			</when>
+			<when test="ssGrantRead == 'GRANT_DHD'">		
+				AND B.RQST_DEPT_NO = #{ssDeptNo}			
+			</when>
+			<when test="ssGrantRead == 'GRANT_MGR'">					
+				AND 1=1			
+			</when>
+			<when test="ssGrantRead == 'GRANT_NONE'">					
+				AND 1=2			
+			</when>		
+        </choose>
+      </if>  
+    	AND EXISTS (
+ 			SELECT 1
+ 			FROM RFID_APPR_ASSET A1
+ 			INNER JOIN RFID_ASSET A2 ON A1.ASSET_SEQ = A2.ASSET_SEQ
+ 			WHERE A1.RQSTNO = A.RQSTNO
+ 		<if test="sAssetNo != null and sAssetNo != ''">		
+ 			AND A2.ASSET_NO LIKE concat('%',#{sAssetNo},'%') 		
+ 		</if>
+ 		<if test="sItemCd != null and sItemCd != ''">		 		
+ 			AND A2.ITEM_CD LIKE concat('%',#{sItemCd},'%') 		
+ 		</if>
+ 		<if test="sItemName != null and sItemName != ''">
+ 		    <if test="sItemCd == null or sItemCd == ''">	     	
+ 			AND A2.ITEM_NAME LIKE concat('%',#{sItemName},'%') 			
+ 		   </if>
+ 		 </if>  
+ 		 <if test="sAssetName != null and sAssetName != ''"> 		
+ 			AND A2.ASSET_NAME LIKE concat('%',#{sAssetName},'%') 		
+ 		</if>
+ 			)
+ 		 <if test="sRqstUserNo != null and sRqstUserNo != ''"> 	    	
+    		AND B.RQST_USER_NO = #{sRqstUserNo}    	
+    	</if>
+    	<if test="sRqstUserName != null and sRqstUserName != ''">
+ 		    <if test="sRqstUserNo == null or sRqstUserNo == ''">	        
+ 			AND B.RQST_USER_NAME LIKE concat('%',#{sRqstUserName},'%')
+    	  </if>
+    	</if>
+    	<if test="sAucUserNo != null and sAucUserNo != ''">    	
+    		AND A.AUC_USER_NO = #{sAucUserNo}    	
+    	</if>
+    	<if test="sAucUserName != null and sAucUserName != ''">
+ 		    <if test="sAucUserNo == null or sAucUserNo == ''">    
+ 			AND A.AUC_USER_NAME LIKE concat('%',#{sAucUserName},'%')
+    	    </if>
+         </if>	
+         <if test="sRqstRegtimeS != null and sRqstRegtimeS != ''">    	
+    		AND B.RQST_REGTIME <![CDATA[ >= ]]> #{sRqstRegtimeS}    	
+    	</if>
+    	<if test="sRqstRegtimeE != null and sRqstRegtimeE != ''">    	
+    		AND B.RQST_REGTIME <![CDATA[ <= ]]> #{sRqstRegtimeE}    	
+    	</if>
+    	<if test="sRqstDeptNo != null and sRqstDeptNo != ''">      	
+    		AND B.RQST_DEPT_NO = #{sRqstDeptNo}    	
+    	</if>
+    	<if test="sRqstDeptName != null and sRqstDeptName != ''">
+ 		    <if test="sRqstDeptNo == null or sRqstDeptNo == ''">    
+    		AND B.RQST_DEPT_NAME = #{sRqstDeptName}    		
+    	  </if>
+    	</if>
+    	<if test="sRqstStatusCd != null and sRqstStatusCd != ''">    	
+    		AND B.RQST_STATUS_CD = #{sRqstStatusCd}    	
+    	</if>
+    </sql>
+   
+    <select id="getApprUsercngList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		SELECT
+		        A.RQSTNO,
+		        A.AUC_USER_NO,
+		        A.AUC_USER_NAME,
+		        A.AUC_DEPT_NO,
+		        A.AUC_DEPT_NAME,
+		        A.AUC_COMP_DT,
+		        A.REASON,
+		        B.RQST_REGTIME,
+		        B.RQST_USER_NO,
+		        B.RQST_USER_NAME,
+		        B.RQST_DEPT_NO,
+		        B.RQST_DEPT_NAME,
+		        B.RQST_ASSET_CNT,
+		        B.RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', B.RQST_STATUS_CD) RQST_STATUS_NAME,
+		        B.FRST_REGIST_PNTTM,
+		        B.FRST_REGISTER_ID,
+		        B.LAST_UPDT_PNTTM,
+		        B.LAST_UPDUSR_ID,
+		        concat(B.RQST_DEPT_NAME , ' / ' , B.RQST_USER_NAME) RQST_USER,
+		        concat(A.AUC_DEPT_NAME , ' / ' , A.AUC_USER_NAME) AUC_USER
+		FROM RFID_APPR_USERCNG A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprUsercngListWhere" />
+        ORDER BY RQSTNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+      <select id="getApprUsercngListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+		FROM RFID_APPR_USERCNG A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprUsercngListWhere" />
+    </select>
+    
+      <sql id="getApprUsercngAssetListWhere">
+
+       <if test="ssGrantRead != null and ssGrantRead != ''">
+          <choose>
+		    <when test="ssGrantRead == 'GRANT_USR'">    	
+				AND B.RQST_USER_NO = #{ssUserNo}
+			</when>				
+			<when test="ssGrantRead == 'GRANT_DHD'">			
+				AND B.RQST_DEPT_NO = #{ssDeptNo}			
+			</when>
+			<when test="ssGrantRead == 'GRANT_MGR'">			
+				AND 1=1			
+			</when>
+			<when test="ssGrantRead == 'GRANT_NONE'">				
+				AND 1=2			
+			</when>
+		</choose>
+	  </if>	
+
+       <if test="sAssetNo != null and sAssetNo != ''">    	
+ 			AND D.ASSET_NO LIKE concat('%',#{sAssetNo},'%') 		
+ 	   </if>	
+ 	    <if test="sItemCd != null and sItemCd != ''">  		
+ 			AND D.ITEM_CD LIKE concat('%',#{sItemCd},'%') 		
+ 		</if>
+ 		<if test="sItemName != null and sItemName != ''">
+ 		    <if test="sItemCd == null or sItemCd == ''">  		
+ 			AND D.ITEM_NAME LIKE concat('%',#{sItemName},'%')
+ 			</if>
+ 		</if>	 		
+ 		<if test="sAssetName != null and sAssetName != ''">	 		
+ 			AND D.ASSET_NAME LIKE concat('%',#{sAssetName},'%') 		
+ 		</if>
+    </sql>
+    
+     <select id="getApprUsercngAssetList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		SELECT
+		        A.RQSTNO,
+		        A.AUC_USER_NO,
+		        A.AUC_USER_NAME,
+		        A.AUC_DEPT_NO,
+		        A.AUC_DEPT_NAME,
+		        A.AUC_COMP_DT,
+		        A.REASON,
+		        B.RQST_REGTIME,
+		        B.RQST_USER_NO,
+		        B.RQST_USER_NAME,
+		        B.RQST_DEPT_NO,
+		        B.RQST_DEPT_NAME,
+		        B.RQST_ASSET_CNT,
+		        B.RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', B.RQST_STATUS_CD) RQST_STATUS_NAME,
+		        B.FRST_REGIST_PNTTM,
+		        B.FRST_REGISTER_ID,
+		        B.LAST_UPDT_PNTTM,
+		        B.LAST_UPDUSR_ID,
+		        concat(B.RQST_DEPT_NAME , ' / ' , B.RQST_USER_NAME) RQST_USER,
+		        concat(A.AUC_DEPT_NAME , ' / ' , A.AUC_USER_NAME) AUC_USER,
+		        D.ASSET_SEQ,
+		        D.ASSET_NO,
+		        D.ASSET_NAME,
+		        D.ITEM_CD,
+		        D.ITEM_NAME
+		FROM RFID_APPR_USERCNG A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+		        INNER JOIN RFID_APPR_ASSET C ON A.RQSTNO = C.RQSTNO
+		        INNER JOIN RFID_ASSET D ON C.ASSET_SEQ = D.ASSET_SEQ
+        WHERE 	1=1
+		<include refid="getApprUsercngListWhere" />
+		<include refid="getApprUsercngAssetListWhere" />
+        ORDER BY RQSTNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+     <select id="getApprUsercngAssetListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+		FROM RFID_APPR_USERCNG A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprUsercngListWhere" />
+		<include refid="getApprUsercngAssetListWhere" />
+    </select>
+    
+    <select id="getApprUsercngView" parameterType="cmap" resultType="cmap" >
+		SELECT
+		        A.RQSTNO,
+		        A.AUC_USER_NO,
+		        A.AUC_USER_NAME,
+		        A.AUC_DEPT_NO,
+		        A.AUC_DEPT_NAME,
+		        A.AUC_COMP_DT,
+		        A.REASON,
+		        B.RQST_REGTIME,
+		        B.RQST_USER_NO,
+		        B.RQST_USER_NAME,
+		        B.RQST_DEPT_NO,
+		        B.RQST_DEPT_NAME,
+		        B.RQST_ASSET_CNT,
+		        B.RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', B.RQST_STATUS_CD) RQST_STATUS_NAME,
+		        B.FRST_REGIST_PNTTM,
+		        B.FRST_REGISTER_ID,
+		        B.LAST_UPDT_PNTTM,
+		        B.LAST_UPDUSR_ID,
+		        concat(B.RQST_DEPT_NAME , ' / ' , B.RQST_USER_NAME) RQST_USER,
+		        concat(A.AUC_DEPT_NAME , ' / ' , A.AUC_USER_NAME) AUC_USER
+		FROM RFID_APPR_USERCNG A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	A.RQSTNO = #{rqstno}
+    </select>
+    
+    <insert id="insertApprUsercng" parameterType="cmap" >
+        INSERT INTO RFID_APPR_USERCNG (
+        		RQSTNO
+				,AUC_USER_NO
+				,AUC_USER_NAME
+				,AUC_DEPT_NO
+				,AUC_DEPT_NAME
+				,AUC_COMP_DT
+				,REASON
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{rqstno}
+				,#{aucUserNo}
+				,#{aucUserName}
+				,#{aucDeptNo}
+				,#{aucDeptName}
+				,#{aucCompDt}
+				,#{reason}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+    
+     <update id="updateApprUsercng" parameterType="cmap" >
+        UPDATE 	RFID_APPR_USERCNG
+        SET
+				AUC_USER_NO = #{aucUserNo}
+				,AUC_USER_NAME = #{aucUserName}
+				,AUC_DEPT_NO = #{aucDeptNo}
+				,AUC_DEPT_NAME = #{aucDeptName}
+				,AUC_COMP_DT = #{aucCompDt}
+				,REASON = #{reason}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+     <update id="deleteApprUsercng" parameterType="cmap" >
+        UPDATE 	RFID_APPR_USERCNG
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+       <delete id="deleteApprUsercng2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_APPR_USERCNG
+        WHERE 	RQSTNO = #{rqstno}
+    </delete>
+</mapper>

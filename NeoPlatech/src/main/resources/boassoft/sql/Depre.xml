@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DepreMapper">
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <sql id="getDepreListWhere">
+    	<isNotEmpty property="sDepreYear">
+    		AND A.DEPRE_DT LIKE concat(#{sDepreYear} , '%')
+    	</isNotEmpty>
+    </sql>
+    
+
+   <select id="getMaxDepreView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_DEPRE A
+        WHERE 	DEPRE_DT = (SELECT MAX(DEPRE_DT) FROM RFID_DEPRE)
+    </select>
+
+    <select id="Depre.getMinAqusitDt" parameterType="cmap" resultType="cmap" >
+        SELECT	MIN(AQUSIT_DT) AQUSIT_DT
+        FROM 	RFID_ASSET A
+    </select>
+    
+    <select id="Depre.getDepreList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_DEPRE A
+        WHERE 	1=1
+		<include refid="getDepreListWhere" />
+        ORDER BY DEPRE_DT DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getDepreListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_DEPRE A
+        WHERE 	1=1
+		<include refid="getDepreList.Where" />
+    </select>
+
+    <select id="getDepreView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_DEPRE A
+        WHERE 	DEPRE_DT = #{depreDt}
+    </select>
+
+    <insert id="insertDepre" parameterType="cmap" >
+        INSERT INTO RFID_DEPRE (
+        		DEPRE_DT
+				,DEPRE_MONTH
+				,DEPRE_CNT
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{depreDt}
+				,#{depreMonth}
+				,#{depreCnt}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+
+    <update id="updateDepre" parameterType="cmap" >
+        UPDATE 	RFID_DEPRE
+        SET
+				DEPRE_MONTH = #{depreMonth}
+				,DEPRE_CNT = #{depreCnt}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	DEPRE_DT = #{depreDt}
+    </update>
+
+    <update id="deleteDepre" parameterType="cmap" >
+        UPDATE 	RFID_DEPRE
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	DEPRE_DT = #{depreDt}
+    </update>
+
+    <delete id="deleteDepre2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_DEPRE
+        WHERE 	1=1        
+        <if test="depreDt != null and depreDt != ''">       
+        		AND DEPRE_DT LIKE concat(#{depreDt},'%')        
+        </if>
+        <if test="depreLastYear != null and depreLastYear != ''">        
+        		AND DEPRE_DT LIKE concat(#{depreLastYear},'%')        
+        </if>
+        <if test="depreDt != null and depreDt != ''">      		
+    		<if test="depreLastYear == null or depreLastYear == ''">
+        		AND 1=2
+        	</isEmpty>
+        </if>
+    </delete>
+
+    <select id="getDepreYearList" parameterType="cmap" resultType="cmap" >
+		SELECT 	SUBSTRING(A.DEPRE_DT,1,4) DEPRE_YEAR
+				, SUM(A.DEPRE_AMT) SUM_DEPRE_AMT
+				, MIN(A.REMAIN_AMT) REMAIN_AMT
+		FROM 	rfid_depre_asset A
+				INNER JOIN rfid_asset B ON A.ASSET_SEQ = B.ASSET_SEQ
+		WHERE 	A.ASSET_SEQ = #{assetSeq}
+		GROUP BY SUBSTRING(A.DEPRE_DT,1,4)
+		ORDER BY DEPRE_YEAR ASC
+    </select>
+
+</mapper>

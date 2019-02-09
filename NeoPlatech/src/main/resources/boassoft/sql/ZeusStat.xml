@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZeusStatMapper">
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <select id="getZeusStatYearList" parameterType="cmap" resultType="cmap" >
+		SELECT  SUBSTRING(REGIST_DT,1,4) YEAR
+		FROM  	RFID_ZEUS_OPER_LIST
+		UNION
+		SELECT  SUBSTRING(REGIST_DT,1,4) YEAR
+		FROM  	RFID_ZEUS_AS_LIST
+		ORDER BY YEAR DESC
+    </select>
+
+    <select id="getZeusMonthStatList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		SELECT 	a.EQUIP_ID
+				, a.ASSET_NO
+				, a.KOR_NM
+				, b.EQUIP_NO
+				, 1 AS GUBN
+				, '운영' AS GUBN_STR
+				, (SELECT USER_NAME FROM RFID_ASSET WHERE ASSET_NO = a.ASSET_NO) USER_NAME
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-01%')
+              ) cnt01
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-02%')
+              ) cnt02
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-03%')
+              ) cnt03
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-04%')
+              ) cnt04
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-05%')
+              ) cnt05
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-06%')
+              ) cnt06
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-07%')
+              ) cnt07
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-08%')
+              ) cnt08
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-09%')
+              ) cnt09
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#sYear#,'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-10%')
+              ) cnt10
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-11%')
+              ) cnt11
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-12%')
+              ) cnt12
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_oper_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'%')
+              ) sum01
+		FROM 	rfid_zeus_oper a
+				INNER JOIN rfid_zeus b on a.EQUIP_ID = b.EQUIP_ID
+		WHERE	1=1
+		<if test="sRegistId != null and sRegistId != ''">		
+				AND	b.REGIST_ID = #{sRegistId}		
+		</if>
+		<if test="sManagerId != null and sManagerId != ''">			
+    			AND b.MANAGER_ID = #{sManagerId}    	
+    	</if>
+		UNION ALL
+		SELECT 	a.EQUIP_ID
+				, a.ASSET_NO
+				, a.KOR_NM
+				, b.EQUIP_NO
+				, 2 AS GUBN
+				, '유지보수' AS GUBN_STR
+				, (SELECT USER_NAME FROM RFID_ASSET WHERE ASSET_NO = a.ASSET_NO) USER_NAME
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-01%')
+              ) cnt01
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-02%')
+              ) cnt02
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-03%')
+              ) cnt03
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-04%')
+              ) cnt04
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-05%')
+              ) cnt05
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-06%')
+              ) cnt06
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-07%')
+              ) cnt07
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-08%')
+              ) cnt08
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-09%')
+              ) cnt09
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-10%')
+              ) cnt10
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-11%')
+              ) cnt11
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'-12%')
+              ) cnt12
+        , (
+              SELECT COUNT(*)
+              FROM rfid_zeus_as_list t1
+              INNER JOIN (select ymd1 from rfid_calendar where ymd1 like concat(#{sYear},'%')) t2 ON 1=1
+              WHERE t2.YMD1 BETWEEN SUBSTRING(t1.JOURNAL_SDT,1,10) AND SUBSTRING(t1.JOURNAL_EDT,1,10)
+              AND t1.EQUIP_ID = a.EQUIP_ID
+              AND t2.YMD1 LIKE concat(#{sYear},'%')
+              ) sum01
+		FROM 	rfid_zeus_oper a
+				INNER JOIN rfid_zeus b on a.EQUIP_ID = b.EQUIP_ID
+		WHERE	1=1
+		<if test="sRegistId != null and sRegistId != ''">		
+				AND	b.REGIST_ID = #{sRegistId}		
+		</if>
+		<if test="sManagerId != null and sManagerId != ''">			
+    			AND b.MANAGER_ID = #{sManagerId}    	
+    	</if>
+		ORDER BY EQUIP_ID DESC, GUBN
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getZeusMonthStatListCnt" parameterType="cmap" resultType="int" >
+    	SELECT	COUNT(*)
+    	FROM	(
+				SELECT 	1
+				FROM 	rfid_zeus_oper a
+						INNER JOIN rfid_zeus b on a.EQUIP_ID = b.EQUIP_ID
+				WHERE	1=1
+				<if test="sRegistId != null and sRegistId != ''">				
+						AND	b.REGIST_ID = #{sRegistId}				
+				</if>
+				<if test="sManagerId != null and sManagerId != ''">					
+		    			AND b.MANAGER_ID = #{sManagerId}		    	
+		    	</if>
+				UNION ALL
+				SELECT 	1
+				FROM 	rfid_zeus_oper a
+						INNER JOIN rfid_zeus b on a.EQUIP_ID = b.EQUIP_ID
+				WHERE	1=1
+				<if test="sRegistId != null and sRegistId != ''">					
+						AND	b.REGIST_ID = #{sRegistId}				
+				</if>
+				<if test="sManagerId != null and sManagerId != ''">				
+		    			AND b.MANAGER_ID = #{sManagerId}		    	
+		    	</if>
+				) Z
+    </select>
+
+    <select id="getZeusEquipStatList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		SELECT 	a.EQUIP_ID
+				, a.ASSET_NO
+				, a.KOR_NM
+				, b.EQUIP_NO
+				, b.TAKE_DT
+				, FLOOR(IFNULL((select sum(ROUND(diff_minute / 60)) from rfid_zeus_oper_list where EQUIP_ID = a.EQUIP_ID and substring(regist_dt,1,4) = #{sYear}),0)) as oper_hour
+				, FLOOR(IFNULL((select sum(diff_day) from rfid_zeus_oper_list where EQUIP_ID = a.EQUIP_ID and substring(regist_dt,1,4) = #{sYear}),0)) as oper_date
+				, FLOOR(IFNULL((select sum(ROUND(diff_minute / 60)) from rfid_zeus_as_list where EQUIP_ID = a.EQUIP_ID and substring(regist_dt,1,4) = #{sYear}),0)) as as_hour
+				, FLOOR(IFNULL((select sum(diff_day) from rfid_zeus_as_list where EQUIP_ID = a.EQUIP_ID and substring(regist_dt,1,4) = #{sYear}),0)) as as_date
+				, (SELECT USER_NAME FROM RFID_ASSET WHERE ASSET_NO = a.ASSET_NO) USER_NAME
+		FROM 	rfid_zeus_oper a
+				INNER JOIN rfid_zeus b on a.EQUIP_ID = b.EQUIP_ID
+		WHERE	1=1
+		<if test="sRegistId != null and sRegistId != ''">			
+				AND	b.REGIST_ID = #{sRegistId}		
+		</if>
+		<if test="sManagerId != null and sManagerId != ''">			
+    			AND b.MANAGER_ID = #{sManagerId}    	
+    	</if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getZeusEquipStatListCnt" parameterType="cmap" resultType="int" >
+		SELECT 	COUNT(*)
+		FROM 	rfid_zeus_oper a
+				INNER JOIN rfid_zeus b on a.EQUIP_ID = b.EQUIP_ID
+		WHERE	1=1
+		<if test="sRegistId != null and sRegistId != ''">		
+				AND	b.REGIST_ID = #{sRegistId}		
+		</if>
+		<if test="sManagerId != null and sManagerId != ''">		
+    			AND b.MANAGER_ID = #{sManagerId}    	
+    	</if>
+    </select>
+
+</mapper>

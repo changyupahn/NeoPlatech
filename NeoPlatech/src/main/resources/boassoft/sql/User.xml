@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprDisuseMapper">
+
+    <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <select id="getUserLoginView" parameterType="cmap" resultType="cmap" >
+		SELECT A.*
+		  FROM RFID_USER A
+		 WHERE 1=1
+		 	   AND USE_YN = 'Y'
+		<if test="userNo != null and userNo != ''"> 	   		
+		 	   AND USER_NO = #{userNo}		
+		</if>
+		<if test="empNo != null and empNo != ''"> 		
+		 	   AND EMP_NO = #{empNo}		
+		</if>
+		 <if test="userNo == null or userNo == ''">
+		   <if test="empNo == null or empNo == ''">
+				AND 1=2	
+		   </if>
+	     </if>	
+    </select>
+    
+    <select id="getUserKeyLoginView" parameterType="cmap" resultType="cmap" >
+		SELECT A.*
+		  FROM RFID_USER A
+		 WHERE 1=1
+		 	   AND USE_YN = 'Y'
+		 	   AND USER_KEY = #{userKey}
+    </select>
+    
+    <select id="getUserIdLoginView" parameterType="cmap" resultType="cmap" >
+		SELECT A.*
+		  FROM RFID_USER A
+		 WHERE 1=1
+		 	   AND USE_YN = 'Y'
+		 	   AND USER_ID = #{userId}
+		 	   AND USER_PW = #{userPw}
+    </select>
+
+    <sql id="getUserList.Where">
+        <if test="sUseYn != null and sUseYn != ''">		
+		   AND A.use_yn = 'Y'		
+		</if>
+		<if test="sUserType != null and sUserType != ''">			 
+		   AND A.user_type = #{sUserType}		 
+		</if>
+		<if test="sUserNo != null and sUserNo != ''">		
+			AND A.USER_NO = #{sUserNo}		
+		</if>
+		<if test="sUserName != null and sUserName !== ''">
+		   <if test="sUserNo == null or sUserNo === ''">		
+			AND A.USER_NAME LIKE concat('%', #{sUserName} ,'%')			
+		   </if>
+		</if>
+		<if test="sDeptNo != null and sDeptNo !== ''">	
+		 <choose>
+		     <when test="sDeptNo == '00000'">			
+			and A.dept_no in (
+					select
+					        d1.dept_no
+					from rfid_dept d1
+							left outer join rfid_dept d2 on d1.parent_dept_no = d2.dept_no
+							left outer join rfid_dept d3 on d2.parent_dept_no = d3.dept_no
+							left outer join rfid_dept d4 on d3.parent_dept_no = d4.dept_no
+							left outer join rfid_dept d5 on d4.parent_dept_no = d5.dept_no
+							left outer join rfid_dept d6 on d5.parent_dept_no = d6.dept_no
+							left outer join rfid_dept d7 on d6.parent_dept_no = d7.dept_no
+							left outer join rfid_dept d8 on d7.parent_dept_no = d8.dept_no
+							inner join (select #{sDeptNo} dept_no from dual) tt on 1=1
+					where d1.dept_no = tt.dept_no
+							or d2.dept_no = tt.dept_no
+							or d3.dept_no = tt.dept_no
+							or d4.dept_no = tt.dept_no
+							or d5.dept_no = tt.dept_no
+							or d6.dept_no = tt.dept_no
+							or d7.dept_no = tt.dept_no
+							or d8.dept_no = tt.dept_no
+			)			
+		     </when>
+		   </choose>
+		</if> 
+		<if test="sDeptName != null and sDeptName !== ''">		
+		  <if test="sDeptNo == null or sDeptNo === ''">		
+			AND A.DEPT_NAME LIKE concat('%', #{sDeptName} ,'%')						
+		  </if>
+		</if>
+		<if test="sGrantNo != null and sGrantNo !== ''">		
+			AND A.GRANT_NO = #{sGrantNo}		
+		</if>
+		<if test="searchKeyword != null and searchKeyword !== ''">
+		  <choose>
+		    <when test="searchNumGubun == '1'">			
+            AND A.user_name like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchNumGubun == '2'">	            
+            AND A.emp_no like concat('%', #{searchKeyword} ,'%')            
+            </when>
+            <when test="searchNumGubun == '3'">	            
+            AND A.dept_name like concat('%', #{searchKeyword} ,'%')            
+            </when>        
+          </choose>
+        </if>
+        <if test="searchKeyword2 != null and searchKeyword2 !== ''">
+		  <choose>
+		    <when test="searchGubun2 == '1'">	    
+            AND A.user_name like concat('%', #{searchKeyword2} ,'%')            
+            </when>
+            <when test="searchGubun2 == '2'">            
+            AND A.emp_no like concat('%', #{searchKeyword2} ,'%')            
+            </when>
+            <when test="searchGubun2 == '3'">          
+            AND A.dept_name like concat('%', #{searchKeyword2} ,'%')            
+            </when>
+           </choose>
+         </if>   
+        
+	</sql>
+
+	<select id="getUserList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        		, C.USER_NAME AS DEPT_HEAD_USER_NAME
+        		, D.GRANT_NAME
+        		, UD.USER_DEPT_CNT
+        FROM 	RFID_USER A
+        		LEFT OUTER JOIN RFID_DEPT B ON A.DEPT_NO = B.DEPT_NO
+        		LEFT OUTER JOIN RFID_USER C ON B.DEPT_HEAD_USER_NO = C.USER_NO
+        		LEFT OUTER JOIN RFID_GRANT D ON A.GRANT_NO = D.GRANT_NO
+        		LEFT OUTER JOIN (SELECT USER_ID, COUNT(*) USER_DEPT_CNT FROM RFID_USER_DEPT GROUP BY USER_ID) UD ON A.USER_ID = UD.USER_ID
+        WHERE 	1=1
+		<include refid="getUserListWhere" />
+        ORDER BY A.GRANT_NO DESC, A.USER_ID ASC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getUserListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_USER A
+        WHERE 	1=1
+		<include refid="getUserListWhere" />
+    </select>
+
+    <select id="getUserView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_USER A
+        WHERE 	A.USER_NO = #userNo#
+    </select>
+
+    <insert id="insertUser" parameterType="cmap" >
+        INSERT INTO RFID_USER (
+        		USER_NO
+        		,USER_ID
+        		,USER_PW
+				,USER_NAME
+				,GRANT_NO
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+				,USER_KEY
+        )
+        SELECT	(SELECT IFNULL(MAX(USER_NO),'10001') + 1 FROM RFID_USER) USER_NO        
+				,#{userId}
+				,#{userPw}
+				,#{userName}
+				,#{grantNo}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+				,#{userKey}
+		FROM	DUAL
+    </insert>
+
+    <update id="updateUser" parameterType="cmap" >
+        UPDATE 	RFID_USER
+        SET
+				USER_NAME = #{userName}
+				<if test="userPw == null or userPw === ''"> 				
+				,USER_PW = #{userPw}				
+				</if>
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	USER_NO = #{userNo}
+    </update>
+
+    <update id="deleteUser" parameterType="cmap" >
+        UPDATE 	RFID_USER
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	USER_NO = #{userNo}
+    </update>
+
+    <delete id="deleteUser2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_USER
+        WHERE 	USER_NO = #{userNo}
+    </delete>
+
+    <delete id="deleteUserAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_USER
+        WHERE	GRANT_NO <![CDATA[ <> ]]> 'MGR'
+    </delete>
+
+    <update id="updateUserGrant" parameterType="cmap" >
+        UPDATE 	RFID_USER
+        SET
+				GRANT_NO = #{grantNo}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	USER_NO = #{userNo}
+    </update>
+
+</mapper>

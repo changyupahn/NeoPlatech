@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DepreAssetMapper">
+
+   <select id="getDepreAssetTargetCnt" parameterType="cmap" resultType="int">
+    	<![CDATA[
+            SELECT
+                COUNT(*)
+            FROM RFID_ASSET A
+            LEFT OUTER JOIN (
+                        SELECT ASSET_SEQ, SUM(DEPRE_AMT) AS SUM_PREV_DEPRE_AMT
+                        FROM RFID_DEPRE_ASSET
+                        WHERE DEPRE_DT < concat(#{depreYear},'0101')
+                        GROUP BY ASSET_SEQ
+                        ) B
+                    ON A.ASSET_SEQ = B.ASSET_SEQ
+            LEFT OUTER JOIN (
+                        SELECT ASSET_SEQ, SUM(DEPRE_AMT) AS SUM_DEPRE_AMT
+                        FROM RFID_DEPRE_ASSET
+                        GROUP BY ASSET_SEQ
+                        ) C
+                    ON A.ASSET_SEQ = C.ASSET_SEQ
+            WHERE 1=1
+            AND A.AQUSIT_DT <= #{depreDt}
+            AND A.USEFUL_LIFE > 0
+            AND A.AQUSIT_REMAIN_AMT > #{minimumRemainAmt}
+            AND A.DEPRE_CD IN ('정액법', '정률법')
+            AND (
+                A.DISUSE_YN = 'N'
+                OR
+                ( A.DISUSE_YN = 'Y' AND EXISTS (SELECT 'X' FROM RFID_APPR_ASSET WHERE APPR_TYPE = 'DISUSE' AND ASSET_SEQ = A.ASSET_SEQ AND DISUSE_PROC_DT >= concat(#depreYear#,'0101')))
+                )
+		]]>
+    </select>
+    
+    <insert id="insertDepreAsset" parameterType="cmap" >
+    	<![CDATA[
+        INSERT INTO RFID_DEPRE_ASSET (
+            ASSET_SEQ
+            , DEPRE_DT
+            , DEPRE_AMT
+            , REMAIN_AMT
+        )
+        SELECT
+            ASSET_SEQ
+            , DEPRE_DT
+            , (CASE WHEN REMAIN_AMT < #{minimumRemainAmt} THEN DEPRE_AMT + REMAIN_AMT - #{minimumRemainAmt} ELSE DEPRE_AMT END) DEPRE_AMT
+            , (CASE WHEN REMAIN_AMT < #{minimumRemainAmt} THEN #{minimumRemainAmt} ELSE REMAIN_AMT END) REMAIN_AMT
+        FROM (
+	        SELECT
+	            ASSET_SEQ
+	            , DEPRE_DT
+	            , DEPRE_AMT
+	            , (AQUSIT_AMT - IFNULL(SUM_DEPRE_AMT,0) - DEPRE_AMT) REMAIN_AMT
+	        FROM (
+	            SELECT
+	                A.ASSET_SEQ
+	                , #depreDt# DEPRE_DT
+	                , ROUND((CASE
+	                    WHEN depre_cd = '정액법' THEN
+	                        (CASE
+	                            WHEN AQUSIT_AMT <= #{minimumRemainAmt} OR USEFUL_LIFE = 0 OR A.AQUSIT_REMAIN_AMT <= #{minimumRemainAmt} THEN 0
+	                            ELSE
+	                                    ((AQUSIT_AMT - #{minimumRemainAmt}) / (USEFUL_LIFE * 12))
+	                            END
+	                         )
+	                     WHEN depre_cd = '정률법' THEN
+	                        (CASE
+	                            WHEN AQUSIT_AMT <= #{minimumRemainAmt} OR USEFUL_LIFE = 0 OR A.AQUSIT_REMAIN_AMT <= #{minimumRemainAmt} THEN 0
+	                            ELSE (
+	                                    ((AQUSIT_AMT - IFNULL(SUM_PREV_DEPRE_AMT,0)) * (SELECT DEPRE_RATE FROM RFID_DEPRE_RATE WHERE USEFUL_LIFE = A.USEFUL_LIFE) / 12)
+	                                 )
+	                            END
+	                        )
+	                    ELSE 0
+	                    END
+	                ),2) DEPRE_AMT
+	                , A.AQUSIT_AMT
+	                , A.AQUSIT_REMAIN_AMT
+	                , C.SUM_DEPRE_AMT
+	            FROM RFID_ASSET A
+	            LEFT OUTER JOIN (
+	                        SELECT ASSET_SEQ, SUM(DEPRE_AMT) AS SUM_PREV_DEPRE_AMT
+	                        FROM RFID_DEPRE_ASSET
+	                        WHERE DEPRE_DT < concat(#{depreYear},'0101')
+	                        GROUP BY ASSET_SEQ
+	                        ) B
+	                    ON A.ASSET_SEQ = B.ASSET_SEQ
+	            LEFT OUTER JOIN (
+	                        SELECT ASSET_SEQ, SUM(DEPRE_AMT) AS SUM_DEPRE_AMT
+	                        FROM RFID_DEPRE_ASSET
+	                        GROUP BY ASSET_SEQ
+	                        ) C
+	                    ON A.ASSET_SEQ = C.ASSET_SEQ
+	            WHERE 1=1
+	            AND A.USE_YN = 'Y'
+	            AND A.AQUSIT_DT <= #{depreDt}
+	            AND A.USEFUL_LIFE > 0
+	            AND A.AQUSIT_REMAIN_AMT > #{minimumRemainAmt}
+	            AND A.DEPRE_CD IN ('정액법', '정률법')
+	            AND (
+	                A.DISUSE_YN = 'N'
+	                OR
+	                A.DISUSE_DT >= concat(#{depreYear},'0101')
+	                )
+	            AND (
+	                A.DISUSE_YN = 'N'
+	                OR
+	                A.DISUSE_DT > concat(#{depreYear},#{depreMonth},'31')
+	                )
+	            ) Z
+	        ) Y
+		]]>
+    </insert>
+    
+     <update id="updateDepreAsset" parameterType="cmap" >
+    	<![CDATA[
+    	UPDATE 	RFID_DEPRE_ASSET A
+    			INNER JOIN (SELECT ASSET_SEQ, MAX(DEPRE_DT) DEPRE_DT FROM RFID_DEPRE_ASSET GROUP BY ASSET_SEQ) B ON A.ASSET_SEQ = B.ASSET_SEQ AND A.DEPRE_DT = B.DEPRE_DT
+				INNER JOIN RFID_ASSET C ON A.ASSET_SEQ = C.ASSET_SEQ
+		SET
+		      	A.DEPRE_AMT = A.DEPRE_AMT + A.REMAIN_AMT
+		      	, A.REMAIN_AMT = 0
+		WHERE 	A.REMAIN_AMT < 1
+				AND A.REMAIN_AMT <> 0.0000
+    	]]>
+    </update>
+    
+      <sql id="getDepreAssetTotalBase">
+    	<![CDATA[
+		SELECT
+		            결산과목코드
+	          , 결산과목명
+	          , 당년도기초수량
+	          , 당년도기초금액
+	          , 당년도증가수량
+	          , 당년도증가금액
+	          , 당년도불용수량
+	          , 당년도불용금액
+	          , 당년도기말수량
+	          , 당년도기말금액
+	          , 전년도누계감가상각비
+	          , 당년도증가감가상각비
+	          , 당년도감소감가상각비
+	          , 당년도누계감가상각비
+	          , (당년도기말금액 - 당년도누계감가상각비) AS 잔존가액
+	          , 당년도불용대표품명
+	          , 당년도불용대표처분일자
+	          , 당년도불용대표처분방법
+	          , 당년도불용처분금액
+	          , (당년도불용금액 - 당년도감소감가상각비) AS 당년도불용미상각잔액
+	          , (CASE
+	          		WHEN (당년도불용처분금액 - (당년도불용금액 - 당년도감소감가상각비)) > 0 THEN (당년도불용처분금액 - (당년도불용금액 - 당년도감소감가상각비))
+	          		ELSE 0 END) AS 당년도불용처분이익
+		FROM (
+		        SELECT
+	                    A.CODE AS 결산과목코드
+	                    , A.CODE_NAME AS 결산과목명
+	                    , IFNULL((
+	                            SELECT COUNT(*)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND AQUSIT_DT < B.SDT
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT >= B.SDT)
+	                    ),0) AS 당년도기초수량
+	                    , IFNULL((
+	                            SELECT SUM(AQUSIT_AMT)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND AQUSIT_DT < B.SDT
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT >= B.SDT)
+	                    ),0) AS 당년도기초금액
+	                    , IFNULL((
+	                            SELECT COUNT(*)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND AQUSIT_DT BETWEEN B.SDT AND B.EDT
+	                    ),0) AS 당년도증가수량
+	                    , IFNULL((
+	                            SELECT SUM(AQUSIT_AMT)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND AQUSIT_DT BETWEEN B.SDT AND B.EDT
+	                    ),0) AS 당년도증가금액
+	                    , IFNULL((
+	                            SELECT COUNT(*)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                    ),0) AS 당년도불용수량
+	                    , IFNULL((
+	                            SELECT SUM(AQUSIT_AMT)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                    ),0) AS 당년도불용금액
+	                    , IFNULL((
+	                            SELECT COUNT(*)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND AQUSIT_DT <= B.EDT
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT > B.EDT)
+	                    ),0) AS 당년도기말수량
+	                    , IFNULL((
+	                            SELECT SUM(AQUSIT_AMT)
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND AQUSIT_DT <= B.EDT
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT > B.EDT)
+	                    ),0) AS 당년도기말금액
+	                    , ROUND(IFNULL((
+	                            SELECT SUM(DEPRE_AMT)
+	                            FROM 	(
+	                            		SELECT ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) DEPRE_AMT
+			                    		FROM RFID_DEPRE_ASSET
+			                    		WHERE DEPRE_DT < concat(#{sDepreYear},'0101')
+			                    		GROUP BY ASSET_SEQ
+	                            ) T1
+	                            INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+	                            WHERE 1=1
+	                            AND T2.USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT >= B.SDT)
+	                    ),0),2) AS 전년도누계감가상각비
+	                    , ROUND(IFNULL((
+	                            SELECT SUM(DEPRE_AMT)
+	                            FROM 	(
+	                            		SELECT ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) DEPRE_AMT
+			                    		FROM RFID_DEPRE_ASSET
+			                    		WHERE DEPRE_DT BETWEEN concat(#{sDepreYear},'0101') AND concat(#{sDepreYear},#{sDepreMonth},'31')
+			                    		GROUP BY ASSET_SEQ
+	                            ) T1
+	                            INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+	                            WHERE 1=1
+	                            AND T2.USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT >= B.SDT)
+	                    ),0),2) AS 당년도증가감가상각비
+	                    , ROUND(IFNULL((
+	                            SELECT 	SUM(DEPRE_AMT)
+	                            FROM 	(
+	                            		SELECT ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) DEPRE_AMT
+			                    		FROM RFID_DEPRE_ASSET
+			                    		GROUP BY ASSET_SEQ
+	                            ) T1
+	                            INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+	                            WHERE 1=1
+	                            AND T2.USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                    ),0),2) AS 당년도감소감가상각비
+	                    , ROUND(IFNULL((
+	                            SELECT SUM(DEPRE_AMT)
+	                            FROM 	(
+	                            		SELECT ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) DEPRE_AMT
+			                    		FROM RFID_DEPRE_ASSET
+			                    		WHERE DEPRE_DT <= concat(#{sDepreYear},#{sDepreMonth},'31')
+			                    		GROUP BY ASSET_SEQ
+	                            ) T1
+	                            INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+	                            WHERE 1=1
+	                            AND T2.USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT > B.EDT)
+	                    ),0),2) AS 당년도누계감가상각비
+	                    , ROUND(IFNULL((
+	                            SELECT SUM(T2.AQUSIT_AMT - T1.DEPRE_AMT)
+	                            FROM 	(
+	                            		SELECT ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) DEPRE_AMT
+			                    		FROM RFID_DEPRE_ASSET
+			                    		WHERE DEPRE_DT <= concat(#{sDepreYear},#{sDepreMonth},'31')
+			                    		GROUP BY ASSET_SEQ
+	                            ) T1
+	                            INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+	                            WHERE 1=1
+	                            AND T2.USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND (DISUSE_YN = 'N' OR DISUSE_DT > B.EDT)
+	                    ),0),2) AS 당년도미상각잔액
+	                    , IFNULL((
+	                            SELECT ITEM_NAME
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                            LIMIT 1
+	                    ),'') AS 당년도불용대표품명
+	                    , IFNULL((
+	                            SELECT IFNULL(DISUSE_PROC_DT, DISUSE_DT) AS DISUSE_DT
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                            LIMIT 1
+	                    ),'') AS 당년도불용대표처분일자
+	                    , IFNULL((
+	                            SELECT DISUSE_TYPE_CD
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                            LIMIT 1
+	                    ),'') AS 당년도불용대표처분방법
+	                    , IFNULL((
+	                            SELECT SUM(DISUSE_AMT) DISUSE_AMT
+	                            FROM RFID_ASSET T1
+	                            WHERE 1=1
+	                            AND USE_YN = 'Y'
+	                            AND ASSET_TYPE_CD = A.CODE
+	                            AND DISUSE_DT BETWEEN B.SDT AND B.EDT
+	                    ),0) AS 당년도불용처분금액
+		        FROM RFID_CMMN_CODE A
+		        INNER JOIN (SELECT concat(#{sDepreYear},'0101') AS SDT, concat(#{sDepreYear},#{sDepreMonth},'31') AS EDT FROM DUAL) B ON 1=1
+		        WHERE CODE_ID = 'COM007'
+		        AND CODE_LEVEL = '1'
+		        ORDER BY A.SORT_NUM
+		) Z
+		]]>
+    </sql>
+    
+     <select id="getDepreAssetTotal" parameterType="cmap" resultType="cmap" >
+    	<include refid="getDepreAssetTotalBase"/>
+    </select>
+
+     <select id="getDepreAssetTotalSum" parameterType="cmap" resultType="cmap" >
+    	SELECT
+				'' AS 결산과목코드
+				, '합계' AS 결산과목명
+				, SUM(당년도기초수량) AS 당년도기초수량
+				, SUM(당년도기초금액) AS 당년도기초금액
+				, SUM(당년도증가수량) AS 당년도증가수량
+				, SUM(당년도증가금액) AS 당년도증가금액
+				, SUM(당년도불용수량) AS 당년도불용수량
+				, SUM(당년도불용금액) AS 당년도불용금액
+				, SUM(당년도기말수량) AS 당년도기말수량
+				, SUM(당년도기말금액) AS 당년도기말금액
+				, SUM(전년도누계감가상각비) AS 전년도누계감가상각비
+				, SUM(당년도증가감가상각비) AS 당년도증가감가상각비
+				, SUM(당년도감소감가상각비) AS 당년도감소감가상각비
+				, SUM(당년도누계감가상각비) AS 당년도누계감가상각비
+				, SUM(잔존가액) AS 잔존가액
+    	FROM 	(
+    			<include refid="getDepreAssetTotalBase"/>
+    			) Z
+    </select>
+
+<select id="getDepreAssetList" parameterType="cmap" resultType="cmap" >
+    	<![CDATA[
+    	SELECT	Z.*,
+    			(CASE
+    				WHEN DISUSE_YN = 'N' OR DISUSE_DT > EDT THEN REMAIN_AMT
+    				ELSE 0 END) AS REMAIN_AMT2,
+    			(CASE
+    				WHEN DISUSE_YN = 'N' OR DISUSE_DT > EDT THEN (IFNULL(LAST_AQUSIT_AMT,0) - IFNULL(PREV_DEPRE_AMT,0) + IFNULL(CUR_DISUSE_AQUSIT_AMT,0))
+    				ELSE 0 END) AS PREV_TOTAL
+    	FROM	(
+	    	SELECT	A.*,
+	    			B.PREV_DEPRE_AMT,
+	    			C.CUR_DEPRE_AMT,
+	    			D.SUM_DEPRE_AMT,
+	    			D.SUM_DEPRE_AMT2,
+	    			ROUND(A.AQUSIT_AMT - SUM_DEPRE_AMT2, 2) AS REMAIN_AMT,
+	    			(CASE WHEN A.DISUSE_YN = 'Y' THEN '증가' ELSE '감소' END) CUR_DISUSE_STR,
+	    			(CASE
+	    				WHEN (A.DISUSE_AMT - A.AQUSIT_REMAIN_AMT) > 0 THEN (A.DISUSE_AMT - A.AQUSIT_REMAIN_AMT)
+	    			  	ELSE 0 END) AS DISUSE_GAIN_AMT,
+	    			(CASE
+	    				WHEN A.DEPRE_CD = '정액법' THEN E.DEPRE_ST_RATE
+	    				WHEN A.DEPRE_CD = '정률법' THEN E.DEPRE_RATE
+	    				END) AS DEPRE_RATE,
+	    			(CASE
+	    				WHEN A.AQUSIT_DT < S.SDT THEN A.AQUSIT_AMT
+	    				ELSE 0 END) PREV_AQUSIT_AMT,
+	    			(CASE
+	    				WHEN A.AQUSIT_DT < S.SDT THEN ROUND(A.AQUSIT_AMT - PREV_DEPRE_AMT, 2)
+	    				ELSE 0 END) PREV_REMAIN_AMT,
+	    			(CASE
+	    				WHEN A.AQUSIT_DT BETWEEN S.SDT AND S.EDT THEN A.AQUSIT_AMT
+	    				ELSE 0 END) CUR_AQUSIT_AMT,
+	    			(CASE
+	    				WHEN A.DISUSE_YN = 'Y' AND A.DISUSE_DT BETWEEN S.SDT AND S.EDT THEN A.AQUSIT_AMT
+	    				ELSE 0 END) CUR_DISUSE_AQUSIT_AMT,
+	    			(CASE
+	    				WHEN A.DISUSE_YN = 'Y' AND A.DISUSE_DT BETWEEN S.SDT AND S.EDT THEN ROUND(A.AQUSIT_AMT - SUM_DEPRE_AMT2, 2)
+	    				ELSE 0 END) CUR_DISUSE_REMAIN_AMT,
+	    			(CASE
+	    				WHEN A.DISUSE_YN = 'N' OR A.DISUSE_DT > S.EDT THEN A.AQUSIT_AMT
+	    				ELSE 0 END) LAST_AQUSIT_AMT,
+	    			S.SDT,
+	    			S.EDT
+	    	FROM	RFID_ASSET A
+	    	LEFT OUTER JOIN (
+	    				SELECT 	ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) PREV_DEPRE_AMT
+	    				FROM 	RFID_DEPRE_ASSET
+	    				WHERE	DEPRE_DT < concat(#{sDepreYear},'0101')
+	    				GROUP BY ASSET_SEQ
+	    				) B ON A.ASSET_SEQ = B.ASSET_SEQ
+	    	LEFT OUTER JOIN (
+	    				SELECT 	ASSET_SEQ, ROUND(SUM(DEPRE_AMT),2) CUR_DEPRE_AMT
+	    				FROM 	RFID_DEPRE_ASSET
+	    				WHERE	DEPRE_DT BETWEEN concat(#{sDepreYear},'0101') AND concat(#{sDepreYear},#{sDepreMonth},'31')
+	    				GROUP BY ASSET_SEQ
+	    				) C ON A.ASSET_SEQ = C.ASSET_SEQ
+	    	LEFT OUTER JOIN (
+	    				SELECT 	T1.ASSET_SEQ
+	    						, CASE WHEN (T2.DISUSE_YN = 'N' OR T2.DISUSE_DT > concat(#{sDepreYear},#{sDepreMonth},'31'))
+	    									THEN ROUND(SUM(T1.DEPRE_AMT),2) ELSE 0 END SUM_DEPRE_AMT
+	    						, ROUND(SUM(T1.DEPRE_AMT),2) SUM_DEPRE_AMT2
+	    				FROM 	RFID_DEPRE_ASSET T1
+	    						INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+	    				WHERE	T1.DEPRE_DT <= concat(#{sDepreYear},#{sDepreMonth},'31')
+	                            AND T2.USE_YN = 'Y'
+	    				GROUP BY T1.ASSET_SEQ
+	    				) D ON A.ASSET_SEQ = D.ASSET_SEQ
+	    	LEFT OUTER JOIN RFID_DEPRE_RATE E ON A.USEFUL_LIFE = E.USEFUL_LIFE
+			INNER JOIN (
+						SELECT 	concat(#{sDepreYear},'0101') SDT,
+								concat(#{sDepreYear},#{sDepreMonth},'31') EDT
+						FROM	DUAL
+						) S ON 1=1
+			WHERE	A.USE_YN = 'Y'
+					AND A.AQUSIT_DT <= S.EDT
+					AND (
+						A.DISUSE_YN = 'N'
+						OR
+						A.DISUSE_DT >= S.SDT
+						)
+	    	]]>
+	    	<if test="sCurDisuseYn != null and sCurDisuseYn != ''">      		
+    	     <choose>
+               <when test="sDisuse == 'Y'">			
+	            AND A.DISUSE_YN = 'Y'
+	            AND A.DISUSE_DT BETWEEN concat(#{sDepreYear},'0101') AND concat(#{sDepreYear},#{sDepreMonth},'31')
+	           </when>
+	         </choose>
+	       </if>     
+		) Z
+		ORDER BY ASSET_TYPE_NAME, ASSET_SEQ
+    </select>
+
+    <update id="updateDepreAssetRemain" parameterType="cmap" >
+    	UPDATE 	RFID_ASSET A
+    	SET		AQUSIT_REMAIN_AMT = (
+    								SELECT ROUND(REMAIN_AMT)
+    								FROM RFID_DEPRE_ASSET
+    								WHERE ASSET_SEQ = A.ASSET_SEQ
+    								AND DEPRE_DT = (
+    												SELECT MAX(DEPRE_DT)
+    												FROM RFID_DEPRE_ASSET
+    												WHERE ASSET_SEQ = A.ASSET_SEQ
+    												)
+    								)
+		WHERE	EXISTS (SELECT 1 FROM RFID_DEPRE_ASSET WHERE ASSET_SEQ = A.ASSET_SEQ)
+
+    </update>
+    
+     <update id="updateDepreAssetRemain2" parameterType="cmap" >
+    	<![CDATA[
+    	UPDATE 	RFID_ASSET A
+    	SET		AQUSIT_REMAIN_AMT = IFNULL((
+    								SELECT ROUND(REMAIN_AMT)
+    								FROM RFID_DEPRE_ASSET
+    								WHERE ASSET_SEQ = A.ASSET_SEQ
+    								AND DEPRE_DT = (
+    												SELECT MAX(DEPRE_DT)
+    												FROM RFID_DEPRE_ASSET
+    												WHERE ASSET_SEQ = A.ASSET_SEQ
+    												AND DEPRE_DT < #{depreDt}
+    												)
+    								), AQUSIT_AMT)
+		WHERE	EXISTS (
+						SELECT 1
+						FROM RFID_DEPRE_ASSET
+						WHERE ASSET_SEQ = A.ASSET_SEQ
+						AND DEPRE_DT = #{depreDt}
+						)
+		]]>
+    </update>
+    
+     <update id="updateDepreAssetRemain2Year" parameterType="cmap" >
+    	<![CDATA[
+    	UPDATE 	RFID_ASSET A
+    	SET		AQUSIT_REMAIN_AMT = IFNULL((
+    								SELECT REMAIN_AMT
+    								FROM RFID_DEPRE_ASSET
+    								WHERE ASSET_SEQ = A.ASSET_SEQ
+    								AND DEPRE_DT = (
+    												SELECT MAX(DEPRE_DT)
+    												FROM RFID_DEPRE_ASSET
+    												WHERE ASSET_SEQ = A.ASSET_SEQ
+    												AND DEPRE_DT < concat(#{depreLastYear},'0101')
+    												)
+    								), AQUSIT_AMT)
+		WHERE	EXISTS (
+						SELECT 1
+						FROM RFID_DEPRE_ASSET
+						WHERE ASSET_SEQ = A.ASSET_SEQ
+						AND DEPRE_DT BETWEEN concat(#{depreLastYear},'0101') AND #{depreDt}
+						)
+		]]>
+    </update>
+    
+    <delete id="deleteDepreAsset2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_DEPRE_ASSET
+        WHERE 	1=1
+        <if test="depreDt != null and depreDt != ''">        
+        		AND DEPRE_DT LIKE concat(#{depreDt},'%')        
+        </if>
+        <if test="depreLastYear != null and depreLastYear != ''">         
+        		AND DEPRE_DT LIKE concat(#{depreLastYear},'%')        
+        </if>
+       	<if test="depreDt == null or depreDt == ''">    	    		
+    		<if test="depreLastYear == null or depreLastYear == ''">      
+        		AND 1=2        	
+            </if>
+       </if> 
+    </delete>
+
+</mapper>

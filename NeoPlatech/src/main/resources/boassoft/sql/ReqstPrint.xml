@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReqstPrintMapper">
+
+    <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql> 
+
+ <insert id="insertReqstPrint" parameterType="cmap">
+		INSERT INTO rfid_print_request
+			(reqst_user_id, org_no, asset_no, label_seq, addr_seq, print_status_cd, use_yn, frst_regist_pnttm, frst_register_id, last_updt_pnttm, last_updusr_id)
+		SELECT
+			#{reqstUserId} reqst_user_id, 
+			#{orgNo} org_no, 
+			asset_no, 
+			#{labelSeq} label_seq, 
+			#{addrSeq} addr_seq, 
+			#{printStatusCd} print_status_cd, 
+			'Y' use_yn,
+			#{frstRegistPnttm} frst_regist_pnttm, 
+			#{frstRegisterId} frst_register_id, 
+			#{lastUpdtPnttm} last_updt_pnttm, 
+			#{lastUpdusrId} last_updusr_id  
+		FROM st$orgNo$_asset ast
+		WHERE ast.asset_no IN (
+		      <foreach item="assetNo" index="index" collection="assetNo" open="(" close=")" separator=",">			  
+			  	#{assetNo[]}			  
+			  </foreach>
+			  )
+	</insert>
+	
+	<select id="getReqstPrintList" parameterType="cmap" resultType="cmap" remapResults="true">
+		<include refid="pagingHeader" />
+		select $colList$, pr.reqst_seq
+		from st$orgNo$_asset ast
+		inner join rfid_print_request pr
+				on pr.asset_no = ast.asset_no
+				and pr.reqst_user_id = #{reqstUserId}
+				and pr.org_no = #{orgNo}
+				and pr.print_status_cd = 'T'
+		where pr.use_yn = 'Y'
+		<if test="dataOrder != null and dataOrder != ''">		
+			ORDER BY #{dataOrder} #{dataOrderArrow}, ast.rfid_no desc		
+		</if>
+		<if test="dataOrder == null or dataOrder == ''">		
+			ORDER BY ast.rfid_no desc		
+		</if>
+		<include refid="pagingFooter" />
+	</select>
+
+	<select id="getReqstPrintListCnt" parameterType="cmap" resultType="int">
+		select count(*)
+		from st$orgNo$_asset ast
+		inner join rfid_print_request pr
+				on pr.asset_no = ast.asset_no
+				and pr.reqst_user_id = #{reqstUserId}
+				and pr.org_no = #{orgNo}
+				and pr.print_status_cd = #{printStatusCd}
+		where pr.use_yn = 'Y'
+	</select>
+	
+	<update id="deleteReqstPrint" parameterType="cmap">
+		update rfid_print_request set 
+			use_yn = 'N'
+		where reqst_user_id = #{reqstUserId}
+		and org_no = #{orgNo}
+		and print_status_cd = #{printStatusCd}
+		<if test="reqstSeq != null and reqstSeq !== ''">			
+			and reqst_seq in (
+			    <foreach item="reqstSeq" index="index" collection="reqstSeq" open="(" close=")" separator=",">				
+					#{reqstSeq[]}
+				</foreach>	
+				)
+						
+		</if>
+	</update>
+	
+	<update id="updatePrintStatusCd_R" parameterType="cmap">
+		update rfid_print_request set 
+			print_status_cd = 'R',
+			label_seq = #{labelSeq},
+			addr_seq = #{addrSeq#}
+			last_updt_pnttm = #{lastUpdtPnttm},
+			last_updusr_id = #{lastUpdusrId} 
+		where reqst_user_id = #{reqstUserId}
+		and org_no = #{orgNo}
+		and print_status_cd = 'T'
+	</update>
+
+</mapper>

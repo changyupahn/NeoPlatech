@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="VirtAssetMapper">
+
+  <select id="getVirtAssetNum" parameterType="cmap" resultType="cmap">
+		SELECT 	(IFNULL((
+		        SELECT 	MAX(CAST(SUBSTR(ASSET_NO,5,4) AS UNSIGNED)) ASSET_NUM
+		        FROM 	RFID_ASSET
+		        WHERE 	ASSET_NO LIKE concat(#{assetTypeCd},#{aqusitYearShort},'%')
+		        ),0) + 1) ASSET_NUM
+		FROM 	DUAL
+	</select>
+
+	<sql id="getVirtAssetListWhere">
+		AND ast.PURNO = #{purno}
+	</sql>
+
+	<select id="getVirtAssetList" parameterType="cmap" resultType="cmap">
+		SELECT 	ast.*
+				,(CASE WHEN ast.ASSET_STATUS_CD = '가자산' THEN 'N' ELSE 'Y' END) AS ASSET_REGI_YN
+				,(CASE WHEN ast.TAG_PRINT_CNT > 0 THEN 'Y' ELSE 'N' END) AS PRINT_YN
+				,insa.INSP_DT
+				,insa.INSP_USER_NAME
+				,insa.INSP_REMARK
+		FROM 	rfid_asset ast
+				LEFT OUTER JOIN rfid_insp_asset insa ON ast.ASSET_SEQ = insa.ASSET_SEQ
+		WHERE 	1=1
+		<include refid="getVirtAssetListWhere" />
+	</select>
+
+	<select id="getVirtAssetListCnt" parameterType="cmap" resultType="int">
+		SELECT 	count(*)
+		FROM 	rfid_asset ast
+		WHERE 	1=1
+		<include refid="getVirtAssetListWhere" />
+	</select>
+
+	<insert id="VirtAsset.insertVirtAsset" parameterType="cmap" >
+        INSERT INTO RFID_ASSET (
+        		ASSET_SEQ
+				,ASSET_NO
+				,ASSET_SUB_NO
+				,RFID_NO
+				,BARC_NO
+				,ITEM_CD
+				,ITEM_NAME
+				,ZEUS_ITEM_CD
+				,ZEUS_ITEM_NAME
+				,ASSET_TYPE_CD
+				,ASSET_TYPE_NAME
+				,ASSET_NAME
+				,ASSET_ENAME
+				,AQUSIT_DT
+				,AQUSIT_AMT
+				,AQUSIT_FOREIGN_AMT
+				,CAPI_TYPE_CD
+				,AQUSIT_REMAIN_AMT
+				,AQUSIT_UNIT_AMT
+				,ASSET_CNT
+				,ASSET_UNIT_CD
+				,USEFUL_LIFE
+				,ASSET_SIZE
+				,TOP_DEPT_NO
+				,TOP_DEPT_NAME
+				,DEPT_NO
+				,DEPT_NAME
+				,USER_NO
+				,USER_NAME
+				,POS_NO
+				,POS_NAME
+				,CONT_REQ_NO
+				,CONT_REQ_USER_NO
+				,CONT_REQ_USER_NAME
+				,CONT_NO
+				,CONT_NAME
+				,AQUSIT_TYPE_CD
+				,DEPRE_CD
+				,MK_NATION_CD
+				,MK_NATION_NAME
+				,MK_COMPANY_CD
+				,MK_COMPANY_NAME
+				,SL_COMPANY_CD
+				,SL_COMPANY_NAME
+				,ASSET_STATUS_CD
+				,REMARK
+				,TAG_PRINT_CNT
+				,PURPOSE_OF_USE
+				,ACCNT_NUM
+				,SW_YN
+				,ZEUS_YN
+				,ETUBE_YN
+				,APLCTN_RANGE_CD
+				,FD_ARTCL_NUM
+				,DISUSE_YN
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+				,PURNO
+				,RQSTNO
+				,PRODNO
+        )
+		SELECT	#{assetSeq} ASSET_SEQ
+				,#{assetNo} ASSET_NO
+				,#{assetSubNo} ASSET_SUB_NO
+				,#{rfidNo} RFID_NO
+				,#{barcNo} BARC_NO
+                ,A.ITEM_CD
+                ,A.ITEM_NAME
+                ,A.ZEUS_ITEM_CD
+                ,A.ZEUS_ITEM_NAME
+                ,A.ASSET_TYPE_CD
+                ,(SELECT CODE_NAME FROM RFID_CMMN_CODE WHERE CODE_ID = 'COM007' AND CODE = A.ASSET_TYPE_CD) ASSET_TYPE_NAME
+                ,A.ASSET_NAME
+                ,A.ASSET_ENAME
+                ,replace(#{aqusitDt},'-','') AQUSIT_DT
+                ,#{aqusitAmt} AQUSIT_AMT
+                ,A.AQUSIT_FOREIGN_AMT
+                ,A.CAPI_TYPE_CD
+                ,#{aqusitRemainAmt} AQUSIT_REMAIN_AMT
+                ,#{aqusitUnitAmt} AQUSIT_UNIT_AMT
+                ,#{assetCnt} ASSET_CNT
+                ,#{assetUnitCd} ASSET_UNIT_CD
+                ,A.USEFUL_LIFE
+                ,A.ASSET_SIZE
+				,#{topDeptNo} TOP_DEPT_NO
+				,#{topDeptName} TOP_DEPT_NAME
+				,#{deptNo} DEPT_NO
+				,#{deptName} DEPT_NAME
+				,#{userNo} USER_NO
+				,#{userName} USER_NAME
+				,#{posNo} POS_NO
+				,#{posName} POS_NAME
+				,A.RQSTNO CONT_REQ_NO
+				,#{contReqUserNo} CONT_REQ_USER_NO
+				,#{contReqUserName} CONT_REQ_USER_NAME
+				,#{contNo} CONT_NO
+				,#{contName} CONT_NAME
+                ,A.AQUSIT_TYPE_CD
+                ,A.DEPRE_CD
+                ,A.MK_NATION_CD
+                ,A.MK_NATION_NAME
+                ,A.MK_COMPANY_CD
+                ,A.MK_COMPANY_NAME
+                ,A.SL_COMPANY_CD
+                ,A.SL_COMPANY_NAME
+                ,'가자산' ASSET_STATUS_CD
+                ,'' REMARK
+                ,'0' TAG_PRINT_CNT
+                ,A.PURPOSE_OF_USE
+                ,A.ACCNT_NUM
+                ,A.SW_YN
+                ,A.ZEUS_YN
+                ,A.ETUBE_YN
+                ,A.APLCTN_RANGE_CD
+                ,A.FD_ARTCL_NUM
+				,'N' DISUSE_YN
+				,'N' USE_YN
+				,#{frstRegistPnttm} FRST_REGIST_PNTTM
+				,#{frstRegisterId} FRST_REGISTER_ID
+				,#{lastUpdtPnttm} LAST_UPDT_PNTTM
+				,#{lastUpdusrId} LAST_UPDUSR_ID
+                ,A.PURNO
+                ,A.RQSTNO
+                ,A.PRODNO
+        FROM    RFID_INSP_ITEM A
+        WHERE	A.INSP_ITEM_SEQ = #{inspItemSeq}
+    </insert>
+
+    <update id="updateVirtAssetConfirm" parameterType="cmap" >
+    	UPDATE	RFID_ASSET
+    	SET		ASSET_STATUS_CD = '정상'
+    			,AQUSIT_DT = replace(#{aqusitDt},'-','')
+    			,USE_YN = 'Y'
+    	WHERE	ASSET_SEQ = #{assetSeq}
+    </update>
+
+    <update id="updateVirtAssetCancel" parameterType="cmap" >
+    	UPDATE	RFID_ASSET
+    	SET		ASSET_STATUS_CD = '가자산'
+    			,USE_YN = 'N'
+    	WHERE	ASSET_SEQ = #{assetSeq}
+    </update>
+
+    <update id="updateVirtAssetUser" parameterType="cmap" >
+    	UPDATE	RFID_ASSET
+    	SET		TOP_DEPT_NO = #{topDeptNo}
+    			,TOP_DEPT_NAME = #{topDeptName}
+    			,DEPT_NO = #{deptNo}
+    			,DEPT_NAME = #{deptName}
+    			,USER_NO = #{userNo}
+    			,USER_NAME = #{userName}
+    			,POS_NO = #{posNo}
+    			,POS_NAME = #{posName}
+    	WHERE	ASSET_SEQ = #{assetSeq}
+    </update>
+
+    <update id="updateVirtAssetName" parameterType="cmap" >
+    	UPDATE	RFID_ASSET
+    	SET		ASSET_TYPE_CD = #{assetTypeCd}
+				,ITEM_CD = #{itemCd}
+				,ITEM_NAME = #{itemName}
+    			,ASSET_NAME = #{assetName}
+    	WHERE	PURNO = #{purno}
+				AND RQSTNO = #{rqstno}
+				AND PRODNO = #{prodno}
+    </update>
+
+    <delete id="deleteVirtAsset" parameterType="cmap" >
+    	DELETE
+    	FROM	RFID_ASSET
+    	WHERE	ASSET_SEQ = #{assetSeq}
+    			AND ASSET_STATUS_CD = '가자산'
+    </delete>
+
+</mapper>

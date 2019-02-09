@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppFileMapper">
+
+    <sql id="getApprFileListWhere">
+    	AND A.RQSTNO = #{rqstno}
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+    <select id="getApprFileList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	rfid_appr_file A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getApprFileListWhere" />
+        ORDER BY RQSTNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getApprFileListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	rfid_appr_file A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getApprFileListWhere" />
+    </select>
+    
+     <select id="getApprFileView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	rfid_appr_file A
+        WHERE 	RQSTNO = #{rqstno}
+        		AND FILE_SN = #{fileSn}
+    </select>
+    
+    <insert id="insertApprFile" parameterType="cmap" >
+        INSERT INTO rfid_appr_file (
+        		RQSTNO
+				,FILE_SN
+				,FILE_PATH
+				,FILE_NM
+				,ORIGNL_FILE_NM
+				,FILE_EXTSN
+				,USE_YN
+				,WEB_FILE_PATH
+        )
+        SELECT	#{rqstno}
+				,(SELECT IFNULL(MAX(FILE_SN),0)+1 FROM rfid_appr_file WHERE RQSTNO = #{rqstno})
+				,#{filePath}
+				,#{fileNm}
+				,#{orignlFileNm}
+				,#{fileExtsn}
+				,#{useYn}
+				,#{webFilePath}
+		FROM	DUAL
+    </insert>
+    
+    <update id="updateApprFile" parameterType="cmap" >
+        UPDATE 	rfid_appr_file
+        SET
+				FILE_SN = #{fileSn}
+				,FILE_PATH = #{filePath}
+				,FILE_NM = #{fileNm}
+				,ORIGNL_FILE_NM = #{orignlFileNm}
+				,FILE_EXTSN = #{fileExtsn}
+				,USE_YN = #{useYn}
+				,WEB_FILE_PATH = #{webFilePath}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+    <update id="deleteApprFile" parameterType="cmap" >
+        UPDATE 	rfid_appr_file
+        SET
+				USE_YN = 'N'
+        WHERE 	RQSTNO = #{rqstno}
+        		AND FILE_SN = #{fileSn}
+    </update>
+    
+     <delete id="deleteApprFile2" parameterType="cmap" >
+        DELETE
+        FROM 	rfid_appr_file
+        WHERE 	RQSTNO = #{rqstno}
+        		AND FILE_SN = #{fileSn}
+    </delete>
+    
+</mapper>

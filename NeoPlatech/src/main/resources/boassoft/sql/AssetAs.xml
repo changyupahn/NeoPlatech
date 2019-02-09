@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AssetAsMapper">
+
+   <sql id="getAssetAsListWhere">
+    </sql>
+    
+     <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <select id="getAssetAsList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_ASSET_AS A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getAssetAsListWhere" />
+        ORDER BY ASSET_SEQ DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getAssetAsListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_ASSET_AS A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getAssetAsListWhere" />
+    </select>
+
+   <select id="getAssetAsView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ASSET_AS A
+        WHERE 	ASSET_SEQ = #{assetSeq}
+    </select>
+    
+    <insert id="insertAssetAs" parameterType="cmap" >
+        INSERT INTO RFID_ASSET_AS (
+        		ASSET_SEQ
+				,AS_NO
+				,AS_REQ_DT
+				,AS_REQ_CONT
+				,AS_RECV_DT
+				,AS_COMP_NAME
+				,AS_AMT
+				,AS_CONT
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{assetSeq}
+				,#{asNo}
+				,#{asReqDt}
+				,#{asReqCont}
+				,#{asRecvDt}
+				,#{asCompName}
+				,#{asAmt}
+				,#{asCont}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+
+    <update id="updateAssetAs" parameterType="cmap" >
+        UPDATE 	RFID_ASSET_AS
+        SET
+				AS_NO = #{asNo}
+				,AS_REQ_DT = #{asReqDt}
+				,AS_REQ_CONT = #{asReqCont}
+				,AS_RECV_DT = #{asRecvDt}
+				,AS_COMP_NAME = #{asCompName}
+				,AS_AMT = #{asAmt}
+				,AS_CONT = #{asCont}
+				,USE_YN = #{useYn}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	ASSET_SEQ = #{assetSeq}
+    </update>
+    
+     <update id="deleteAssetAs" parameterType="cmap" >
+        UPDATE 	RFID_ASSET_AS
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	ASSET_SEQ = #{assetSeq}
+    </update>
+    
+     <delete id="deleteAssetAs2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ASSET_AS
+        WHERE 	ASSET_SEQ = #{assetSeq}
+    </delete>
+    
+</mapper>

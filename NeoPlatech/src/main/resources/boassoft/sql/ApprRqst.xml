@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprRqstMapper">
+
+   <sql id="getApprRqstListWhere">
+    </sql>
+    
+     <select id="getApprRqstList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_APPR_RQST A
+        WHERE 	1=1
+		<include refid="getApprRqstListWhere" />
+        ORDER BY COL1 DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getApprRqstListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_APPR_RQST A
+        WHERE 	1=1
+		<include refid="getApprRqstListWhere" />
+    </select>
+    
+     <select id="getApprRqstView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        		, (SELECT MAX(APPR_TYPE) RQSTNO FROM RFID_APPR_ASSET WHERE RQSTNO = A.RQSTNO) AS APPR_TYPE
+        FROM 	RFID_APPR_RQST A
+        WHERE 	RQSTNO = #{rqstno}
+    </select>
+    
+    <insert id="ApprRqst.insertApprRqst" parameterType="cmap" >
+        INSERT INTO RFID_APPR_RQST (
+        		RQSTNO
+				,RQST_REGTIME
+				,RQST_USER_NO
+				,RQST_USER_NAME
+				,RQST_DEPT_NO
+				,RQST_DEPT_NAME
+				,RQST_TOP_USER_NO
+				,RQST_TOP_USER_NAME
+				,RQST_ASSET_CNT
+				,RQST_STATUS_CD
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        )
+        SELECT	#{rqstno}
+        		,#{rqstRegtime}
+				,#{rqstUserNo}
+				,#{rqstUserName}
+				,#{rqstDeptNo}
+				,#{rqstDeptName}
+				,#{rqstTopUserNo}
+				,#{rqstTopUserName}
+				,COUNT(*) RQST_ASSET_CNT
+				,'2' RQST_STATUS_CD
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        FROM	RFID_APPR_ASSET
+        WHERE 	RQSTNO = #{rqstno}
+    </insert>
+
+    <update id="ApprRqst.updateApprRqst" parameterType="cmap" >
+        UPDATE 	RFID_APPR_RQST
+        SET
+				RQSTNO = #{rqstno}
+				,RQST_REGTIME = #{rqstRegtime}
+				,RQST_USER_NO = #{rqstUserNo}
+				,RQST_USER_NAME = #{rqstUserName}
+				,RQST_DEPT_NO = #{rqstDeptNo}
+				,RQST_DEPT_NAME = #{rqstDeptName}
+				,RQST_TOP_USER_NO = #{rqstTopUserNo}
+				,RQST_TOP_USER_NAME = #{rqstTopUserName}
+				,RQST_ASSET_CNT = #{rqstAssetCnt}
+				,RQST_STATUS_CD = #{rqstStatusCd}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+    <delete id="deleteApprRqst" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_APPR_RQST
+        WHERE 	RQSTNO = #rqstno#
+    </delete>
+    
+</mapper>

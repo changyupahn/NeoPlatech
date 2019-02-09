@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogMapper">
+
+   <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <sql id="getLogListWhere">
+    </sql>
+
+    <select id="getLogList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	rfid_log A
+        WHERE 	1=1
+		<include refid="getLogListWhere" />
+        ORDER BY LOG_SEQ DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getLogListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	rfid_log A
+        WHERE 	1=1
+		<include refid="getLogListWhere" />
+    </select>
+
+    <select id="getLogView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	rfid_log A
+        WHERE 	LOG_SEQ = #{logSeq}
+    </select>
+
+    <insert id="insertLog" parameterType="cmap" >
+        INSERT INTO rfid_log (
+        		LOG_SEQ
+				,LOG_TYPE
+				,LOG_DT
+				,LOG_CONT
+				,LOG_IP
+        ) VALUES (
+				#{logSeq}
+				,#{logType}
+				,#{logDt}
+				,#{logCont}
+				,#{logIp}
+        )
+    </insert>
+
+    <update id="updateLog" parameterType="cmap" >
+        UPDATE 	rfid_log
+        SET
+				LOG_TYPE = #{logType}
+				,LOG_DT = #{logDt}
+				,LOG_CONT = #{logCont}
+				,LOG_IP = #{logIp}
+        WHERE 	LOG_SEQ = #{logSeq}
+    </update>
+
+    <update id="deleteLog" parameterType="cmap" >
+        UPDATE 	rfid_log
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	LOG_SEQ = #{logSeq}
+    </update>
+
+    <delete id="deleteLog2" parameterType="cmap" >
+        DELETE
+        FROM 	rfid_log
+        WHERE 	LOG_SEQ = #{logSeq}
+    </delete>
+  
+
+</mapper>

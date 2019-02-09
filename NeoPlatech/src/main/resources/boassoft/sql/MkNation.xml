@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MkNationMapper">
+
+   <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <sql id="getMkNationListWhere">
+        <if test="sUseYn != null and sUseYn !== ''">			
+		   AND nat.use_yn = 'Y'		
+		</if>
+		<if test="sParentNatnSeq != null and sParentNatnSeq !== ''">		
+		   AND nat.parent_natn_seq = #{sParentNatnSeq}		
+		</if>
+		<if test="sNatnSeqArr != null and sNatnSeqArr !== ''">		
+           AND nat.natn_seq IN (
+                       <foreach item="sNatnSeq" index="index" collection="sNatnSeqArr" open="(" close=")" separator=",">                         
+                        #{sNatnSeqArr[]}                        
+                        </foreach>
+                        )        
+        </if>
+        <if test="searchKeyword != null and searchKeyword !== ''">
+        <choose>
+           <when test="searchGubun == '1'">      
+            AND nat.NATN_NAME like concat('%', #{searchKeyword} ,'%')            
+           </when>
+       </choose>             
+	</sql>
+
+	<select id="getMkNationList" parameterType="cmap" resultType="cmap">
+		<include refid="pagingHeader" />
+		SELECT 	nat.*
+		FROM 	rfid_mk_nation nat
+		WHERE 	1=1
+		<include refid="getMkNationListWhere" />
+		ORDER BY nat.natn_level, nat.sort_num asc
+		<include refid="pagingFooter" />
+	</select>
+
+	<select id="getMkNationListCnt" parameterType="cmap" resultType="int">
+		SELECT	count(*)
+		FROM 	rfid_mk_nation nat
+		WHERE 	1=1
+		<include refid="getMkNationListWhere" />
+	</select>
+
+	<select id="getMkNationCdList" parameterType="cmap" resultType="cmap" >
+		SELECT 	T1.natn_seq    AS natn_seq01
+	            , T2.natn_seq  AS natn_seq02
+	            , T3.natn_seq  AS natn_seq03
+	            , T4.natn_seq  AS natn_seq04
+	            , T5.natn_seq  AS natn_seq05
+	            , T6.natn_seq  AS natn_seq06
+	            , T7.natn_seq  AS natn_seq07
+	            , T8.natn_seq  AS natn_seq08
+		FROM 	rfid_mk_nation T1
+				LEFT OUTER JOIN rfid_mk_nation T2 ON T1.parent_natn_seq = T2.natn_seq
+				LEFT OUTER JOIN rfid_mk_nation T3 ON T2.parent_natn_seq = T3.natn_seq
+				LEFT OUTER JOIN rfid_mk_nation T4 ON T3.parent_natn_seq = T4.natn_seq
+				LEFT OUTER JOIN rfid_mk_nation T5 ON T4.parent_natn_seq = T5.natn_seq
+				LEFT OUTER JOIN rfid_mk_nation T6 ON T5.parent_natn_seq = T6.natn_seq
+				LEFT OUTER JOIN rfid_mk_nation T7 ON T6.parent_natn_seq = T7.natn_seq
+				LEFT OUTER JOIN rfid_mk_nation T8 ON T7.parent_natn_seq = T8.natn_seq
+		WHERE 	T1.use_yn = 'Y'
+		<if test="searchKeyword != null and searchKeyword !== ''">       
+            AND (
+                T1.natn_cd LIKE concat('%', #searchKeyword# ,'%')
+                OR
+                T1.natn_name LIKE concat('%', #searchKeyword# ,'%')
+                OR
+                T1.remark LIKE concat('%', #searchKeyword# ,'%')
+                )        
+        </if>
+        <if test="searchKeyword == null or searchKeyword === ''">          
+			AND 1 = 2        
+        </if>
+ 	</select>
+
+	<select id="getMkNationView" parameterType="cmap" resultType="cmap">
+		SELECT 	nat.*
+				,T2.natn_name as parent_natn_name
+				,FN_GET_CMMNCODENAME('COM002', nat.use_yn) AS use_yn_str
+		FROM 	rfid_mk_nation nat
+				LEFT OUTER JOIN rfid_mk_nation T2 ON nat.parent_natn_seq = T2.natn_seq
+		WHERE 	nat.NATN_SEQ = #{natnSeq}
+	</select>
+
+    <insert id="insertMkNation" parameterType="cmap" >
+        INSERT INTO RFID_MK_NATION (
+        		NATN_SEQ
+				,NATN_CD
+				,NATN_NAME
+				,NATN_LEVEL
+				,REMARK
+				,PARENT_NATN_SEQ
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{natnSeq}
+				,#{natnCd}
+				,#{natnName}
+				,#{natnLevel}
+				,#{remark}
+				,#{parentNatnSeq}
+				,#{sortNum}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+
+    <update id="MkNation.updateMkNation" parameterType="cmap" >
+        UPDATE 	RFID_MK_NATION
+        SET
+				NATN_CD = #{natnCd}
+				,NATN_NAME = #{natnName}
+				,NATN_LEVEL = #{natnLevel}
+				,REMARK = #{remark}
+				,PARENT_NATN_SEQ = #{parentNatnSeq}
+				,SORT_NUM = #{sortNum}
+				,USE_YN = #{useYn}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	NATN_SEQ = #{natnSeq}
+    </update>
+
+    <update id="deleteMkNation" parameterType="cmap" >
+        UPDATE 	RFID_MK_NATION
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	NATN_SEQ = #{natnSeq}
+    </update>
+
+    <delete id="deleteMkNation2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_MK_NATION
+        WHERE 	NATN_SEQ = #{natnSeq}
+    </delete>
+
+</mapper>

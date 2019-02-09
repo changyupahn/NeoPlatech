@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppMapper">
+
+    <sql id="getApprIoInListWhere">
+    	AND A.RQSTNO = #{rqstno}
+    </sql>
+    
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <select id="getApprIoInList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        		,FN_GET_CMMNCODENAME('COM008', A.RQST_STATUS_CD) RQST_STATUS_NAME
+        FROM 	RFID_APPR_IO_IN A
+        WHERE 	1=1
+		<include refid="getApprIoInListWhere" />
+        ORDER BY IN_RQSTNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getApprIoInListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_APPR_IO_IN A
+        WHERE 	1=1
+		<include refid="getApprIoInListWhere" />
+    </select>
+    
+     <select id="getApprIoInView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_APPR_IO_IN A
+        WHERE 	IN_RQSTNO = #{inRqstno}
+    </select>
+    
+     <select id="getApprIoInView2" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_APPR_IO_IN A
+        WHERE 	RQSTNO = #{rqstno}
+    </select>
+    
+     <insert id="insertApprIoIn" parameterType="cmap" >
+        INSERT INTO RFID_APPR_IO_IN (
+        		IN_RQSTNO
+				,RQSTNO
+				,IN_DT
+				,IN_REMARK
+				,RQST_STATUS_CD
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{inRqstno}
+				,#{rqstno}
+				,#{inDt}
+				,#{inRemark}
+				,#{rqstStatusCd}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+    
+    <update id="updateApprIoIn" parameterType="cmap" >
+        UPDATE 	RFID_APPR_IO_IN
+        SET
+				RQSTNO = #{rqstno}
+				,IN_DT = #{inDt}
+				,IN_REMARK = #{inRemark}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	IN_RQSTNO = #{inRqstno}
+    </update>
+    
+    <update id="deleteApprIoIn" parameterType="cmap" >
+        UPDATE 	RFID_APPR_IO_IN
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	IN_RQSTNO = #{inRqstno}
+    </update>
+    
+</mapper>

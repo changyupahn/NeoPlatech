@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LabelMapper">
+
+  <insert id="insertLabel" parameterType="cmap">
+		INSERT INTO rfid_print_label
+		(label_user_id, org_no, label_title, use_yn, frst_regist_pnttm, frst_register_id, last_updt_pnttm, last_updusr_id) 
+		VALUES 
+		(#{labelUserId}, #{orgNo}, #{labelTitle}, #{useYn}, #{frstRegistPnttm}, #{frstRegisterId}, #{lastUpdtPnttm}, #{lastUpdusrId})
+		
+		<selectKey keyProperty="labelSeq" resultClass="int">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<insert id="insertLabelCol" parameterType="cmap">
+		INSERT INTO rfid_print_label_col
+		(label_seq, obj_aam_seq, obj_type, obj_title, obj_lcation_no) 
+		VALUES 
+		(#{labelSeq}, #{objAamSeq}, #{objType}, #{objTitle}, #{objLcationNo})
+	</insert>
+	
+	<update id="deleteLabel" parameterType="cmap">
+		UPDATE rfid_print_label SET
+			use_yn = 'N'
+		WHERE label_seq = #{labelSeq}
+	</update>
+	
+	<select id="getLabelList" parameterType="cmap" resultType="cmap" >
+		SELECT label_seq, label_user_id, org_no, label_title
+			   , concat(substring(frst_regist_pnttm, 1, 4), '-', substring(frst_regist_pnttm, 5, 2), '-', substring(frst_regist_pnttm, 7, 2)) reg_dt 
+		FROM rfid_print_label pl
+		WHERE org_no = #{orgNo}
+		AND label_user_id = #{labelUserId}
+		AND use_yn = 'Y'
+		ORDER BY label_seq DESC
+	</select>
+	
+	<select id="getLabelListCnt" parameterType="cmap" resultType="int" >
+		SELECT count(*) 
+		FROM rfid_print_label pl
+		WHERE org_no = #{orgNo}
+		AND label_user_id = #{labelUserId}
+		AND use_yn = 'Y'
+	</select>
+	
+	<select id="getLabelColList" parameterType="cmap" resultType="cmap" >
+		SELECT plc.label_seq, 
+			   plc.obj_aam_seq, 
+			   plc.obj_type, 
+			   plc.obj_title, 
+			   plc.obj_lcation_no,
+			   am.logical_name
+		FROM rfid_print_label_col plc
+			   INNER JOIN rfid_print_label pl ON plc.label_seq = pl.label_seq
+			   INNER JOIN rfidsys_astcol_mng am ON plc.obj_aam_seq = am.aam_seq 
+		WHERE pl.org_no = #{orgNo}
+		AND pl.label_user_id = #{labelUserId}
+		AND plc.label_seq = #{labelSeq}
+		ORDER BY plc.obj_lcation_no
+	</select>
+  
+</mapper>

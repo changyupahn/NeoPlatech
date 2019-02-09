@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AssetSubMapper">
+
+<update id="updateAssetSub" parameterType="cmap" >
+		UPDATE 	RFID_ASSET
+		SET		TOP_ASSET_SEQ = #{topAssetSeq}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+		WHERE	ASSET_SEQ = #{assetSeq}
+	</update>
+
+    <update id="deleteAssetSub" parameterType="cmap" >
+		UPDATE 	RFID_ASSET
+		SET		TOP_ASSET_SEQ = null
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+		WHERE	ASSET_SEQ = #{assetSeq}
+	</update>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AddressMapper">
+    
+   <insert id="insertAddress" parameterType="cmap">
+        INSERT INTO rfid_address
+		(addr_user_id, addr_type_cd, title, org_no, sping_address, sping_tel, sping_name, use_yn, frst_regist_pnttm, frst_register_id, last_updt_pnttm, last_updusr_id) 
+		VALUES 
+		(#{addrUserId}, #{addrTypeCd}, #{title}, #{orgNo}, #{spingAddress}, #{spingTel}, #{spingName}, #{useYn}, #{frstRegistPnttm}, #{frstRegisterId}, #{lastUpdtPnttm}, #{lastUpdusrId})
+		
+		<selectKey keyProperty="addrSeq" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+   
+   <update id="deleteAddress" parameterType="cmap">
+		UPDATE rfid_address SET
+			use_yn = 'N'
+		WHERE addr_seq = #{addrSeq}
+	</update>
+	
+	<select id="getAddressList" parameterType="cmap" resultType="cmap" >
+	  SELECT addr_seq, addr_user_id, addr_type_cd, title, org_no, sping_address, sping_tel, sping_name
+			   , concat(substring(frst_regist_pnttm, 1, 4), '-', substring(frst_regist_pnttm, 5, 2), '-', substring(frst_regist_pnttm, 7, 2)) reg_dt 
+		FROM rfid_address
+		WHERE org_no = #{orgNo}
+			   AND addr_user_id = #{addrUserId}
+			   AND addr_type_cd = #{addrTypeCd}
+			   AND use_yn = 'Y'
+		ORDER BY addr_seq DESC
+	</select>
+	
+	<select id="getAddressListCnt" parameterType="cmap" resultType="int" >
+		SELECT count(*) 
+		FROM rfid_address
+		WHERE org_no = #{orgNo}
+			   AND addr_user_id = #{addrUserId}
+			   AND addr_type_cd = #{addrTypeCd}
+			   AND use_yn = 'Y'
+		ORDER BY addr_seq DESC
+	</select>
+	
+	<select id="getAddressInfo" parameterType="cmap" resultType="cmap" >
+		SELECT addr_seq, addr_user_id, addr_type_cd, title, org_no, sping_address, sping_tel, sping_name
+			   , concat(substring(frst_regist_pnttm, 1, 4), '-', substring(frst_regist_pnttm, 5, 2), '-', substring(frst_regist_pnttm, 7, 2)) reg_dt 
+		FROM rfid_address
+		WHERE org_no = #{orgNo}
+			   AND addr_user_id = #{addrUserId}
+			   AND addr_seq = #{addrSeq}
+			   AND use_yn = 'Y'
+		ORDER BY addr_seq DESC
+	</select>
+   
+</mapper>

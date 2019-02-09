@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AssetOperListMapper">
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>     
+
+  <sql id="getAssetOperListListWhere">
+    	AND A.ASSET_SEQ = #{assetSeq}
+    </sql>
+    
+       <select id="getAssetOperListList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        		, B.asset_no
+        		, B.asset_name
+        FROM 	rfid_asset_oper_list A
+        		INNER JOIN rfid_asset B ON A.asset_seq = B.asset_seq
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getAssetOperListListWhere" />
+        ORDER BY OPER_SEQ DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+        <select id="getAssetOperListListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	rfid_asset_oper_list A
+        		INNER JOIN rfid_asset B ON A.asset_seq = B.asset_seq
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getAssetOperListListWhere" />
+    </select>
+
+ <insert id="insertAssetOperList" parameterType="cmap" >
+        INSERT INTO rfid_asset_oper_list (
+        		OPER_SEQ
+				,ASSET_SEQ
+				,REGISTRENT_NM
+				,JOURNALUSER_NM
+				,JOURNAL_SDT
+				,JOURNAL_SHOUR
+				,JOURNAL_SMINUTE
+				,JOURNAL_EDT
+				,JOURNAL_EHOUR
+				,JOURNAL_EMINUTE
+				,USE_ORGAN_CLASS_CD
+				,USE_ORGAN_NM
+				,USE_DEPT_NM
+				,SAMPLE_CNT
+				,INPUT_MAN_HOUR
+				,JOURNAL_PRC
+				,USE_TYPE_CD
+				,USE_TYPE_ETC
+				,USE_ORGAN_TYPE_CD
+				,USE_SCOPE_CD
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{operSeq}
+				,#{assetSeq}
+				,#{registrentNm}
+				,#{journaluserNm}
+				,#{journalSdt}
+				,#{journalShour}
+				,#{journalSminute}
+				,#{journalEdt}
+				,#{journalEhour}
+				,#{journalEminute}
+				,#{useOrganClassCd}
+				,#{useOrganNm}
+				,#{useDeptNm}
+				,#{ampleCnt}
+				,#{inputManHour}
+				,#{journalPrc}
+				,#{useTypeCd}
+				,#{useTypeEtc}
+				,#{useOrganTypeCd}
+				,#{useScopeCd}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+
+     <update id="updateAssetOperList" parameterClass="cmap" >
+        UPDATE 	rfid_asset_oper_list
+        SET
+				REGISTRENT_NM = #{registrentNm}
+				,JOURNALUSER_NM = #{journaluserNm}
+				,JOURNAL_SDT = #{journalSdt}
+				,JOURNAL_SHOUR = #{journalShour}
+				,JOURNAL_SMINUTE = #{journalSminute}
+				,JOURNAL_EDT = #{journalEdt}
+				,JOURNAL_EHOUR = #{journalEhour}
+				,JOURNAL_EMINUTE = #{journalEminute}
+				,USE_ORGAN_CLASS_CD = #{useOrganClassCd}
+				,USE_ORGAN_NM = #{useOrganNm}
+				,USE_DEPT_NM = #{useDeptNm}
+				,SAMPLE_CNT = #{sampleCnt}
+				,INPUT_MAN_HOUR = #{inputManHour}
+				,JOURNAL_PRC = #{journalPrc}
+				,USE_TYPE_CD = #{useTypeCd}
+				,USE_TYPE_ETC = #{useTypeEtc}
+				,USE_ORGAN_TYPE_CD = #{useOrganTypeCd}
+				,USE_SCOPE_CD = #{useScopeCd}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	OPER_SEQ = #{operSeq}
+    </update>
+
+    <update id="deleteAssetOperList" parameterType="cmap" >
+        UPDATE 	rfid_asset_oper_list
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	OPER_SEQ = #{operSeq}
+    </update>
+
+    <delete id="AssetOperList.deleteAssetOperList2" parameterClass="cmap" >
+        DELETE
+        FROM 	rfid_asset_oper_list
+        WHERE 	OPER_SEQ = #operSeq#
+    </delete>
+    
+
+</mapper>

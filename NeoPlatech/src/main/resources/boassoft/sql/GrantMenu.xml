@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GrantMenuMapper">
+
+    <sql id="getGrantMenuListWhere">
+    	AND (
+    		B.GRANT_NO IS NULL
+    		OR
+    		B.GRANT_NO = #{grantNo}
+    		)
+    </sql>
+
+    <select id="getGrantMenuList" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        		, B.GRANT_NO
+				, B.GRANT_READ_YN
+				, B.GRANT_WRITE_YN
+				, B.GRANT_HREAD_YN
+				, B.GRANT_HWRITE_YN
+				, B.GRANT_MANAGER_YN
+        FROM 	RFID_MENU A
+        		LEFT OUTER JOIN (SELECT * FROM RFID_GRANT_MENU WHERE GRANT_NO = #{grantNo}) B ON A.MENU_NO = B.MENU_NO
+        WHERE 	1=1
+		<include refid="getGrantMenuListWhere" />
+        ORDER BY SORT_NUM
+    </select>
+
+    <select id="getGrantMenuListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_MENU A
+        		LEFT OUTER JOIN (SELECT * FROM RFID_GRANT_MENU WHERE GRANT_NO = #{grantNo}) B ON A.MENU_NO = B.MENU_NO
+        WHERE 	1=1
+		<include refid="getGrantMenuListWhere" />
+    </select>
+
+    <select id="getGrantMenuView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        		, B.GRANT_NO
+				, B.GRANT_READ_YN
+				, B.GRANT_WRITE_YN
+				, B.GRANT_HREAD_YN
+				, B.GRANT_HWRITE_YN
+				, B.GRANT_MANAGER_YN
+        FROM 	RFID_MENU A
+        		INNER JOIN RFID_GRANT_MENU B ON A.MENU_NO = B.MENU_NO
+        WHERE 	B.GRANT_NO = #{grantNo}
+        		AND B.MENU_NO = #{menuNo}
+    </select>
+
+    <insert id="insertGrantMenu" parameterType="cmap" >
+        INSERT INTO RFID_GRANT_MENU (
+				GRANT_NO
+				,MENU_NO
+				,GRANT_READ_YN
+				,GRANT_WRITE_YN
+				,GRANT_HREAD_YN
+				,GRANT_HWRITE_YN
+				,GRANT_MANAGER_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{grantNo}
+				,#{menuNo}
+				,#{grantReadYn}
+				,#{grantWriteYn}
+				,#{grantHreadYn}
+				,#{grantHwriteYn}
+				,#{grantManagerYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+
+    <update id="updateGrantMenu" parameterType="cmap" >
+        UPDATE 	RFID_GRANT_MENU
+        SET
+				GRANT_READ_YN = #{grantReadYn}
+				,GRANT_WRITE_YN = #{grantWriteYn}
+				,GRANT_HREAD_YN = #{grantHreadYn}
+				,GRANT_HWRITE_YN = #{grantHwriteYn}
+				,GRANT_MANAGER_YN = #{grantManagerYn}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	GRANT_NO = #{grantNo}
+				AND MENU_NO = #{menuNo}
+    </update>
+
+    <delete id="deleteGrantMenu" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_GRANT_MENU
+        WHERE 	GRANT_NO = #{grantNo}
+				AND MENU_NO = #{menuNo}
+    </delete>
+
+    <delete id="deleteGrantMenuAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_GRANT_MENU
+        WHERE 	GRANT_NO = #{grantNo}
+    </delete>
+
+</mapper>

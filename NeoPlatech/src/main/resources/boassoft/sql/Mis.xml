@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MisMapper">
+
+   <select id="getMisDocList" parameterType="cmap" resultType="cmap" >
+		SELECT 	RQSTNO,
+			    DOCSTATCD,
+			    DOCSTATNM,
+			    DOCDIVCD,
+			    TO_CHAR(REGTIME, 'YYYYMMDDHH24MISS') REGTIME,
+			    TO_CHAR(MODTIME, 'YYYYMMDDHH24MISS') MODTIME,
+			    PRGSNO
+		FROM 	V_RFID_DOC
+		WHERE	DOCDIVCD IN ('0030170','0030171','0030172','0030173','0030174')
+				AND MODTIME > (SYSDATE-1)
+    </select>
+
+    <select id="getMisUserList" parameterType="cmap" resultType="omap" >
+		SELECT
+	            USERNO
+	            ,USERHISNO
+	            ,EMPNO
+	            ,DEPTCD
+	            ,KORDEPT
+	            ,DEPTHISNO
+	            ,KORNM
+	            ,EMAIL
+	            ,USERSTAT
+	            ,USERSTATNM
+	            ,USERPOSDIVCD
+	            ,USERPOSDIVNM
+	            ,TELNO
+	            ,(CASE WHEN RETIREYN = 'Y' THEN '퇴직' ELSE '정상' END) USERTYPE
+	            ,USERGRANT
+	            ,(CASE WHEN RETIREYN = 'Y' THEN 'N' ELSE 'Y' END) USE_YN
+				,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') REGTIME
+				,'SYSTEM' FRST_REGIST_PNTTM
+				,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') MODTIME
+				,'SYSTEM' LAST_UPDT_PNTTM
+				,ROOMNO
+				,LOCA_NAME
+		FROM 	V_RFID_USER A
+    </select>
+
+    <select id="getMisDeptList" parameterType="cmap" resultType="omap" >
+		SELECT
+			    DEPTCD DEPT_NO
+			    ,KORDEPT DEPT_NAME
+			    ,DEPTH DEPT_LEVEL
+			    ,(CASE
+			        WHEN DEPTCD = TOPDEPTCD THEN '00000'
+			        ELSE TOPDEPTCD END) PARENT_DEPT_NO
+			    ,DEPTHEAD DEPT_HEAD_USER_NO
+			    ,TO_NUMBER(DEPTORDNO) SORT_NUM
+			    ,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') FRST_REGIST_PNTTM
+			    ,'SYSTEM' FRST_REGIST_PNTTM
+			    ,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') LAST_UPDT_PNTTM
+			    ,'SYSTEM' LAST_UPDT_PNTTM
+		FROM 	V_RFID_DEPT
+		WHERE 	DEPTUSEYN = 'Y'
+    </select>
+
+    <select id="getMisCustList" parameterType="cmap" resultType="omap" >
+		SELECT	TO_NUMBER(CUSTHISNO) COMP_SEQ
+		        ,CUSTHISNO COMP_CD
+		        ,CUSTNM COMP_NAME
+		        ,'1' COMP_LEVEL
+		        ,CORPNO COMP_BIZ_NO
+		        ,PEPRSTVNM COMP_OWNER_NAME
+		        ,BUSICOND COMP_BIZ_TYPE1
+		        ,BUSIITEM COMP_BIZ_TYPE2
+		        ,REGEXP_REPLACE(ADDR, '[[:space:]]',' ') COMP_ADDR
+		        ,TELNO1 COMP_TEL
+		        ,EMAIL COMP_EMAIL
+		        ,NULL REMARK
+		        ,'0' PARENT_COMP_SEQ
+		        ,TO_NUMBER(CUSTHISNO) SORT_NUM
+		        ,'Y' USE_YN
+		        ,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') FRST_REGIST_PNTTM
+		        ,'SYSTEM' FRST_REGIST_PNTTM
+		        ,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') LAST_UPDT_PNTTM
+		        ,'SYSTEM' LAST_UPDT_PNTTM
+		FROM 	V_RFID_CUST
+    </select>
+
+    <select id="getMisLocaList" parameterType="cmap" resultType="omap" >
+		SELECT	LOCA_NO POS_NO
+				,LOCA_NAME POS_NAME
+				,LOCA_LEVEL POS_LEVEL
+				,PARENT_LOCA_NO PARENT_POS_NO
+				,SORT_NUM SORT_NUM
+		        ,'Y' USE_YN
+		        ,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') FRST_REGIST_PNTTM
+		        ,'SYSTEM' FRST_REGIST_PNTTM
+		        ,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') LAST_UPDT_PNTTM
+		        ,'SYSTEM' LAST_UPDT_PNTTM
+		FROM	V_RFID_LOCA
+    </select>
+
+    <select id="getMisContrList" parameterType="cmap" resultType="omap" >
+		SELECT
+		        PURNO
+		        ,PURNM
+		        ,PURCD
+		        ,PURDIVCD
+		        ,AGGRDIVCD
+		        ,USERHISNO
+		        ,NULL NATNCD
+		        ,CONTRDT
+		        ,CONTRSTARTDT
+		        ,CONTRENDDT
+		        ,CUSTHISNO
+		        ,DELIVERYPLACE
+		        ,DELIVERYDT
+		        ,REGTIME
+		        ,NULL REGUSER
+		        ,MODTIME
+		        ,NULL MODUSER
+		        ,CONTRAMT
+		        ,CONTRNO
+		        ,CUSTDIVCD
+		        ,CUSTWOMAN
+		        ,CUSTDISPER
+		        ,SWYN
+		        ,PURDIVNM CONTRDIV
+		        ,STATENM
+		FROM 	V_RFID_CONTR
+		WHERE 	MODTIME > SYSDATE - 30
+        		AND CONTRDT > '20180101'
+    </select>
+
+    <select id="getMisContrdtlList" parameterType="cmap" resultType="omap" >
+		SELECT
+		        PURNO
+		        ,RQSTNO
+		        ,PRODNO
+		        ,REGEXP_REPLACE(PRODNM, '[[:space:]]',' ') PRODNM
+		        ,QTY
+		        ,REGEXP_REPLACE(SPEC, '[[:space:]]',' ') SPEC
+		        ,UNIT
+		        ,UNITCOST GUSUCOST
+		        ,UNITCOST SPLYUCOST
+		        ,PROPYN
+		        ,USERHISNO
+		        ,ACCNO
+		        ,FORECURRAMT
+		        ,CURRENCYAMT
+		        ,SOFTWAREYN
+		        ,ZEUSYN NTISYN
+		        ,NULL REMARK
+		        ,REGTIME
+		        ,NULL REGUSER
+		        ,MODTIME
+		        ,NULL MODUSER
+		        ,USEOFPURPOSE
+		FROM 	V_RFID_CONTRDTL
+        WHERE 	MODTIME > SYSDATE - 30
+    </select>
+
+</mapper>

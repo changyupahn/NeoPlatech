@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprDisuseMapper">
+
+   <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+   <sql id="getPositionListWhere">
+        <if test="sUseYn != null and sUseYn !== ''">		
+		   AND pos.use_yn = 'Y'		
+		</if>
+		<if test="sParentPosNo != null and sParentPosNo !== ''">			
+		   AND pos.parent_pos_no = #{sParentPosNo}		
+		</if>
+		<if test="sPosNoArr != null and sPosNoArr !== ''">			
+           AND pos.pos_no IN (
+                        <foreach item="sPosNo" index="index" collection="sPosNoArr" open="(" close=")" separator=",">                          
+                        #{sPosNoArr[]}                        
+                        </foreach>
+                        )        
+        </if>
+	</sql>
+
+	<select id="getPositionList" parameterType="cmap" resultType="cmap">
+		<include refid="pagingHeader" />
+		SELECT 	pos.*
+		FROM 	rfid_position pos
+		WHERE 	1=1
+		<include refid="getPositionListWhere" />
+		ORDER BY pos.pos_level, pos.sort_num
+		<include refid="pagingFooter" />
+	</select>
+
+	<select id="getPositionListCnt" parameterType="cmap" resultType="int">
+		SELECT	count(*)
+		FROM 	rfid_position pos
+		WHERE 	1=1
+		<include refid="getPositionListWhere" />
+	</select>
+
+	<select id="getPositionCdList" parameterType="cmap" resultType="cmap" >
+		SELECT 	T1.pos_no    AS pos_no01
+	            , T2.pos_no  AS pos_no02
+	            , T3.pos_no  AS pos_no03
+	            , T4.pos_no  AS pos_no04
+	            , T5.pos_no  AS pos_no05
+	            , T6.pos_no  AS pos_no06
+	            , T7.pos_no  AS pos_no07
+	            , T8.pos_no  AS pos_no08
+		FROM 	rfid_position T1
+				LEFT OUTER JOIN rfid_position T2 ON T1.parent_pos_no = T2.pos_no
+				LEFT OUTER JOIN rfid_position T3 ON T2.parent_pos_no = T3.pos_no
+				LEFT OUTER JOIN rfid_position T4 ON T3.parent_pos_no = T4.pos_no
+				LEFT OUTER JOIN rfid_position T5 ON T4.parent_pos_no = T5.pos_no
+				LEFT OUTER JOIN rfid_position T6 ON T5.parent_pos_no = T6.pos_no
+				LEFT OUTER JOIN rfid_position T7 ON T6.parent_pos_no = T7.pos_no
+				LEFT OUTER JOIN rfid_position T8 ON T7.parent_pos_no = T8.pos_no
+		WHERE 	T1.use_yn = 'Y'
+		<if test="searchKeyword != null and searchKeyword != ''">        
+            AND (
+                T1.pos_no LIKE concat('%', #{searchKeyword} ,'%')
+                OR
+                T1.pos_name LIKE concat('%', #{searchKeyword} ,'%')
+                )        
+        </if>
+        <if test="searchKeyword == null or searchKeyword == ''">        
+			AND 1 = 2        
+        </if>
+ 	</select>
+
+	<select id="getPositionView" parameterType="cmap" resultType="cmap">
+		SELECT 	pos.*
+				,T2.pos_name as parent_pos_name
+				,FN_GET_CMMNCODENAME('COM002', pos.use_yn) AS use_yn_str
+		FROM 	rfid_position pos
+				LEFT OUTER JOIN rfid_position T2 ON pos.parent_pos_no = T2.pos_no
+		WHERE 	pos.POS_NO = #{posNo}
+	</select>
+
+	<insert id="insertPosition" parameterType="cmap" >
+		INSERT INTO RFID_POSITION (
+        		POS_NO
+				,POS_NAME
+				,POS_LEVEL
+				,PARENT_POS_NO
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{posNo}
+				,#{posName}
+				,#{posLevel}
+				,#{parentPosNo}
+				,#{useYn}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+	</insert>
+
+    <update id="updatePosition" parameterType="cmap" >
+        UPDATE 	RFID_POSITION
+        SET
+				POS_NAME = #{posName}
+				,POS_LEVEL = #{posLevel}
+				,PARENT_POS_NO = #{parentPosNo}
+				,USE_YN = #{useYn}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	POS_NO = #{posNo}
+    </update>
+
+    <update id="deletePosition" parameterType="cmap" >
+        UPDATE 	RFID_POSITION
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	POS_NO = #{posNo}
+    </update>
+
+    <delete id="deletePosition2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_POSITION
+        WHERE 	POS_NO = #{posNo}
+    </delete>
+
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BatchMysqlMapper">
+
+    <insert id="loadDataFile" parameterType="cmap" >
+    	<![CDATA[
+		LOAD DATA LOCAL INFILE #{filePath} INTO TABLE #{tableName} CHARACTER SET utf8 FIELDS TERMINATED BY '|,,|'
+		]]>
+    </insert>
+        
+</mapper>

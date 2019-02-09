@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContractMapper">
+
+ <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql> 
+
+ 
+ <sql id="getContractListWhere">
+      <choose>
+        <when test="inspCompYn == 'Y'">    	
+    		AND EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO)    	
+        </when> 
+      </choose>  
+        <if test="sContrdiv != null and sContrdiv != ''">       	
+    		AND CONT.CONTRDIV = #{sContrdiv}    	
+    	</if>
+    	<if test="sContrno != null and sContrno != ''">     	
+    		AND CONT.CONTRNO LIKE concat('%',#{sContrno},'%')    	
+    	</if>
+    	<if test="sContrno == null or sContrno == ''">    	
+    		AND IFNULL(CONT.CONTRDIV,'AA') NOT IN ('외자')    	
+    	</if>
+    	<if test="sPurnm != null and sPurnm != ''">        	
+    		AND CONT.PURNM LIKE concat('%',#{sPurnm},'%')    	
+        </if>
+        <if test="searchDtKeywordS != null and searchDtKeywordS != ''">     	    	
+    		<choose>
+            <when test="searchDtGubun == '1'">    	
+			 AND CONT.CONTRDT <![CDATA[ >= ]]> #{searchDtKeywordS}			
+			</when>
+			 <when test="searchDtGubun == '2'"> 
+			<isEqual property="searchDtGubun" compareValue="2">
+			AND INSP.INSP_DT <![CDATA[ >= ]]> #{searchDtKeywordS}
+			</when>
+		   </choose>	
+		</if>   			
+		</isNotEmpty>
+		<if test="searchDtKeywordE != null and searchDtKeywordE != ''">     	    	
+    	  <choose>
+            <when test="searchDtGubun == '1'">  	
+			AND CONT.CONTRDT <![CDATA[ <= ]]> #{searchDtKeywordE}
+			</when>			
+			<when test="searchDtGubun == '2'">
+			<isEqual property="searchDtGubun" compareValue="2">
+			AND INSP.INSP_DT <![CDATA[ <= ]]> #{searchDtKeywordE}
+			</when>
+		  </choose>
+		</if>  		
+
+       <if test="sContramtS != null and sContramtS != ''">  		
+			AND CONT.CONTRAMT <![CDATA[ >= ]]> #{sContramtS}		
+	   </if>	
+	   <if test="sContramtE != null and sContramtE != ''"> 		
+			AND CONT.CONTRAMT <![CDATA[ <= ]]> #{sContramtE}		
+       </if>
+       <if test="sCompCd != null and sCompCd != ''">  		
+			AND CONT.CUSTHISNO = #{sCompCd}		
+	   </if>	
+	   <if test="sCompName != null and sCompName != ''"> 
+	     <if test="sCompCd == null or sCompCd == ''">		
+			AND SC.COMP_NAME LIKE concat('%', #{sCompName} ,'%')
+		 </if>
+	   </if>	  	
+
+       <if test="sUserNo != null and sUserNo != ''">      	  
+			AND CONT.USERHISNO = #{sUserNo}	   
+	   </if>
+	   	<if test="sUserName != null and sUserName != ''">      		
+    	  <if test="sUserNo == null or sUserNo == ''">		
+			AND USR.USER_NAME LIKE concat('%', #{sUserName} ,'%')		
+          </if>		
+ 	    </if>
+        <if test="sVirtAssetNo != null and sVirtAssetNo != ''">   		
+			AND EXISTS (
+					SELECT 1
+					FROM RFID_ASSET
+					WHERE ASSET_NO LIKE concat('%', #{sVirtAssetNo} ,'%')
+					AND	PURNO = CONT.PURNO
+					)		
+		</if>
+
+     <if test="sInspStatus != null and sInspStatus != ''">      
+	      <choose>
+           <when test="sInspStatus == '1'">		
+			AND (
+				NOT EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO)
+				OR
+				EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO AND ASSET_STATUS_CD = '가자산')
+				)
+		   </when>		
+			<when test="sInspStatus == '2'">			
+			AND NOT EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO)			
+			</when>
+			<when test="sInspStatus == '3'">			
+			AND EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO AND ASSET_STATUS_CD = '가자산')			
+			</when>
+			<when test="sInspStatus == '4'">			
+			AND EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO)
+			AND NOT EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO AND ASSET_STATUS_CD = '가자산')			
+			</when>		
+    </choose>
+   </if>   
+    </sql>
+
+   <select id="getContractList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	CONT.*,
+        		USR.USER_NAME AS USERHISNAME,
+        		SC.COMP_NAME AS CUSTHISNAME,
+        		INSP.INSP_DT,
+        		INSP.INSP_USER_NAME,
+        		(CASE
+        			WHEN (SELECT COUNT(*) FROM RFID_CONTRACT_DTL WHERE PURNO = CONT.PURNO) <![CDATA[ <= ]]> (SELECT COUNT(*) FROM RFID_INSP_ITEM WHERE PURNO = CONT.PURNO AND ASSET_YN = 'N') THEN '미자산 품목'
+        			WHEN NOT EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO) THEN ''
+        			WHEN EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO AND ASSET_STATUS_CD = '가자산') THEN '일부완료'
+        			ELSE '검수완료'
+        			END) AS INSP_STATUS_CD_STR,
+        		(CASE
+        			WHEN (SELECT COUNT(*) FROM RFID_CONTRACT_DTL WHERE PURNO = CONT.PURNO) <![CDATA[ <= ]]> (SELECT COUNT(*) FROM RFID_INSP_ITEM WHERE PURNO = CONT.PURNO AND ASSET_YN = 'N') THEN '4'
+        			WHEN NOT EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO) THEN '1'
+        			WHEN EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO AND ASSET_STATUS_CD = '가자산') THEN '2'
+        			ELSE '3'
+        			END) AS INSP_STATUS_CD_ORD
+        FROM 	RFID_CONTRACT CONT
+        		LEFT OUTER JOIN RFID_USER USR ON CONT.USERHISNO = USR.USER_HIS_NO
+        		LEFT OUTER JOIN RFID_SL_COMPANY SC ON CONT.CUSTHISNO = SC.COMP_CD
+        		LEFT OUTER JOIN (
+        				SELECT 	PURNO, MAX(INSP_DT) INSP_DT, MAX(INSP_USER_NAME) INSP_USER_NAME
+        				FROM 	RFID_INSP_ASSET
+        				GROUP BY PURNO
+        				) INSP ON CONT.PURNO = INSP.PURNO
+        WHERE 	1=1
+		<include refid="getContractListWhere" />
+        ORDER BY INSP_STATUS_CD_ORD ASC, PURNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+     <select id="getContractListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_CONTRACT CONT
+        		LEFT OUTER JOIN RFID_USER USR ON CONT.USERHISNO = USR.USER_HIS_NO
+        		LEFT OUTER JOIN RFID_SL_COMPANY SC ON CONT.CUSTHISNO = SC.COMP_CD
+        		LEFT OUTER JOIN (
+        				SELECT 	PURNO, MAX(INSP_DT) INSP_DT
+        				FROM 	RFID_INSP_ASSET
+        				GROUP BY PURNO
+        				) INSP ON CONT.PURNO = INSP.PURNO
+        WHERE 	1=1
+		<include refid="getContractListWhere" />
+    </select>
+    
+    <select id="getContractView" parameterType="cmap" resultType="cmap" >
+        SELECT	CONT.*,
+        		USR.USER_NAME AS USERHISNAME,
+        		SC.COMP_NAME AS CUSTHISNAME,
+        		INSP.INSP_DT,
+        		INSP.INSP_USER_NAME,
+        		(CASE
+        			WHEN NOT EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO) THEN ''
+        			WHEN EXISTS (SELECT 1 FROM RFID_ASSET WHERE PURNO = CONT.PURNO AND ASSET_STATUS_CD = '가자산') THEN '일부완료'
+        			ELSE '검수완료'
+        			END) AS INSP_STATUS_CD_STR
+        FROM 	RFID_CONTRACT CONT
+        		LEFT OUTER JOIN RFID_USER USR ON CONT.USERHISNO = USR.USER_HIS_NO
+        		LEFT OUTER JOIN RFID_SL_COMPANY SC ON CONT.CUSTHISNO = SC.COMP_CD
+        		LEFT OUTER JOIN (
+        				SELECT 	PURNO, MAX(INSP_DT) INSP_DT, MAX(INSP_USER_NAME) INSP_USER_NAME
+        				FROM 	RFID_INSP_ASSET
+        				GROUP BY PURNO
+        				) INSP ON CONT.PURNO = INSP.PURNO
+        WHERE 	CONT.PURNO = #{purno}
+    </select>
+
+</mapper>

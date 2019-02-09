@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InspItemMapper">
+
+  <sql id="getInspItemListWhere">
+    	AND A.PURNO = #{purno}
+    	<if test="sAssetYn != null and sAssetYn != ''"> 
+    	   <choose>
+		    <when test="sAssetYn == 'Y'">    
+    			AND (ASSET_YN IS NULL OR ASSET_YN =  'Y')
+    		</when>
+    		<when test="sAssetYn == 'N'">    		
+    			AND ASSET_YN =  'N'    		
+    		</when>
+    	 </choose>
+    	</if>    	
+    </sql>
+
+    <select id="getInspItemList" parameterType="cmap" resultType="cmap" >
+		SELECT
+				B.INSP_ITEM_SEQ
+				,A.PURNO
+				,A.RQSTNO
+				,A.PRODNO
+				,#{sAssetYn} ASSET_YN
+				,B.ASSET_TYPE_CD
+				,FN_GET_CMMNCODENAME('COM007', B.ASSET_TYPE_CD) ASSET_TYPE_NAME
+				,B.ITEM_CD
+				,B.ITEM_NAME
+				,B.ZEUS_ITEM_CD
+				,B.ZEUS_ITEM_NAME
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.PRODNM ELSE B.ASSET_NAME END) AS ASSET_NAME
+				,B.ASSET_ENAME
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN CONT.CONTRDIV ELSE B.AQUSIT_TYPE_CD END) AS AQUSIT_TYPE_CD
+				,B.DEPRE_CD
+				,B.MK_NATION_CD
+				,B.MK_NATION_NAME
+				,B.MK_COMPANY_CD
+				,B.MK_COMPANY_NAME
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN SC.COMP_CD ELSE B.SL_COMPANY_CD END) AS SL_COMPANY_CD
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN SC.COMP_NAME ELSE B.SL_COMPANY_NAME END) AS SL_COMPANY_NAME
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.USEOFPURPOSE ELSE B.PURPOSE_OF_USE END) AS PURPOSE_OF_USE
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN (A.QTY * A.SPLYUCOST) ELSE B.AQUSIT_AMT END) AS AQUSIT_AMT
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.FORECURRAMT ELSE B.AQUSIT_FOREIGN_AMT END) AS AQUSIT_FOREIGN_AMT
+				,B.CAPI_TYPE_CD
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.SPLYUCOST ELSE B.AQUSIT_UNIT_AMT END) AS AQUSIT_UNIT_AMT
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.QTY ELSE B.ASSET_CNT END) AS ASSET_CNT
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.UNIT ELSE B.ASSET_UNIT_CD END) AS ASSET_UNIT_CD
+				,B.USEFUL_LIFE
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.SPEC ELSE B.ASSET_SIZE END) AS ASSET_SIZE
+				,(CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.ACCNO ELSE B.ACCNT_NUM END) AS ACCNT_NUM
+				,IFNULL((CASE WHEN B.INSP_ITEM_SEQ IS NULL THEN A.SOFTWAREYN ELSE B.SW_YN END),'N') AS SW_YN
+				,B.ZEUS_YN
+				,B.ETUBE_YN
+				,B.APLCTN_RANGE_CD
+				,B.FD_ARTCL_NUM
+				,IFNULL(B.ASSET_YN,'Y') ASSET_YN
+				,FN_GET_CMMNCODENAME('COM006', B.AQUSIT_TYPE_CD) AQUSIT_TYPE_NAME
+		FROM 	RFID_CONTRACT_DTL A
+				INNER JOIN RFID_CONTRACT CONT ON A.PURNO = CONT.PURNO
+				LEFT OUTER JOIN RFID_INSP_ITEM B ON A.PURNO = B.PURNO AND A.RQSTNO = B.RQSTNO AND A.PRODNO = B.PRODNO
+				LEFT OUTER JOIN RFID_SL_COMPANY SC ON CONT.CUSTHISNO = SC.COMP_CD
+		WHERE 	1=1
+		<include refid="getInspItemListWhere" />
+    </select>
+
+    <select id="getInspItemListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+		FROM 	RFID_CONTRACT_DTL A
+				INNER JOIN RFID_CONTRACT CONT ON A.PURNO = CONT.PURNO
+				LEFT OUTER JOIN RFID_INSP_ITEM B ON A.PURNO = B.PURNO AND A.RQSTNO = B.RQSTNO AND A.PRODNO = B.PRODNO
+				LEFT OUTER JOIN RFID_SL_COMPANY SC ON CONT.CUSTHISNO = SC.COMP_CD
+		WHERE 	1=1
+		<include refid="getInspItemListWhere" />
+    </select>
+
+    <select id="getInspItemList2" parameterType="cmap" resultType="cmap" >
+		SELECT	A.*
+				,(CASE WHEN A.SW_YN = 'Y' THEN 'N' ELSE 'Y' END) AS DIV_REGI_YN
+				,FN_GET_CMMNCODENAME('COM006', A.AQUSIT_TYPE_CD) AQUSIT_TYPE_NAME
+		FROM 	RFID_INSP_ITEM A
+		WHERE 	1=1
+		<include refid="getInspItemListWhere" />
+    </select>
+
+    <select id="getInspItemListCnt2" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_INSP_ITEM A
+        WHERE 	1=1
+		<include refid="getInspItemListWhere" />
+    </select>
+
+    <select id="getInspItemView" parameterType="cmap" resultTypes="cmap" >
+        SELECT	A.*
+        FROM 	RFID_INSP_ITEM A
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+    </select>
+
+    <insert id="insertInspItem" parameterType="cmap" >
+        INSERT INTO RFID_INSP_ITEM (
+        		INSP_ITEM_SEQ
+				,PURNO
+				,RQSTNO
+				,PRODNO
+				,ASSET_TYPE_CD
+				,ITEM_CD
+				,ITEM_NAME
+				,ZEUS_ITEM_CD
+				,ZEUS_ITEM_NAME
+				,ASSET_NAME
+				,ASSET_ENAME
+				,AQUSIT_TYPE_CD
+				,DEPRE_CD
+				,MK_NATION_CD
+				,MK_NATION_NAME
+				,MK_COMPANY_CD
+				,MK_COMPANY_NAME
+				,SL_COMPANY_CD
+				,SL_COMPANY_NAME
+				,PURPOSE_OF_USE
+				,AQUSIT_AMT
+				,AQUSIT_FOREIGN_AMT
+				,CAPI_TYPE_CD
+				,AQUSIT_UNIT_AMT
+				,ASSET_CNT
+				,ASSET_UNIT_CD
+				,USEFUL_LIFE
+				,ASSET_SIZE
+				,ACCNT_NUM
+				,SW_YN
+				,ZEUS_YN
+				,ETUBE_YN
+				,APLCTN_RANGE_CD
+				,FD_ARTCL_NUM
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+				,ASSET_YN
+        ) VALUES (
+				#{inspItemSeq}
+				,#{purno}
+				,#{rqstno}
+				,#{prodno}
+				,#{assetTypeCd}
+				,#{itemCd}
+				,#{itemName}
+				,#{zeusItemCd}
+				,#{zeusItemName}
+				,#{assetName}
+				,#{assetEname}
+				,#{aqusitTypeCd}
+				,#{depreCd}
+				,#{mkNationCd}
+				,#{mkNationName}
+				,#{mkCompanyCd}
+				,#{mkCompanyName}
+				,#{slCompanyCd}
+				,#{slCompanyName}
+				,#{purposeOfUse}
+				,#{aqusitAmt}
+				,#{aqusitForeignAmt}
+				,#{capiTypeCd}
+				,#{aqusitUnitAmt}
+				,#{assetCnt}
+				,#{assetUnitCd}
+				,#{usefulLife}
+				,#{assetSize}
+				,#{accntNum}
+				,#{swYn}
+				,#{zeusYn}
+				,#{etubeYn}
+				,#{aplctnRangeCd}
+				,#{fdArtclNum}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+				,#{assetYn}
+        )
+    </insert>
+
+    <update id="updateInspItem" parameterType="cmap" >
+        UPDATE 	RFID_INSP_ITEM
+        SET
+				PURNO = #{purno}
+				,RQSTNO = #{rqstno}
+				,PRODNO = #{prodno}
+				,ASSET_TYPE_CD = #{assetTypeCd}
+				,ITEM_CD = #{itemCd}
+				,ITEM_NAME = #{itemName}
+				,ZEUS_ITEM_CD = #{zeusItemCd}
+				,ZEUS_ITEM_NAME = #{zeusItemName}
+				,ASSET_NAME = #{assetName}
+				,ASSET_ENAME = #{assetEname}
+				,AQUSIT_TYPE_CD = #{aqusitTypeCd}
+				,DEPRE_CD = #{depreCd}
+				,MK_NATION_CD = #{mkNationCd}
+				,MK_NATION_NAME = #{mkNationName}
+				,MK_COMPANY_CD = #{mkCompanyCd}
+				,MK_COMPANY_NAME = #{mkCompanyName}
+				,SL_COMPANY_CD = #{slCompanyCd}
+				,SL_COMPANY_NAME = #{slCompanyName}
+				,PURPOSE_OF_USE = #{purposeOfUse}
+				,AQUSIT_AMT = #{aqusitAmt}
+				,AQUSIT_FOREIGN_AMT = #{aqusitForeignAmt}
+				,AQUSIT_UNIT_AMT = #{aqusitUnitAmt}
+				,ASSET_CNT = #{assetCnt}
+				,ASSET_UNIT_CD = #{assetUnitCd}
+				,USEFUL_LIFE = #{usefulLife}
+				,ASSET_SIZE = #{assetSize}
+				,ACCNT_NUM = #{accntNum}
+				,SW_YN = #{swYn}
+				,ZEUS_YN = #{zeusYn}
+				,ETUBE_YN = #{etubeYn}
+				,APLCTN_RANGE_CD = #{aplctnRangeCd}
+				,FD_ARTCL_NUM = #{fdArtclNum}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+    </update>
+
+    <update id="updateInspItem2" parameterType="cmap" >
+        UPDATE 	RFID_INSP_ITEM
+        SET
+				DIV_REGI_YN = #{divRegiYn}
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+    </update>
+
+    <update id="deleteInspItem" parameterType="cmap" >
+        UPDATE 	RFID_INSP_ITEM
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+    </update>
+
+    <delete id="deleteInspItem2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_INSP_ITEM
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+    </delete>
+
+    <delete id="deleteInspItem3" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_INSP_ITEM
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+        		AND PURNO = #{purno}
+				AND RQSTNO = #{rqstno}
+				AND PRODNO = #{prodno}
+    </delete>
+
+    <delete id="deleteInspItemAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_INSP_ITEM
+        WHERE 	PURNO = #{purno}
+    </delete>
+
+    <update id="InspItem.updateInspItemAssetYn" parameterType="cmap" >
+        UPDATE	RFID_INSP_ITEM
+        SET		ASSET_YN = #{assetYn}
+        WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
+        		AND PURNO = #{purno}
+				AND RQSTNO = #{rqstno}
+				AND PRODNO = #{prodno}
+    </update>
+
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AssetFileMapper">
+
+  <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+     <sql id="getAssetFileListWhere">
+    	AND A.ASSET_NO = #{assetNo}
+    </sql>
+    
+    <select id="getAssetFileList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_ASSET_FILE A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getAssetFileListWhere" />
+        ORDER BY ASSET_NO DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getAssetFileListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_ASSET_FILE A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getAssetFileList.Where" />
+    </select>
+    
+    <select id="getAssetFileView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ASSET_FILE A
+        WHERE 	ASSET_NO = #{assetNo}
+    </select>
+    
+     <insert id="insertAssetFile" parameterType="cmap" >
+        INSERT INTO RFID_ASSET_FILE (
+        		ASSET_NO
+				,FILE_DT
+				,FILE_PATH
+				,FILE_NM
+				,ORIGNL_FILE_NM
+				,FILE_EXTSN
+				,USE_YN
+				,WEB_FILE_PATH
+        ) VALUES (
+				#{assetNo}
+				,#{fileDt}
+				,#{filePath}
+				,#{fileNm}
+				,#{orignlFileNm}
+				,#{fileExtsn}
+				,#{useYn}
+				,#{webFilePath}
+        )
+    </insert>
+    
+    <update id="updateAssetFile" parameterType="cmap" >
+        UPDATE 	RFID_ASSET_FILE
+        SET
+				FILE_DT = #{fileDt}
+				,FILE_PATH = #{filePath}
+				,FILE_NM = #{fileNm}
+				,ORIGNL_FILE_NM = #{orignlFileNm}
+				,FILE_EXTSN = #{fileExtsn}
+				,USE_YN = #{useYn}
+				,WEB_FILE_PATH = #{webFilePath}
+        WHERE 	ASSET_NO = #{assetNo}
+    </update>
+    
+     <update id="deleteAssetFile" parameterType="cmap" >
+        UPDATE 	RFID_ASSET_FILE
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	ASSET_NO = #{assetNo}
+    </update>
+
+      <delete id="deleteAssetFile2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ASSET_FILE
+        WHERE 	ASSET_NO = #assetNo#
+    </delete>
+    
+    <select id="getAssetFileListAll" parameterType="cmap" resultType="cmap" >
+		SELECT 	*
+		FROM 	RFID_ASSET_FILE A
+		WHERE 	FILE_NM <![CDATA[ <> ]]> CONCAT(ASSET_NO,'_',FILE_DT,'.',FILE_EXTSN)
+    </select>
+</mapper>

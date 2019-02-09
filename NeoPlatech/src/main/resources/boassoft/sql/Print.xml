@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprDisuseMapper">
+
+  <select id="getPrintTargetListXml" parameterType="cmap" resultType="commonXml" >
+		select ifnull(a.print_seq,' ') print_seq,
+		       ifnull(a.asset_seq,' ') asset_seq,
+		       ifnull(a.asset_no,' ') asset_no,
+		       ifnull(a.rfid_no,' ') rfid_no,
+		       ifnull(a.asset_name,' ') asset_name,
+		       ifnull(a.asset_size,' ') asset_size,
+		       ifnull(a.asset_type,' ') asset_type,
+		       ifnull(a.aqusit_dt,' ') aqusit_dt,
+		       ifnull(a.org_no,' ') org_no,
+		       ifnull(a.inv_year,' ') inv_year,
+		       ifnull(a.inv_no,' ') inv_no,
+		       ifnull(a.req_system,' ') req_system,
+		       ifnull(a.print_dt,' ') print_dt,
+		       ifnull(a.print_type,' ') print_type,
+		       ifnull(a.print_yn,' ') print_yn,
+		       ifnull(a.tmp_title,' ') tmp_title,
+		       ifnull(a.etc1,' ') etc1,
+		       ifnull(a.etc2,' ') etc2,
+		       ifnull(a.etc3,' ') etc3,
+		       ifnull(a.etc4,' ') etc4,
+		       ' ' user_name
+		  from rfid_print_history a left outer join rfid_asset ast on a.asset_no = ast.asset_no
+		 where a.print_yn = 'N'
+		   and a.org_no = #{orgNo}
+		 order by print_seq
+    </select>
+
+    <update id="updatePrintTargetListXml" parameterType="cmap" >
+    	update rfid_print_history set
+    		   print_yn = 'R'
+		 where print_yn = 'N'
+		   and org_no = #{orgNo}
+    </update>
+
+    <update id="updatePrintTargetSuccess" parameterType="cmap" >
+    	update rfid_print_history set
+    		   print_yn = 'Y'
+    	 where print_seq = #{printSeq}
+    </update>
+
+    <update id="updatePrintTargetFail" parameterType="cmap" >
+    	update rfid_print_history set
+    		print_yn = 'F'
+    	where print_seq = #{printSeq}
+    </update>
+
+    <select id="getRePrintTargetListXml" parameterType="cmap" resultType="commonXml" >
+		select ifnull(a.print_seq,' ') print_seq,
+		       ifnull(a.asset_no,' ') asset_no,
+		       ifnull(a.rfid_no,' ') rfid_no,
+		       ifnull(a.asset_name,' ') asset_name,
+		       ifnull(a.asset_size,' ') asset_size,
+		       ifnull(a.asset_type,' ') asset_type,
+		       ifnull(a.aqusit_dt,' ') aqusit_dt,
+		       ifnull(a.org_no,' ') org_no,
+		       ifnull(a.inv_year,' ') inv_year,
+		       ifnull(a.inv_no,' ') inv_no,
+		       ifnull(a.req_system,' ') req_system,
+		       ifnull(a.print_dt,' ') print_dt,
+		       ifnull(a.print_type,' ') print_type,
+		       ifnull(a.print_yn,' ') print_yn,
+		       ifnull(a.tmp_title,' ') tmp_title
+		  from rfid_print_history a left outer join rfid_asset ast on a.asset_no = ast.asset_no
+		 where a.print_yn = 'N'
+		   and a.org_no = #{orgNo}
+		 order by print_seq
+    </select>
+
+    <update id="updateRePrintTargetListXml" parameterType="cmap" >
+    	update rfid_print_history set
+    		   print_yn = 'R'
+		 where print_yn = 'N'
+		   and org_no = #{orgNo}
+    </update>
+
+    <update id="updateRePrintTargetSuccess" parameterType="cmap" >
+    	update rfid_print_history set
+    		   print_yn = 'Y'
+    	 where print_seq = #{printSeq}
+    </update>
+
+    <update id="updateRePrintTargetFail" parameterType="cmap" >
+    	update rfid_print_history set
+    		print_yn = 'F'
+    	where print_seq = #{printSeq}
+    </update>
+
+    <sql id="getPrintHistoryListWhere">
+        <if test="sPrintDtS != null and sPrintDtS !== ''">    	
+		   and print_dt &gt;= #{sPrintDtS}		
+		</if>
+		<if test="sPrintDtE != null and sPrintDtE !== ''">		
+		   and print_dt &lt;= #{sPrintDtE}		
+		</if>
+		<if test="searchKeyword != null and searchKeyword !== ''">	
+		 <choose>
+		    <when test="searchGubun == '1'">	   
+            AND asset_no like concat('%',#{searchKeyword},'%')            
+            </when>
+            <when test="searchGubun == '2'">            
+            AND asset_name like concat('%',#{searchKeyword},'%')            
+            </when>
+            <when test="searchGubun == '3'">             
+            AND asset_size like concat('%',#{searchKeyword},'%')            
+            </when>
+        </choose>
+        </if>
+    </sql>
+
+    <select id="getPrintHistoryList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        select a.*
+		from rfid_print_history a
+		where 1=1
+		<include refid="getPrintHistoryListWhere"/>
+		 <if test="dataOrder == null or dataOrder === ''">		
+        	ORDER BY #{dataOrder} #{dataOrderArrow}, a.print_dt desc        
+        </if>
+        <if test="dataOrder == null or dataOrder === ''">        
+        	ORDER BY a.print_dt desc        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getPrintHistoryListCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		from rfid_print_history a
+		where 1=1
+		<include refid="getPrintHistoryListWhere"/>
+    </select>
+
+    <insert id="insertHistory" parameterType="cmap" >
+    	insert into rfid_print_history ( print_seq,asset_no,rfid_no,asset_name,asset_type,aqusit_dt,org_no,inv_year,inv_no,req_system,print_dt,print_yn )
+		values ( #{print_seq},#{asset_no},#{rfid_no},#{asset_name},#{asset_type},#{aqusit_dt},#{org_no},#{inv_year},#{inv_no},#{req_system},#{print_dt},#{print_yn} )
+	</insert>
+
+    <insert id="insertHistory2" parameterType="cmap" >
+    	INSERT
+    	INTO 	rfid_print_history (
+    			print_seq,
+    			asset_seq,
+    			asset_no,
+    			rfid_no,
+    			asset_name,
+    			asset_size,
+    			asset_type,
+    			aqusit_dt,
+    			org_no,
+    			inv_year,
+    			inv_no,
+    			req_system,
+    			print_dt,
+    			print_type,
+    			print_yn,
+    			tmp_title,
+    			etc1,
+    			etc2,
+    			etc3,
+    			etc4
+		)
+		SELECT
+	    		#{printSeq}
+	    		, #{assetSeq}
+	    		, ast.asset_no
+	    		, ast.rfid_no
+				, ast.asset_name
+				, ast.asset_size
+				, ast.item_name asset_type
+				, ast.aqusit_dt
+				, '10001' org_no
+				, #{invYear} inv_year
+				, #{invNo} inv_no
+				, #{reqSystem} req_system
+				, #{printDt}
+				, #{printType}
+				, 'N' print_yn
+				, concat(ifnull(ast.user_name,' '), ' - ', ifnull(ast.pos_name,' ')) tmp_title
+				, ast.user_name etc1
+				, (case
+					when ast.top_asset_no is null or ast.top_asset_no = '' then ast.asset_no
+					else concat(ast.top_asset_no, ' / ', ast.asset_no)
+					end) as etc2
+				, null etc3
+				, null etc4
+		FROM 	rfid_asset ast
+		WHERE 	ast.ASSET_SEQ = #{assetSeq}
+    </insert>
+    
+    <insert id="insertHistoryTmp" parameterType="cmap" >
+    	INSERT
+    	INTO 	rfid_print_history_tmp (
+    			tmp_code,
+    			print_seq,
+    			asset_seq,
+    			asset_no,
+    			rfid_no,
+    			asset_name,
+    			asset_size,
+    			asset_type,
+    			aqusit_dt,
+    			org_no,
+    			inv_year,
+    			inv_no,
+    			req_system,
+    			print_dt,
+    			print_type,
+    			print_yn,
+    			tmp_title,
+    			etc1,
+    			etc2,
+    			etc3,
+    			etc4
+		)
+		SELECT
+				#{tmpCode}
+	    		, #{printSeq}
+	    		, #{assetSeq}
+	    		, ast.asset_no
+	    		, ast.rfid_no
+				, ast.asset_name
+				, ast.asset_size
+				, ast.item_name asset_type
+				, ast.aqusit_dt
+				, '10001' org_no
+				, #{invYear} inv_year
+				, #{invNo} inv_no
+				, #{reqSystem} req_system
+				, #{printDt}
+				, #{printType}
+				, 'N' print_yn
+				, concat(ifnull(ast.top_dept_name,' '), ' - ', ifnull(ast.dept_name,' '), ' - ', ifnull(ast.pos_name,' ')) tmp_title
+				, ast.user_name etc1
+				, (case
+					when ast.top_asset_no is null or ast.top_asset_no = '' then ast.asset_no
+					else concat(ast.top_asset_no, ' / ', ast.asset_no)
+					end) as etc2
+				, ast.aqusit_amt etc3
+				, remark etc4
+		FROM 	rfid_asset ast
+		WHERE 	ast.ASSET_SEQ = #{assetSeq}
+    </insert>
+    
+    <insert id="insertHistoryTmpApply" parameterType="cmap" >
+    	INSERT
+    	INTO	rfid_print_history (
+    			print_seq,
+    			asset_seq,
+    			asset_no,
+    			rfid_no,
+    			asset_name,
+    			asset_size,
+    			asset_type,
+    			aqusit_dt,
+    			org_no,
+    			inv_year,
+    			inv_no,
+    			req_system,
+    			print_dt,
+    			print_type,
+    			print_yn,
+    			tmp_title,
+    			etc1,
+    			etc2,
+    			etc3,
+    			etc4
+		)
+		SELECT
+    			print_seq,
+    			asset_seq,
+    			asset_no,
+    			rfid_no,
+    			asset_name,
+    			asset_size,
+    			asset_type,
+    			aqusit_dt,
+    			org_no,
+    			inv_year,
+    			inv_no,
+    			req_system,
+    			print_dt,
+    			print_type,
+    			print_yn,
+    			tmp_title,
+    			etc1,
+    			etc2,
+    			etc3,
+    			etc4
+    	FROM	rfid_print_history_tmp
+    	WHERE	tmp_code = #{tmpCode}
+    </insert>
+
+    <update id="updatePrintYn" parameterType="cmap" >
+    	<![CDATA[
+        update rfid_print_history set
+        	print_yn = #{printYn}
+        where print_seq = #{printSeq}
+        ]]>
+    </update>
+
+    <insert id="insertRePrint" parameterType="cmap" >
+    	insert into rfid_print_history( asset_no,rfid_no,asset_name,asset_size,asset_type,aqusit_dt,org_no,inv_year,inv_no,req_system,print_dt,print_type,print_yn,tmp_title,etc1,etc2,etc3,etc4 )
+		select
+			asset_no
+		    ,rfid_no
+		    ,asset_name
+		    ,asset_size
+		    ,asset_type
+		    ,aqusit_dt
+		    ,org_no
+		    ,inv_year
+		    ,inv_no
+		    ,req_system
+		    ,#{print_dt} print_dt
+		    ,print_type
+		    ,'N' print_yn
+		    ,tmp_title
+		    ,etc1
+		    ,etc2
+		    ,etc3
+		    ,etc4
+		from rfid_print_history
+		where print_seq = #{printSeq}
+	</insert>
+
+</mapper>

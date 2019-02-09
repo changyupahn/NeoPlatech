@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprDisuseMapper">
+
+  <sql id="getGateListWhere">
+   </sql>
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+     <select id="getGateList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	rfid_gate A
+        WHERE 	1=1
+		<include refid="getGateListWhere" />
+        ORDER BY GATE_NO DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getGateListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	rfid_gate A
+        WHERE 	1=1
+		<include refid="getGateListWhere" />
+    </select>
+
+    <select id="getGateView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	rfid_gate A
+        WHERE 	GATE_NO = #{gateNo}
+    </select>
+
+    <insert id="insertGate" parameterType="cmap" >
+        INSERT INTO rfid_gate (
+        		GATE_NO
+				,GATE_NAME
+				,GATE_IP
+				,GATE_PORT
+				,GATE_REMARK
+        ) VALUES (
+				#{gateNo}
+				,#{gateName}
+				,#{gateIp}
+				,#{gatePort}
+				,#{gateRemark}
+        )
+    </insert>
+
+    <update id="updateGate" parameterType="cmap" >
+        UPDATE 	rfid_gate
+        SET
+				GATE_NAME = #{gateName}
+				,GATE_IP = #{gateIp}
+				,GATE_PORT = #{gatePort}
+				,GATE_REMARK = #{gateRemark}
+        WHERE 	GATE_NO = #{gateNo}
+    </update>
+
+    <update id="deleteGate" parameterType="cmap" >
+        UPDATE 	rfid_gate
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	GATE_NO = #{gateNo}
+    </update>
+
+    <delete id="Gate.deleteGate2" parameterType="cmap" >
+        DELETE
+        FROM 	rfid_gate
+        WHERE 	GATE_NO = #{gateNo}
+    </delete>
+
+</mapper>

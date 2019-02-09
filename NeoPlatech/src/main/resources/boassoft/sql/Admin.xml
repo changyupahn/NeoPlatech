@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AdminMapper">
+
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+   <select id="getValidationQuery" parameterType="cmap" resultType="cmap" >
+    	select '1' as result from dual
+    </select>
+    
+    <select id="getAdminLoginView" parameterType="cmap" resultType="cmap" >
+		SELECT user_id, 
+		       user_name, 
+		       org_no 
+		  FROM rfid_admin 
+		 WHERE 1=1 
+		       AND use_yn = 'Y' 
+		       AND user_id = #{userId} 
+		       AND user_pw = #{userPw}
+    </select>
+    
+     <select id="getAdminView" parameterType="cmap" resultType="cmap" >
+    	select 
+    		user_id
+    		, user_name
+    	from rfid_admin a
+    	where 1=1
+    	and use_yn = 'Y'
+    	and org_no = #{orgNo}
+    	and user_id = #{userId}
+    </select>
+    
+     <select id="getAdminList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+    	select *
+    	from rfid_admin
+    	where 1=1
+    	and use_yn = 'Y'
+    	and org_no = #{orgNo}    	
+    	<if test="searchKeyword != null and searchKeyword != ''">            
+            <choose>
+              <when test="searchGubun == 1">
+               and user_id like concat('%', #{searchKeyword}, '%')
+              </when>            
+              <when test="searchGubun == 2">
+               and user_name like concat('%', #{searchKeyword}, '%')
+              </when> 
+            </choose>
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+     <select id="getAdminListCnt" parameterType="cmap" resultType="int" >
+    	select count(*)
+    	from rfid_admin
+    	where 1=1
+    	and use_yn = 'Y'
+    	and org_no = #{orgNo}
+    	<if test="searchKeyword != null and searchKeyword != ''">      	
+          <choose>
+              <when test="searchGubun == 1">
+            and user_id like concat('%', #{searchKeyword}, '%')
+            </when>  
+            <when test="searchGubun == 2">
+            and user_name like concat('%', #{searchKeyword}, '%')
+            </when> 
+         </choose>
+         </if>
+    </select>
+    
+    <select id="getAdminPrintList" parameterType="cmap" resultType="cmap" >
+    	select print_id,print_name,print_ip,print_port,label_file_loc,'N' as print_type
+    	from rfid_print a inner join rfid_admin b on a.print_id = b.print_id_n
+    	where a.print_id = #{print_id_n}
+    	union all
+    	select print_id,print_name,print_ip,print_port,label_file_loc,'S' as print_type
+    	from rfid_print a inner join rfid_admin b on a.print_id = b.print_id_s
+    	where a.print_id = #{print_id_s}
+    </select>
+    
+    <select id="getAdminPrintN" parameterType="cmap" resultType="cmap" >
+    	select *
+    	from rfid_print
+    	where 1=1
+    	and print_id = #{print_id_n}
+    </select>
+    
+    <select id="insertAdminPrintS" parameterType="cmap" resultType="cmap" >
+    	select *
+    	from rfid_print
+    	where 1=1
+    	and print_id = #{print_id_s}
+    </select>
+    
+     <delete id="deleteUserPrint" parameterType="cmap">
+    	delete from rfid_print where print_id = #{print_id}
+    </delete>
+    
+    <insert id="insertUserPrint" parameterType="cmap">
+    	insert into rfid_print( print_id,print_name,print_ip,print_port,label_file_loc,frst_regist_pnttm,frst_register_id,last_updt_pnttm,last_updusr_id )
+		values ( #{print_id},#{print_nm},#{print_ip},#{print_port},#{label_file_loc},#{frst_regist_pnttm},#{frst_register_id},#{last_updt_pnttm},#{last_updusr_id} )
+    </insert>
+    
+     <insert id="insertUser" parameterType="cmap">
+    	insert into rfid_admin( user_id,user_pw,user_name,org_no,use_yn,frst_regist_pnttm,frst_register_id,last_updt_pnttm,last_updusr_id )
+		values ( #{userId},#{userPw},#{userName},#{orgNo},#{useYn},#{frstRegistPnttm},#{frstRegisterId},#{lastUpdtPnttm},#{lastUpdusrId} )
+    </insert>
+    
+     <update id="updateUser" parameterType="cmap">
+    	update rfid_admin set
+    		user_name = #{userName}
+    		<if test="user_pw != null and user_pw != ''">    		
+    		, user_pw = #{userPw}    		
+    		</if>
+    		, last_updt_pnttm = #{lastUpdtPnttm}
+    		, last_updusr_id = #{lastUpdusrId}
+    	where user_id = #{userId}
+    	and org_no = #{orgNo}
+    </update>
+    
+     <update id="deleteUser" parameterType="cmap">
+    	update rfid_admin set use_yn = 'N' where user_id = #{userId} and org_no = #{orgNo}
+    </update>  
+    
+</mapper>

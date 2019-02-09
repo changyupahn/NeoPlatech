@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDeptMapper">
+
+   <sql id="getUserDeptListWhere">
+    </sql>
+
+    <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+    <select id="getUserDeptList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	rfid_user_dept A
+        WHERE 	1=1
+		<include refid="getUserDeptListWhere" />
+        ORDER BY USER_ID, DEPT_NAME
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getUserDeptListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	rfid_user_dept A
+        WHERE 	1=1
+		<include refid="getUserDeptListWhere" />
+    </select>
+    
+    <select id="getUserDeptListChk" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	rfid_user_dept A
+        WHERE 	user_id = #{userId}
+        ORDER BY DEPT_NAME
+    </select>
+    
+    <select id="getUserDeptListAll" parameterType="cmap" resultType="cmap" >
+		SELECT 	top_dept_name AS dept_name
+            , (CASE WHEN ud.dept_name = '' AND ud.dept_name IS NULL THEN 'N' ELSE 'Y' END) AS grant_dept_yn
+            , ud2.user_dept_cnt
+		FROM 	rfid_asset ast
+        LEFT OUTER JOIN (select dept_name from rfid_user_dept where user_id = #{userId}) ud ON ast.top_dept_name = ud.dept_name
+        LEFT OUTER JOIN (
+        				select 	a.dept_name, count(*) user_dept_cnt 
+        				from 	rfid_user_dept a 
+        						inner join rfid_user b on a.user_id = b.user_id
+        				where	b.use_yn = 'Y'
+        				group by a.dept_name
+        				) ud2 ON ast.top_dept_name = ud2.dept_name
+       	WHERE	ast.USE_YN = 'Y'  				
+		GROUP BY top_dept_name
+		ORDER BY top_dept_name
+    </select>
+
+    <select id="getUserDeptView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	rfid_user_dept A
+        WHERE 	USER_ID = #{userId}
+        		AND DEPT_NAME = #{deptName}
+    </select>
+
+    <insert id="insertUserDept" parameterType="cmap" >
+        INSERT INTO rfid_user_dept (
+				USER_ID
+				,DEPT_NAME
+        )
+        SELECT 	#{userId} AS USER_ID
+        		,#{deptName} AS DEPT_NAME
+        FROM	DUAL
+        WHERE	NOT EXISTS (
+        			SELECT 	1
+        			FROM	rfid_user_dept
+        			WHERE	USER_ID = #{userId}
+        					AND DEPT_NAME = #{deptName}
+        		)
+    </insert>
+
+    <update id="updateUserDept" parameterType="cmap" >
+        UPDATE 	rfid_user_dept
+        SET
+				USER_ID = #{userId}
+				,DEPT_NAME = #{deptName}
+        WHERE 	1 = 2
+    </update>
+
+    <delete id="deleteUserDept" parameterType="cmap" >
+        DELETE
+        FROM 	rfid_user_dept
+        WHERE 	USER_ID = #{userId}
+        		AND DEPT_NAME = #{deptName}
+    </delete>
+
+    <delete id="deleteUserDept2" parameterType="cmap" >
+        DELETE
+        FROM 	rfid_user_dept
+        WHERE 	USER_ID = #{userId}
+    </delete>
+</mapper>

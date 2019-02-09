@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SampleMapper">
+
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql> 
+
+ <sql id="getSampleListWhere">
+    
+     <if test="searchKeyword != null and searchKeyword !== ''">
+		  <choose>
+		    <when test="searchGubun == '1'">	        
+            AND A.COL1 like concat('%', #searchKeyword# ,'%')            
+            </when>
+            <when test="searchGubun == '2'">            
+            AND A.COL2 like concat('%', #searchKeyword# ,'%')            
+            </when>
+          </choose>  
+      </if>    
+        <if test="checkbox != null and checkbox !== ''">       
+        	<![CDATA[  ]]>
+            AND A.COL1 IN (
+                        <foreach item="checkbox" index="index" collection="checkbox" open="(" close=")" separator=",">                         
+                        #checkbox[]#
+                        </foreach>                                                
+                        )
+        </if>                        
+    </sql>
+
+    <select id="getSampleList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	SAMPLE A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getSampleListWhere" />
+        ORDER BY COL1 DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getSampleListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	SAMPLE A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getSampleListWhere" />
+    </select>
+
+    <select id="getSampleView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	SAMPLE A
+        WHERE 	COL1 = #{COL1}
+    </select>
+
+    <insert id="insertSample" parameterType="cmap" >
+        INSERT INTO SAMPLE (
+				COL2
+				,COL3
+				,COL4
+				,ATCH_FILE_ID
+        ) VALUES (
+				#{COL2}
+				,#{COL3}
+				,#{COL4}
+				,#{ATCH_FILE_ID}
+        )
+    </insert>
+
+    <update id="updateSample" parameterType="cmap" >
+        UPDATE 	SAMPLE
+        SET
+				COL2 = #{COL2}
+				,COL3 = #{COL3}
+				,COL4 = #{COL4}
+        WHERE 	COL1 = #{COL1}
+    </update>
+
+    <delete id="deleteSample" parameterType="cmap" >
+        DELETE
+        FROM 	SAMPLE
+        WHERE 	COL1 = #{COL1}
+    </delete>
+    
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SystemMapper">
+
+<select id="getAddcolMngList" parameterType="cmap" resultType="cmap" >
+    	select *
+    	from rfidsys_astcol_mng a
+    	where use_yn = 'Y'
+    	order by order_idx
+    </select>
+    
+    <select id="getDispMngList" parameterType="cmap" resultType="cmap" >
+    	select a.*
+    	from rfidsys_astcol_mng a inner join rfidsys_disp_mng b on a.aam_seq = b.aam_seq
+    	where 1=1
+        and a.use_yn = 'Y'
+    	and b.disp_type = #{dispType}
+    	order by a.order_idx
+    </select>
+
+
+</mapper>

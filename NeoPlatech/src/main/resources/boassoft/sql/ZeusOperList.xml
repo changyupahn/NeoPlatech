@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZeusOperListMapper">
+
+  <sql id="getZeusOperListListWhere">
+  </sql>
+  
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+<select id="getZeusOperListList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_ZEUS_OPER_LIST A
+        WHERE 	1=1
+		<include refid="getZeusOperListListWhere" />
+        ORDER BY JOURNAL_SEQ DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getZeusOperListListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_ZEUS_OPER_LIST A
+        WHERE 	1=1
+		<include refid="getZeusOperListList.Where" />
+    </select>
+
+    <select id="getZeusOperListView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ZEUS_OPER_LIST A
+        WHERE 	JOURNAL_SEQ = #{journalSeq}
+    </select>
+
+    <insert id="insertZeusOperList" parameterType="cmap" >
+        INSERT INTO RFID_ZEUS_OPER_LIST (
+        		JOURNAL_SEQ
+				,EQUIP_ID
+				,ASSET_NO
+				,KOR_NM
+				,JOURNAL_SDT
+				,JOURNAL_EDT
+				,JOURNAL_PRC
+				,REGIST_DT
+				,JOURNAL_SHOUR
+				,JOURNAL_EHOUR
+				,JOURNAL_SMINUTE
+				,JOURNAL_EMINUTE
+				,DIFF_MINUTE
+				,DIFF_DAY
+        ) VALUES (
+				#{journalSeq}
+				,#{equipId}
+				,#{assetNo}
+				,#{korNm}
+				,#{journalSdt}
+				,#{journalEdt}
+				,#{journalPrc}
+				,#{registDt}
+				,#{journalShour}
+				,#{journalEhour}
+				,#{journalSminute}
+				,#{journalEminute}
+				,#{diffMinute}
+				,#{diffDay}
+        )
+    </insert>
+
+    <update id="updateZeusOperList" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS_OPER_LIST
+        SET
+				EQUIP_ID = #{equipId}
+				,ASSET_NO = #{assetNo}
+				,KOR_NM = #{korNm}
+				,JOURNAL_SDT = #{journalSdt}
+				,JOURNAL_EDT = #{journalEdt}
+				,JOURNAL_PRC = #{journalPrc}
+				,REGIST_DT = #{registDt}
+				,JOURNAL_SHOUR = #{journalShour}
+				,JOURNAL_EHOUR = #{journalEhour}
+				,JOURNAL_SMINUTE = #{journalSminute}
+				,JOURNAL_EMINUTE = #{journalEminute}
+				,DIFF_MINUTE = #{diffMinute}
+				,DIFF_DAY = #{diffDay}
+        WHERE 	JOURNAL_SEQ = #{journalSeq}
+    </update>
+
+    <update id="deleteZeusOperList" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS_OPER_LIST
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	JOURNAL_SEQ = #{journalSeq}
+    </update>
+
+    <delete id="deleteZeusOperList2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS_OPER_LIST
+        WHERE 	JOURNAL_SEQ = #{journalSeq}
+    </delete>
+
+    <delete id="deleteZeusOperListAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS_OPER_LIST
+    </delete>
+
+
+</mapper>

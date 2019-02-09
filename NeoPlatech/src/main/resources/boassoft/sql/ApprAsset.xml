@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprAssetMapper">
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <sql id="getApprAssetListWhere">
+    	AND A.RQSTNO = #{rqstno}
+    </sql>
+
+   <select id="getApprAssetList" parameterType="cmap" resultType="cmap" >
+   <include refid="pagingHeader"/>
+        SELECT	A.RQSTNO
+				,A.APPR_TYPE
+				,A.DISUSE_PROC_DT
+				,A.DISUSE_PROC_TYPE_CD
+				,A.FRST_REGISTER_ID AS REGIST_ID
+				,FN_GET_CMMNCODENAME('COM010', A.DISUSE_PROC_TYPE_CD) DISUSE_PROC_TYPE_NAME
+				,A.DISUSE_PROC_CONT
+				,A.DISUSE_PROC_AMT
+				,A.DISUSE_RFD_DT
+				,A.DISUSE_RFD_CONT
+				,C.DISUSE_COMP_DT
+				,(CASE WHEN D.ASSET_SEQ IS NULL THEN 'N' ELSE 'Y' END) AS IN_YN
+				,(CASE WHEN D.ASSET_SEQ IS NULL THEN '아니요' ELSE '예' END) AS IN_YN_STR
+				,B.*
+        FROM 	RFID_APPR_ASSET A
+        		INNER JOIN RFID_ASSET B ON A.ASSET_SEQ = B.ASSET_SEQ
+        		LEFT OUTER JOIN RFID_APPR_DISUSE C ON A.RQSTNO = C.RQSTNO
+        		LEFT OUTER JOIN RFID_APPR_IO_IN_ASSET D ON A.ASSET_SEQ = D.ASSET_SEQ AND A.RQSTNO = D.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprAssetListWhere" />
+        ORDER BY A.RQSTNO ASC
+        <include refid="pagingFooter"/>   
+   </select>
+   
+   <select id="getApprAssetListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_APPR_ASSET A
+        WHERE 	1=1
+		<include refid="getApprAssetListWhere" />
+    </select>
+    
+     <select id="getApprAssetView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_APPR_ASSET A
+        WHERE 	RQSTNO = #{rqstno}
+    </select>
+    
+    <insert id="insertApprAsset" parameterType="cmap" >
+        INSERT INTO RFID_APPR_ASSET (
+        		RQSTNO
+				,ASSET_SEQ
+				,APPR_TYPE
+				,DISUSE_PROC_DT
+				,DISUSE_PROC_TYPE_CD
+				,DISUSE_PROC_CONT
+				,DISUSE_PROC_AMT
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{rqstno}
+				,#{assetSeq}
+				,#{apprType}
+				,#{disuseProcDt}
+				,#{disuseProcTypeCd}
+				,#{disuseProcCont}
+				,#{disuseProcAmt}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+    
+     <update id="updateApprAsset" parameterType="cmap" >
+        UPDATE 	RFID_APPR_ASSET
+        SET
+				DISUSE_PROC_DT = #{disuseProcDt}
+				,DISUSE_PROC_TYPE_CD = #{disuseProcTypeCd}
+				,DISUSE_PROC_CONT = #{disuseProcCont}
+				,DISUSE_PROC_AMT = #{disuseProcAmt}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+        		AND ASSET_SEQ = #{assetSeq}
+    </update>
+
+     <update id="updateApprAssetDisuseRfd" parameterType="cmap" >
+        UPDATE 	RFID_APPR_ASSET
+        SET
+				DISUSE_RFD_DT = #{disuseRfdDt}
+				,DISUSE_RFD_CONT = #{disuseRfdCont}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+        		AND ASSET_SEQ = #{assetSeq}
+    </update>
+    
+      <update id="deleteApprAsset" parameterType="cmap" >
+        UPDATE 	RFID_APPR_ASSET
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+
+    <delete id="deleteApprAsset2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_APPR_ASSET
+        WHERE 	RQSTNO = #{rqstno}
+    </delete>
+
+    <update id="updateAsset" parameterType="cmap" >
+        UPDATE 	RFID_ASSET
+        SET
+				DISUSE_YN = #{disuseYn}
+				,DISUSE_DT = CASE WHEN DISUSE_DT <![CDATA[ <> ]]> '' THEN DISUSE_DT ELSE #{disuseProcDt} END
+				,DISUSE_PROC_DT = #{disuseProcDt}
+				,DISUSE_TYPE_CD = #{disuseProcTypeCd}
+				,DISUSE_CONT = #{disuseProcCont}
+				,DISUSE_AMT = #{disuseProcAmt}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	ASSET_SEQ = #{assetSeq}
+    </update>
+
+</mapper>

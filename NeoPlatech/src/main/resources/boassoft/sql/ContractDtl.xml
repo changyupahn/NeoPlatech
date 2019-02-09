@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContractDtlMapper">
+
+  <sql id="pagingHeader">
+  </sql>
+
+  <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+  </sql> 
+  
+  <sql id="getContractDtlListWhere">
+    	AND A.PURNO = #{purno}
+    </sql>
+  
+   <select id="getContractDtlList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        		,IFNULL((SELECT MAX(ASSET_NAME) FROM RFID_INSP_ITEM WHERE PURNO = A.PURNO AND RQSTNO = A.RQSTNO AND PRODNO = A.PRODNO), A.PRODNM) AS ASSET_NAME
+        		,IFNULL((SELECT MAX(ASSET_YN) FROM RFID_INSP_ITEM WHERE PURNO = A.PURNO AND RQSTNO = A.RQSTNO AND PRODNO = A.PRODNO), 'Y') AS ASSET_YN
+        		,(SELECT COUNT(*) FROM RFID_ASSET WHERE PURNO = A.PURNO AND RQSTNO = A.RQSTNO AND PRODNO = A.PRODNO) AS VIRT_ASSET_CNT
+        		,(SELECT COUNT(*) FROM RFID_ASSET WHERE PURNO = A.PURNO AND RQSTNO = A.RQSTNO AND PRODNO = A.PRODNO AND TAG_PRINT_CNT > 0) AS TAG_PRINT_CNT
+        		,(SELECT COUNT(*) FROM RFID_ASSET WHERE PURNO = A.PURNO AND RQSTNO = A.RQSTNO AND PRODNO = A.PRODNO AND ASSET_STATUS_CD <![CDATA[ <> ]]> '가자산') AS INSP_ASSET_CNT
+        		,(SELECT MAX(INSP_DT) FROM RFID_INSP_ASSET WHERE PURNO = A.PURNO AND RQSTNO = A.RQSTNO AND PRODNO = A.PRODNO) INSP_DT
+        FROM 	RFID_CONTRACT_DTL A
+        WHERE 	1=1
+		<include refid="getContractDtlListWhere" />
+        ORDER BY PURNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getContractDtlListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_CONTRACT_DTL A
+        WHERE 	1=1
+		<include refid="getContractDtlListWhere" />
+    </select>
+
+    <select id="getContractDtlView" parameterType="cmap" resultType="cmap" >
+        SELECT  A.*
+        		, A1.CONTRNO CONT_NO
+        		, A1.PURNM CONT_NAME
+                , B.USER_NO
+                , B.USER_NAME
+                , B.POS_NO
+                , B.POS_NAME
+                , C.DEPT_NO
+                , C.DEPT_NAME
+                , D.DEPT_NO TOP_DEPT_NO
+                , D.DEPT_NAME TOP_DEPT_NAME
+                , E.USER_NO CONT_REQ_USER_NO
+                , E.USER_NAME CONT_REQ_USER_NAME
+        FROM    RFID_CONTRACT_DTL A
+        		INNER JOIN RFID_CONTRACT A1 ON A.PURNO = A1.PURNO
+                LEFT OUTER JOIN RFID_USER B ON A.USERHISNO = B.USER_HIS_NO
+                LEFT OUTER JOIN RFID_DEPT C ON B.DEPT_NO = C.DEPT_NO
+                LEFT OUTER JOIN RFID_DEPT D ON C.PARENT_DEPT_NO = D.DEPT_NO
+                LEFT OUTER JOIN RFID_USER E ON A1.USERHISNO = E.USER_HIS_NO
+        WHERE 	A.PURNO = #{purno}
+        		AND A.RQSTNO = #{rqstno}
+        		AND A.PRODNO = #{prodno}
+    </select>
+  
+
+</mapper>

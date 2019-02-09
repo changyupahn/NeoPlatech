@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AssetHistoryMapper">
+
+ <update id="syncZeusToAsset" parameterType="cmap" >
+    	UPDATE 	rfid_asset a
+    			INNER JOIN (
+    						SELECT 	MIN(EQUIP_ID) EQUIP_ID, MIN(USE_SCOPE_CD) USE_SCOPE_CD, ASSET_NO
+    						FROM	RFID_ZEUS
+    						GROUP BY ASSET_NO
+    						) b ON a.ASSET_NO = b.ASSET_NO
+		SET		a.ZEUS_EQUIP_ID = b.EQUIP_ID
+				, a.ZEUS_YN = 'Y'
+				, a.APLCTN_RANGE_CD = (CASE
+										WHEN b.USE_SCOPE_CD = '1' THEN '단독활용'
+										WHEN b.USE_SCOPE_CD = '2' THEN '공동활용허용'
+										WHEN b.USE_SCOPE_CD = '3' THEN '공동활용서비스'
+										END)
+    </update>
+
+     <update id="syncUserToAsset" parameterType="cmap" >
+    	UPDATE	RFID_ASSET AST
+    			INNER JOIN RFID_USER USR ON AST.USER_NO = USER.USER_NO
+    			INNER JOIN RFID_DEPT DPT ON USR.DEPT_NO = DPT.DEPT_NO
+    			INNER JOIN RFID_DEPT DPT2 ON DPT.PARENT_DEPT_NO = DPT2.DEPT_NO
+    	SET
+    			AST.TOP_DEPT_NO = DPT2.DEPT_NO,
+				AST.TOP_DEPT_NAME = DPT2.DEPT_NAME,
+				AST.DEPT_NO = DPT.DEPT_NO,
+				AST.DEPT_NAME = DPT.DEPT_NAME,
+				AST.USER_NO = USR.USER_NO,
+				AST.USER_NAME = USR.USER_NAME,
+				AST.LAST_UPDT_PNTTM = #{lastUpdtPnttm},
+				AST.LAST_UPDUSR_ID = 'BATCH'
+    </update>
+    
+    <select id="getDocNList" parameterType="cmap" resultType="cmap" >
+    	SELECT	*
+    	FROM	rfid_doc
+		WHERE	UPDATEYN = 'N'
+    </select>
+    
+     <select id="getDocView" parameterType="cmap" resultType="cmap" >
+    	SELECT	*
+    	FROM	rfid_doc
+		WHERE	RQSTNO = #rqstno#
+    </select>
+
+    <insert id="insertDoc" parameterType="cmap" >
+    	INSERT INTO	rfid_doc (
+	    		RQSTNO,
+			    DOCSTATCD,
+			    DOCSTATNM,
+			    DOCDIVCD,
+			    REGTIME,
+			    MODTIME,
+			    UPDATEYN,
+			    PRGSNO
+    	)
+    	SELECT	#{rqstno},
+    			#{docstatcd},
+    			#{docstatnm#}
+    			#{docdivcd},
+    			#{regtime},
+    			#{modtime},
+    			'N',
+    			#{prgsno}
+    	FROM	DUAL
+    	WHERE	NOT EXISTS (
+    					SELECT	1
+    					FROM	rfid_doc
+    					WHERE	RQSTNO = #{rqstno}
+    					)
+    </insert>
+    
+     <update id="updateDoc" parameterType="cmap" >
+    	UPDATE	rfid_doc
+    	SET		DOCSTATCD = #{docstatcd},
+    			DOCSTATNM = #{docstatnm},
+    			REGTIME = #{regtime},
+    			MODTIME = #{modtime},
+    			UPDATEYN = 'N',
+    			PRGSNO = #{prgsno}
+    	WHERE	RQSTNO = #{rqstno}
+    	AND		DOCSTATCD <![CDATA[ <> ]]> #{docstatcd}
+    </update>
+    
+    <update id="updateDocUpdateynY" parameterType="cmap" >
+    	UPDATE	rfid_doc
+    	SET		UPDATEYN = 'Y'
+    	WHERE	RQSTNO = #{rqstno}
+    </update>
+    
+    <update id="updateApprRqst" parameterType="cmap" >
+    	UPDATE  rfid_appr_rqst
+    	SET     RQST_STATUS_CD = #{rqstStatusCd}
+    	WHERE   RQSTNO = #{rqstno}
+    			AND IFNULL(RQST_STATUS_CD,'999') <![CDATA[ <> ]]> #{rqstStatusCd}
+    </update>
+
+    <update id="updateApprIoExt" parameterType="cmap" >
+    	UPDATE  rfid_appr_io_ext
+    	SET     RQST_STATUS_CD = #{rqstStatusCd}
+    	WHERE   EXT_RQSTNO = #{rqstno}
+    			AND IFNULL(RQST_STATUS_CD,'999') <![CDATA[ <> ]]> #{rqstStatusCd}
+    </update>
+
+    <update id="updateApprIoIn" parameterType="cmap" >
+    	UPDATE  rfid_appr_io_in
+    	SET     RQST_STATUS_CD = #{rqstStatusCd}
+    	WHERE   IN_RQSTNO = #{rqstno}
+    			AND IFNULL(RQST_STATUS_CD,'999') <![CDATA[ <> ]]> #{rqstStatusCd}
+    </update>
+
+    <update id="updateApprDisuse" parameterType="cmap" >
+    	UPDATE  rfid_appr_disuse
+    	SET     DISUSE_COMP_DT = #{disuseCompDt}
+    	WHERE   RQSTNO = #{rqstno}
+    </update>
+
+    <update id="updateApprUsercng" parameterType="cmap" >
+    	UPDATE  rfid_appr_usercng
+    	SET     AUC_COMP_DT = #{aucCompDt}
+    	WHERE   RQSTNO = #{rqstno}
+    </update>
+
+    <select id="getApprUsercngView" parameterType="cmap" resultType="cmap" >
+    	SELECT
+		        A.RQSTNO,
+		        A.AUC_USER_NO,
+		        A.AUC_USER_NAME,
+		        A.AUC_DEPT_NO,
+		        A.AUC_DEPT_NAME,
+		        D.DEPT_NO AUC_TOP_DEPT_NO,
+		        D.DEPT_NAME AUC_TOP_DEPT_NAME
+		FROM RFID_APPR_USERCNG A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+		        LEFT OUTER JOIN RFID_DEPT C ON A.AUC_DEPT_NO = C.DEPT_NO
+		        LEFT OUTER JOIN RFID_DEPT D ON C.PARENT_DEPT_NO = D.DEPT_NO
+		WHERE	A.RQSTNO = #{rqstno}
+    </select>
+
+    <update id="updateAssetUsercng" parameterClass="cmap" >
+    	UPDATE	rfid_asset
+    	SET		TOP_DEPT_NO = #{topDeptNo},
+				TOP_DEPT_NAME = #{topDeptName},
+				DEPT_NO = #{deptNo},
+				DEPT_NAME = #{deptName},
+				USER_NO = #{userNo},
+				USER_NAME = #{userName},
+				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
+				LAST_UPDUSR_ID = 'BATCH'
+		WHERE	ASSET_SEQ IN (
+						SELECT 	ASSET_SEQ
+						FROM	rfid_appr_asset
+						WHERE	RQSTNO = #{rqstno}
+						)
+    </update>
+
+    <update id="updateAssetIoOut" parameterClass="cmap" >
+    	UPDATE	rfid_asset
+    	SET		ASSET_STATUS_CD = '반출중',
+				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
+				LAST_UPDUSR_ID = 'BATCH'
+		WHERE	ASSET_SEQ IN (
+						SELECT 	ASSET_SEQ
+						FROM	rfid_appr_asset
+						WHERE	RQSTNO = #{rqstno}
+						)
+				AND ASSET_STATUS_CD = '정상'
+    </update>
+
+    <update id="updateAssetIoIn" parameterClass="cmap" >
+    	UPDATE	rfid_asset
+    	SET		ASSET_STATUS_CD = '정상',
+				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
+				LAST_UPDUSR_ID = 'BATCH'
+		WHERE	ASSET_SEQ IN (
+						SELECT 	A.ASSET_SEQ
+						FROM	rfid_appr_asset A
+								INNER JOIN rfid_appr_io_in B ON A.RQSTNO = B.RQSTNO
+								INNER JOIN rfid_appr_io_in_asset C ON B.IN_RQSTNO = C.IN_RQSTNO AND A.ASSET_SEQ = C.ASSET_SEQ
+						WHERE	A.RQSTNO = #{rqstno}
+						)
+				AND ASSET_STATUS_CD = '반출중'
+    </update>
+
+    <update id="updateAssetDisuse" parameterClass="cmap" >
+    	UPDATE	rfid_asset
+    	SET		ASSET_STATUS_CD = '불용',
+    			DISUSE_YN = 'Y',
+    			DISUSE_DT = #{disuseDt},
+				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
+				LAST_UPDUSR_ID = 'BATCH'
+		WHERE	ASSET_SEQ IN (
+						SELECT 	ASSET_SEQ
+						FROM	rfid_appr_asset
+						WHERE	RQSTNO = #{rqstno}
+						)
+    </update>
+
+    <update id="Batch.updateAssetStatusCd" parameterClass="cmap" >
+    	UPDATE	rfid_asset
+    	SET		ASSET_STATUS_CD = #assetStatusCd#,
+				LAST_UPDT_PNTTM = #lastUpdtPnttm#,
+				LAST_UPDUSR_ID = 'BATCH'
+		WHERE	ASSET_SEQ IN (
+						SELECT 	ASSET_SEQ
+						FROM	rfid_appr_asset
+						WHERE	RQSTNO = #rqstno#
+						)
+    </update>
+
+    <insert id="Batch.insertUser" parameterClass="cmap" >
+    	INSERT INTO rfid_user (
+				USER_NO,
+				USER_HIS_NO,
+				EMP_NO,
+				DEPT_NO,
+				DEPT_NAME,
+				DEPT_HIS_NO,
+				USER_NAME,
+				USER_EMAIL,
+				USER_STAT_CD,
+				USER_STAT_NAME,
+				USER_POS_DIV_CD,
+				USER_POS_DIV_NAME,
+				USER_TEL_NO,
+				USER_TYPE,
+				GRANT_NO,
+				USE_YN,
+				FRST_REGIST_PNTTM,
+				FRST_REGISTER_ID,
+				LAST_UPDT_PNTTM,
+				LAST_UPDUSR_ID,
+				POS_NO,
+				POS_NAME
+    	)
+    	SELECT
+				USER_NO,
+				USER_HIS_NO,
+				EMP_NO,
+				DEPT_NO,
+				DEPT_NAME,
+				DEPT_HIS_NO,
+				USER_NAME,
+				USER_EMAIL,
+				USER_STAT_CD,
+				USER_STAT_NAME,
+				USER_POS_DIV_CD,
+				USER_POS_DIV_NAME,
+				USER_TEL_NO,
+				USER_TYPE,
+				GRANT_NO,
+				USE_YN,
+				FRST_REGIST_PNTTM,
+				FRST_REGISTER_ID,
+				LAST_UPDT_PNTTM,
+				LAST_UPDUSR_ID,
+				POS_NO,
+				POS_NAME
+		FROM 	RFID_MIS_USER A
+		WHERE	NOT EXISTS (SELECT 	1
+							FROM	RFID_USER
+							WHERE	USER_NO = A.USER_NO
+							)
+    </insert>
+
+    <insert id="Batch.insertDept" parameterClass="cmap" >
+        INSERT INTO RFID_DEPT (
+        		DEPT_NO
+				,DEPT_NAME
+				,DEPT_LEVEL
+				,PARENT_DEPT_NO
+				,DEPT_HEAD_USER_NO
+				,SORT_NUM
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        )
+        SELECT
+        		DEPT_NO
+				,DEPT_NAME
+				,DEPT_LEVEL
+				,PARENT_DEPT_NO
+				,DEPT_HEAD_USER_NO
+				,SORT_NUM
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+		FROM	RFID_MIS_DEPT A
+		WHERE	NOT EXISTS (SELECT 	1
+							FROM	RFID_DEPT
+							WHERE	DEPT_NO = A.DEPT_NO
+							)
+    </insert>
+
+    <insert id="Batch.insertCust" parameterClass="cmap" >
+        INSERT INTO RFID_SL_COMPANY (
+        		COMP_SEQ
+				,COMP_CD
+				,COMP_NAME
+				,COMP_LEVEL
+				,COMP_BIZ_NO
+				,COMP_OWNER_NAME
+				,COMP_BIZ_TYPE1
+				,COMP_BIZ_TYPE2
+				,COMP_ADDR
+				,COMP_TEL
+				,COMP_EMAIL
+				,REMARK
+				,PARENT_COMP_SEQ
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        )
+        SELECT
+        		COMP_SEQ
+				,COMP_CD
+				,COMP_NAME
+				,COMP_LEVEL
+				,COMP_BIZ_NO
+				,COMP_OWNER_NAME
+				,COMP_BIZ_TYPE1
+				,COMP_BIZ_TYPE2
+				,COMP_ADDR
+				,COMP_TEL
+				,COMP_EMAIL
+				,REMARK
+				,PARENT_COMP_SEQ
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+		FROM	RFID_MIS_CUST A
+		WHERE	NOT EXISTS (SELECT 	1
+							FROM	RFID_SL_COMPANY
+							WHERE	COMP_SEQ = A.COMP_SEQ
+							)
+    </insert>
+
+    <insert id="Batch.insertLoca" parameterClass="cmap" >
+        INSERT INTO RFID_POSITION (
+				POS_NO
+				,POS_NAME
+				,POS_LEVEL
+				,PARENT_POS_NO
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        )
+        SELECT
+				POS_NO
+				,POS_NAME
+				,POS_LEVEL
+				,PARENT_POS_NO
+				,SORT_NUM
+				,USE_YN
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+		FROM	RFID_MIS_POSITION A
+		WHERE	NOT EXISTS (SELECT 	1
+							FROM	RFID_POSITION
+							WHERE	POS_NO = A.POS_NO
+							)
+    </insert>
+
+    <insert id="Batch.insertContr" parameterClass="cmap" >
+        INSERT INTO RFID_CONTRACT (
+        		PURNO
+				,PURNM
+				,PURCD
+				,PURDIVCD
+				,AGGRDIVCD
+				,USERHISNO
+				,NATNCD
+				,CONTRDT
+				,CONTRSTARTDT
+				,CONTRENDDT
+				,CUSTHISNO
+				,DELIVERYPLACE
+				,DELIVERYDT
+				,REGTIME
+				,REGUSER
+				,MODTIME
+				,MODUSER
+				,CONTRAMT
+				,CONTRNO
+				,CUSTDIVCD
+				,CUSTWOMAN
+				,CUSTDISPER
+				,SWYN
+				,CONTRDIV
+				,STATENM
+        )
+        SELECT
+        		PURNO
+				,PURNM
+				,PURCD
+				,PURDIVCD
+				,AGGRDIVCD
+				,USERHISNO
+				,NATNCD
+				,CONTRDT
+				,CONTRSTARTDT
+				,CONTRENDDT
+				,CUSTHISNO
+				,DELIVERYPLACE
+				,DELIVERYDT
+				,REGTIME
+				,REGUSER
+				,MODTIME
+				,MODUSER
+				,CONTRAMT
+				,CONTRNO
+				,CUSTDIVCD
+				,CUSTWOMAN
+				,CUSTDISPER
+				,SWYN
+				,CONTRDIV
+				,STATENM
+		FROM	RFID_MIS_CONTR A
+		WHERE	NOT EXISTS (SELECT 	1
+							FROM	RFID_CONTRACT
+							WHERE	PURNO = A.PURNO
+							)
+    </insert>
+
+    <insert id="Batch.insertContrdtl" parameterClass="cmap" >
+    	INSERT INTO RFID_CONTRACT_DTL (
+        		PURNO
+				,RQSTNO
+				,PRODNO
+				,PRODNM
+				,QTY
+				,SPEC
+				,UNIT
+				,GUSUCOST
+				,SPLYUCOST
+				,PROPYN
+				,USERHISNO
+				,ACCNO
+				,FORECURRAMT
+				,CURRENCYAMT
+				,SOFTWAREYN
+				,NTISYN
+				,REMARK
+				,REGTIME
+				,REGUSER
+				,MODTIME
+				,MODUSER
+				,USEOFPURPOSE
+        )
+        SELECT
+        		PURNO
+				,RQSTNO
+				,PRODNO
+				,PRODNM
+				,QTY
+				,SPEC
+				,UNIT
+				,GUSUCOST
+				,SPLYUCOST
+				,PROPYN
+				,USERHISNO
+				,ACCNO
+				,FORECURRAMT
+				,CURRENCYAMT
+				,SOFTWAREYN
+				,NTISYN
+				,REMARK
+				,REGTIME
+				,REGUSER
+				,MODTIME
+				,MODUSER
+				,USEOFPURPOSE
+		FROM	RFID_MIS_CONTRDTL A
+		WHERE	NOT EXISTS (SELECT 	1
+							FROM	RFID_CONTRACT_DTL
+							WHERE	PURNO = A.PURNO
+									AND RQSTNO = A.RQSTNO
+									AND PRODNO = A.PRODNO
+							)
+    </insert>
+
+    <update id="Batch.updateUser" parameterClass="cmap" >
+    	UPDATE	RFID_USER A
+    			INNER JOIN RFID_MIS_USER B ON A.USER_NO = B.USER_NO
+    	SET
+        		A.USER_HIS_NO = B.USER_HIS_NO,
+				A.EMP_NO = B.EMP_NO,
+				A.DEPT_NO = B.DEPT_NO,
+				A.DEPT_NAME = B.DEPT_NAME,
+				A.DEPT_HIS_NO = B.DEPT_HIS_NO,
+				A.USER_NAME = B.USER_NAME,
+				A.USER_EMAIL = B.USER_EMAIL,
+				A.USER_STAT_CD = B.USER_STAT_CD,
+				A.USER_STAT_NAME = B.USER_STAT_NAME,
+				A.USER_POS_DIV_CD = B.USER_POS_DIV_CD,
+				A.USER_POS_DIV_NAME = B.USER_POS_DIV_NAME,
+				A.USER_TEL_NO = B.USER_TEL_NO,
+				A.USER_TYPE = B.USER_TYPE,
+				A.GRANT_NO = CASE
+								WHEN A.GRANT_NO = 'MGR' THEN 'MGR'
+								WHEN A.GRANT_NO = 'ET1' THEN 'ET1'
+								ELSE B.GRANT_NO END,
+				A.LAST_UPDT_PNTTM = B.LAST_UPDT_PNTTM,
+				A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID,
+				A.POS_NO = B.POS_NO,
+				A.POS_NAME = B.POS_NAME
+    </update>
+
+    <update id="Batch.updateDept" parameterClass="cmap" >
+    	UPDATE	RFID_DEPT A
+    			INNER JOIN RFID_MIS_DEPT B ON A.DEPT_NO = B.DEPT_NO
+    	SET
+        		A.DEPT_NAME = B.DEPT_NAME
+				,A.DEPT_LEVEL = B.DEPT_LEVEL
+				,A.PARENT_DEPT_NO = B.PARENT_DEPT_NO
+				,A.DEPT_HEAD_USER_NO = B.DEPT_HEAD_USER_NO
+				,A.SORT_NUM = B.SORT_NUM
+				,A.LAST_UPDT_PNTTM = B.LAST_UPDT_PNTTM
+				,A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID
+    </update>
+
+    <update id="Batch.updateCust" parameterClass="cmap" >
+    	UPDATE	RFID_SL_COMPANY A
+    			INNER JOIN RFID_MIS_CUST B ON A.COMP_SEQ = B.COMP_SEQ
+    	SET
+        		A.COMP_CD = B.COMP_CD
+				,A.COMP_NAME = B.COMP_NAME
+				,A.COMP_LEVEL = B.COMP_LEVEL
+				,A.COMP_BIZ_NO = B.COMP_BIZ_NO
+				,A.COMP_OWNER_NAME = B.COMP_OWNER_NAME
+				,A.COMP_BIZ_TYPE1 = B.COMP_BIZ_TYPE1
+				,A.COMP_BIZ_TYPE2 = B.COMP_BIZ_TYPE2
+				,A.COMP_ADDR = B.COMP_ADDR
+				,A.COMP_TEL = B.COMP_TEL
+				,A.COMP_EMAIL = B.COMP_EMAIL
+				,A.REMARK = B.REMARK
+				,A.PARENT_COMP_SEQ = B.PARENT_COMP_SEQ
+				,A.SORT_NUM = B.SORT_NUM
+				,A.USE_YN = B.USE_YN
+				,A.LAST_UPDT_PNTTM = B.LAST_UPDT_PNTTM
+				,A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID
+    </update>
+
+    <update id="Batch.updateLoca" parameterClass="cmap" >
+    	UPDATE	RFID_POSITION A
+    			INNER JOIN RFID_MIS_POSITION B ON A.POS_NO = B.POS_NO
+    	SET
+        		A.POS_NAME = B.POS_NAME
+				,A.POS_LEVEL = B.POS_LEVEL
+				,A.PARENT_POS_NO = B.PARENT_POS_NO
+				,A.SORT_NUM = B.SORT_NUM
+				,A.USE_YN = B.USE_YN
+				,A.LAST_UPDT_PNTTM = B.LAST_UPDT_PNTTM
+				,A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID
+    </update>
+
+    <update id="Batch.updateContr" parameterClass="cmap" >
+    	UPDATE	RFID_CONTRACT A
+    			INNER JOIN RFID_MIS_CONTR B ON A.PURNO = B.PURNO
+    	SET
+				A.PURNM = B.PURNM
+				,A.PURCD = B.PURCD
+				,A.PURDIVCD = B.PURDIVCD
+				,A.AGGRDIVCD = B.AGGRDIVCD
+				,A.USERHISNO = B.USERHISNO
+				,A.NATNCD = B.NATNCD
+				,A.CONTRDT = B.CONTRDT
+				,A.CONTRSTARTDT = B.CONTRSTARTDT
+				,A.CONTRENDDT = B.CONTRENDDT
+				,A.CUSTHISNO = B.CUSTHISNO
+				,A.DELIVERYPLACE = B.DELIVERYPLACE
+				,A.DELIVERYDT = B.DELIVERYDT
+				,A.MODTIME = B.MODTIME
+				,A.MODUSER = B.MODUSER
+				,A.CONTRAMT = B.CONTRAMT
+				,A.CONTRNO = B.CONTRNO
+				,A.CUSTDIVCD = B.CUSTDIVCD
+				,A.CUSTWOMAN = B.CUSTWOMAN
+				,A.CUSTDISPER = B.CUSTDISPER
+				,A.SWYN = B.SWYN
+				,A.CONTRDIV = B.CONTRDIV
+				,A.STATENM = B.STATENM
+    </update>
+
+    <update id="Batch.updateContrdtl" parameterClass="cmap" >
+    	UPDATE	RFID_CONTRACT_DTL A
+    			INNER JOIN RFID_MIS_CONTRDTL B
+    					ON A.PURNO = B.PURNO
+    					AND A.RQSTNO = B.RQSTNO
+    					AND A.PRODNO = B.PRODNO
+    	SET
+				A.PRODNM = B.PRODNM
+				,A.QTY = B.QTY
+				,A.SPEC = B.SPEC
+				,A.UNIT = B.UNIT
+				,A.GUSUCOST = B.GUSUCOST
+				,A.SPLYUCOST = B.SPLYUCOST
+				,A.PROPYN = B.PROPYN
+				,A.USERHISNO = B.USERHISNO
+				,A.ACCNO = B.ACCNO
+				,A.FORECURRAMT = B.FORECURRAMT
+				,A.CURRENCYAMT = B.CURRENCYAMT
+				,A.SOFTWAREYN = B.SOFTWAREYN
+				,A.NTISYN = B.NTISYN
+				,A.REMARK = B.REMARK
+				,A.MODTIME = B.MODTIME
+				,A.MODUSER = B.MODUSER
+				,A.USEOFPURPOSE = B.USEOFPURPOSE
+    </update>
+
+    <delete id="Batch.deleteUser" parameterClass="cmap" >
+    	DELETE	A
+    	FROM	RFID_USER A
+    			LEFT OUTER JOIN RFID_MIS_USER B ON A.USER_NO = B.USER_NO AND A.USER_HIS_NO = B.USER_HIS_NO
+    	WHERE	B.USER_NO IS NULL
+    </delete>
+
+    <delete id="Batch.deleteDept" parameterClass="cmap" >
+    	DELETE	A
+    	FROM	RFID_DEPT A
+    			LEFT OUTER JOIN RFID_MIS_DEPT B ON A.DEPT_NO = B.DEPT_NO
+    	WHERE	B.DEPT_NO IS NULL
+    </delete>
+
+    <delete id="Batch.deleteCust" parameterClass="cmap" >
+    	DELETE	A
+    	FROM	RFID_SL_COMPANY A
+    			LEFT OUTER JOIN RFID_MIS_CUST B ON A.COMP_SEQ = B.COMP_SEQ
+    	WHERE	B.COMP_SEQ IS NULL
+    </delete>
+
+    <delete id="Batch.deleteLoca" parameterClass="cmap" >
+    	DELETE	A
+    	FROM	RFID_POSITION A
+    			LEFT OUTER JOIN RFID_MIS_POSITION B ON A.POS_NO = B.POS_NO
+    	WHERE	B.POS_NO IS NULL
+    </delete>
+
+    <delete id="Batch.deleteContr" parameterClass="cmap" >
+    	DELETE	A
+    	FROM	RFID_CONTRACT A
+    			LEFT OUTER JOIN RFID_MIS_CONTR B ON A.PURNO = B.PURNO
+    	WHERE	B.PURNO IS NULL
+    </delete>
+
+    <delete id="Batch.deleteContrdtl" parameterClass="cmap" >
+    	DELETE	A
+    	FROM	RFID_CONTRACT_DTL A
+    			LEFT OUTER JOIN RFID_MIS_CONTRDTL B
+    					ON A.PURNO = B.PURNO
+    					AND A.RQSTNO = B.RQSTNO
+    					AND A.PRODNO = B.PRODNO
+    	WHERE	B.PURNO IS NULL
+    </delete>
+
+    <delete id="Batch.deleteMisUserAll" parameterClass="cmap" >
+    	DELETE
+    	FROM	RFID_MIS_USER
+    </delete>
+
+    <delete id="Batch.deleteMisDeptAll" parameterClass="cmap" >
+    	DELETE
+    	FROM	RFID_MIS_DEPT
+    </delete>
+
+    <delete id="Batch.deleteMisCustAll" parameterClass="cmap" >
+    	DELETE
+    	FROM	RFID_MIS_CUST
+    </delete>
+
+    <delete id="Batch.deleteMisLocaAll" parameterClass="cmap" >
+    	DELETE
+    	FROM	RFID_MIS_POSITION
+    </delete>
+
+    <delete id="Batch.deleteMisContrAll" parameterClass="cmap" >
+    	DELETE
+    	FROM	RFID_MIS_CONTR
+    </delete>
+
+    <delete id="Batch.deleteMisContrdtlAll" parameterClass="cmap" >
+    	DELETE
+    	FROM	RFID_MIS_CONTRDTL
+    </delete>
+
+    <update id="Batch.updateAssetDeptInfo" parameterClass="cmap" >
+		UPDATE 	RFID_ASSET A
+				INNER JOIN RFID_USER B ON A.USER_NO = B.USER_NO
+				INNER JOIN RFID_DEPT C ON B.DEPT_NO = C.DEPT_NO
+				INNER JOIN RFID_DEPT D ON C.PARENT_DEPT_NO = D.DEPT_NO
+		SET
+				A.USER_NAME = B.USER_NAME
+				, A.DEPT_NO = C.DEPT_NO
+				, A.DEPT_NAME = C.DEPT_NAME
+				, A.TOP_DEPT_NO = D.DEPT_NO
+				, A.TOP_DEPT_NAME = D.DEPT_NAME
+		WHERE
+				A.DEPT_NAME <![CDATA[ <> ]]> C.DEPT_NAME
+    </update>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InspectionMapper">
+
+  <sql id="getInspectionListWhere">
+  </sql>
+    
+    <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <select id="getInspectionList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	SAMPLE A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getInspectionListWhere" />
+        ORDER BY COL1 DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getInspectionListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	SAMPLE A
+        WHERE 	A.USE_YN = 'Y'
+		<include refid="getInspectionListWhere" />
+    </select>
+    
+    <select id="getInspectionView" parameterType="cmap" resultType="cmap" >        
+        SELECT	A.*
+        FROM 	SAMPLE A
+        WHERE 	COL1 = #{COL1}
+    </select>
+    
+    <insert id="insertInspection" parameterType="cmap" >
+        INSERT INTO SAMPLE (
+				COL2
+				,COL3
+				,COL4
+				,ATCH_FILE_ID
+        ) VALUES (
+				#{COL2}
+				,#{COL3}
+				,#{COL4}
+				,#{ATCH_FILE_ID}
+        )
+    </insert>
+    
+    <update id="updateInspection" parameterType="cmap" >
+        UPDATE 	SAMPLE 
+        SET
+				COL2 = #{COL2}
+				,COL3 = #{COL3}
+				,COL4 = #{COL4}
+        WHERE 	COL1 = #{COL1}
+    </update>
+    
+    <delete id="deleteInspection" parameterType="cmap" >
+        DELETE 
+        FROM 	SAMPLE
+        WHERE 	COL1 = #{COL1}
+    </delete>
+  
+
+</mapper>

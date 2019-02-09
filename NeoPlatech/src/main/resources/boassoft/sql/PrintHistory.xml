@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PrintHistoryMapper">
+
+  <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+   <sql id="getPrintHistoryListWhere">
+        <if test="sAssetNo != null and sAssetNo !== ''">    	
+    		AND A.ASSET_NO like concat('%', #{sAssetNo} ,'%')    	
+    	</if>
+    	<if test="sAssetName != null and sAssetName !== ''">    	
+    		AND A.ASSET_NAME like concat('%', #{sAssetName} ,'%')    	
+    	</if>
+    	<if test="sAssetSize != null and sAssetSize !== ''">    	
+    		AND A.ASSET_SIZE like concat('%', #{sAssetSize} ,'%')    	
+    	</if>
+    </sql>
+
+    <select id="getPrintHistoryList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        		,(CASE
+        			WHEN A.PRINT_YN = 'N' THEN '출력요청'
+        			WHEN A.PRINT_YN = 'R' THEN '출력대기'
+        			WHEN A.PRINT_YN = 'Y' THEN '출력성공'
+        			WHEN A.PRINT_YN = 'F' THEN '출력실패'
+        			ELSE '-'
+        			END) AS PRINT_YN_STR
+        FROM 	RFID_PRINT_HISTORY A
+        WHERE 	1=1
+		<include refid="getPrintHistoryListWhere" />
+        ORDER BY PRINT_SEQ DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getPrintHistoryListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_PRINT_HISTORY A
+        WHERE 	1=1
+		<include refid="getPrintHistoryListWhere" />
+    </select>
+
+    <select id="getPrintHistoryView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_PRINT_HISTORY A
+        WHERE 	PRINT_SEQ = #{printSeq}
+    </select>
+
+    <insert id="insertPrintHistory" parameterType="cmap" >
+        INSERT INTO RFID_PRINT_HISTORY (
+        		PRINT_SEQ
+				,ASSET_SEQ
+				,ASSET_NO
+				,RFID_NO
+				,ASSET_NAME
+				,ASSET_SIZE
+				,ASSET_TYPE
+				,AQUSIT_DT
+				,ORG_NO
+				,INV_YEAR
+				,INV_NO
+				,REQ_SYSTEM
+				,PRINT_DT
+				,PRINT_TYPE
+				,PRINT_YN
+				,TMP_TITLE
+				,ETC1
+				,ETC2
+				,ETC3
+				,ETC4
+        ) VALUES (
+				#{printSeq}
+				,#{assetSeq}
+				,#{assetNo}
+				,#{rfidNo}
+				,#{assetName}
+				,NULL
+				,#{assetType}
+				,#{aqusitDt}
+				,#{orgNo}
+				,#{invYear}
+				,CASE WHEN #{invNo} = '' THEN NULL ELSE #{invNo} END
+				,#{reqSystem}
+				,#{printDt}
+				,#{printType}
+				,#{printYn}
+				,#{tmpTitle}
+				,#{etc1}
+				,#{etc2}
+				,#{etc3}
+				,#{etc4}
+        )
+    </insert>
+
+    <update id="updatePrintHistory" parameterType="cmap" >
+        UPDATE 	RFID_PRINT_HISTORY
+        SET
+				ASSET_SEQ = #{assetSeq}
+				,ASSET_NO = #{assetNo}
+				,RFID_NO = #{rfidNo}
+				,ASSET_NAME = #{assetName}
+				,ASSET_SIZE = #{assetSize}
+				,ASSET_TYPE = #{assetType}
+				,AQUSIT_DT = #{aqusitDt}
+				,ORG_NO = #{orgNo}
+				,INV_YEAR = #{invYear}
+				,INV_NO = #{invNo}
+				,REQ_SYSTEM = #{reqSystem}
+				,PRINT_DT = #{printDt}
+				,PRINT_TYPE = #{printType}
+				,PRINT_YN = #{printYn}
+				,TMP_TITLE = #{tmpTitle}
+				,ETC1 = #{etc1}
+				,ETC2 = #{etc2}
+				,ETC3 = #{etc3}
+				,ETC4 = #{etc4}
+        WHERE 	PRINT_SEQ = #{printSeq}
+    </update>
+
+    <update id="deletePrintHistory" parameterType="cmap" >
+        UPDATE 	RFID_PRINT_HISTORY
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	PRINT_SEQ = #{printSeq}
+    </update>
+
+    <delete id="deletePrintHistory2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_PRINT_HISTORY
+        WHERE 	PRINT_SEQ = #{printSeq}
+    </delete>
+
+</mapper>

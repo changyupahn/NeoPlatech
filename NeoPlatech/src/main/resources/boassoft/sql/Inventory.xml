@@ -1,0 +1,1316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InventoryeMapper">
+
+   <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+     <sql id="getAssetListWhere">
+        <if test="sUseYn != null and sUseYn != ''">    		
+			AND ast.use_yn = #{sUseYn}		
+		</if>
+        <if test="sAssetDiv != null and sAssetDiv != ''">  
+          <choose>
+		    <when test="sAssetDiv == '1'">
+			<!-- 고정자산 -->			
+				AND ast.USE_YN = 'Y'			
+			</when>
+			<when test="sAssetDiv == '2'">
+			<!-- 자산검수 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.INSP_YN = 'N'			
+			</when>
+			<when test="sAssetDiv == '3'">
+			<!-- 미배정자산 -->			
+				AND ast.USE_YN = 'Y'
+				AND NOT EXISTS (SELECT 1 FROM RFID_USER WHERE USER_TYPE = '정상' AND USER_NO = ast.USER_NO)
+				AND ast.DISUSE_YN = 'N'			
+			</when>
+			<when test="sAssetDiv == '4'">
+			<!-- 불용자산 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.DISUSE_YN = 'Y'			
+			</when>
+			<when test="sAssetDiv == '5'">
+			<!-- 삭제자산 -->			
+				AND ast.USE_YN = 'N'
+				AND ast.ASSET_STATUS_CD <![CDATA[ <> ]]> '가자산'			
+			</when>
+			<when test="sAssetDiv == '6'">
+			<!-- 전자결재신청대상 인수인계 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.DISUSE_YN = 'N'
+				AND ast.ASSET_STATUS_CD IN ('정상','반출중')
+				AND NOT EXISTS (
+							SELECT 1
+							FROM RFID_APPR_ASSET T1
+							INNER JOIN RFID_APPR_RQST T2 ON T1.RQSTNO = T2.RQSTNO
+							WHERE 1=1
+							AND T2.RQST_STATUS_CD IN ('2')
+							AND T1.ASSET_SEQ = ast.ASSET_SEQ
+							)			
+			</when>
+			<when test="sAssetDiv == '7'">
+			<!-- 전자결재신청대상 반출 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.DISUSE_YN = 'N'
+				AND ast.ASSET_STATUS_CD IN ('정상')
+				AND NOT EXISTS (
+							SELECT 1
+							FROM RFID_APPR_ASSET T1
+							INNER JOIN RFID_APPR_RQST T2 ON T1.RQSTNO = T2.RQSTNO
+							LEFT OUTER JOIN RFID_APPR_IO_IN T3 ON T2.RQSTNO = T3.RQSTNO
+							WHERE 1=1
+							AND T2.RQST_STATUS_CD IN ('2')
+							AND IFNULL(T3.RQST_STATUS_CD,'0') NOT IN ('3','4')
+							AND T1.ASSET_SEQ = ast.ASSET_SEQ
+							)			
+			</when>
+			<when test="sAssetDiv == '8'">
+			<!-- 전자결재신청대상 불용 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.DISUSE_YN = 'N'
+				AND ast.ASSET_STATUS_CD IN ('정상','반출중')
+				AND NOT EXISTS (
+							SELECT 1
+							FROM RFID_APPR_ASSET T1
+							INNER JOIN RFID_APPR_RQST T2 ON T1.RQSTNO = T2.RQSTNO
+							WHERE 1=1
+							AND T2.RQST_STATUS_CD IN ('2')
+							AND T1.ASSET_SEQ = ast.ASSET_SEQ
+							)			
+			</when>
+			<when test="sAssetDiv == '9'">
+			<!-- 부속품대상 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.DISUSE_YN = 'N'
+				AND ast.ASSET_SEQ <![CDATA[ <> ]]> #{assetSeq}
+				AND NOT EXISTS (
+							SELECT 1
+							FROM RFID_ASSET
+							WHERE TOP_ASSET_SEQ = #{assetSeq}
+							AND ASSET_SEQ = ast.ASSET_SEQ
+							)			
+			</when>
+			<when test="sAssetDiv == '10'">
+			<!-- 부속품목록 -->			
+				AND ast.USE_YN = 'Y'
+				AND ast.TOP_ASSET_SEQ = #{assetSeq}			
+			</when>
+		</choose>	
+	</if>
+        <if test="sAssetNo != null or sAssetNo != ''">
+            <if test="ssGrantRead != null and ssGrantRead !== ''"> 					
+			   <choose>
+		         <when test="ssGrantRead == 'GRANT_USR'">				
+					AND (
+						ast.USER_NO = #{ssUserNo}
+						OR
+						ast.TOP_ASSET_SEQ IN (
+								SELECT	ASSET_SEQ
+								FROM	RFID_ASSET
+								WHERE 	USER_NO = #{ssUserNo}
+								)
+						)				
+				  </when>
+				   <when test="ssGrantRead == 'GRANT_DHD'">				
+					AND ast.TOP_DEPT_NAME IN (
+							SELECT	sd.DEPT_NAME
+							FROM	RFID_USER_DEPT sd
+									INNER JOIN RFID_USER usr ON sd.USER_ID = usr.USER_ID									 
+							WHERE	usr.USER_NO = #{ssUserNo}
+							)				
+				  </when>
+				  <when test="ssGrantRead == 'GRANT_MGR'">					
+					AND 1=1				
+				   </when>
+				   <when test="ssGrantRead == 'GRANT_NONE'">						
+					AND 1=2				
+				   </when>
+				  </choose> 
+			</if>	
+       </if>
+        <if test="sApprRqstYn != null and sApprRqstYn != ''"> 
+		    <choose>
+		     <when test="sApprRqstYn == 'Y'">				
+			   AND ast.ASSET_STATUS_CD = '정상'
+			 </when>
+		   </choose>
+		</if>   			
+
+        <if test="sAssetSeq != null and sAssetSeq != ''"> 
+          AND ast.ASSET_SEQ = #{sAssetSeq}
+        </if>
+		 
+		
+         <if test="sAssetSeqArr != null and sAssetSeqArr != ''">
+              AND ast.ASSET_SEQ IN  
+             <foreach item="sAssetSeq" index="index" collection="sAssetSeqArr" open="(" close=")" separator=",">
+                  #{sAssetSeq}
+              </foreach>
+          </if>
+		
+        <if test="sAssetNoArr != null and sAssetNoArr != ''">		
+            AND ast.ASSET_NO IN 
+            <foreach item="sAssetNo" index="index" collection="sAssetNoArr" open="(" close=")" separator=",">                         
+            #{sAssetNo}
+            </foreach>                        		
+		 </if>
+
+         <if test="sAssetNoMulti != null and sAssetNoMulti != ''">				
+            AND ast.ASSET_NO IN 
+             <foreach item="sAssetNo" index="index" collection="sAssetNoMulti" open="(" close=")" separator=",">                        
+              #{sAssetNo}                      
+             </foreach>                              
+		</if>
+
+
+        <if test="sPosNoMulti != null and sPosNoMulti != ''">			
+            AND ast.POS_NO IN             
+             <foreach item="sPosNo" index="index" collection="sPosNoMulti" open="(" close=")" separator=",">                        
+              #{sPosNo}                      
+             </foreach>             		
+		</if>
+		
+		<if test="sDeptNoMulti != null and sDeptNoMulti != ''">	
+            AND ast.DEPT_NO IN
+              <foreach item="sDeptNo" index="index" collection="sDeptNoMulti" open="(" close=")" separator=",">                        
+              #{sDeptNo}                      
+             </foreach> 
+        </if>   		
+        
+        <if test="sUserNoMulti != null and sUserNoMulti != ''">	
+            AND ast.USER_NO IN
+            <foreach item="sUserNo" index="index" collection="sUserNoMulti" open="(" close=")" separator=",">                        
+              #{sUserNoMulti}                      
+             </foreach> 
+        </if>
+        
+        <if test="sItemNoMulti != null and sItemNoMulti != ''">
+            AND ast.ITEM_CD IN
+            <foreach item="sItemNo" index="index" collection="sItemNoMulti" open="(" close=")" separator=",">                        
+              #{sItemNo}                      
+             </foreach> 
+        </if>			
+
+        <if test="sBuSrchYn != null and sBuSrchYn != ''">                        		
+		 <choose>
+           <when test="sBuSrchYn == 'Y'">		
+			AND 1=1
+           </when> 
+           <when test="sBuSrchYn == 'N'">           
+            AND ast.ASSET_TYPE_CD <![CDATA[ <> ]]> 'BU'
+            </when>		
+		 </choose>
+		</if>
+
+        <if test="sAssetTypeCd != null and sAssetTypeCd != ''"> 		
+			AND ast.ASSET_TYPE_CD = #{sAssetTypeCd}		
+		</if>
+		
+		<if test="sAssetTypeName != null and sAssetTypeName != ''">				
+			AND ast.ASSET_TYPE_NAME LIKE concat('%', #{sAssetTypeName} ,'%')		
+		</if>
+		
+		<if test="sAssetName !== null and sAssetName != ''">				
+			AND ast.ASSET_NAME LIKE concat('%', #{sAssetName} ,'%')		
+		</if>
+		
+		<if test="sAssetSize != null and sAssetSize != ''">			
+			AND ast.ASSET_SIZE LIKE concat('%', #{sAssetSize} ,'%')		
+        </if>
+        
+        <if test="sItemCd != null and sItemCd != ''">				
+			AND (
+				ast.ITEM_CD LIKE concat(#{sItemCd} , '%')
+				OR
+				ast.ASSET_TYPE_CD = #{sItemCd}
+				)		
+		</if>
+		<if test="sItemName != null and sItemName !== ''">	
+		 <if test="sItemCd == null or sItemCd == ''">	
+			AND (
+				ast.ITEM_NAME LIKE concat('%', #{sItemName} ,'%')
+				<if test="sItemName01 != null and sItemName01 !== ''">				
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName01} ,'%')		        
+		        </if>
+		        <if test="sItemName02 != null and sItemName02 !== ''">			        
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName02} ,'%')		        
+		        </if>
+		        <if test="sItemName03 != null and sItemName03 !== ''">			       
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName03} ,'%')		        
+		        </if>
+		        <if test="sItemName04 != null and sItemName04 !== ''">		        
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName04} ,'%')		        
+		        </if>
+		        <if test="sItemName05 != null and sItemName05 !== ''">		       
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName05} ,'%')		        
+		        </if>
+		        <if test="sItemName06 != null and sItemName06 !== ''">		        
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName06} ,'%')		        
+		        </if>
+		        <if test="sItemName07 != null and sItemName07 !== ''">		        
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName07} ,'%')		        
+		        </if>
+		        <if test="sItemName08 != null and sItemName08 !== ''">		        
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName08} ,'%')}		        
+		        </if>
+		        <if test="sItemName09 != null and sItemName09 !== ''">		        
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName09} ,'%')		        
+		        </if>
+				)
+			</if>
+		</if>
+		
+		<if test="sBldngNo != null and sBldngNo !== ''">			
+			AND ast.BLDNG_NO LIKE concat(#{sBldngNo} , '%')		
+		</if>
+		<if test="sBldngName != null and sBldngName !== ''">		
+		  <if test="sBldngNo == null or sBldngNo === ''">			
+			AND (
+				ast.BLDNG_NAME LIKE concat('%', #{sBldngName} ,'%')
+				<if test="sBldngName01 != null and sBldngName01 !== ''">				
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName01} ,'%')		        
+		        </if>
+		        <if test="sBldngName02 != null and sBldngName02 !== ''">		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName02} ,'%')		        
+		        </if>
+		        <if test="sBldngName03 != null and sBldngName03 !== ''">		   		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName03} ,'%')		        
+		        </if>
+		        <if test="sBldngName04 != null and sBldngName04 !== ''">		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName04} ,'%')		        
+		        </if>
+		        <if test="sBldngName05 != null and sBldngName05 !== ''">		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName05} ,'%')		        
+		        </if>
+		        <if test="sBldngName06 != null and sBldngName06 !== ''">		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName06} ,'%')		       
+		        </if>
+		        <if test="sBldngName07 != null and sBldngName07 !== ''">		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName07} ,'%')		        
+		        </if>
+		        <if test="sBldngName08 != null and sBldngName08 !== ''">		    		        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName08} ,'%')		        
+		        </if>
+		        <if test="sBldngName09 != null and sBldngName09 !== ''">			        
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName09} ,'%')		        
+		        </if>
+				)
+			</if>
+		</if>
+
+        <if test="sAssetNo != null and sAssetNo !== ''">		
+			AND ast.ASSET_NO = #sAssetNo#		
+        </if>
+        <if test="sAssetNo == null or sAssetNo === ''">		
+          <if test="sUserNo != null and sUserNo !== ''">				
+				AND (
+					ast.USER_NO = #{sUserNo}
+					OR
+					ast.TOP_ASSET_SEQ IN (
+							SELECT	ASSET_SEQ
+							FROM	RFID_ASSET
+							WHERE 	USER_NO = #{sUserNo}
+							)
+					)
+			 </if>
+		</if>	 
+		<if test="sUserName != null and sUserName !== ''">
+			 <if test="sAssetNo == null or sAssetNo === ''">				
+				AND (
+					ast.USER_NAME LIKE concat('%', #{sUserName} ,'%')
+					<if test="sUserName01 != null and sUserName01 !== ''">					
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName01} ,'%')			        
+			        </if>
+			        <if test="sUserName02 != null and sUserName02 !== ''">					
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName02} ,'%')			        
+			        </if>
+			        <if test="sUserName03 != null and sUserName03 !== ''">					
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName03} ,'%')			        
+			        </if>
+			         <if test="sUserName04 != null and sUserName04 !== ''">						
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName04} ,'%')			        
+			        </if>
+			         <if test="sUserName05 != null and sUserName05 !== ''">						
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName05} ,'%')			        
+			        </if>
+			        <if test="sUserName06 != null and sUserName06 !== ''">					
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName06} ,'%')			        
+			        </if>
+			        <if test="sUserName07 != null and sUserName07 !== ''">
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName07} ,'%')			        
+			        </if>
+			        <if test="sUserName08 != null and sUserName08 !== ''">					
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName08} ,'%')			        
+			        </if>
+			         <if test="sUserName09 != null and sUserName09 !== ''">						
+			            OR ast.USER_NAME LIKE concat('%', #{sUserName09} ,'%')			        
+			        </if>
+			        )
+				 </if>
+			 </if>
+			
+			<if test="sOrgName != null and sOrgName !== ''">
+			 <if test="sOrgNo == null or sOrgNo === ''">			  	
+				AND (
+					ast.ORG_NAME LIKE concat('%', #{sOrgName} ,'%')
+					<if test="sOrgName01 != null and sOrgName01 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName01} ,'%')			        
+			        </if>
+			        <if test="sOrgName02 != null and sOrgName02 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName02} ,'%')			        
+			        </if>
+			        <if test="sOrgName03 != null and sOrgName03 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName03} ,'%')			        
+			        </if>
+			        <if test="sOrgName04 != null and sOrgName04 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName04} ,'%')			        
+			        </if>
+			        <if test="sOrgName05 != null and sOrgName05 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName05} ,'%')			        
+			        </if>
+			        <if test="sOrgName06 != null and sOrgName06 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName06} ,'%')			        
+			        </if>
+			        <if test="sOrgName07 != null and sOrgName07 !== ''">						
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName07} ,'%')			        
+			        </if>
+			        <if test="sOrgName08 != null and sOrgName08 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName08} ,'%')			        
+			        </if>
+			        <if test="sOrgName09 != null and sOrgName09 !== ''">					
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName09} ,'%')			        
+			        </if>
+			        )
+				</if>
+			</if>
+			<if test="sTopDeptName != null and sTopDeptName !== ''">			
+				AND ast.TOP_DEPT_NAME LIKE concat('%', #{sTopDeptName} ,'%')			
+			</if>
+			<if test="sDeptNoArr == null or sDeptNoArr === ''">
+			  <if test="sDeptNo != null and sDeptNo !== ''">		
+					AND (
+						ast.DEPT_NO = #{sDeptNo}
+						OR
+						ast.TOP_ASSET_SEQ IN (
+								SELECT	ASSET_SEQ
+								FROM	RFID_ASSET
+								WHERE 	USER_NO = #{sUserNo}
+								)
+						)
+				</if>
+			</if>
+			<if test="sDeptNoArr != null and sDeptNoArr !== ''">				
+	            AND (
+	            	ast.DEPT_NO IN (	                      
+	                      <foreach item="sDeptNo" index="index" collection="sDeptNoArr" open="(" close=")" separator=",">                        
+                            #{sDeptNo}                      
+                          </foreach>  	                        
+					OR
+					ast.TOP_ASSET_SEQ IN (
+							SELECT	ASSET_SEQ
+							FROM	RFID_ASSET
+							WHERE 	USER_NO = #{sUserNo}
+							)
+	                )
+	        </if>
+	        <if test="sDeptName != null and sDeptName !== ''">
+	          <if test="sDeptNo == null or sDeptNo === ''">	   
+				AND (
+					ast.DEPT_NAME LIKE concat('%', #{sDeptName} ,'%')
+					<if test="sDeptName01 != null and sDeptName01 !== ''">				
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName01} ,'%')			        
+			        </if>
+			        <if test="sDeptName02 != null and sDeptName02 !== ''">					
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName02} ,'%')			      
+			        </if>
+			        <if test="sDeptName03 != null and sDeptName03 !== ''">						
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName03} ,'%')			        
+			        </if>
+			        <if test="sDeptName04 != null and sDeptName04 !== ''">						
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName04} ,'%')			        
+			        </if>
+			        <if test="sDeptName05 != null and sDeptName05 !== ''">						
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName05} ,'%')			       
+			        </if>
+			        <if test="sDeptName06 != null and sDeptName06 !== ''">					
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName06} ,'%')			        
+			        </if>
+			        <if test="sDeptName07 != null and sDeptName07 !== ''">					
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName07} ,'%')			        
+			         </if>
+			        <if test="sDeptName08 != null and sDeptName08 !== ''">					
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName08} ,'%')			        
+			        </if>
+			         <if test="sDeptName09 != null and sDeptName09 !== ''">						
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName09} ,'%')			        
+			         </if>
+					)
+				</if>
+			</if>		      
+        <if test="sPosNo != null and sPosNo !== ''">		
+			AND ast.POS_NO = #{sPosNo}		
+		</if>
+		<if test="sPosName != null and sPosName !== ''">
+		<if test="sPosNo == null or sPosNo === ''">		
+			AND (
+				ast.POS_NAME LIKE concat('%', #{sPosName} ,'%')
+				<if test="sPosName01 != null and sPosName01 !== ''">				
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName01} ,'%')		        
+		        </if>
+		        <if test="sPosName02 != null and sPosName02 !== ''">					
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName02} ,'%')		        
+		        </if>
+		        <if test="sPosName03 != null and sPosName03 !== ''">					
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName03} ,'%')		        
+		        </if>
+		        <if test="sPosName04 != null and sPosName04 !== ''">				
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName04} ,'%')		        
+		        </if>
+		        <if test="sPosName05 != null and sPosName05 !== ''">					
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName05} ,'%')		        
+		        </if>
+		        <if test="sPosName06 != null and sPosName06 !== ''">				
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName06} ,'%')		        
+		        </if>
+		         <if test="sPosName07 != null and sPosName07 !== ''">					
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName07} ,'%')		        
+		        </if>
+		        <if test="sPosName08 != null and sPosName08 !== ''">				
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName08} ,'%')		        
+		        </if>
+		        <if test="sPosName09 != null and sPosName09 !== ''">				
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName09} ,'%')		        
+		        </if>
+				)
+			</if>
+		</if>
+		
+		<if test="sMkNationCd != null and sMkNationCd !== ''">		
+			AND ast.MK_NATION_CD = #{sMkNationCd}		
+		</if>
+		<if test="sMkCompanyCd != null and sMkCompanyCd !== ''">			
+			AND ast.MK_COMPANY_CD = #{sMkCompanyCd}		
+        </if>
+        <if test="sAqusitTypeCd != null and sAqusitTypeCd !== ''">		
+			AND ast.AQUSIT_TYPE_CD = #{sAqusitTypeCd}		
+		</if>
+		<if test="sAssetStatusCd != null and sAssetStatusCd !== ''">			
+			AND ast.ASSET_STATUS_CD LIKE concat('%', #{sAssetStatusCd} ,'%')		
+		</if>
+		<if test="sZeusYn != null and sZeusYn !== ''">		
+			AND ast.ZEUS_YN = #{sZeusYn}		
+		</if>
+		<if test="sEtubeYn != null and sEtubeYn !== ''">			
+			AND ast.ETUBE_YN = #{sEtubeYn}		
+		</if>
+		<if test="sAplctnRangeCd != null and sAplctnRangeCd !== ''">		
+			AND ast.APLCTN_RANGE_CD = #{sAplctnRangeCd}		
+        </if>
+        <if test="searchDtKeywordS != null and searchDtKeywordS !== ''">
+         <choose>
+		    <when test="searchDtGubun == '1'">					
+			AND replace(ast.AQUSIT_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')
+			</when>
+			<when test="searchDtGubun == '2'">			
+			AND replace(ast.CONT_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			</when>
+			<when test="searchDtGubun == '3'">			
+			AND replace(ast.DISUSE_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			</when>
+			<when test="searchDtGubun == '4'">			
+			AND replace(ast.DISUSE_PROC_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			</when>
+			<when test="searchDtGubun == '5'">			
+			AND replace(ast.FRST_REGIST_PNTTM,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			</when>
+		</choose>
+		</if>	
+		<if test="searchDtKeywordE != null and searchDtKeywordE !== ''">
+		 <choose>
+		    <when test="searchDtGubun == '1'">					
+			AND replace(ast.AQUSIT_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			</when>
+			<when test="searchDtGubun == '2'">			
+			AND replace(ast.CONT_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			</when>
+			<when test="searchDtGubun == '3'">			
+			AND replace(ast.DISUSE_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			</when>
+			<when test="searchDtGubun == '4'">			
+			AND replace(ast.DISUSE_PROC_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			</when>
+			<when test="searchDtGubun == '5'">			
+			AND replace(ast.FRST_REGIST_PNTTM,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			</when>
+			</choose>
+		</if>			
+
+      <if test="searchNumKeywordS != null and searchNumKeywordS !== ''">
+          <choose>
+		    <when test="searchNumGubun == '1'">			
+			AND ast.AQUSIT_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			<when test="searchNumGubun == '2'">			
+			AND ast.AQUSIT_FOREIGN_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			<when test="searchNumGubun == '3'">			
+			AND ast.AQUSIT_REMAIN_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			<when test="searchNumGubun == '4'">			
+			AND ast.AQUSIT_UNIT_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			<when test="searchNumGubun == '5'">					
+			AND ast.ASSET_CNT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			<when test="searchNumGubun == '6'">			
+			AND ast.USEFUL_LIFE <![CDATA[ >= ]]> replace(#searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '7'">			
+			AND ast.TAG_PRINT_CNT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			<when test="searchNumGubun == '8'">			
+			AND IFNULL(afc.ASSET_FILE_CNT,0) <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			</when>
+			</choose>
+		</if>
+		
+		 <if test="searchNumKeywordE != null and searchNumKeywordE !== ''">
+          <choose>
+		    <when test="searchNumGubun == '1'">					
+			AND ast.AQUSIT_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			 <when test="searchNumGubun == '2'">					
+			AND ast.AQUSIT_FOREIGN_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			<when test="searchNumGubun == '3'">			
+			AND ast.AQUSIT_REMAIN_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			<when test="searchNumGubun == '4'">			
+			AND ast.AQUSIT_UNIT_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			<when test="searchNumGubun == '5'">				
+			AND ast.ASSET_CNT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			<when test="searchNumGubun == '6'">			
+			AND ast.USEFUL_LIFE <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			<when test="searchNumGubun == '7'">			
+			AND ast.TAG_PRINT_CNT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+			<when test="searchNumGubun == '8'">			
+			AND IFNULL(afc.ASSET_FILE_CNT,0) <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			</when>
+		  </choose>
+		  </if>			
+        
+          <if test="sAssetNo == null or sAssetNo === ''">
+            <if test="searchKeyword != null and searchKeyword !== ''">
+             <choose>
+		       <when test="searchGubun == '1'">	                		
+					AND (
+						ast.ASSET_NO like concat('%', #{searchKeyword} ,'%')
+						<if test="searchKeyword01 != null and searchKeyword01 !== ''">							
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword01} ,'%')				        
+				        </if>
+				        <if test="searchKeyword02 != null and searchKeyword02 !== ''">						
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword02} ,'%')				        
+				        </if>
+				        <if test="searchKeyword03 != null and searchKeyword03 !== ''">							
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword03} ,'%')
+				        </if>
+				        <if test="searchKeyword04 != null and searchKeyword04 !== ''">							
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword04} ,'%')				        
+				        </if>
+				        <if test="searchKeyword05 != null and searchKeyword05 !== ''">						
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword05} ,'%')				        
+				        </if>
+				        <if test="searchKeyword06 != null and searchKeyword06 !== ''">						
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword06} ,'%')				        
+				        </if>
+				        <if test="searchKeyword07 != null and searchKeyword07 !== ''">						
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword07} ,'%')				        
+				        </if>
+				        <if test="searchKeyword08 != null and searchKeyword08 !== ''">						
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword08} ,'%')				       
+				        </if>
+				        <if test="searchKeyword09 != null and searchKeyword09 !== ''">							
+				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword09} ,'%')				        
+				        </if>
+						)
+	            </when>
+	             <when test="searchGubun == '2'">	   	            
+					AND (
+						ast.ASSET_NAME like concat('%', #{searchKeyword} ,'%')
+						<if test="searchKeyword01 != null and searchKeyword01 !== ''">							
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword01} ,'%')				        
+				        </if>
+				        <if test="searchKeyword02 != null and searchKeyword02 !== ''">						
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword02} ,'%')				        
+				        </if>
+				        <if test="searchKeyword03 != null and searchKeyword03 !== ''">						
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword03} ,'%')				        
+				        </if>
+				        <if test="searchKeyword04 != null and searchKeyword04 !== ''">							
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword04} ,'%')				        
+				        </if>
+				         <if test="searchKeyword05 != null and searchKeyword05 !== ''">						
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword05} ,'%')				        
+				        </if>
+				         <if test="searchKeyword06 != null and searchKeyword06 !== ''">						
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword06} ,'%')				        
+				        </if>
+				         <if test="searchKeyword07 != null and searchKeyword07 !== ''">									
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword07} ,'%')				        
+				        </if>
+				        <if test="searchKeyword08 != null and searchKeyword08 !== ''">						
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword08} ,'%')				        
+				        </if>
+				        <if test="searchKeyword09 != null and searchKeyword09 !== ''">					
+				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword09} ,'%')				        
+				        </if>
+						)
+	            </when>
+	            <when test="searchGubun == '3'">	            
+	            AND ast.ASSET_SIZE like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '4'">	            
+	            AND ast.ACCNT_NUM like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '5'">	           
+	            AND ast.CONT_NO like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '6'">		           
+	            AND ast.CONT_REQ_NO like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '7'">	            
+	            AND ast.FD_ARTCL_NUM like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '8'">	            
+	            AND ast.USER_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '9'">	            
+	            AND ast.DEPT_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '10'">	            
+	            AND ast.CONT_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '11'">		            
+	            AND ast.ASSET_TYPE_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '12'">	            
+	            AND ast.REMARK like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '13'">	            
+	            AND ast.TOP_ASSET_NO like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '14'">	   	            
+	            AND ast.DISUSE_CONT like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	            <when test="searchGubun == '15'">	            
+	            AND ast.PURPOSE_OF_USE like concat('%', #{searchKeyword} ,'%')	            
+	            </when>
+	        </choose>
+	      </if>  
+	   </if>       
+	</sql>
+
+   <select id="getInventoryList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        select invm.inv_year,
+		       invm.inv_no,
+		       invm.inv_type,
+		       FN_GET_CMMNCODENAME('COM012', invm.inv_type) inv_type_name,
+		       invm.inv_summary,
+		       invm.inv_start_dt,
+		       invm.frst_regist_pnttm,
+		       invm.use_yn,
+		       (
+		       	select 	count(*) 
+		       	from 	rfid_inventory a inner join rfid_asset b on a.asset_seq = b.asset_seq 
+		       	where 	a.inv_year = invm.inv_year 
+		       			and a.inv_no = invm.inv_no 
+		       			and a.inv_target_yn = 'Y'
+		       			and b.use_yn = 'Y'
+		       ) target_count
+		  from rfid_inventory_master invm
+		 where use_yn = 'Y'
+		 <if test="sInvYear != null and sInvYear !== ''">		
+			and invm.inv_year = #{sInvYear}		
+		</if>
+		 order by invm.inv_year desc, invm.inv_no desc
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getInventoryListCnt" parameterType="cmap" resultType="int" >
+        select count(*)
+		  from rfid_inventory_master invm
+		 where use_yn = 'Y'
+		 <if test="sInvYear != null and sInvYear !== ''">			
+			and invm.inv_year = #{sInvYear}		
+		</if>
+    </select>
+
+    <select id="getInventoryView" parameterType="cmap" resultType="cmap" >
+        select invm.inv_year,
+		       invm.inv_no,
+		       invm.inv_type,
+		       FN_GET_CMMNCODENAME('COM012', invm.inv_type) inv_type_name,
+		       invm.inv_summary,
+		       invm.inv_start_dt,
+		       invm.frst_regist_pnttm,
+		       invm.use_yn,
+		       (
+		       select count(*) from rfid_inventory where inv_year = invm.inv_year and inv_no = invm.inv_no and inv_target_yn = "Y"
+		       ) target_count
+		  from rfid_inventory_master invm
+		 where invm.inv_year = #{invYear}
+		   and invm.inv_no = #{invNo}
+    </select>
+
+    <select id="getInventoryLast" parameterType="cmap" resultType="cmap" >
+		SELECT invm.inv_year,
+		       max(invm.inv_no) inv_no
+		  FROM rfid_inventory_master invm
+		   INNER JOIN
+		       (SELECT max(inv_year) inv_year
+		         FROM rfid_inventory_master
+		        WHERE use_yn = 'Y'
+		       ) invmtmp
+		       ON invm.inv_year = invmtmp.inv_year
+		 WHERE 1=1
+		       AND invm.use_yn = 'Y'
+		 GROUP BY invm.inv_year
+    </select>
+
+    <select id="getInventoryYearList" parameterType="cmap" resultType="cmap" >
+        select invm.inv_year
+		  from rfid_inventory_master invm
+		 where use_yn = 'Y'
+		 group by invm.inv_year
+		 order by invm.inv_year desc
+    </select>
+
+    <select id="getMaxJaemulNo" parameterType="cmap" resultType="int" >
+        select ( ifnull(max(invm.inv_no),0) + 1 ) inv_no
+		  from rfid_inventory_master invm
+		 where invm.inv_year = #{invYear}
+    </select>
+
+    <insert id="insertInventoryMaster" parameterType="cmap" >
+		insert into rfid_inventory_master (
+				inv_year,inv_no,inv_type,inv_summary,inv_start_dt,use_yn,frst_regist_pnttm,frst_register_id,last_updt_pnttm,last_updusr_id
+		) values (
+				#{invYear},#{invNo},#{invType},#{invSummary},#{invStartDt},'Y',#{frstRegistPnttm},#{frstRegisterId},#{lastUpdtPnttm},#{lastUpdusrId}
+		)
+	</insert>
+
+    <insert id="Inventory.insertInventoryDetail" parameterType="cmap" >
+		insert into rfid_inventory( inv_year,inv_no,asset_seq,asset_no,inv_target_yn,org_no,org_name,top_dept_no,top_dept_name,top_user_no,top_user_name,dept_no,dept_name,user_no,user_name,bldng_no,bldng_name,floor_no,floor_name,hosil,pos_no,pos_name,remark,asset_status_cd,disuse_dt,disuse_cont )
+		select
+				#{invYear},#{invNo},asset_seq,asset_no,#{invTargetYn},org_no,org_name,top_dept_no,top_dept_name,top_user_no,top_user_name,dept_no,dept_name,user_no,user_name,bldng_no,bldng_name,floor_no,floor_name,hosil,pos_no,pos_name,remark,asset_status_cd,disuse_dt,disuse_cont
+		from 	rfid_asset ast
+		where 	use_yn = 'Y'
+				and not exists (select 1 from rfid_inventory where inv_year = #{invYear} and inv_no = #{invNo} and asset_seq = ast.asset_seq)				
+		    <if test="sAssetSeq != null and sAssetSeq !== ''">		
+				and ast.asset_seq = #{sAssetSeq}			
+			</if>
+    </insert>
+
+    <update id="updateInventory" parameterType="cmap" >
+        update rfid_inventory_master set
+			inv_type = #{invType}
+			, inv_summary = #{invSummary}
+			, inv_start_dt = #{invStartDt}
+			, last_updt_pnttm = #{lastUpdtPnttm}
+			, last_updusr_id = #{lastUpdusrId}
+		where inv_year = #{invYear}
+		and inv_no = #{invNo}
+    </update>
+
+    <delete id="deleteInventory" parameterType="cmap" >
+        update rfid_inventory_master set
+			last_updt_pnttm = #{lastUpdtPnttm}
+			, last_updusr_id = #{lastUpdusrId}
+			, use_yn = 'N'
+		where inv_year = #{invYear}
+		and inv_no = #{invNo}
+	</delete>
+
+	<sql id="getInventoryDetailListWhere">
+    	and inv.inv_year = #sInvYear#
+		and inv.inv_no = #sInvNo#
+        <if test="sInventoryDiv != null and sInventoryDiv !== ''">
+         <choose>
+		    <when test="sInventoryDiv == '1'">	
+			and inv.update_dt <![CDATA[ > ]]> '19000101000000'
+			and inv.update_dt <![CDATA[ > ]]> IFNULL(inv.confirm_dt, '19000101000000')
+			</when>
+		 </choose>
+	   </if>						
+        <if test="sInvTargetYn != null and sInvTargetYn !== ''">		
+		   and inv.inv_target_yn = #{sInvTargetYn}		
+		</if>
+		<if test="sUpdateDtS != null and sUpdateDtS !== ''">			
+		   and inv.update_dt &gt;= concat(replace(#{sUpdateDtS},'-',''),'000000')		
+		</if>
+		<if test="sUpdateDtE != null and sUpdateDtE !== ''">		
+		   and inv.update_dt &lt;= concat(replace(#{sUpdateDtE},'-',''),'235959')		
+		</if>
+		<if test="sTagReadDtS != null and sTagReadDtS !== ''">		
+		   and inv.tag_read_dt &gt;= concat(replace(#{sTagReadDtS},'-',''),'000000')		
+		</if>
+		<if test="sTagReadDtE != null and sTagReadDtE !== ''">		
+		   and inv.tag_read_dt &lt;= concat(replace(#{sTagReadDtE},'-',''),'235959')		
+		</if>
+		<if test="sTagReadYn != null and sTagReadYn !== ''">
+		  <choose>
+		    <when test="sTagReadYn == 'Y'">			
+				and inv.tag_read_yn = 'Y'
+			</when>		
+			<when test="sTagReadYn == 'N'">						
+				and IFNULL(inv.tag_read_yn, 'N') <![CDATA[ <> ]]> 'Y'			
+			</when>
+		</choose>
+	    </if> 	
+	    <choose>
+		   <when test="sRePrintChk == 'Y'">						
+		   and ast.tag_print_cnt = 0		
+		   </when>
+		</choose>
+	</sql>
+
+    <select id="Inventory.getInventoryDetailList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		select 	ast.*
+				, inv.INV_YEAR
+				, inv.INV_NO
+				, inv.CNG_ORG_NO
+				, inv.CNG_ORG_NAME
+				, inv.CNG_TOP_DEPT_NO
+				, inv.CNG_TOP_DEPT_NAME
+				, inv.CNG_TOP_USER_NO
+				, inv.CNG_TOP_USER_NAME
+				, inv.CNG_DEPT_NO
+				, inv.CNG_DEPT_NAME
+				, inv.CNG_USER_NO
+				, inv.CNG_USER_NAME
+				, inv.CNG_BLDNG_NO
+				, inv.CNG_BLDNG_NAME
+				, inv.CNG_FLOOR_NO
+				, inv.CNG_FLOOR_NAME
+				, inv.CNG_HOSIL
+				, inv.CNG_POS_NO
+				, inv.CNG_POS_NAME
+				, inv.CNG_ASSET_SIZE
+				, inv.CNG_REMARK
+				, inv.CNG_BASIC_DT
+				, inv.TAG_READ_YN
+				, inv.TAG_READ_DT
+				, inv.INV_TARGET_YN
+				, inv.TAG_INSP_NAME
+				, inv.UPDATE_DT
+				, inv.CONFIRM_DT
+				, afc.asset_file_cnt
+				, lpd.last_print_dt
+				, HEX(ast.ASSET_NO) RFID_NO2
+		from rfid_inventory inv 
+				inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+				left outer join (
+						select 	asset_no, count(*) asset_file_cnt
+						from	rfid_asset_file
+						where	use_yn = 'Y'
+						group by asset_no
+						) afc on afc.asset_no = inv.asset_no
+				left outer join (
+						select	asset_seq, max(print_dt) last_print_dt
+						from	rfid_print_history
+						where	print_yn = 'Y'
+						group by asset_seq						
+						) lpd on lpd.asset_seq = inv.asset_seq
+		where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+		<include refid="getAssetList.Where"/>
+		<if test="dataOrder != null and dataOrder !== ''">        
+        	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.asset_no #{dataOrderArrow}        
+        </if>
+        <if test="dataOrder == null or dataOrder === ''">	        
+        	ORDER BY ast.asset_no asc        
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="Inventory.getInventoryDetailListCnt" parameterType="cmap" resultType="int" >
+		select 	count(*)
+		from rfid_inventory inv 
+				inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+				left outer join (
+						select 	asset_no, count(*) asset_file_cnt
+						from	rfid_asset_file
+						where	use_yn = 'Y'
+						group by asset_no
+						) afc on afc.asset_no = inv.asset_no
+				left outer join (
+						select	asset_seq, max(print_dt) last_print_dt
+						from	rfid_print_history
+						where	print_yn = 'Y'
+						group by asset_seq						
+						) lpd on lpd.asset_seq = inv.asset_seq
+		where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+		<include refid="getAssetListWhere"/>
+    </select>
+
+    <select id="getInventoryDetailListCnt2" parameterType="cmap" resultType="int" >
+        select count(*)
+		  from rfid_inventory inv
+		 where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+    </select>
+
+    <select id="getInventoryDetailView" parameterType="cmap" resultType="cmap" >
+        select
+        	inv.*
+ 		from rfid_inventory inv
+		where 1=1
+		and inv_year = #{sInvYear}
+		and inv_no = #{sInvNo}
+		and asset_seq = #{assetSeq}
+    </select>
+
+    <update id="updateTargetYn" parameterType="cmap" >
+	    UPDATE 	rfid_inventory inv
+	    		INNER JOIN rfid_asset ast ON inv.asset_seq = ast.asset_seq
+	    SET
+	    		inv_target_yn = #{invTargetYn}
+		WHERE
+				inv_year = #{invYear}
+				AND inv_no = #{invNo}
+		<include refid="getAssetListWhere"/>
+	</update>
+
+    <update id="updateInventoryPrint" parameterType="cmap" >
+    	UPDATE 	rfid_inventory
+    	SET
+    			tag_print_cnt = IFNULL(tag_print_cnt,0) + 1
+		WHERE 	inv_year = #{invYear}
+				AND inv_no = #{invNo}
+				AND asset_no = #{assetNo}
+    </update>
+
+    <select id="getAssetHistoryList" parameterType="cmap" resultType="cmap" >
+    	<![CDATA[
+    	select
+			inv.inv_year
+		    , inv.inv_no
+            , inv.asset_no
+            , inv.dept_name
+            , inv.user_name
+            , inv.hosil
+            , (case when inv.cng_dept_name is null or inv.cng_dept_name = '' then inv.dept_name else inv.cng_dept_name end) cng_dept_name
+		    , (case when inv.cng_user_name is null or inv.cng_user_name = '' then inv.user_name else inv.cng_user_name end) cng_user_name
+            , (case when inv.cng_hosil is null or inv.cng_hosil = '' then inv.hosil else inv.cng_hosil end) cng_hosil
+            , (case when inv.tag_read_dt is null or inv.tag_read_dt = '' then inv.cng_basic_dt else inv.tag_read_dt end) inv_dt
+		from rfid_inventory inv inner join rfid_inventory_master invm on inv.inv_year = invm.inv_year and inv.inv_no = invm.inv_no
+        						inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+		where 1=1
+		and ast.use_yn = 'Y'
+		and invm.use_yn = 'Y'
+		and inv.asset_no = #{asset_no}
+		and ( inv.tag_read_dt <> '' or inv.cng_basic_dt <> '' )
+		order by inv.inv_year desc, inv.inv_no desc
+		]]>
+    </select>
+
+    <select id="getDeptStat" parameterType="cmap" resultType="cmap" >
+    	select
+    		top_dept_name
+    		, dept_name
+    		, count(*) total
+            , sum(inv_target_cnt) inv_target_cnt
+    		, sum(tag_read_cnt) tag_read_cnt
+            , (sum(inv_target_cnt) - sum(tag_read_cnt)) no_read_cnt
+        from (
+	          select
+	              inv.top_dept_name
+	              , inv.dept_name
+                  , case when inv.inv_target_yn = 'Y' then 1 else 0 end inv_target_cnt
+	              , case when inv.tag_read_dt > '' then 1 else 0 end tag_read_cnt
+	          from rfid_inventory inv
+	          		inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+	          where 1=1
+	          and inv.inv_target_yn = 'Y'
+	          <include refid="getInventoryDetailListWhere"/>
+        ) z
+		group by top_dept_name, dept_name
+		order by top_dept_name, dept_name
+    </select>
+
+    <select id="getHosilStat" parameterType="cmap" resultType="cmap" >
+    	select
+    		pos_name
+    		, count(*) total
+            , sum(inv_target_cnt) inv_target_cnt
+    		, sum(tag_read_cnt) tag_read_cnt
+            , (sum(inv_target_cnt) - sum(tag_read_cnt)) no_read_cnt
+        from (
+	          select
+	              inv.pos_name
+                  , case when inv.inv_target_yn = 'Y' then 1 else 0 end inv_target_cnt
+	              , case when inv.tag_read_dt > '' then 1 else 0 end tag_read_cnt
+	          from rfid_inventory inv
+	          		inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+	          where 1=1
+	          and inv.inv_target_yn = 'Y'
+	          and ast.use_yn = 'Y'
+	          <include refid="getInventoryDetailListWhere"/>
+        ) z
+		group by pos_name
+		order by pos_name
+    </select>
+
+    <select id="getAssetCateStat" parameterType="cmap" resultType="cmap" >
+    	select
+    		asset_type_cd
+    		, FN_GET_CMMNCODENAME('COM007', asset_type_cd) asset_type_name
+    		, count(*) total
+            , sum(inv_target_cnt) inv_target_cnt
+    		, sum(tag_read_cnt) tag_read_cnt
+            , (sum(inv_target_cnt) - sum(tag_read_cnt)) no_read_cnt
+        from (
+	          select
+	              ast.asset_type_cd
+                  , case when inv.inv_target_yn = 'Y' then 1 else 0 end inv_target_cnt
+	              , case when inv.tag_read_dt > '' then 1 else 0 end tag_read_cnt
+	          from rfid_inventory inv
+	          		inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+	          where 1=1
+	          and inv.inv_target_yn = 'Y'
+	          and ast.use_yn = 'Y'
+	          <include refid="getInventoryDetailListWhere"/>
+        ) z
+		group by asset_type_cd
+		order by asset_type_cd
+    </select>
+
+
+       <select id="getNewRegisterStat" parameterType="cmap" resultType="cmap" >
+		 select
+			asset_no
+		    , dept_name
+		    , asset_name
+		    , asset_cnt
+		 from rfid_new_asset ast
+		 where 1=1
+	   </select>
+
+
+    <select id="getUserStat" parameterType="cmap" resultType="cmap" >
+    	select
+    		IFNULL(inv.cng_user_name, ast.user_name) user_name
+    		, IFNULL(inv.cng_user_no, ast.user_no) user_no
+    		, ast.asset_type
+    		, ast.asset_cate
+    		, ast.asset_no
+    		, ast.asset_name
+    		, ast.aqusit_dt
+		    , 1 cnt
+		    , af.img_cnt
+		from rfid_inventory inv 
+				inner join rfid_asset ast on inv.asset_seq = ast.asset_seq				
+                                left outer join (
+                                                  select asset_no, case when count(*) > 1 then 1 else 0 end img_cnt
+                                                  from rfid_asset_file
+                                                  where use_yn = 'Y'
+                                                  group by asset_no
+                                                  ) af on inv.asset_no = af.asset_no
+		where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+		order by user_name, user_no, asset_type, asset_cate, asset_no
+    </select>
+
+    <insert id="Inventory.insertPrintHistory" parameterType="cmap" >
+    	insert into rfid_print_history( asset_no,rfid_no,asset_name,asset_size,asset_type,aqusit_dt,org_no,inv_year,inv_no,req_system,print_dt,print_type,print_yn,tmp_title )
+		select
+    		ast.asset_no
+    		, ast.rfid_no
+			, ast.asset_name
+			, ast.asset_size
+			, ast.asset_type
+			, ast.aqusit_dt
+			, '1' org_no
+			, #{inv_year} inv_year
+			, #{inv_no} inv_no
+			, #{req_system} req_system
+			, #{print_dt}
+			, #{print_type}
+			, 'N' print_yn
+			, #{tmp_title}
+		from rfid_inventory inv inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+		where 1=1
+		<include refid="getInventoryDetailListWhere"/>
+		<if test="dataOrder != null and dataOrder !== ''">		
+        	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.asset_no asc        
+        </if>
+        <if test="dataOrder == null or dataOrder === ''">      
+        	ORDER BY ast.asset_no asc        
+        </if>
+    </insert>
+
+    <insert id="insertRequest" parameterType="cmap" >
+    	insert into rfid_inventory_update
+        select
+    		asset_no,
+			asset_size,
+			org_no,
+			org_name,
+			dept_no,
+			dept_name,
+			user_no,
+			user_name,
+			pos_no,
+			pos_name,
+			hosil,
+			remark,
+            cng_basic_dt,
+            #{create_dt}
+		from (
+		      select
+		          inv.asset_no
+                  , case when inv.cng_asset_size is null or inv.cng_asset_size = '' then ast.asset_size else inv.cng_asset_size end asset_size
+                  , case when inv.cng_org_no is null or inv.cng_org_no = '' then ast.org_no else inv.cng_org_no end org_no
+                  , case when inv.cng_org_name is null or inv.cng_org_name = '' then ast.org_name else inv.cng_org_name end org_name
+                  , case when inv.cng_dept_no is null or inv.cng_dept_no = '' then ast.dept_no else inv.cng_dept_no end dept_no
+                  , case when inv.cng_dept_name is null or inv.cng_dept_name = '' then ast.dept_name else inv.cng_dept_name end dept_name
+                  , case when inv.cng_user_no is null or inv.cng_user_no = '' then ast.user_no else inv.cng_user_no end user_no
+                  , case when inv.cng_user_name is null or inv.cng_user_name = '' then ast.user_name else inv.cng_user_name end user_name
+                  , case when inv.cng_pos_no is null or inv.cng_pos_no = '' then ast.pos_no else inv.cng_pos_no end pos_no
+                  , case when inv.cng_pos_name is null or inv.cng_pos_name = '' then ast.pos_name else inv.cng_pos_name end pos_name
+                  , case when inv.cng_hosil is null or inv.cng_hosil = '' then ast.hosil else inv.cng_hosil end hosil
+                  , inv.remark
+                  , inv.cng_basic_dt
+              from rfid_inventory inv inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
+              where cng_basic_dt <![CDATA[ <> ]]> ''
+              and inv_year = #{inv_year}
+              and inv_no = #{inv_no}
+		      ) z
+    </insert>
+
+    <select id="selectRequest" parameterType="cmap" resultType="cmap" >
+    	SELECT	inv.cng_user_no
+    			, inv.cng_user_name
+    			, inv.cng_pos_no
+    			, inv.cng_pos_name
+    			, inv.asset_status_cd cng_asset_status_cd
+    			, inv.disuse_dt cng_disuse_dt
+    			, inv.disuse_cont cng_disuse_cont
+    			, ast.user_no
+    			, ast.user_name
+    			, ast.pos_no
+    			, ast.pos_name
+    			, ast.asset_status_cd
+    			, ast.disuse_dt
+    			, ast.disuse_cont
+    	FROM	rfid_inventory inv
+    			INNER JOIN rfid_asset ast ON inv.ASSET_SEQ = ast.ASSET_SEQ
+    	WHERE	inv.INV_YEAR = #invYear#
+    			AND inv.INV_NO = #invNo#
+    			AND inv.ASSET_SEQ = #assetSeq#
+    </select>
+
+    <update id="updateRequest" parameterType="cmap" >
+    	UPDATE 	rfid_asset
+    	SET
+	    		last_updt_pnttm = #{lastUpdtPnttm}
+	    		, last_updusr_id  = #{lastUpdusrId}
+	    		<if test="userName != null and userName !== ''">	    		
+	    		, user_no = #{userNo}
+	    		, user_name = #{userName}	    		
+	    		</if>
+	    		<if test="posName != null and posName !== ''">	    		
+	    		, pos_no = #{posNo}
+	    		, pos_name = #{posName}	    		
+	    		</if>
+	    		<if test="disuseDt != null and disuseDt !== ''">		    		
+	    		, disuse_dt = #{disuseDt}	    		
+	    		</if>
+	    		<if test="disuseCont != null and disuseCont !== ''">	    		
+	    		, disuse_cont = #{disuseCont}	    		
+	    		</if>
+	    		<if test="assetStatusCd != null and assetStatusCd !== ''">	    		
+	    		, asset_status_cd = #{assetStatusCd}	    		
+	    		</if>
+		WHERE
+				asset_seq = #{assetSeq}
+    </update>
+
+    <update id="updateRequestCon" parameterType="cmap" >
+    	UPDATE 	rfid_inventory
+    	SET
+	    		confirm_dt = #{confirmDt}
+		WHERE	inv_year = #{invYear}
+				AND inv_no = #{invNo}
+				AND asset_seq = #{assetSeq}
+    </update>
+
+    <delete id="deleteRequestCon" parameterType="cmap" >
+    	UPDATE 	rfid_inventory
+    	SET
+				CNG_ORG_NO = NULL
+				,CNG_ORG_NAME = NULL
+				,CNG_DEPT_NO = NULL
+				,CNG_DEPT_NAME = NULL
+				,CNG_USER_NO = NULL
+				,CNG_USER_NAME = NULL
+				,CNG_POS_NO = NULL
+				,CNG_POS_NAME = NULL
+				,CNG_HOSIL = NULL
+				,CNG_REMARK = NULL
+				,CNG_BASIC_DT = NULL
+				,CNG_ASSET_SIZE = NULL
+				,TAG_READ_YN = NULL
+				,TAG_READ_DT = NULL
+				,TAG_INSP_NAME = NULL
+				,CONFIRM_DT = #{confirmDt}
+		WHERE	inv_year = #{invYear}
+				AND inv_no = #{invNo}
+				AND asset_seq = #{assetSeq}
+    </delete>
+
+    <select id="selectRequestCon" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+    	select invu.asset_no,
+		       ast.asset_name,
+		       invu.asset_size,
+		       invu.org_no,
+		       invu.org_name,
+		       invu.dept_no,
+		       invu.dept_name,
+		       invu.user_no,
+		       invu.user_name,
+		       invu.pos_no,
+		       invu.pos_name,
+		       invu.hosil,
+		       invu.remark,
+		       invu.cng_basic_dt,
+		       invu.create_dt
+		  from rfid_inventory_update invu inner join rfid_asset ast on invu.asset_seq = ast.asset_seq
+		<include refid="pagingFooter"/>
+    </select>
+
+
+    <delete id="deleteRequest" parameterClass="cmap" >
+        delete from rfid_inventory_update
+    </delete>
+  
+
+</mapper>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprIoOutMapper">
+
+   <sql id="pagingHeader">
+   </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
+
+  <sql id="getApprIoOutListWhere">
+
+    	AND B.RQST_STATUS_CD NOT IN ('4')
+        <if test="ssGrantRead != null and ssGrantRead != ''">
+          <choose>
+		    <when test="sAssetDiv == 'GRANT_USR'">       	
+				AND (
+					B.RQST_USER_NO = #ssUserNo#
+					OR
+					EXISTS (
+							SELECT 	1
+							FROM 	RFID_APPR_ASSET T1
+									INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+							WHERE	T1.RQSTNO = A.RQSTNO
+									AND T2.USER_NO = #ssUserNo#
+							)
+					)
+			</when>		
+			<when test="ssGrantRead == 'GRANT_DHD'">  			
+				AND (
+					B.RQST_DEPT_NO = #ssDeptNo#
+					OR
+					EXISTS (
+							SELECT 	1
+							FROM 	RFID_APPR_ASSET T1
+									INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
+							WHERE	T1.RQSTNO = A.RQSTNO
+									AND T2.USER_NO = #ssUserNo#
+							)
+					)
+			</when>
+			<when test="ssGrantRead == 'GRANT_MGR'">  				
+				AND 1=1			
+			</when>
+			<when test="ssGrantRead == 'GRANT_NONE'">  				
+				AND 1=2			
+			</when>
+		 </choose>
+      </if>
+    	<!-- AND NOT EXISTS (
+    		SELECT 	1
+    		FROM 	RFID_APPR_IO_IN T1
+    		WHERE 	RQSTNO = A.RQSTNO
+    				AND RQST_STATUS_CD IN ('3','4')
+    		) -->
+    	AND EXISTS (
+    		SELECT	1
+    		FROM	RFID_APPR_ASSET T1
+    				LEFT OUTER JOIN RFID_APPR_IO_IN_ASSET T2 ON T1.RQSTNO = T2.RQSTNO AND T1.ASSET_SEQ = T2.ASSET_SEQ
+    		WHERE	T2.ASSET_SEQ IS NULL
+    		)
+    	AND EXISTS (
+ 			SELECT 1
+ 			FROM RFID_APPR_ASSET A1
+ 			INNER JOIN RFID_ASSET A2 ON A1.ASSET_SEQ = A2.ASSET_SEQ
+ 			WHERE A1.RQSTNO = A.RQSTNO
+ 		<if test="sAssetNo != null and sAssetNo != ''">			
+ 			AND A2.ASSET_NO LIKE concat('%',#{sAssetNo},'%') 		
+ 		</if>
+ 		<if test="sItemCd != null and sItemCd != ''">		 		
+ 			AND A2.ITEM_CD LIKE concat('%',#{sItemCd},'%') 		
+ 		</if>
+ 		<if test="sItemName != null and sItemName != ''">
+ 		    <if test="sItemCd == null or sItemCd == ''">		 		    	
+ 			AND A2.ITEM_NAME LIKE concat('%',#{sItemName},'%') 			 		
+ 			</if>
+ 		</if>
+ 		<if test="sAssetName != null and sAssetName != ''"> 	
+ 			AND A2.ASSET_NAME LIKE concat('%',#{sAssetName},'%') 		
+ 		</if>
+ 			)
+        <if test="sRqstUserNo != null and sRqstUserNo != ''"> 	    
+    		AND B.RQST_USER_NO = #{sRqstUserNo}    	
+    	</if>
+    	<if test="sRqstUserName != null and sRqstUserName != ''">
+ 		    <if test="sRqstUserNo == null or sRqstUserNo == ''">	    	
+ 			AND B.RQST_USER_NAME LIKE concat('%',#{sRqstUserName},'%')
+ 			</if>
+ 		</if>	
+ 		<if test="sRqstRegtimeS != null and sRqstRegtimeS != ''">    	
+    		AND B.RQST_REGTIME <![CDATA[ >= ]]> #{sRqstRegtimeS}    	
+    	</if>	
+    	<if test="sRqstRegtimeE != null and sRqstRegtimeE != ''">     	
+    		AND B.RQST_REGTIME <![CDATA[ <= ]]> #{sRqstRegtimeE}    	
+    	</if>
+    	<if test="sRqstDeptNo != null and sRqstDeptNo != ''">       	
+    		AND B.RQST_DEPT_NO = #{sRqstDeptNo}    	
+    	</if>
+    	<if test="sRqstDeptName != null and sRqstDeptName != ''">
+ 		    <if test="sRqstDeptNo == null or sRqstDeptNo == ''">    
+    		AND B.RQST_DEPT_NAME = #{sRqstDeptName}
+    		</if>
+    	</if>	
+    	<if test="sRqstStatusCd != null and sRqstStatusCd != ''">       	    	
+    		AND B.RQST_STATUS_CD = #{sRqstStatusCd}    	
+    	</if>
+    </sql>
+  
+<select id="getApprIoOutList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		SELECT
+		        A.RQSTNO,
+		        A.OUT_DT,
+		        A.OUT_PLACE,
+		        A.EXP_IN_DT,
+		        (CASE WHEN D.EXT_DT IS NULL OR D.EXT_DT = '' THEN A.EXP_IN_DT ELSE D.EXT_DT END) AS EXP_IN_DT2,
+		        A.REASON_CD,
+		        A.REASON,
+		        A.GUARD_SIGN_YN,
+		        A.GUARD_SIGN_DT,
+		        A.GUARD_NAME,
+		        B.RQST_REGTIME,
+		        B.RQST_USER_NO,
+		        B.RQST_USER_NAME,
+		        B.RQST_DEPT_NO,
+		        B.RQST_DEPT_NAME,
+		        B.RQST_TOP_USER_NO,
+		        B.RQST_TOP_USER_NAME,
+		        B.RQST_ASSET_CNT,
+		        B.RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', B.RQST_STATUS_CD) RQST_STATUS_NAME,
+		        B.FRST_REGIST_PNTTM,
+		        B.FRST_REGISTER_ID,
+		        B.LAST_UPDT_PNTTM,
+		        B.LAST_UPDUSR_ID,
+		        C.RQST_STATUS_CD AS IN_RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', C.RQST_STATUS_CD) IN_RQST_STATUS_NAME,
+		        C.IN_DT,
+		        D.RQST_STATUS_CD AS EXT_RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', D.RQST_STATUS_CD) EXT_RQST_STATUS_NAME,
+		        D.EXT_DT
+		FROM 	RFID_APPR_IO_OUT A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+		        LEFT OUTER JOIN (
+		        		SELECT 	T1.*
+					    FROM 	RFID_APPR_IO_IN T1
+					    		INNER JOIN (
+					    				SELECT 	RQSTNO, MAX(IN_RQSTNO) IN_RQSTNO
+					    				FROM 	RFID_APPR_IO_IN
+					    				WHERE 	RQST_STATUS_CD = '3'
+					    				GROUP BY RQSTNO
+					    				) T2 ON T1.IN_RQSTNO = T2.IN_RQSTNO
+					    ) C ON A.RQSTNO = C.RQSTNO
+		        LEFT OUTER JOIN (
+		        		SELECT 	T1.*
+					    FROM 	RFID_APPR_IO_EXT T1
+					    		INNER JOIN (
+					    				SELECT RQSTNO, MAX(EXT_RQSTNO) EXT_RQSTNO
+					    				FROM RFID_APPR_IO_EXT
+					    				WHERE 	RQST_STATUS_CD = '3'
+					    				GROUP BY RQSTNO
+					    				) T2 ON T1.EXT_RQSTNO = T2.EXT_RQSTNO
+					    ) D ON A.RQSTNO = D.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprIoOutListWhere" />
+        ORDER BY RQSTNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getApprIoOutListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+		FROM RFID_APPR_IO_OUT A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprIoOutListWhere" />
+    </select>
+    
+     <sql id="getApprIoOutAssetListWhere">
+
+        <if test="ssGrantRead != null and ssGrantRead != ''">
+          <choose>
+		    <when test="ssGrantRead == 'GRANT_USR'">       	    	
+				AND B.RQST_USER_NO = #{ssUserNo}			
+			</when>
+			<when test="ssGrantRead == 'GRANT_DHD'">  			
+				AND B.RQST_DEPT_NO = #{ssDeptNo}			
+			</when>
+			<when test="ssGrantRead == 'GRANT_MGR'">  					
+				AND 1=1			
+			</when>
+			<when test="ssGrantRead == 'GRANT_NONE'"> 			
+				AND 1=2			
+			</when>
+		 </choose>
+		 </if>			
+
+        <if test="sAssetNo != null and sAssetNo != ''">    	
+ 			AND D.ASSET_NO LIKE concat('%',#{sAssetNo},'%') 		
+ 		 </if>
+ 		 <if test="sItemCd != null and sItemCd != ''">    	 		
+ 			AND D.ITEM_CD LIKE concat('%',#{sItemCd},'%') 		
+ 		</if>
+ 		<if test="sItemName != null and sItemName !== ''">	
+		  <if test="sItemCd == null or sItemCd == ''">	 		
+ 			AND D.ITEM_NAME LIKE concat('%',#{sItemName},'%') 		
+ 		</if>
+ 	  </if>	
+ 	  <if test="sAssetName != null and sAssetName !== ''">	 		
+ 			AND D.ASSET_NAME LIKE concat('%',#{sAssetName},'%') 		
+ 	  </if>	
+    </sql>
+    
+     <select id="getApprIoOutAssetList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+		SELECT
+		        A.RQSTNO,
+		        A.OUT_DT,
+		        A.OUT_PLACE,
+		        A.EXP_IN_DT,
+		        A.REASON_CD,
+		        A.REASON,
+		        A.GUARD_SIGN_YN,
+		        A.GUARD_SIGN_DT,
+		        A.GUARD_NAME,
+		        B.RQST_REGTIME,
+		        B.RQST_USER_NO,
+		        B.RQST_USER_NAME,
+		        B.RQST_DEPT_NO,
+		        B.RQST_DEPT_NAME,
+		        B.RQST_TOP_USER_NO,
+		        B.RQST_TOP_USER_NAME,
+		        B.RQST_ASSET_CNT,
+		        B.RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', B.RQST_STATUS_CD) RQST_STATUS_NAME,
+		        B.FRST_REGIST_PNTTM,
+		        B.FRST_REGISTER_ID,
+		        B.LAST_UPDT_PNTTM,
+		        B.LAST_UPDUSR_ID,
+		        D.ASSET_SEQ,
+		        D.ASSET_NO,
+		        D.ASSET_NAME,
+		        D.ITEM_CD,
+		        D.ITEM_NAME,
+		        E.EXT_DT,
+		        F.IN_DT
+		FROM RFID_APPR_IO_OUT A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+		        INNER JOIN RFID_APPR_ASSET C ON A.RQSTNO = C.RQSTNO
+		        INNER JOIN RFID_ASSET D ON C.ASSET_SEQ = D.ASSET_SEQ
+		        LEFT OUTER JOIN (
+		        		SELECT 	T1.*
+					    FROM 	RFID_APPR_IO_EXT T1
+					    		INNER JOIN (
+					    				SELECT RQSTNO, MAX(EXT_RQSTNO) EXT_RQSTNO
+					    				FROM RFID_APPR_IO_EXT
+					    				WHERE 	RQST_STATUS_CD = '3'
+					    				GROUP BY RQSTNO
+					    				) T2 ON T1.EXT_RQSTNO = T2.EXT_RQSTNO
+					    ) E ON A.RQSTNO = E.RQSTNO
+		        LEFT OUTER JOIN (
+		        		SELECT 	T1.*
+					    FROM 	RFID_APPR_IO_IN T1
+					    		INNER JOIN (
+					    				SELECT 	RQSTNO, MAX(IN_RQSTNO) IN_RQSTNO
+					    				FROM 	RFID_APPR_IO_IN
+					    				WHERE 	RQST_STATUS_CD = '3'
+					    				GROUP BY RQSTNO
+					    				) T2 ON T1.IN_RQSTNO = T2.IN_RQSTNO
+					    ) F ON A.RQSTNO = F.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprIoOutListWhere" />
+		<include refid="getApprIoOutAssetListWhere" />
+        ORDER BY RQSTNO DESC
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getApprIoOutAssetListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+		FROM RFID_APPR_IO_OUT A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	1=1
+		<include refid="getApprIoOutListWhere" />
+		<include refid="getApprIoOutAssetListWhere" />
+    </select>
+    
+    <select id="getApprIoOutView" parameterType="cmap" resultType="cmap" >
+		SELECT
+		        A.RQSTNO,
+		        A.OUT_DT,
+		        A.OUT_PLACE,
+		        A.EXP_IN_DT,
+		        A.REASON_CD,
+		        A.REASON,
+		        A.GUARD_SIGN_YN,
+		        A.GUARD_SIGN_DT,
+		        A.GUARD_NAME,
+		        B.RQST_REGTIME,
+		        B.RQST_USER_NO,
+		        B.RQST_USER_NAME,
+		        B.RQST_DEPT_NO,
+		        B.RQST_DEPT_NAME,
+		        B.RQST_TOP_USER_NO,
+		        B.RQST_TOP_USER_NAME,
+		        B.RQST_ASSET_CNT,
+		        B.RQST_STATUS_CD,
+		        FN_GET_CMMNCODENAME('COM008', B.RQST_STATUS_CD) RQST_STATUS_NAME,
+		        B.FRST_REGIST_PNTTM,
+		        B.FRST_REGISTER_ID,
+		        B.LAST_UPDT_PNTTM,
+		        B.LAST_UPDUSR_ID
+		FROM RFID_APPR_IO_OUT A
+		        INNER JOIN RFID_APPR_RQST B ON A.RQSTNO = B.RQSTNO
+        WHERE 	A.RQSTNO = #{rqstno}
+    </select>
+
+ <insert id="insertApprIoOut" parameterType="cmap" >
+        INSERT INTO RFID_APPR_IO_OUT (
+        		RQSTNO
+				,OUT_DT
+				,OUT_PLACE
+				,EXP_IN_DT
+				,REASON_CD
+				,REASON
+				,FRST_REGIST_PNTTM
+				,FRST_REGISTER_ID
+				,LAST_UPDT_PNTTM
+				,LAST_UPDUSR_ID
+        ) VALUES (
+				#{rqstno}
+				,#{outDt}
+				,#{outPlace}
+				,#{expInDt}
+				,#{reasonCd}
+				,#{reason}
+				,#{frstRegistPnttm}
+				,#{frstRegisterId}
+				,#{lastUpdtPnttm}
+				,#{lastUpdusrId}
+        )
+    </insert>
+    
+      <update id="updateApprIoOut" parameterType="cmap" >
+        UPDATE 	RFID_APPR_IO_OUT
+        SET
+				OUT_DT = #{outDt}
+				,OUT_PLACE = #{outPlace}
+				,EXP_IN_DT = #{expInDt}
+				,REASON_CD = #{reasonCd}
+				,REASON = #{reason}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+				,FRST_REGISTER_ID = #{frstRegisterId}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+     <update id="deleteApprIoOut" parameterType="cmap" >
+        UPDATE 	RFID_APPR_IO_OUT
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+    <delete id="deleteApprIoOut2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_APPR_IO_OUT
+        WHERE 	RQSTNO = #{rqstno}
+    </delete>
+    
+    <update id="updateGuardSignYn" parameterType="cmap" >
+        UPDATE 	RFID_APPR_IO_OUT
+        SET
+				GUARD_SIGN_YN = #{guardSignYn}
+				,GUARD_NAME = #{guardName}
+				,GUARD_SIGN_DT = #{guardSignDt}
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RQSTNO = #{rqstno}
+    </update>
+    
+</mapper>
