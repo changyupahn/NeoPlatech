@@ -8,7 +8,7 @@
 		VALUES 
 		(#{labelUserId}, #{orgNo}, #{labelTitle}, #{useYn}, #{frstRegistPnttm}, #{frstRegisterId}, #{lastUpdtPnttm}, #{lastUpdusrId})
 		
-		<selectKey keyProperty="labelSeq" resultClass="int">
+		<selectKey keyProperty="labelSeq" resultType="int">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
