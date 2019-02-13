@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import boassoft.mapper.GrantMapper;
 import boassoft.service.GrantService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
@@ -11,7 +12,7 @@ import boassoft.util.CommonMap;
 @Service("GrantService")
 public class GrantServiceImpl implements GrantService {
 
-	@Resource(name="grantMapper")
+	@Resource(name="GrantMapper")
     private GrantMapper grantMapper;
 
 	

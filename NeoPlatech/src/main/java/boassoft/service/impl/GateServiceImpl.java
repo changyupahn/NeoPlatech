@@ -16,7 +16,7 @@ import boassoft.util.CommonMap;
 @Service("GateService")
 public class GateServiceImpl extends EgovAbstractServiceImpl implements GateService {
 
-	@Resource(name="gateMapper")
+	@Resource(name="GateMapper")
     private GateMapper gateMapper;
 	
 	public CommonList getAssetInfoList(CommonMap cmap) throws Exception {

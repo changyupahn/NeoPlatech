@@ -17,7 +17,7 @@ import boassoft.mapper.GrandMenuMapper;
 @Service("GrantMenuService")
 public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements GrantMenuService {
 
-	@Resource(name="grandMenuMapper")
+	@Resource(name="GrandMenuMapper")
 	private GrandMenuMapper grandMenuMapper;
 	
 	public CommonList getGrantMenuList(CommonMap cmap) throws Exception {
