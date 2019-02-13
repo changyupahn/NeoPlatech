@@ -14,7 +14,7 @@ import boassoft.util.CommonMap;
 @Service("LogService")
 public class LogServiceImpl extends EgovAbstractServiceImpl implements LogService {
 
-	@Resource(name="logMapper")
+	@Resource(name="LogMapper")
     private LogMapper logMapper;
 	
 	@Resource(name = "logSeqIdGnrService")

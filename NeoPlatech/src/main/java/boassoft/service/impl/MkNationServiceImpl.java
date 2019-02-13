@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("MkNationService")
 public class MkNationServiceImpl extends EgovAbstractServiceImpl implements MkNationService {
 
-	@Resource(name="mkNationMapper")
+	@Resource(name="MkNationMapper")
     private MkNationMapper mkNationMapper;
 	
 	@Override
