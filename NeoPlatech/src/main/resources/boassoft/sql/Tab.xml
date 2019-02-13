@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="TabMapper">
 
-    <sql id="pagingHeader">
+     <!--<sql id="pagingHeader">
     </sql>
 
     <sql id="pagingFooter">
@@ -10,8 +10,7 @@
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
 
   <select id="getRfidLoginView" parameterType="cmap" resultType="cmap" >
     	SELECT 	*
@@ -32,7 +31,7 @@
         group by invm.inv_year
     </select>
 
-    <sql id=".getAssetListXmlWhere">
+    <sql id="getAssetListXmlWhere">
     	and ast.use_yn = 'Y'
     	<if test="assetNo != null and assetNo != ''">	    
 		   and ast.asset_no like concat('%',#{assetNo},'%')		
@@ -103,7 +102,7 @@
     	</if>
 	</sql>
 
-    <select id="Tab.getInventoryListXml" parameterType="cmap" resultType="commonXml" >
+    <select id="getInventoryListXml" parameterType="cmap" resultType="commonXml" >
     	<include refid="pagingHeader"/>
         select
         	ifnull(invm.inv_year,' ') inv_year,
@@ -262,7 +261,7 @@
         <include refid="pagingFooter"/>
     </select>
 
-    <select id="Tab.getUserListXmlCnt" parameterType="cmap" resultType="int" >
+    <select id="getUserListXmlCnt" parameterType="cmap" resultType="int" >
         select count(*)
 		from rfid_user usr inner join rfid_dept dpt on usr.dept_no = dpt.dept_no
 		where 1=1
@@ -294,7 +293,7 @@
         <include refid="pagingFooter"/>
     </select>
 
-    <select id="Tab.getDeptListXmlCnt" parameterType="cmap" resultType="int" >
+    <select id="getDeptListXmlCnt" parameterType="cmap" resultType="int" >
         select count(*)
 		from rfid_dept dpt inner join rfid_org org on dpt.org_no = org.org_no
 		where 1=1
@@ -325,7 +324,7 @@
         <include refid="pagingFooter"/>
     </select>
 
-    <select id="Tab.getPosListXmlCnt" parameterType="cmap" resultType="int" >
+    <select id="getPosListXmlCnt" parameterType="cmap" resultType="int" >
     	select count(*)
 		from rfid_position pos
 		where 1=1
