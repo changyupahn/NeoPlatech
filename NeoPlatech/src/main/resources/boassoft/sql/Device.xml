@@ -3,7 +3,7 @@
 <mapper namespace="DeviceMapper">
 
 
-    <sql id="pagingHeader">
+     <!--<sql id="pagingHeader">
     </sql>
 
     <sql id="pagingFooter">
@@ -11,8 +11,7 @@
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
 
      <sql id="getDeviceListWhere">    	
     	<if test="searchKeyword != null and searchKeyword != ''">  

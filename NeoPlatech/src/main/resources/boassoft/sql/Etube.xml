@@ -2,62 +2,66 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="EtubeMapper">
 
- <sql id="Etube.getEtubeList.Where">
-        <isNotEmpty property="sEquipNo">
-        	AND A.EQUIP_NO like concat('%', #sEquipNo# ,'%')
-        </isNotEmpty>
-        <isNotEmpty property="sEquipName">
+ <sql id="getEtubeListWhere">
+        <if test="sEquipNo != null and sEquipNo != ''">        
+        	AND A.EQUIP_NO like concat('%', #{sEquipNo} ,'%')        
+        </if>
+        <if test="sEquipName != null and sEquipName != ''">        
         	AND (
-        		A.EQUIP_KOR_NM like concat('%', #sEquipName# ,'%')
+        		A.EQUIP_KOR_NM like concat('%', #{sEquipName} ,'%')
         		OR
-        		A.EQUIP_ENG_NM like concat('%', #sEquipName# ,'%')
-        		)
-        </isNotEmpty>
-        <isNotEmpty property="sAssetNo">
-        	AND A.EQUIP_ASSET_NO like concat('%', #sAssetNo# ,'%')
-        </isNotEmpty>
-        <isNotEmpty property="searchDtKeywordS">
-			<isEqual property="searchDtGubun" compareValue="1">
-			AND A.REG_DATE <![CDATA[ >= ]]> replace(#searchDtKeywordS#,'-','')
-			</isEqual>
-			<isEqual property="searchDtGubun" compareValue="2">
-			AND A.MOD_DATE <![CDATA[ >= ]]> replace(#searchDtKeywordS#,'-','')
-			</isEqual>
-		</isNotEmpty>
-		<isNotEmpty property="searchDtKeywordE">
-			<isEqual property="searchDtGubun" compareValue="1">
-			AND A.REG_DATE <![CDATA[ <= ]]> replace(#searchDtKeywordE#,'-','')
-			</isEqual>
-			<isEqual property="searchDtGubun" compareValue="2">
-			AND A.MOD_DATE <![CDATA[ <= ]]> replace(#searchDtKeywordE#,'-','')
-			</isEqual>
-		</isNotEmpty>
+        		A.EQUIP_ENG_NM like concat('%', #{sEquipName} ,'%')
+        		)        
+        </if>
+        <if test="sAssetNo != null and sAssetNo != ''">           
+        	AND A.EQUIP_ASSET_NO like concat('%', #{sAssetNo} ,'%')        
+        </if>
+        <if test="searchDtKeywordS != null and searchDtKeywordS != ''">
+          <choose>
+		    <when test="searchDtGubun == '1'">        
+			AND A.REG_DATE <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			</when>
+			<when test="searchDtGubun == '2'">			
+			AND A.MOD_DATE <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			</when>
+		   </choose>			
+		</if>
+		<if test="searchDtKeywordE != null and searchDtKeywordE != ''">
+          <choose>
+		    <when test="searchDtGubun == '1'">		
+			AND A.REG_DATE <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			</when>
+			<when test="searchDtGubun == '2'">			
+			AND A.MOD_DATE <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')
+			</when>
+		  </choose>	
+		 </if>
     </sql>
 
-    <select id="Etube.getEtubeList" parameterClass="cmap" resultClass="cmap" >
-    	<include refid="Common.pagingHeader"/>
+    <select id="getEtubeList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
         SELECT	A.*
         FROM 	rfid_etube A
         WHERE 	1=1
-		<include refid="Etube.getEtubeList.Where" />
+		<include refid="getEtubeListWhere" />
         ORDER BY RNUM DESC
-        <include refid="Common.pagingFooter"/>
+        <include refid="pagingFooter"/>
     </select>
 
-    <select id="Etube.getEtubeListCnt" parameterClass="cmap" resultClass="int">
+    <select id="getEtubeListCnt" parameterType="cmap" resultType="int">
         SELECT	COUNT(*)
         FROM 	rfid_etube A
         WHERE 	1=1
 		<include refid="Etube.getEtubeList.Where" />
     </select>
 
-    <select id="Etube.getEtubeView" parameterClass="cmap" resultClass="cmap" >
+    <select id="getEtubeView" parameterType="cmap" resultType="cmap" >
         SELECT	A.*
         FROM 	rfid_etube A
-        WHERE 	RNUM = #rnum#
+        WHERE 	RNUM = #{rnum}
     </select>
 
-    <insert id="Etube.insertEtube" parameterClass="cmap" >
+    <insert id="insertEtube" parameterType="cmap" >
         INSERT INTO rfid_etube (
         		RNUM
 				,EQUIP_INST_CPNY_NO
@@ -85,80 +89,80 @@
 				,HAVE_CPNY_NM
 				,CPNY_TEL_NO
         ) VALUES (
-				#rnum#
-				,#equipInstCpnyNo#
-				,CASE WHEN #dist# = 'null' THEN NULL ELSE #dist# END
-				,#equipNo#
-				,#equipKorNm#
-				,#equipEngNm#
-				,#equipModelNm#
-				,#equipAssetNo#
-				,#equipClassCd1#
-				,#equipClassCd2#
-				,#equipClassCd3#
-				,#equipUseCd#
-				,#equipUseMoveCd#
-				,#equipImg#
-				,CASE WHEN #equipInstCpnyPosx# = 'null' THEN NULL ELSE #equipInstCpnyPosx# END
-				,CASE WHEN #equipInstCpnyPosy# = 'null' THEN NULL ELSE #equipInstCpnyPosy# END
-				,#regDate#
-				,#modDate#
-				,#cpnyAddr#
-				,#equipInstCpnyAddr1#
-				,#equipInstCpnyAddr2#
-				,#cpnyFullAddr#
-				,#cpnyNm#
-				,#haveCpnyNm#
-				,#cpnyTelNo#
+				#{rnum}
+				,#{equipInstCpnyNo}
+				,CASE WHEN #{dist} = 'null' THEN NULL ELSE #{dist} END
+				,#{equipNo}
+				,#{equipKorNm}
+				,#{equipEngNm}
+				,#{equipModelNm}
+				,#{equipAssetNo}
+				,#{equipClassCd1}
+				,#{equipClassCd2}
+				,#{equipClassCd3}
+				,#{equipUseCd}
+				,#{equipUseMoveCd}
+				,#{equipImg}
+				,CASE WHEN #{equipInstCpnyPosx} = 'null' THEN NULL ELSE #{equipInstCpnyPosx} END
+				,CASE WHEN #{equipInstCpnyPosy} = 'null' THEN NULL ELSE #{equipInstCpnyPosy} END
+				,#{regDate}
+				,#{modDate}
+				,#{cpnyAddr}
+				,#{equipInstCpnyAddr1}
+				,#{equipInstCpnyAddr2}
+				,#{cpnyFullAddr}
+				,#{cpnyNm}
+				,#{haveCpnyNm}
+				,#{cpnyTelNo}
         )
     </insert>
 
-    <update id="Etube.updateEtube" parameterClass="cmap" >
+    <update id="updateEtube" parameterType="cmap" >
         UPDATE 	rfid_etube
         SET
-				EQUIP_INST_CPNY_NO = #equipInstCpnyNo#
-				,DIST = #dist#
-				,EQUIP_NO = #equipNo#
-				,EQUIP_KOR_NM = #equipKorNm#
-				,EQUIP_ENG_NM = #equipEngNm#
-				,EQUIP_MODEL_NM = #equipModelNm#
-				,EQUIP_ASSET_NO = #equipAssetNo#
-				,EQUIP_CLASS_CD1 = #equipClassCd1#
-				,EQUIP_CLASS_CD2 = #equipClassCd2#
-				,EQUIP_CLASS_CD3 = #equipClassCd3#
-				,EQUIP_USE_CD = #equipUseCd#
-				,EQUIP_USE_MOVE_CD = #equipUseMoveCd#
-				,EQUIP_IMG = #equipImg#
-				,EQUIP_INST_CPNY_POSX = #equipInstCpnyPosx#
-				,EQUIP_INST_CPNY_POSY = #equipInstCpnyPosy#
-				,REG_DATE = #regDate#
-				,MOD_DATE = #modDate#
-				,CPNY_ADDR = #cpnyAddr#
-				,EQUIP_INST_CPNY_ADDR1 = #equipInstCpnyAddr1#
-				,EQUIP_INST_CPNY_ADDR2 = #equipInstCpnyAddr2#
-				,CPNY_FULL_ADDR = #cpnyFullAddr#
-				,CPNY_NM = #cpnyNm#
-				,HAVE_CPNY_NM = #haveCpnyNm#
-				,CPNY_TEL_NO = #cpnyTelNo#
-        WHERE 	RNUM = #rnum#
+				EQUIP_INST_CPNY_NO = #{equipInstCpnyNo}
+				,DIST = #{dist}
+				,EQUIP_NO = #{equipNo}
+				,EQUIP_KOR_NM = #{equipKorNm}
+				,EQUIP_ENG_NM = #{equipEngNm}
+				,EQUIP_MODEL_NM = #{equipModelNm}
+				,EQUIP_ASSET_NO = #{equipAssetNo}
+				,EQUIP_CLASS_CD1 = #{equipClassCd1}
+				,EQUIP_CLASS_CD2 = #{equipClassCd2}
+				,EQUIP_CLASS_CD3 = #{equipClassCd3}
+				,EQUIP_USE_CD = #{equipUseCd}
+				,EQUIP_USE_MOVE_CD = #{equipUseMoveCd}
+				,EQUIP_IMG = #{equipImg}
+				,EQUIP_INST_CPNY_POSX = #{equipInstCpnyPosx}
+				,EQUIP_INST_CPNY_POSY = #{equipInstCpnyPosy}
+				,REG_DATE = #{regDate}
+				,MOD_DATE = #{modDate}
+				,CPNY_ADDR = #{cpnyAddr}
+				,EQUIP_INST_CPNY_ADDR1 = #{equipInstCpnyAddr1}
+				,EQUIP_INST_CPNY_ADDR2 = #{equipInstCpnyAddr2}
+				,CPNY_FULL_ADDR = #{cpnyFullAddr}
+				,CPNY_NM = #{cpnyNm}
+				,HAVE_CPNY_NM = #{haveCpnyNm}
+				,CPNY_TEL_NO = #{cpnyTelNo}
+        WHERE 	RNUM = #{rnum}
     </update>
 
-    <update id="Etube.deleteEtube" parameterClass="cmap" >
+    <update id="deleteEtube" parameterType="cmap" >
         UPDATE 	rfid_etube
         SET
 				USE_YN = 'N'
-				,LAST_UPDT_PNTTM = #lastUpdtPnttm#
-				,LAST_UPDUSR_ID = #lastUpdusrId#
-        WHERE 	RNUM = #rnum#
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	RNUM = #{rnum}
     </update>
 
-    <delete id="Etube.deleteEtube2" parameterClass="cmap" >
+    <delete id="deleteEtube2" parameterType="cmap" >
         DELETE
         FROM 	rfid_etube
-        WHERE 	RNUM = #rnum#
+        WHERE 	RNUM = #{rnum}
     </delete>
 
-    <delete id="Etube.deleteEtube2All" parameterClass="cmap" >
+    <delete id="deleteEtube2All" parameterType="cmap" >
         DELETE
         FROM 	rfid_etube
     </delete>
