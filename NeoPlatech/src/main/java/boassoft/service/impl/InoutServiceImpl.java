@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("InoutService")
 public class InoutServiceImpl extends EgovAbstractServiceImpl implements InoutService{
 
-	@Resource(name="inoutMapper")
+	@Resource(name="InoutMapper")
     private InoutMapper inoutMapper;
 	
 	@Override

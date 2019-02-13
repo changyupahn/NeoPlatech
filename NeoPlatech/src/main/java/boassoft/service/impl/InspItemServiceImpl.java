@@ -14,7 +14,7 @@ import boassoft.util.CommonMap;
 @Service("InspItemService")
 public class InspItemServiceImpl extends EgovAbstractServiceImpl implements InspItemService{
 
-	@Resource(name="inspItemMapper")
+	@Resource(name="InspItemMapper")
     private InspItemMapper inspItemMapper;
 
 	@Resource(name = "inspItemSeqIdGnrService")

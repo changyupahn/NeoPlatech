@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("ItemService")
 public class ItemServiceImpl extends EgovAbstractServiceImpl implements ItemService{
 
-	@Resource(name="itemMapper")
+	@Resource(name="ItemMapper")
     private ItemMapper itemMapper;
 	
 	@Override

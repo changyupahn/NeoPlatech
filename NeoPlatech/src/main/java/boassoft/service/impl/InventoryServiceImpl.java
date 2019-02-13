@@ -14,7 +14,7 @@ import boassoft.util.DateUtil;
 @Service("InventoryService")
 public class InventoryServiceImpl extends EgovAbstractServiceImpl implements InventoryService {
 
-	@Resource(name = "inventoryMapper")
+	@Resource(name = "InventoryMapper")
 	private InventoryMapper inventoryMapper;
 
 	@Override

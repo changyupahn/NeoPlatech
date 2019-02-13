@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("InventoryStatService")
 public class InventoryStatServiceImpl extends EgovAbstractServiceImpl implements InventoryStatService {
 
-	@Resource(name="inventoryStatMapper")
+	@Resource(name="InventoryStatMapper")
     private InventoryStatMapper inventoryStatMapper;
 	
 	@Override
