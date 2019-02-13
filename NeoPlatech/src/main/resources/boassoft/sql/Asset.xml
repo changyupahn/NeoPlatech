@@ -2,16 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="AssetMapper">
 
-   <sql id="pagingHeader">
-   </sql>
+    <!--<sql id="pagingHeader">
+    </sql>
 
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
 
      <sql id="getAssetListWhere">
         <if test="sUseYn != null and sUseYn != ''">    		
@@ -917,7 +916,7 @@
 		ORDER BY MAIN_YN DESC, FILE_DT ASC
 	</select>
 	
-	<select id="Asset.getAssetImg" parameterType="cmap" resultType="cmap">
+	<select id="getAssetImg" parameterType="cmap" resultType="cmap">
 		select
 			af.asset_no,
 			af.file_dt,
@@ -1298,13 +1297,13 @@
 		</foreach>				
 	</update>
     
-    <statement id="createAssetExcelBackup01" parameterType="cmap" resultType="cmap">
+    <select id="createAssetExcelBackup01" parameterType="cmap" resultType="cmap">
 		create table boasrfid_backup.backup_rfid_asset_#{create_dt} select * from rfid_asset
-	</statement>
+	</select>
 
-	<statement id="createAssetExcelBackup02" parameterType="cmap" resultType="cmap">
+	<select id="createAssetExcelBackup02" parameterType="cmap" resultType="cmap">
 		create table boasrfid_backup.backup_rfid_asset_addinfo_#{create_dt} select * from rfid_asset_addinfo
-	</statement> 
+	</select> 
 	
 	<insert id="createAssetExcelBackup03" parameterType="cmap">
 		insert into rfid_asset_backup ( create_dt,use_yn ) values ( #{create_dt},'Y' )
@@ -1319,13 +1318,13 @@
 		]]>
 	</select>
 	
-	<statement id="dropAssetExcelBackup01" parameterType="cmap" resultType="cmap">
+	<select id="dropAssetExcelBackup01" parameterType="cmap" resultType="cmap">
 		drop table boasrfid_backup.backup_rfid_asset_#{create_dt}
-	</statement>
+	</select>
 
-	<statement id="dropAssetExcelBackup02" parameterType="cmap" resultType="cmap">
+	<select id="dropAssetExcelBackup02" parameterType="cmap" resultType="cmap">
 		drop table boasrfid_backup.backup_rfid_asset_addinfo_#{create_dt}
-	</statement>
+	</select>
 	
 	<update id="dropAssetExcelBackup03" parameterType="cmap" >
 		update rfid_asset_backup set
@@ -1348,7 +1347,7 @@
 		insert into rfid_asset_excel ( #{colList} )
 		values(
 		<foreach item="colValue" index="index" collection="colValueArr"  separator=",">  			
-				#colValue#						
+				#{colValue[]}						
 		</foreach>
 		)
 	</insert>
