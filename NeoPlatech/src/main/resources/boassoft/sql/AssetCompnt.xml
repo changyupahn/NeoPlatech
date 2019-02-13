@@ -28,7 +28,7 @@
         WHERE 	ASSET_SEQ = #{assetSeq}
     </select>
     
-<insert id="AssetCompnt.insertAssetCompnt" parameterType="cmap" >
+<insert id="insertAssetCompnt" parameterType="cmap" >
         INSERT INTO RFID_ASSET_COMPNT (
         		ASSET_SEQ
 				,COMPNT_NO
