@@ -90,7 +90,7 @@
 		<include refid="getInspItemListWhere" />
     </select>
 
-    <select id="getInspItemView" parameterType="cmap" resultTypes="cmap" >
+    <select id="getInspItemView" parameterType="cmap" resultType="cmap" >
         SELECT	A.*
         FROM 	RFID_INSP_ITEM A
         WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}
@@ -259,7 +259,7 @@
         WHERE 	PURNO = #{purno}
     </delete>
 
-    <update id="InspItem.updateInspItemAssetYn" parameterType="cmap" >
+    <update id="updateInspItemAssetYn" parameterType="cmap" >
         UPDATE	RFID_INSP_ITEM
         SET		ASSET_YN = #{assetYn}
         WHERE 	INSP_ITEM_SEQ = #{inspItemSeq}

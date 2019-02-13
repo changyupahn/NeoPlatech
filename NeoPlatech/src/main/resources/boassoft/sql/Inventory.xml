@@ -2,16 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="InventoryeMapper">
 
-   <sql id="pagingHeader">
-   </sql>
+  <!--<sql id="pagingHeader">
+    </sql>
 
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
     
      <sql id="getAssetListWhere">
         <if test="sUseYn != null and sUseYn != ''">    		
@@ -814,7 +813,7 @@
 		)
 	</insert>
 
-    <insert id="Inventory.insertInventoryDetail" parameterType="cmap" >
+    <insert id="insertInventoryDetail" parameterType="cmap" >
 		insert into rfid_inventory( inv_year,inv_no,asset_seq,asset_no,inv_target_yn,org_no,org_name,top_dept_no,top_dept_name,top_user_no,top_user_name,dept_no,dept_name,user_no,user_name,bldng_no,bldng_name,floor_no,floor_name,hosil,pos_no,pos_name,remark,asset_status_cd,disuse_dt,disuse_cont )
 		select
 				#{invYear},#{invNo},asset_seq,asset_no,#{invTargetYn},org_no,org_name,top_dept_no,top_dept_name,top_user_no,top_user_name,dept_no,dept_name,user_no,user_name,bldng_no,bldng_name,floor_no,floor_name,hosil,pos_no,pos_name,remark,asset_status_cd,disuse_dt,disuse_cont
@@ -889,7 +888,7 @@
 		</choose>
 	</sql>
 
-    <select id="Inventory.getInventoryDetailList" parameterType="cmap" resultType="cmap" >
+    <select id="getInventoryDetailList" parameterType="cmap" resultType="cmap" >
     	<include refid="pagingHeader"/>
 		select 	ast.*
 				, inv.INV_YEAR
@@ -949,7 +948,7 @@
         <include refid="pagingFooter"/>
     </select>
 
-    <select id="Inventory.getInventoryDetailListCnt" parameterType="cmap" resultType="int" >
+    <select id="getInventoryDetailListCnt" parameterType="cmap" resultType="int" >
 		select 	count(*)
 		from rfid_inventory inv 
 				inner join rfid_asset ast on inv.asset_seq = ast.asset_seq
@@ -1138,7 +1137,7 @@
 		order by user_name, user_no, asset_type, asset_cate, asset_no
     </select>
 
-    <insert id="Inventory.insertPrintHistory" parameterType="cmap" >
+    <insert id="insertPrintHistory" parameterType="cmap" >
     	insert into rfid_print_history( asset_no,rfid_no,asset_name,asset_size,asset_type,aqusit_dt,org_no,inv_year,inv_no,req_system,print_dt,print_type,print_yn,tmp_title )
 		select
     		ast.asset_no
@@ -1222,9 +1221,9 @@
     			, ast.disuse_cont
     	FROM	rfid_inventory inv
     			INNER JOIN rfid_asset ast ON inv.ASSET_SEQ = ast.ASSET_SEQ
-    	WHERE	inv.INV_YEAR = #invYear#
-    			AND inv.INV_NO = #invNo#
-    			AND inv.ASSET_SEQ = #assetSeq#
+    	WHERE	inv.INV_YEAR = #{invYear}
+    			AND inv.INV_NO = #{invNo}
+    			AND inv.ASSET_SEQ = #{assetSeq}
     </select>
 
     <update id="updateRequest" parameterType="cmap" >
@@ -1308,7 +1307,7 @@
     </select>
 
 
-    <delete id="deleteRequest" parameterClass="cmap" >
+    <delete id="deleteRequest" parameterType="cmap" >
         delete from rfid_inventory_update
     </delete>
   

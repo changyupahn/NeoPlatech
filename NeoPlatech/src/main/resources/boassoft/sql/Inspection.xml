@@ -5,16 +5,15 @@
   <sql id="getInspectionListWhere">
   </sql>
     
-    <sql id="pagingHeader">
-   </sql>
+   <!--<sql id="pagingHeader">
+    </sql>
 
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
     
     <select id="getInspectionList" parameterType="cmap" resultType="cmap" >
     	<include refid="pagingHeader"/>
