@@ -13,7 +13,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("ZeusAsListService")
 public class ZeusAsListServiceImpl extends EgovAbstractServiceImpl implements  ZeusAsListService {
 
-	@Resource(name="zeusAsListMapper")
+	@Resource(name="ZeusAsListMapper")
     private ZeusAsListMapper zeusAsListMapper;
 	
 	@Override

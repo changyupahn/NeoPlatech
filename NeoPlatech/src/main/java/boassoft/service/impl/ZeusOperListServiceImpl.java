@@ -10,7 +10,7 @@ import boassoft.util.CommonMap;
 
 public class ZeusOperListServiceImpl extends EgovAbstractServiceImpl implements ZeusOperListService{
 
-	@Resource(name="zeusOperListMapper")
+	@Resource(name="ZeusOperListMapper")
     private ZeusOperListMapper zeusOperListMapper;
 
 	

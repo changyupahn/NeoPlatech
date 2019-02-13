@@ -13,7 +13,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("ZeusCodeService")
 public class ZeusCodeServiceImpl extends EgovAbstractServiceImpl implements ZeusCodeService {
 
-	@Resource(name="zeusCodeMapper")
+	@Resource(name="ZeusCodeMapper")
     private ZeusCodeMapper zeusCodeMapper;
 
 	
