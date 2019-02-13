@@ -13,11 +13,11 @@ import egovframework.com.cmm.service.EgovProperties;
 public class BatchShellScriptJob implements Job{
 
 	/** batchService */
-	private BatchServiceImpl batchService;
+	private BatchServiceImpl scheduleBatchService;
 	
 	/** setBatchService */
-	public void setBatchService(BatchServiceImpl batchService) {
-		this.batchService = batchService;
+	public void setBatchService(BatchServiceImpl scheduleBatchService) {
+		this.scheduleBatchService = scheduleBatchService;
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class BatchShellScriptJob implements Job{
 	public void execute(JobExecutionContext jobContext) throws JobExecutionException {
 		System.out.println("egovBatchExecute() : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
-		setBatchService((BatchServiceImpl)jobContext.getJobDetail().getJobDataMap().get("batchService"));
+		setBatchService((BatchServiceImpl)jobContext.getJobDetail().getJobDataMap().get("scheduleBatchService"));
 		
 		try {
 			//데이터베이스 백업
