@@ -20,10 +20,10 @@ public class BatchScheduler {
 	 */
 	private Scheduler sched;
 	
-	private BatchServiceImpl batchService;
+	private BatchServiceImpl scheduleBatchService;
 
-	public void setBatchService(BatchServiceImpl batchService) {
-		this.batchService = batchService;
+	public void setBatchService(BatchServiceImpl scheduleBatchService) {
+		this.scheduleBatchService = scheduleBatchService;
 	}
 	
 	/** log */
@@ -46,7 +46,7 @@ public class BatchScheduler {
 		//String batchCycle = "10 * * * * ?"; //1분 마다
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
-		jobMap.put("batchService", batchService);
+		jobMap.put("scheduleBatchService", scheduleBatchService);
 		JobDataMap jobDataMap = new JobDataMap(jobMap);
 		
 		// Job 만들기
