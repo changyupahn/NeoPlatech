@@ -4,7 +4,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
-@Mapper("ApprIoExtAssetMapper")
+@Mapper("AssetAsMapper")
 public interface AssetAsMapper {
 
 	public CommonList getAssetAsList(CommonMap cmap) throws Exception;
