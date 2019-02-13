@@ -35,7 +35,7 @@
 		<include refid="getVirtAssetListWhere" />
 	</select>
 
-	<insert id="VirtAsset.insertVirtAsset" parameterType="cmap" >
+	<insert id="insertVirtAsset" parameterType="cmap" >
         INSERT INTO RFID_ASSET (
         		ASSET_SEQ
 				,ASSET_NO
