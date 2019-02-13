@@ -1,7 +1,7 @@
 package boassoft.controller.kp1000;
 
 import javax.annotation.Resource;
-import javax.print.PrintService;
+import boassoft.service.PrintService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
