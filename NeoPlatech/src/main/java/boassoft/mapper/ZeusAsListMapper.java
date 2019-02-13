@@ -1,8 +1,10 @@
 package boassoft.mapper;
 
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
+@Mapper("ZeusAsListMapper")
 public interface ZeusAsListMapper {
 
 	public CommonList getZeusAsListList(CommonMap cmap) throws Exception;

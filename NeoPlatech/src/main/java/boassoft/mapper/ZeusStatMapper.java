@@ -4,7 +4,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
-@Mapper("MkNationMapper")
+@Mapper("ZeusStatMapper")
 public interface ZeusStatMapper {
 
 	public CommonList getZeusStatYearList(CommonMap cmap) throws Exception;
