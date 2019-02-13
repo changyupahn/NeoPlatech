@@ -60,7 +60,7 @@
         )
     </insert>
     
-    <update id="CmmnCode.updateCmmnCode" parameterType="cmap" >
+    <update id="updateCmmnCode" parameterType="cmap" >
         UPDATE 	rfid_cmmn_code
         SET
 				CODE = #{code}
