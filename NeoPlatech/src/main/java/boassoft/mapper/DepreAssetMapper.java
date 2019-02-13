@@ -4,7 +4,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
-@Mapper("ContractMapper")
+@Mapper("DepreAssetMapper")
 public interface DepreAssetMapper {
 
 	public int getDepreAssetTargetCnt(CommonMap cmap) throws Exception;

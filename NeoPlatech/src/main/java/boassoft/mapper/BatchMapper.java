@@ -50,5 +50,57 @@ public interface BatchMapper {
 	public int updateDept(CommonMap cmap) throws Exception;
 	
 	public int deleteDept(CommonMap cmap) throws Exception;
+
+	public int deleteItem(CommonMap cmap) throws Exception;
 	
+	public int deleteAsset(CommonMap cmap) throws Exception;
+	
+	public int deleteMisDeptAll(CommonMap cmap) throws Exception;
+	
+	public int deleteMisItemAll(CommonMap cmap) throws Exception;
+	
+	public int deleteMisAssetAll(CommonMap cmap) throws Exception;
+	
+	public int insertCust(CommonMap cmap) throws Exception;
+	
+	public int updateCust(CommonMap cmap) throws Exception;
+	
+	public int deleteCust(CommonMap cmap) throws Exception;
+	
+	public int deleteMisCustAll(CommonMap cmap) throws Exception;
+	
+	public int insertContr(CommonMap cmap) throws Exception;
+	
+	public int updateContr(CommonMap cmap) throws Exception;
+	
+	public int deleteContr(CommonMap cmap) throws Exception;
+	
+	public int deleteMisContrAll(CommonMap cmap) throws Exception;
+	
+	public int insertContrdtl(CommonMap cmap) throws Exception;
+	
+	public int updateContrdtl(CommonMap cmap) throws Exception;
+	
+	public int deleteContrdtl(CommonMap cmap) throws Exception;
+	
+	public int deleteMisContrdtlAll(CommonMap cmap) throws Exception;
+	
+	public int insertMisUserAll(CommonMap cmap) throws Exception;
+	
+	public int insertMisDeptAll(CommonMap cmap) throws Exception;
+	
+	public int insertMisItemAll(CommonMap cmap) throws Exception;
+	
+	public int insertMisAssetAll(CommonMap cmap) throws Exception;
+	
+	public int mergeUser(CommonMap cmap) throws Exception;
+	
+	public int mergeDept(CommonMap cmap) throws Exception;
+	
+	public int mergeItem(CommonMap cmap) throws Exception;
+	
+	public int mergeAsset(CommonMap cmap) throws Exception;
+	
+	public int mergeMisAsset(CommonMap cmap) throws Exception;
+		
 }
