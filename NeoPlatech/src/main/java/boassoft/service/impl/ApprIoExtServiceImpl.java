@@ -19,16 +19,16 @@ import boassoft.util.CommonMap;
 @Service("ApprIoExtService")
 public class ApprIoExtServiceImpl extends EgovAbstractServiceImpl implements ApprIoExtService {
 
-	@Resource(name="apprIoExtMapper")
+	@Resource(name="ApprIoExtMapper")
     private ApprIoExtMapper apprIoExtMapper;
 
-	@Resource(name="apprRqstMapper")
+	@Resource(name="ApprRqstMapper")
     private ApprRqstMapper apprRqstMapper;
 
-	@Resource(name = "userMapper")
+	@Resource(name = "UserMapper")
     private UserMapper userMapper;
 
-	@Resource(name="apprAssetMapper")
+	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 	
 	@Resource(name="AssetHistoryService")

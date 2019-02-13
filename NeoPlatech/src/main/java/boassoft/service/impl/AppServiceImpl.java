@@ -15,7 +15,7 @@ import boassoft.util.CommonList;
 @Service("AppService")
 public class AppServiceImpl extends EgovAbstractServiceImpl implements AppService{
 
-	@Resource(name="appMapper")
+	@Resource(name="AppMapper")
     private AppMapper appMapper;
 	
 	public CommonMap getRfidAdminView(CommonMap cmap) throws Exception {

@@ -14,10 +14,10 @@ import boassoft.util.CommonMap;
 @Service("ApprRqstService")
 public class ApprRqstServiceImpl extends EgovAbstractServiceImpl implements ApprRqstService {
 
-	@Resource(name="apprRqstMapper")
+	@Resource(name="ApprRqstMapper")
     private ApprRqstMapper apprRqstMapper;
 
-	@Resource(name="batchMapper")
+	@Resource(name="BatchMapper")
     private BatchMapper batchMapper;
 	
 	@Override

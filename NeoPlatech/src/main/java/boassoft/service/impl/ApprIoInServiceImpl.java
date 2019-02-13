@@ -21,25 +21,25 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("ApprIoInService")
 public class ApprIoInServiceImpl extends EgovAbstractServiceImpl implements ApprIoInService{
 
-	@Resource(name="apprIoInMapper")
+	@Resource(name="ApprIoInMapper")
     private ApprIoInMapper apprIoInMapper;
 
-	@Resource(name="apprIoInAssetMapper")
+	@Resource(name="ApprIoInAssetMapper")
     private ApprIoInAssetMapper apprIoInAssetMapper;
 
-	@Resource(name="apprRqstMapper")
+	@Resource(name="ApprRqstMapper")
     private ApprRqstMapper apprRqstMapper;
 
-	@Resource(name = "userMapper")
+	@Resource(name = "UserMapper")
     private UserMapper userMapper;
 
-	@Resource(name="apprAssetMapper")
+	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
 	@Resource(name="AssetHistoryService")
     private AssetHistoryService assetHistoryService;
 
-	@Resource(name="batchMapper")
+	@Resource(name="BatchMapper")
     private BatchMapper batchMapper;
 
 	

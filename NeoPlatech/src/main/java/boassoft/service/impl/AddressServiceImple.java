@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("AddressService")
 public class AddressServiceImple extends EgovAbstractServiceImpl implements AddressService {
 
-	@Resource(name="addressMapper")
+	@Resource(name="AddressMapper")
     private AddressMapper addressMapper;
 	
 	public int insertAddress(CommonMap cmap) throws Exception{

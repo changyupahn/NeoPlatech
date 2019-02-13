@@ -18,16 +18,16 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Service("ApprAssetService")
 public class ApprAssetServiceImpl extends EgovAbstractServiceImpl implements ApprAssetService {
 
-	@Resource(name="apprAssetMapper")
+	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
-	@Resource(name="assetMapper")
+	@Resource(name="AssetMapper")
     private AssetMapper assetMapper;
 
-	@Resource(name="batchMapper")
+	@Resource(name="BatchMapper")
     private BatchMapper batchMapper;
 
-	@Resource(name="sndMisDAO")
+	@Resource(name="SndMisMapper")
     private SndMisMapper sndMisMapper;
 
 	@Resource(name = "sndSeqIdGnrService")

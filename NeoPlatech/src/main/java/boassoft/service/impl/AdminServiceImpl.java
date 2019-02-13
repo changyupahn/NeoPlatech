@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("AdminService")
 public class AdminServiceImpl extends EgovAbstractServiceImpl implements AdminService{
 
-	@Resource(name="adminMapper")
+	@Resource(name="AdminMapper")
 	private AdminMapper adminMapper;
 	
 	public CommonMap getValidationQuery(CommonMap cmap) throws Exception{

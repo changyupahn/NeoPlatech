@@ -21,22 +21,22 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Service("ApprUsercngService")
 public class ApprUsercngServiceImpl extends EgovAbstractServiceImpl implements ApprUsercngService{
 
-	@Resource(name="apprUsercngMapper")
+	@Resource(name="ApprUsercngMapper")
     private ApprUsercngMapper apprUsercngMapper;
 
-	@Resource(name="apprRqstMapper")
+	@Resource(name="ApprRqstMapper")
     private ApprRqstMapper apprRqstMapper;
 
-	@Resource(name = "userMapper")
+	@Resource(name = "UserMapper")
     private UserMapper userMapper;
 
-	@Resource(name = "batchMapper")
+	@Resource(name = "BatchMapper")
     private BatchMapper batchMapper;
 
-	@Resource(name="apprAssetMapper")
+	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
-	@Resource(name="assetHistoryService")
+	@Resource(name="AssetHistoryService")
     private AssetHistoryService assetHistoryService;
 
 	@Resource(name = "sndSeqIdGnrService")

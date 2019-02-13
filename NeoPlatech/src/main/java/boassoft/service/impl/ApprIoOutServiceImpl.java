@@ -19,16 +19,16 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("ApprIoOutService")
 public class ApprIoOutServiceImpl extends EgovAbstractServiceImpl implements ApprIoOutService{
 
-	@Resource(name="apprIoOutMapper")
+	@Resource(name="ApprIoOutMapper")
     private ApprIoOutMapper apprIoOutMapper;
 
-	@Resource(name="apprRqstMapper")
+	@Resource(name="ApprRqstMapper")
     private ApprRqstMapper apprRqstMapper;
 
-	@Resource(name = "userMapper")
+	@Resource(name = "UserMapper")
     private UserMapper userMapper;
 
-	@Resource(name="apprAssetMapper")
+	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
 	@Resource(name="AssetHistoryService")

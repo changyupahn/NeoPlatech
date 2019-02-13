@@ -21,22 +21,22 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Service("ApprDisuseService")
 public class ApprDisuseServiceImpl extends EgovAbstractServiceImpl implements  ApprDisuseService {
 
-	@Resource(name="apprDisuseMapper")
+	@Resource(name="ApprDisuseMapper")
     private ApprDisuseMapper apprDisuseMapper;
 
-	@Resource(name="apprRqstMapper")
+	@Resource(name="ApprRqstMapper")
     private ApprRqstMapper apprRqstMapper;
 
-	@Resource(name = "userMapper")
+	@Resource(name = "UserMapper")
     private UserMapper userMapper;
 
-	@Resource(name = "batchMapper")
+	@Resource(name = "BatchMapper")
     private BatchMapper batchMapper;
 
-	@Resource(name="apprAssetMapper")
+	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
-	@Resource(name="sndMisMapper")
+	@Resource(name="SndMisMapper")
     private SndMisMapper sndMisMapper;
 
 	@Resource(name="AssetHistoryService")
