@@ -16,7 +16,7 @@ import boassoft.util.CommonMap;
 @Service("TabService")
 public class TabServiceImpl extends EgovAbstractServiceImpl implements TabService{
 
-	@Resource(name="tabMapper")
+	@Resource(name="TabMapper")
     private TabMapper tabMapper;
 	
 	@Override

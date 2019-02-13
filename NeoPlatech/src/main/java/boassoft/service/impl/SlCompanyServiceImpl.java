@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("SlCompanyService")
 public class SlCompanyServiceImpl extends EgovAbstractServiceImpl implements SlCompanyService{
 
-	@Resource(name="slCompanyMapper")
+	@Resource(name="SlCompanyMapper")
     private SlCompanyMapper slCompanyMapper;
 	
 	@Override

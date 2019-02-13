@@ -13,7 +13,7 @@ import boassoft.mapper.SystemMapper;
 @Service("SystemService")
 public class SystemServiceImpl extends EgovAbstractServiceImpl implements SystemService {
 
-	@Resource(name="systemMapper")
+	@Resource(name="SystemMapper")
     private SystemMapper systemMapper;
 	
 	public CommonList getAddcolMngList(CommonMap cmap) throws Exception {
