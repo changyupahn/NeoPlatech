@@ -12,7 +12,7 @@ import boassoft.util.CommonMap;
 @Service("AssetCompntServic")
 public class AssetCompntServiceImpl implements  AssetCompntService {
 
-	@Resource(name="assetCompntMapper")
+	@Resource(name="AssetCompntMapper")
     private AssetCompntMapper assetCompntMapper;
 	
 	@Override

@@ -12,7 +12,7 @@ import boassoft.util.CommonMap;
 @Service("AssetOperListService")
 public class AssetOperListServiceImpl implements AssetOperListService {
 
-	@Resource(name="assetOperListMapper")
+	@Resource(name="AssetOperListMapper")
     private AssetOperListMapper assetOperListMapper;
 	
 	@Override

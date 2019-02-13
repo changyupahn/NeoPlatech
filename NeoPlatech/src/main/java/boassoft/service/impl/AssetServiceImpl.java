@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import boassoft.mapper.AssetMapper;
 import boassoft.mapper.DeptMapper;
+import boassoft.mapper.SndMisMapper;
 import boassoft.service.AssetHistoryService;
 import boassoft.service.AssetService;
+import boassoft.service.VirtAssetService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
@@ -20,14 +22,17 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Service("AssetService")
 public class AssetServiceImpl extends EgovAbstractServiceImpl implements AssetService {
 
-	@Resource(name="assetMapper")
+	@Resource(name="AssetMapper")
     private AssetMapper assetMapper;
 	
-	@Resource(name="deptMapper")
+	@Resource(name="DeptMapper")
     private DeptMapper deptMapper;
 	
 	@Resource(name="VirtAssetService")
     private VirtAssetService virtAssetService;
+	
+	@Resource(name="SndMisMapper")
+    private SndMisMapper sndMisMapper;
 	
 	@Resource(name="AssetHistoryService")
     private AssetHistoryService assetHistoryService;
@@ -541,7 +546,7 @@ public class AssetServiceImpl extends EgovAbstractServiceImpl implements AssetSe
 		    	sndMap.put("disuseApprovalDt", null);
 		    	sndMap.put("outAssetYn", "Y");
 		    	sndMap.put("sndYn", "N");
-		    	sndMisDAO.insertSndMis(sndMap);
+		    	sndMisMapper.insertSndMis(sndMap);
     		}
     	}
 

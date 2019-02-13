@@ -2,15 +2,18 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import boassoft.mapper.BatchMysqlMapper;
 import boassoft.service.BatchMysqlService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
+@Service("BatchMysqlService")
 public class BatchMysqlServiceImpl extends EgovAbstractServiceImpl implements BatchMysqlService {
 
-	@Resource(name="batchMysqlMapper")
+	@Resource(name="BatchMysqlMapper")
     private BatchMysqlMapper batchMysqlMapper;
 	
 	@Override

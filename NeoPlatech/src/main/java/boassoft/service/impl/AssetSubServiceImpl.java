@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("AssetSubService")
 public class AssetSubServiceImpl extends EgovAbstractServiceImpl implements AssetSubService{
 
-	@Resource(name="assetSubMapper")
+	@Resource(name="AssetSubMapper")
     private AssetSubMapper assetSubMapper;
 	
 	@Override

@@ -16,7 +16,7 @@ import boassoft.mapper.AssetHistoryMapper;
 @Service("AssetHistoryService")
 public class AssetHistoryServiceImpl extends EgovAbstractServiceImpl implements  AssetHistoryService{
 
-	@Resource(name="assetHistoryMapper")
+	@Resource(name="AssetHistoryMapper")
     private AssetHistoryMapper assetHistoryMapper;
 	
 	@Resource(name = "histSeqIdGnrService")

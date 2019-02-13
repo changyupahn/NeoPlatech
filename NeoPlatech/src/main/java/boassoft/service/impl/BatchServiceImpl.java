@@ -10,12 +10,23 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.service.EgovProperties;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import boassoft.common.CommonXmlList;
 import boassoft.mapper.ApprAssetMapper;
 import boassoft.mapper.ApprDisuseMapper;
+import boassoft.mapper.ApprIoExtMapper;
+import boassoft.mapper.ApprIoInMapper;
+import boassoft.mapper.ApprIoOutMapper;
 import boassoft.mapper.AssetMapper;
 import boassoft.mapper.BatchMapper;
+import boassoft.mapper.MisMapper;
 import boassoft.mapper.UserMapper;
+import boassoft.mapper.ZeusAsListMapper;
+import boassoft.mapper.ZeusAsMapper;
+import boassoft.mapper.ZeusCodeMapper;
+import boassoft.mapper.ZeusMapper;
+import boassoft.mapper.ZeusOperListMapper;
+import boassoft.mapper.ZeusOperMapper;
 import boassoft.service.AssetHistoryService;
 import boassoft.service.BatchMysqlService;
 import boassoft.service.BatchService;
@@ -28,52 +39,52 @@ import boassoft.util.HttpZeusUtil;
 @Service("BatchService")
 public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchService{
 
-	@Resource(name="batchMapper")
+	@Resource(name="BatchMapper")
     private BatchMapper batchMapper;
 
-	@Resource(name="misMapper")
+	@Resource(name="MisMapper")
     private MisMapper misMapper;
 
-	@Resource(name="zeusMapper")
+	@Resource(name="ZeusMapper")
     private ZeusMapper zeusMapper;
 
-	@Resource(name="zeusOperMapper")
-    private ZeusOperMapper ZeusOperMapper;
+	@Resource(name="ZeusOperMapper")
+    private ZeusOperMapper zeusOperMapper;
 
-	@Resource(name="ZeusOperListDAO")
-    private ZeusOperListMapper zeusOperListDAO;
+	@Resource(name="ZeusOperListMapper")
+    private ZeusOperListMapper zeusOperListMapper;
 
-	@Resource(name="ZeusAsDAO")
-    private ZeusAsMapper zeusAsDAO;
+	@Resource(name="ZeusAsMapper")
+    private ZeusAsMapper zeusAsMapper;
 
-	@Resource(name="ZeusAsListDAO")
-    private ZeusAsListMapper zeusAsListDAO;
+	@Resource(name="ZeusAsListMapper")
+    private ZeusAsListMapper zeusAsListMapper;
 
-	@Resource(name="ZeusCodeDAO")
-    private ZeusCodeMapper zeusCodeDAO;
+	@Resource(name="ZeusCodeMapper")
+    private ZeusCodeMapper zeusCodeMapper;
 
-	@Resource(name = "UserDAO")
-    private UserMapper userDAO;
+	@Resource(name = "UserMapper")
+    private UserMapper userMapper;
 
-	@Resource(name="ApprAssetDAO")
-    private ApprAssetMapper apprAssetDAO;
+	@Resource(name="ApprAssetMapper")
+    private ApprAssetMapper apprAssetMapper;
 
 	@Resource(name="AssetHistoryService")
     private AssetHistoryService assetHistoryService;
 
-	@Resource(name="apprIoOutMapper")
+	@Resource(name="ApprIoOutMapper")
     private ApprIoOutMapper apprIoOutMapper;
 
-	@Resource(name="apprIoInMapper")
+	@Resource(name="ApprIoInMapper")
     private ApprIoInMapper apprIoInMapper;
 
-	@Resource(name="apprIoExtMapper")
+	@Resource(name="ApprIoExtMapper")
     private ApprIoExtMapper apprIoExtMapper;
 
-	@Resource(name="apprDisuseMapper")
+	@Resource(name="ApprDisuseMapper")
     private ApprDisuseMapper apprDisuseMapper;
 
-	@Resource(name="assetMapper")
+	@Resource(name="AssetMapper")
     private AssetMapper assetMapper;
 
 	@Resource(name="BatchMysqlService")
@@ -97,7 +108,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		JSONArray resultArray = resultObject.getJSONArray("pageList");
 
 		if (resultArray != null && resultArray.size() > 0) {
-			zeusDAO.deleteZeusAll(cmap);
+			zeusMapper.deleteZeusAll(cmap);
 
 			for (int i=0; i<resultArray.size(); i++) {
 				JSONObject resultObj = resultArray.getJSONObject(i);
@@ -154,7 +165,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 				//} catch (Exception e) {
 				//}
 
-				zeusDAO.insertZeus(cmap);
+				zeusMapper.insertZeus(cmap);
 
 //				if (!"".equals(cmap.getString("useScopeCd"))) {
 //					if ("1".equals(cmap.getString("useScopeCd"))) {
@@ -189,7 +200,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		JSONArray resultArray = resultObject.getJSONArray("pageList");
 
 		if (resultArray != null && resultArray.size() > 0) {
-			zeusOperDAO.deleteZeusOperAll(cmap);
+			zeusOperMapper.deleteZeusOperAll(cmap);
 
 			for (int i=0; i<resultArray.size(); i++) {
 				JSONObject resultObj = resultArray.getJSONObject(i);
@@ -200,14 +211,14 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 				cmap.put("engNm", resultObj.getString("engNm"));
 				cmap.put("registDt", resultObj.getString("registDt"));
 
-				zeusOperDAO.insertZeusOper(cmap);
+				zeusOperMapper.insertZeusOper(cmap);
 			}
 		}
 
 		//제우스 운영일지 동기화
 		try {
 
-			zeusOperListDAO.deleteZeusOperListAll(cmap);
+			zeusOperListMapper.deleteZeusOperListAll(cmap);
 
 			int pageIdx = 0;
 			int pageCnt = 10;
@@ -277,7 +288,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 						} catch (Exception e) {
 						}
 
-						zeusOperListDAO.insertZeusOperList(cmap3);
+						zeusOperListMapper.insertZeusOperList(cmap3);
 
 						System.out.println("pageCnt : " + pageCnt);
 						System.out.println("pageIdx : " + pageIdx);
@@ -312,7 +323,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		JSONArray resultArray = resultObject.getJSONArray("pageList");
 
 		if (resultArray != null && resultArray.size() > 0) {
-			zeusAsDAO.deleteZeusAsAll(cmap);
+			zeusAsMapper.deleteZeusAsAll(cmap);
 
 			for (int i=0; i<resultArray.size(); i++) {
 				JSONObject resultObj = resultArray.getJSONObject(i);
@@ -323,14 +334,14 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 				cmap.put("engNm", resultObj.getString("engNm"));
 				cmap.put("registDt", resultObj.getString("registDt"));
 
-				zeusAsDAO.insertZeusAs(cmap);
+				zeusAsMapper.insertZeusAs(cmap);
 			}
 		}
 
 		//제우스 유지보수일지 동기화
 		try {
 
-			zeusAsListDAO.deleteZeusAsListAll(cmap);
+			zeusAsListMapper.deleteZeusAsListAll(cmap);
 
 			int pageIdx = 0;
 			int pageCnt = 10;
@@ -403,7 +414,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 						} catch (Exception e) {
 						}
 
-						zeusAsListDAO.insertZeusAsList(cmap3);
+						zeusAsListMapper.insertZeusAsList(cmap3);
 
 						System.out.println("pageCnt : " + pageCnt);
 						System.out.println("pageIdx : " + pageIdx);
@@ -441,7 +452,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		JSONObject resultObject = JSONObject.fromObject(resultStr);
 
 		if (resultObject != null && !resultObject.isEmpty()) {
-			zeusCodeDAO.deleteZeusCodeAll(cmap);
+			zeusCodeMapper.deleteZeusCodeAll(cmap);
 		}
 
 		for (int k=0; k<codeIdArr.length; k++) {
@@ -459,7 +470,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 					cmap.put("codes", StringUtil.nvl2(resultObj.get("codes")));
 					cmap.put("def", StringUtil.nvl2(resultObj.get("def")));
 
-					zeusCodeDAO.insertZeusCode(cmap);
+					zeusCodeMapper.insertZeusCode(cmap);
 				}
 			}
 		}
@@ -469,7 +480,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 
 	/** 연계한 제우스 장비 목록과 자산번호를 매칭하여 자산의 장비ID를 업데이트 함. */
 	public void syncZeusToAsset(CommonMap cmap) throws Exception {
-		batchDAO.syncZeusToAsset(cmap);
+		batchMapper.syncZeusToAsset(cmap);
 	}
 
 	/** 승인정보 동기화 */
@@ -481,13 +492,13 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("sRqstno", cmap.getString("sRqstno", sRqstno));
 		cmap.put("eRqstno", cmap.getString("eRqstno", eRqstno));
 
-		CommonList misDocList = misDAO.getMisDocList(cmap);
+		CommonList misDocList = misMapper.getMisDocList(cmap);
 
 		for (int i=0; i<misDocList.size(); i++) {
 			CommonMap misDoc = misDocList.getMap(i);
-			int updateCnt = batchDAO.updateDoc(misDoc);
+			int updateCnt = batchMapper.updateDoc(misDoc);
 			if (updateCnt == 0) {
-				batchDAO.insertDoc(misDoc);
+				batchMapper.insertDoc(misDoc);
 			}
 		}
 	}
@@ -501,7 +512,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("sRqstno", cmap.getString("sRqstno", sRqstno));
 		cmap.put("eRqstno", cmap.getString("eRqstno", eRqstno));
 
-		CommonList misDocList = misDAO.getMisDocList(cmap);
+		CommonList misDocList = misMapper.getMisDocList(cmap);
 
 		for (int i=0; i<misDocList.size(); i++) {
 			CommonMap misDoc = misDocList.getMap(i);
@@ -509,9 +520,9 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 			misDoc.put("docstatcd", "0040005");
 			misDoc.put("docstatnm", "처리완료");
 
-			int updateCnt = batchDAO.updateDoc(misDoc);
+			int updateCnt = batchMapper.updateDoc(misDoc);
 			if (updateCnt == 0) {
-				batchDAO.insertDoc(misDoc);
+				batchMapper.insertDoc(misDoc);
 			}
 		}
 	}
@@ -519,7 +530,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 	/** 승인정보 반영 */
 	public void syncMisDocAppr(CommonMap cmap) throws Exception {
 
-		CommonList docNList = batchDAO.getDocNList(cmap);
+		CommonList docNList = batchMapper.getDocNList(cmap);
 		int updateCnt = 0;
 
 		for (int i=0; i<docNList.size(); i++) {
@@ -549,7 +560,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 						|| "0030172".equals(doc.getString("docdivcd"))
 						|| "0030171".equals(doc.getString("docdivcd"))
 						) {
-					updateCnt = batchDAO.updateApprRqst(doc);
+					updateCnt = batchMapper.updateApprRqst(doc);
 				}
 			}
 
@@ -557,7 +568,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 			if ("0030170".equals(doc.getString("docdivcd"))
 					&& "3".equals(doc.getString("rqstStatusCd"))) {
 				//사용자 조회
-				CommonMap apprUsercngView = batchDAO.getApprUsercngView(doc);
+				CommonMap apprUsercngView = batchMapper.getApprUsercngView(doc);
 
 				if (updateCnt > 0 && !apprUsercngView.isEmpty()) {
 
@@ -568,11 +579,11 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 					doc.put("userNo", apprUsercngView.getString("aucUserNo"));
 					doc.put("userName", apprUsercngView.getString("aucUserName"));
 
-					int updateCnt2 = batchDAO.updateAssetUsercng(doc);
+					int updateCnt2 = batchMapper.updateAssetUsercng(doc);
 
 					if (updateCnt2 > 0) {
 						//승인 자산 목록
-				    	CommonList dataList = apprAssetDAO.getApprAssetList(doc);
+				    	CommonList dataList = apprAssetMapper.getApprAssetList(doc);
 
 				    	//승인신청 히스토리
 				    	for (int k=0; k<dataList.size(); k++) {
@@ -598,13 +609,13 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 				if (updateCnt > 0) {
 
 					//자산상태변경
-					batchDAO.updateAssetIoOut(doc);
+					batchMapper.updateAssetIoOut(doc);
 
 					//반출정보
-					CommonMap apprIoOutView = apprIoOutDAO.getApprIoOutView(doc);
+					CommonMap apprIoOutView = apprIoOutMapper.getApprIoOutView(doc);
 
 					//승인 자산 목록
-			    	CommonList dataList = apprAssetDAO.getApprAssetList(doc);
+			    	CommonList dataList = apprAssetMapper.getApprAssetList(doc);
 
 			    	//승인신청 히스토리
 			    	for (int k=0; k<dataList.size(); k++) {
@@ -623,16 +634,16 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 			if ("0030173".equals(doc.getString("docdivcd"))
 					&& "3".equals(doc.getString("rqstStatusCd"))) {
 
-				updateCnt = batchDAO.updateApprIoExt(doc);
+				updateCnt = batchMapper.updateApprIoExt(doc);
 
 				if (updateCnt > 0) {
 
 					//반입연장정보
 					doc.put("extRqstno", doc.getString("rqstno"));
-					CommonMap apprIoExtView = apprIoExtDAO.getApprIoExtView(doc);
+					CommonMap apprIoExtView = apprIoExtMapper.getApprIoExtView(doc);
 
 					//승인 자산 목록
-			    	CommonList dataList = apprAssetDAO.getApprAssetList(apprIoExtView);
+			    	CommonList dataList = apprAssetMapper.getApprAssetList(apprIoExtView);
 
 			    	//승인신청 히스토리
 			    	for (int k=0; k<dataList.size(); k++) {
@@ -651,19 +662,19 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 			if ("0030174".equals(doc.getString("docdivcd"))
 					&& "3".equals(doc.getString("rqstStatusCd"))) {
 
-				updateCnt = batchDAO.updateApprIoIn(doc);
+				updateCnt = batchMapper.updateApprIoIn(doc);
 
 				if (updateCnt > 0) {
 
 					//반입정보
 					doc.put("inRqstno", doc.getString("rqstno"));
-					CommonMap apprIoInView = apprIoInDAO.getApprIoInView(doc);
+					CommonMap apprIoInView = apprIoInMapper.getApprIoInView(doc);
 
 					//자산상태변경
-					batchDAO.updateAssetIoIn(apprIoInView);
+					batchMapper.updateAssetIoIn(apprIoInView);
 
 					//승인 자산 목록
-			    	CommonList dataList = apprAssetDAO.getApprAssetList(apprIoInView);
+			    	CommonList dataList = apprAssetMapper.getApprAssetList(apprIoInView);
 
 			    	//승인신청 히스토리
 			    	for (int k=0; k<dataList.size(); k++) {
@@ -686,16 +697,16 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 
 					//불용승인일자
 					doc.put("disuseCompDt", DateUtil.getFormatDate("yyyyMMdd"));
-					batchDAO.updateApprDisuse(doc);
+					batchMapper.updateApprDisuse(doc);
 
 					//자산상태변경
-					batchDAO.updateAssetDisuse(doc);
+					batchMapper.updateAssetDisuse(doc);
 
 					//불용정보
-					CommonMap apprDisuseView = apprDisuseDAO.getApprDisuseView(doc);
+					CommonMap apprDisuseView = apprDisuseMapper.getApprDisuseView(doc);
 
 					//승인 자산 목록
-			    	CommonList dataList = apprAssetDAO.getApprAssetList(doc);
+			    	CommonList dataList = apprAssetMapper.getApprAssetList(doc);
 
 			    	//승인신청 히스토리
 			    	for (int k=0; k<dataList.size(); k++) {
@@ -712,7 +723,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 
 			if (updateCnt > 0) {
 
-				batchDAO.updateDocUpdateynY(doc);
+				batchMapper.updateDocUpdateynY(doc);
 			}
 
 			//DOCDIVCD => 0030170:인수인계, 0030171:불용신청, 0030172:반출신청, 0030173:반출연장신청, 0030174:자산반입신청
@@ -743,10 +754,10 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		batchDAO.deleteMisUserAll(cmap);
-		batchDAO.insertMisUserAll(cmap);
-		batchDAO.deleteUser(cmap);
-		batchDAO.mergeUser(cmap);
+		batchMapper.deleteMisUserAll(cmap);
+		batchMapper.insertMisUserAll(cmap);
+		batchMapper.deleteUser(cmap);
+		batchMapper.mergeUser(cmap);
 
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "BatchService.syncUser() - end");
 	}
@@ -757,10 +768,10 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		batchDAO.deleteMisDeptAll(cmap);
-		batchDAO.insertMisDeptAll(cmap);
-		batchDAO.deleteDept(cmap);
-		batchDAO.mergeDept(cmap);
+		batchMapper.deleteMisDeptAll(cmap);
+		batchMapper.insertMisDeptAll(cmap);
+		batchMapper.deleteDept(cmap);
+		batchMapper.mergeDept(cmap);
 
 		/*CommonList misDeptList = misDAO.getMisDeptList(cmap);
 		if (misDeptList.size() > 0) {
@@ -783,10 +794,10 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		batchDAO.deleteMisItemAll(cmap);
-		batchDAO.insertMisItemAll(cmap);
-		batchDAO.deleteItem(cmap);
-		batchDAO.mergeItem(cmap);
+		batchMapper.deleteMisItemAll(cmap);
+		batchMapper.insertMisItemAll(cmap);
+		batchMapper.deleteItem(cmap);
+		batchMapper.mergeItem(cmap);
 
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "BatchService.syncItem() - end");
 	}
@@ -797,11 +808,11 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		batchDAO.deleteMisAssetAll(cmap);
-		batchDAO.insertMisAssetAll(cmap);
-		batchDAO.mergeMisAsset(cmap); // 묶음자산 처리
-		batchDAO.deleteAsset(cmap);
-		batchDAO.mergeAsset(cmap);
+		batchMapper.deleteMisAssetAll(cmap);
+		batchMapper.insertMisAssetAll(cmap);
+		batchMapper.mergeMisAsset(cmap); // 묶음자산 처리
+		batchMapper.deleteAsset(cmap);
+		batchMapper.mergeAsset(cmap);
 
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "BatchService.syncAsset() - end");
 	}
@@ -812,14 +823,14 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		CommonList misCustList = misDAO.getMisCustList(cmap);
+		CommonList misCustList = misMapper.getMisCustList(cmap);
 		if (misCustList.size() > 0) {
 			//거래처 추가
-			batchDAO.deleteMisCustAll(cmap);
+			batchMapper.deleteMisCustAll(cmap);
 			batchMysqlService.loadDataFile("rfid_mis_cust", misCustList);
-			batchDAO.deleteCust(cmap);
-			batchDAO.updateCust(cmap);
-			batchDAO.insertCust(cmap);
+			batchMapper.deleteCust(cmap);
+			batchMapper.updateCust(cmap);
+			batchMapper.insertCust(cmap);
 		} else {
 			System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "[ERROR] MIS조회 정보가 없습니다.");
 		}
@@ -833,13 +844,13 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		CommonList misContrList = misDAO.getMisContrList(cmap);
+		CommonList misContrList = misMapper.getMisContrList(cmap);
 		//사용자 추가
-		batchDAO.deleteMisContrAll(cmap);
+		batchMapper.deleteMisContrAll(cmap);
 		batchMysqlService.loadDataFile("rfid_mis_contr", misContrList);
 		//batchDAO.deleteContr(cmap); //전체 데이터를 끌어오는 것이 아니기 때문에 삭제는 하면 안된다.
-		batchDAO.updateContr(cmap);
-		batchDAO.insertContr(cmap);
+		batchMapper.updateContr(cmap);
+		batchMapper.insertContr(cmap);
 
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "BatchService.syncContr() - end");
 	}
@@ -850,13 +861,13 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 		cmap.put("pageIdx", "1");
 		cmap.put("pageSize", "999999");
 
-		CommonList misContrdtlList = misDAO.getMisContrdtlList(cmap);
+		CommonList misContrdtlList = misMapper.getMisContrdtlList(cmap);
 		//사용자 추가
-		batchDAO.deleteMisContrdtlAll(cmap);
+		batchMapper.deleteMisContrdtlAll(cmap);
 		batchMysqlService.loadDataFile("rfid_mis_contrdtl", misContrdtlList);
 		//batchDAO.deleteContrdtl(cmap); //전체 데이터를 끌어오는 것이 아니기 때문에 삭제는 하면 안된다.
-		batchDAO.updateContrdtl(cmap);
-		batchDAO.insertContrdtl(cmap);
+		batchMapper.updateContrdtl(cmap);
+		batchMapper.insertContrdtl(cmap);
 
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "BatchService.syncContrdtl() - end");
 	}

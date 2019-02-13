@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("BldngService")
 public class BldngServiceImpl extends EgovAbstractServiceImpl implements BldngService{
 
-	@Resource(name="bldngMapper")
+	@Resource(name="BldngMapper")
     private BldngMapper bldngMapper;
 	
 	@Override
@@ -57,7 +57,7 @@ public class BldngServiceImpl extends EgovAbstractServiceImpl implements BldngSe
 	@Override
 	public int deleteBldng2(CommonMap cmap) throws Exception {
 		// TODO Auto-generated method stub
-		return bldngMapper.deleteBldng2;
+		return bldngMapper.deleteBldng2(cmap);
 	}
 
 }
