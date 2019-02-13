@@ -59,7 +59,7 @@
     	)
     	SELECT	#{rqstno},
     			#{docstatcd},
-    			#{docstatnm#}
+    			#{docstatnm}
     			#{docdivcd},
     			#{regtime},
     			#{modtime},
@@ -140,7 +140,7 @@
 		WHERE	A.RQSTNO = #{rqstno}
     </select>
 
-    <update id="updateAssetUsercng" parameterClass="cmap" >
+    <update id="updateAssetUsercng" parameterType="cmap" >
     	UPDATE	rfid_asset
     	SET		TOP_DEPT_NO = #{topDeptNo},
 				TOP_DEPT_NAME = #{topDeptName},
@@ -157,7 +157,7 @@
 						)
     </update>
 
-    <update id="updateAssetIoOut" parameterClass="cmap" >
+    <update id="updateAssetIoOut" parameterType="cmap" >
     	UPDATE	rfid_asset
     	SET		ASSET_STATUS_CD = '반출중',
 				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
@@ -170,7 +170,7 @@
 				AND ASSET_STATUS_CD = '정상'
     </update>
 
-    <update id="updateAssetIoIn" parameterClass="cmap" >
+    <update id="updateAssetIoIn" parameterType="cmap" >
     	UPDATE	rfid_asset
     	SET		ASSET_STATUS_CD = '정상',
 				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
@@ -185,7 +185,7 @@
 				AND ASSET_STATUS_CD = '반출중'
     </update>
 
-    <update id="updateAssetDisuse" parameterClass="cmap" >
+    <update id="updateAssetDisuse" parameterType="cmap" >
     	UPDATE	rfid_asset
     	SET		ASSET_STATUS_CD = '불용',
     			DISUSE_YN = 'Y',
@@ -199,19 +199,19 @@
 						)
     </update>
 
-    <update id="Batch.updateAssetStatusCd" parameterClass="cmap" >
+    <update id="updateAssetStatusCd" parameterType="cmap" >
     	UPDATE	rfid_asset
-    	SET		ASSET_STATUS_CD = #assetStatusCd#,
-				LAST_UPDT_PNTTM = #lastUpdtPnttm#,
+    	SET		ASSET_STATUS_CD = #{assetStatusCd},
+				LAST_UPDT_PNTTM = #{lastUpdtPnttm},
 				LAST_UPDUSR_ID = 'BATCH'
 		WHERE	ASSET_SEQ IN (
 						SELECT 	ASSET_SEQ
 						FROM	rfid_appr_asset
-						WHERE	RQSTNO = #rqstno#
+						WHERE	RQSTNO = #{rqstno}
 						)
     </update>
 
-    <insert id="Batch.insertUser" parameterClass="cmap" >
+    <insert id="insertUser" parameterType="cmap" >
     	INSERT INTO rfid_user (
 				USER_NO,
 				USER_HIS_NO,
@@ -266,7 +266,7 @@
 							)
     </insert>
 
-    <insert id="Batch.insertDept" parameterClass="cmap" >
+    <insert id="insertDept" parameterType="cmap" >
         INSERT INTO RFID_DEPT (
         		DEPT_NO
 				,DEPT_NAME
@@ -297,7 +297,7 @@
 							)
     </insert>
 
-    <insert id="Batch.insertCust" parameterClass="cmap" >
+    <insert id="insertCust" parameterType="cmap" >
         INSERT INTO RFID_SL_COMPANY (
         		COMP_SEQ
 				,COMP_CD
@@ -346,7 +346,7 @@
 							)
     </insert>
 
-    <insert id="Batch.insertLoca" parameterClass="cmap" >
+    <insert id="insertLoca" parameterType="cmap" >
         INSERT INTO RFID_POSITION (
 				POS_NO
 				,POS_NAME
@@ -377,7 +377,7 @@
 							)
     </insert>
 
-    <insert id="Batch.insertContr" parameterClass="cmap" >
+    <insert id="insertContr" parameterType="cmap" >
         INSERT INTO RFID_CONTRACT (
         		PURNO
 				,PURNM
@@ -438,7 +438,7 @@
 							)
     </insert>
 
-    <insert id="Batch.insertContrdtl" parameterClass="cmap" >
+    <insert id="insertContrdtl" parameterType="cmap" >
     	INSERT INTO RFID_CONTRACT_DTL (
         		PURNO
 				,RQSTNO
@@ -495,7 +495,7 @@
 							)
     </insert>
 
-    <update id="Batch.updateUser" parameterClass="cmap" >
+    <update id="updateUser" parameterType="cmap" >
     	UPDATE	RFID_USER A
     			INNER JOIN RFID_MIS_USER B ON A.USER_NO = B.USER_NO
     	SET
@@ -522,7 +522,7 @@
 				A.POS_NAME = B.POS_NAME
     </update>
 
-    <update id="Batch.updateDept" parameterClass="cmap" >
+    <update id="updateDept" parameterType="cmap" >
     	UPDATE	RFID_DEPT A
     			INNER JOIN RFID_MIS_DEPT B ON A.DEPT_NO = B.DEPT_NO
     	SET
@@ -535,7 +535,7 @@
 				,A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID
     </update>
 
-    <update id="Batch.updateCust" parameterClass="cmap" >
+    <update id="updateCust" parameterType="cmap" >
     	UPDATE	RFID_SL_COMPANY A
     			INNER JOIN RFID_MIS_CUST B ON A.COMP_SEQ = B.COMP_SEQ
     	SET
@@ -557,7 +557,7 @@
 				,A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID
     </update>
 
-    <update id="Batch.updateLoca" parameterClass="cmap" >
+    <update id="updateLoca" parameterType="cmap" >
     	UPDATE	RFID_POSITION A
     			INNER JOIN RFID_MIS_POSITION B ON A.POS_NO = B.POS_NO
     	SET
@@ -570,7 +570,7 @@
 				,A.LAST_UPDUSR_ID = B.LAST_UPDUSR_ID
     </update>
 
-    <update id="Batch.updateContr" parameterClass="cmap" >
+    <update id="updateContr" parameterType="cmap" >
     	UPDATE	RFID_CONTRACT A
     			INNER JOIN RFID_MIS_CONTR B ON A.PURNO = B.PURNO
     	SET
@@ -598,7 +598,7 @@
 				,A.STATENM = B.STATENM
     </update>
 
-    <update id="Batch.updateContrdtl" parameterClass="cmap" >
+    <update id="updateContrdtl" parameterType="cmap" >
     	UPDATE	RFID_CONTRACT_DTL A
     			INNER JOIN RFID_MIS_CONTRDTL B
     					ON A.PURNO = B.PURNO
@@ -624,42 +624,42 @@
 				,A.USEOFPURPOSE = B.USEOFPURPOSE
     </update>
 
-    <delete id="Batch.deleteUser" parameterClass="cmap" >
+    <delete id="deleteUser" parameterType="cmap" >
     	DELETE	A
     	FROM	RFID_USER A
     			LEFT OUTER JOIN RFID_MIS_USER B ON A.USER_NO = B.USER_NO AND A.USER_HIS_NO = B.USER_HIS_NO
     	WHERE	B.USER_NO IS NULL
     </delete>
 
-    <delete id="Batch.deleteDept" parameterClass="cmap" >
+    <delete id="deleteDept" parameterType="cmap" >
     	DELETE	A
     	FROM	RFID_DEPT A
     			LEFT OUTER JOIN RFID_MIS_DEPT B ON A.DEPT_NO = B.DEPT_NO
     	WHERE	B.DEPT_NO IS NULL
     </delete>
 
-    <delete id="Batch.deleteCust" parameterClass="cmap" >
+    <delete id="deleteCust" parameterType="cmap" >
     	DELETE	A
     	FROM	RFID_SL_COMPANY A
     			LEFT OUTER JOIN RFID_MIS_CUST B ON A.COMP_SEQ = B.COMP_SEQ
     	WHERE	B.COMP_SEQ IS NULL
     </delete>
 
-    <delete id="Batch.deleteLoca" parameterClass="cmap" >
+    <delete id="deleteLoca" parameterType="cmap" >
     	DELETE	A
     	FROM	RFID_POSITION A
     			LEFT OUTER JOIN RFID_MIS_POSITION B ON A.POS_NO = B.POS_NO
     	WHERE	B.POS_NO IS NULL
     </delete>
 
-    <delete id="Batch.deleteContr" parameterClass="cmap" >
+    <delete id="deleteContr" parameterType="cmap" >
     	DELETE	A
     	FROM	RFID_CONTRACT A
     			LEFT OUTER JOIN RFID_MIS_CONTR B ON A.PURNO = B.PURNO
     	WHERE	B.PURNO IS NULL
     </delete>
 
-    <delete id="Batch.deleteContrdtl" parameterClass="cmap" >
+    <delete id="deleteContrdtl" parameterType="cmap" >
     	DELETE	A
     	FROM	RFID_CONTRACT_DTL A
     			LEFT OUTER JOIN RFID_MIS_CONTRDTL B
@@ -669,37 +669,37 @@
     	WHERE	B.PURNO IS NULL
     </delete>
 
-    <delete id="Batch.deleteMisUserAll" parameterClass="cmap" >
+    <delete id="deleteMisUserAll" parameterType="cmap" >
     	DELETE
     	FROM	RFID_MIS_USER
     </delete>
 
-    <delete id="Batch.deleteMisDeptAll" parameterClass="cmap" >
+    <delete id="deleteMisDeptAll" parameterType="cmap" >
     	DELETE
     	FROM	RFID_MIS_DEPT
     </delete>
 
-    <delete id="Batch.deleteMisCustAll" parameterClass="cmap" >
+    <delete id="deleteMisCustAll" parameterType="cmap" >
     	DELETE
     	FROM	RFID_MIS_CUST
     </delete>
 
-    <delete id="Batch.deleteMisLocaAll" parameterClass="cmap" >
+    <delete id="deleteMisLocaAll" parameterType="cmap" >
     	DELETE
     	FROM	RFID_MIS_POSITION
     </delete>
 
-    <delete id="Batch.deleteMisContrAll" parameterClass="cmap" >
+    <delete id="deleteMisContrAll" parameterType="cmap" >
     	DELETE
     	FROM	RFID_MIS_CONTR
     </delete>
 
-    <delete id="Batch.deleteMisContrdtlAll" parameterClass="cmap" >
+    <delete id="deleteMisContrdtlAll" parameterType="cmap" >
     	DELETE
     	FROM	RFID_MIS_CONTRDTL
     </delete>
 
-    <update id="Batch.updateAssetDeptInfo" parameterClass="cmap" >
+    <update id="updateAssetDeptInfo" parameterType="cmap" >
 		UPDATE 	RFID_ASSET A
 				INNER JOIN RFID_USER B ON A.USER_NO = B.USER_NO
 				INNER JOIN RFID_DEPT C ON B.DEPT_NO = C.DEPT_NO
