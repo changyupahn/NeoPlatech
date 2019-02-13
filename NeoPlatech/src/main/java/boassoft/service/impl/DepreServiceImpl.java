@@ -13,7 +13,7 @@ import boassoft.service.DepreService;
 @Service("DepreService")
 public class DepreServiceImpl extends EgovAbstractServiceImpl implements  DepreService {
 
-	@Resource(name="depreMapper")
+	@Resource(name="DepreMapper")
     private DepreMapper depreMapper;
 
 	@Override

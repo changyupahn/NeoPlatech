@@ -12,7 +12,7 @@ import boassoft.util.CommonMap;
 @Service("DeviceService")
 public class DeviceServiceImpl extends EgovAbstractServiceImpl implements  DeviceService {
 
-	@Resource(name="deviceMapper")
+	@Resource(name="DeviceMapper")
 	private DeviceMapper deviceMapper;
 	
 	public CommonList getDeviceList(CommonMap cmap) throws Exception{

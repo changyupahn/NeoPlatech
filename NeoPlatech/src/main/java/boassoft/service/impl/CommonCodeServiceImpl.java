@@ -13,7 +13,7 @@ import boassoft.mapper.CommonCodeMapper;
 @Service("CommonCodeService")
 public class CommonCodeServiceImpl extends EgovAbstractServiceImpl implements CommonCodeService {
 
-	@Resource(name="commonCodeMapper")
+	@Resource(name="CommonCodeMapper")
     private CommonCodeMapper commonCodeMapper;
 	
 	public CommonList getCommonCodeList(CommonMap cmap) throws Exception {

@@ -10,7 +10,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 public class DepreAssetServiceImpl extends EgovAbstractServiceImpl implements DepreAssetService {
 
-	@Resource(name="depreAssetMapper")
+	@Resource(name="DepreAssetMapper")
     private DepreAssetMapper depreAssetMapper;
 	
 	@Override

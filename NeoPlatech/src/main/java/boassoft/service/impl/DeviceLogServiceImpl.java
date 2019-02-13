@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("DeviceLogService")
 public class DeviceLogServiceImpl extends EgovAbstractServiceImpl  implements DeviceLogService{
 
-	@Resource(name="deviceLogMapper")
+	@Resource(name="DeviceLogMapper")
     private DeviceLogMapper deviceLogMapper;
 	
 	@Override
