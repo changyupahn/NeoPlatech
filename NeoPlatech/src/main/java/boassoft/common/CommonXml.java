@@ -5,6 +5,7 @@ import java.io.Serializable;
 import boassoft.util.DateUtil;
 import boassoft.util.StringUtil;
 
+@SuppressWarnings("serial")
 public class CommonXml implements Serializable {
 
 	private String asset_seq;
