@@ -5,13 +5,15 @@
     <sql id="getApprIoInAssetListWhere">
     </sql>
 
+     <!--<sql id="pagingHeader">
+    </sql>
+
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
 
   <select id="getApprIoInAssetList" parameterType="cmap" resultType="cmap" >
     	<include refid="pagingHeader"/>
@@ -84,7 +86,7 @@
         WHERE 	IN_RQSTNO = #inRqstno#
     </update>
     
-     <delete id="deleteApprIoInAsset2" parameterClass="cmap" >
+     <delete id="deleteApprIoInAsset2" parameterType="cmap" >
         DELETE
         FROM 	rfid_appr_io_in_asset
         WHERE 	IN_RQSTNO = #{inRqstno}

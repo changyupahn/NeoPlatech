@@ -29,7 +29,7 @@
         WHERE 	RQSTNO = #{rqstno}
     </select>
     
-    <insert id="ApprRqst.insertApprRqst" parameterType="cmap" >
+    <insert id="insertApprRqst" parameterType="cmap" >
         INSERT INTO RFID_APPR_RQST (
         		RQSTNO
 				,RQST_REGTIME
@@ -64,7 +64,7 @@
         WHERE 	RQSTNO = #{rqstno}
     </insert>
 
-    <update id="ApprRqst.updateApprRqst" parameterType="cmap" >
+    <update id="updateApprRqst" parameterType="cmap" >
         UPDATE 	RFID_APPR_RQST
         SET
 				RQSTNO = #{rqstno}

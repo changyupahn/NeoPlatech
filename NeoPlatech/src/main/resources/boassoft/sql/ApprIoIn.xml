@@ -6,13 +6,15 @@
     	AND A.RQSTNO = #{rqstno}
     </sql>
     
+     <!--<sql id="pagingHeader">
+    </sql>
+
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
                 LIMIT #{pageLimit}, #{pageSize}
           </if>
-       </if> 
-    </sql>
+       </if> -->
     
     <select id="getApprIoInList" parameterType="cmap" resultType="cmap" >
     	<include refid="pagingHeader"/>
