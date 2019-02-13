@@ -16,10 +16,10 @@ import boassoft.util.DateUtil;
 @Service("PrintHistoryService")
 public class PrintHistoryServiceImpl extends EgovAbstractServiceImpl implements PrintHistoryService {
 
-	@Resource(name="printHistoryMapper")
+	@Resource(name="PrintHistoryMapper")
     private PrintHistoryMapper printHistoryMapper;
 
-	@Resource(name="assetMapper")
+	@Resource(name="AssetMapper")
     private AssetMapper assetMapper;
 
 	@Resource(name = "printSeqIdGnrService")

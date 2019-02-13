@@ -21,13 +21,13 @@ import boassoft.util.DateUtil;
 public class PrintServiceImpl extends EgovAbstractServiceImpl implements PrintService {
 
 	
-	@Resource(name="printMapper")
+	@Resource(name="PrintMapper")
     private PrintMapper printMapper;
 
-	@Resource(name="inventoryMapper")
+	@Resource(name="InventoryMapper")
     private InventoryMapper inventoryMapper;
 
-	@Resource(name="assetMapper")
+	@Resource(name="AssetMapper")
     private AssetMapper assetMapper;
 
 	@Resource(name = "printSeqIdGnrService")
