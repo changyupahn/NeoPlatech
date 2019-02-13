@@ -18,7 +18,7 @@ import boassoft.util.SessionUtil;
 public class UserServiceImpl extends EgovAbstractServiceImpl implements UserService {
 
 	
-	@Resource(name="userMapper")
+	@Resource(name="UserMapper")
 	private UserMapper userMapper;
 	
 	@Resource(name="GrantMenuService")

@@ -18,13 +18,13 @@ import boassoft.util.StringUtil;
 @Service("VirtAssetService")
 public class VirtAssetServiceImpl extends EgovAbstractServiceImpl implements VirtAssetService {
 
-	@Resource(name="virtAssetMapper")
+	@Resource(name="VirtAssetMapper")
     private VirtAssetMapper virtAssetMapper;
 
-	@Resource(name="inspItemMapper")
+	@Resource(name="InspItemMapper")
     private InspItemMapper inspItemMapper;
 	
-	@Resource(name="contractDtlMapper")
+	@Resource(name="ContractDtlMapper")
     private ContractDtlMapper contractDtlMapper;
 	
 	@Resource(name = "assetSeqIdGnrService")

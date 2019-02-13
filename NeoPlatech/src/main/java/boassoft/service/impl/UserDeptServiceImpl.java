@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("UserDeptService")
 public class UserDeptServiceImpl extends EgovAbstractServiceImpl implements UserDeptService{
 
-	@Resource(name="userDeptMapper")
+	@Resource(name="UserDeptMapper")
     private UserDeptMapper userDeptMapper;
 	
 	@Override
