@@ -13,7 +13,7 @@ import boassoft.util.CommonMap;
 @Service("ZeusStatService")
 public class ZeusStatServiceImpl extends EgovAbstractServiceImpl implements ZeusStatService {
 
-	@Resource(name="zeusStatMapper")
+	@Resource(name="ZeusStatMapper")
     private ZeusStatMapper zeusStatMapper;
 	
 	@Override
