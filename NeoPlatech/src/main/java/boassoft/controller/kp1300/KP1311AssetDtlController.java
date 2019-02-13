@@ -33,10 +33,10 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 
 @Controller
-public enum KP1311AssetDtlController {
+public class KP1311AssetDtlController {
 	
-	@Resource(name = "CommonMap")
-    private CommonMap commonMap;
+	@Resource(name = "commonMap")
+	private CommonMap commonMap;
 
 	@Resource(name = "AssetService")
     private AssetService assetService;
