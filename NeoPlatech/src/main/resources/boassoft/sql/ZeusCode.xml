@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZeusCodeMapper">
+
+   <!--<sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> -->
+
+    <sql id="getZeusCodeListWhere"> 
+    	AND CODE_ID = #{codeId}
+    </sql>
+
+    <select id="getZeusCodeList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_ZEUS_CODE A
+        WHERE 	1=1
+		<include refid="getZeusCodeListWhere" />
+        ORDER BY CODE_ID DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getZeusCodeListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_ZEUS_CODE A
+        WHERE 	1=1
+		<include refid="getZeusCodeListWhere" />
+    </select>
+
+    <select id="getZeusCodeView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ZEUS_CODE A
+        WHERE 	CODE_ID = #{codeId}
+        		AND CODE = #{code}
+    </select>
+
+    <select id="getZeusCodeView2" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ZEUS_CODE A
+        WHERE 	CODE_ID = #{codeId}
+        		AND NAME = #{name}
+        LIMIT	1
+    </select>
+
+    <insert id="insertZeusCode" parameterType="cmap" >
+        INSERT INTO RFID_ZEUS_CODE (
+        		CODE_ID
+				,CODE
+				,NAME
+				,LEVEL
+				,CODES
+				,DEF
+		)
+		SELECT	#{codeId}
+				,#{code}
+				,#{name}
+				,#{level}
+				,#{codes}
+				,#{def}
+		FROM	DUAL
+		WHERE	NOT EXISTS (
+						SELECT 	1
+						FROM	RFID_ZEUS_CODE
+						WHERE	CODE_ID = #{codeId}
+								AND CODE = #{code}
+						)
+    </insert>
+
+    <update id="updateZeusCode" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS_CODE
+        SET
+				CODE = #{code}
+				,NAME = #{name}
+				,LEVEL = #{level}
+				,CODES = #{codes}
+				,DEF = #{def}
+        WHERE 	CODE_ID = #{codeId}
+        		AND CODE = #{code}
+    </update>
+
+    <update id="deleteZeusCode" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS_CODE
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	CODE_ID = #{codeId}
+        		AND CODE = #{code}
+    </update>
+
+    <delete id="deleteZeusCode2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS_CODE
+        WHERE 	CODE_ID = #{codeId}
+        		AND CODE = #{code}
+    </delete>
+
+    <delete id="deleteZeusCodeAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS_CODE
+    </delete>
+ 
+
+
+</mapper>

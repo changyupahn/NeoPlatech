@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZeusAsMapper">
+
+   <sql id="getZeusAsListWhere">
+    </sql>
+    
+      <!--<sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> -->
+
+    <select id="getZeusAsList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        FROM 	RFID_ZEUS_AS A
+        WHERE 	1=1
+		<include refid="getZeusAsListWhere" />
+        ORDER BY EQUIP_ID DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getZeusAsListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_ZEUS_AS A
+        WHERE 	1=1
+		<include refid="getZeusAsListWhere" />
+    </select>
+
+    <select id="getZeusAsView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ZEUS_AS A
+        WHERE 	EQUIP_ID = #{equipId}
+    </select>
+
+    <insert id="insertZeusAs" parameterType="cmap" >
+        INSERT INTO RFID_ZEUS_AS (
+        		EQUIP_ID
+				,EQUIP_CD
+				,ASSET_NO
+				,KOR_NM
+				,ENG_NM
+				,REGIST_DT
+        ) VALUES (
+				#{equipId}
+				,#{equipCd}
+				,#{assetNo}
+				,#{korNm}
+				,#{engNm}
+				,#{registDt}
+        )
+    </insert>
+
+    <update id="updateZeusAs" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS_AS
+        SET
+				EQUIP_CD = #{equipCd}
+				,ASSET_NO = #{assetNo}
+				,KOR_NM = #{korNm}
+				,ENG_NM = #{engNm}
+				,REGIST_DT = #{registDt}
+        WHERE 	EQUIP_ID = #{equipId}
+    </update>
+
+    <update id="deleteZeusAs" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS_AS
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	EQUIP_ID = #{equipId}
+    </update>
+
+    <delete id="deleteZeusAs2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS_AS
+        WHERE 	EQUIP_ID = #{equipId}
+    </delete>
+
+    <delete id="deleteZeusAsAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS_AS
+    </delete>
+
+</mapper>

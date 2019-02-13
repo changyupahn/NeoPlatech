@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZeusMapper">
+
+  <!--<sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> -->
+  
+
+  <sql id="getZeusListWhere">
+    	AND IDLE_DISUSE_CD IN ('1','2')
+    	<if test="sManagerId != null and sManagerId != ''">     	
+    		AND MANAGER_ID = #{sManagerId}    	
+    	</if>
+    	<if test="keywords != null and keywords != ''">      	
+    		AND (
+    			ASSET_NO like concat('%', #{keywords} ,'%')
+    			OR
+				KOR_NM like concat('%', #{keywords} ,'%')
+    			OR
+				ENG_NM like concat('%', #{keywords} ,'%')
+    			OR
+				REGIST_ID like concat('%', #{keywords} ,'%')
+    			OR
+				REGIST_NM like concat('%', #{keywords} ,'%')
+    			OR
+				MANAGER_ID like concat('%', #{keywords} ,'%')
+    			OR
+				EQUIP_NO like concat('%', #{keywords} ,'%')
+    			)    	
+    	</if>
+    </sql>
+
+    <select id="getZeusList" parameterType="cmap" resultType="cmap" >
+    	<include refid="pagingHeader"/>
+        SELECT	A.*
+        		, B.USER_NAME
+        FROM 	RFID_ZEUS A
+        LEFT OUTER JOIN RFID_ASSET B ON A.ASSET_NO = B.ASSET_NO
+        WHERE 	1=1
+		<include refid="getZeusListWhere" />
+        ORDER BY EQUIP_ID DESC
+        <include refid="pagingFooter"/>
+    </select>
+
+    <select id="getZeusListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_ZEUS A
+        LEFT OUTER JOIN RFID_ASSET B ON A.ASSET_NO = B.ASSET_NO
+        WHERE 	1=1
+		<include refid="getZeusListWhere" />
+    </select>
+
+    <select id="getZeusView" parameterType="cmap" resultType="cmap" >
+        SELECT	A.*
+        FROM 	RFID_ZEUS A
+        WHERE 	EQUIP_ID = #{equipId}
+    </select>
+
+    <insert id="insertZeus" parameterType="cmap" >
+        INSERT INTO RFID_ZEUS (
+        		EQUIP_ID
+				,EQUIP_NO
+				,EQUIP_CD
+				,ASSET_NO
+				,KOR_NM
+				,ENG_NM
+				,STATUS_CD
+				,STATUS_NM
+				,USE_SCOPE_CD
+				,USE_SCOPE_NM
+				,IDLE_DISUSE_CD
+				,IDLE_DISUSE_NM
+				,ORGAN_NM
+				,RND_YN
+				,RND_NM
+				,CONFIRM_YN
+				,DELETE_YN
+				,REGIST_ID
+				,REGIST_NM
+				,REGIST_DT
+				,MODIFY_DT
+				,API_YN
+				,PHOTO_WEB_PATH
+				,PHOTO_THUMB_WEB_PATH
+				,TAKE_DT
+				,FRST_REGIST_PNTTM
+				,MANAGER_ID
+        ) VALUES (
+				#{equipId}
+				,#{equipNo}
+				,#{equipCd}
+				,#{assetNo}
+				,#{korNm}
+				,#{engNm}
+				,#{statusCd}
+				,#{statusNm}
+				,#{useScopeCd}
+				,#{useScopeNm}
+				,#{idleDisuseCd}
+				,#{idleDisuseNm}
+				,#{organNm}
+				,#{rndYn}
+				,#{rndNm}
+				,#{confirmYn}
+				,#{deleteYn}
+				,#{registId}
+				,#{registNm}
+				,#{registDt}
+				,#{modifyDt}
+				,#{apiYn}
+				,#{photoWebPath}
+				,#{photoThumbWebPath}
+				,#{takeDt}
+				,#{frstRegistPnttm}
+				,#{managerId}
+        )
+    </insert>
+
+    <update id="updateZeus" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS
+        SET
+				EQUIP_NO = #{equipNo}
+				,EQUIP_CD = #{equipCd}
+				,ASSET_NO = #{assetNo}
+				,KOR_NM = #{korNm}
+				,ENG_NM = #{engNm}
+				,STATUS_CD = #{statusCd}
+				,STATUS_NM = #{statusNm}
+				,USE_SCOPE_CD = #{useScopeCd}
+				,USE_SCOPE_NM = #{useScopeNm}
+				,IDLE_DISUSE_CD = #{idleDisuseCd}
+				,IDLE_DISUSE_NM = #{idleDisuseNm}
+				,ORGAN_NM = #{organNm}
+				,RND_YN = #{rndYn}
+				,RND_NM = #{rndNm}
+				,CONFIRM_YN = #{confirmYn}
+				,DELETE_YN = #{deleteYn}
+				,REGIST_ID = #{registId}
+				,REGIST_NM = #{registNm}
+				,REGIST_DT = #{registDt}
+				,MODIFY_DT = #{modifyDt}
+				,API_YN = #{apiYn}
+				,PHOTO_WEB_PATH = #{photoWebPath}
+				,PHOTO_THUMB_WEB_PATH = #{photoThumbWebPath}
+				,TAKE_DT = #{takeDt}
+				,FRST_REGIST_PNTTM = #{frstRegistPnttm}
+        WHERE 	EQUIP_ID = #{equipId}
+    </update>
+
+    <update id="deleteZeus" parameterType="cmap" >
+        UPDATE 	RFID_ZEUS
+        SET
+				USE_YN = 'N'
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	EQUIP_ID = #{equipId}
+    </update>
+
+    <delete id="deleteZeus2" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS
+        WHERE 	EQUIP_ID = #{equipId}
+    </delete>
+
+    <delete id="deleteZeusAll" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_ZEUS
+    </delete>
+  
+
+</mapper>
