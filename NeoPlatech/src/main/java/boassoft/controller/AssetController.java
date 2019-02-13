@@ -357,7 +357,7 @@ public class AssetController {
    					if (hst != null || hst2007 != null) {
    						if (hst != null) {
    							for(int i=0; i<=hst.getLastRowNum(); i++){
-   								HSSFRow hsr = hst.getRow(i);
+   								HSSFRow hsr = (HSSFRow) hst.getRow(i);
    								CommonMap xMap = new CommonMap();
 
    								if (i == 0)
