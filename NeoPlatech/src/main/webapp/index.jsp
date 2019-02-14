@@ -1,4 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%--<jsp:forward page="/sym/mms/EgovMainMenuHome.do"/>--%>
-<%--<jsp:forward page="WEB-INF/jsp/egovframework/com/cmm/EgovUnitMain.jsp"/>--%>
-<jsp:forward page="/index.do"/>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/common/doctype.jsp" %>
+<html>
+<head>
+<%@ include file="/WEB-INF/jsp/common/head.jsp" %>
+<script type="text/javascript">
+function forward(){
+	location.href = "/index.do";
+}
+</script>
+</head>
+<body onload="forward()">
+<iframe src="/validationQuery.do" width="0" height="0"></iframe>
+</body>
+</html>
