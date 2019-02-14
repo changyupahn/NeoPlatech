@@ -2,16 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ReqstPrintMapper">
 
-    <!--<sql id="pagingHeader">
-    </sql>
-
-    <sql id="pagingFooter">
-        <if test="pageIdx != null and pageIdx != ''">      
-          <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
-          </if>
-       </if> -->
-
  <insert id="insertReqstPrint" parameterType="cmap">
 		INSERT INTO rfid_print_request
 			(reqst_user_id, org_no, asset_no, label_seq, addr_seq, print_status_cd, use_yn, frst_regist_pnttm, frst_register_id, last_updt_pnttm, last_updusr_id)
