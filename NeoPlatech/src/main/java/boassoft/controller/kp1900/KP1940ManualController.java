@@ -17,10 +17,10 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1940ManualController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

@@ -22,16 +22,16 @@ import egovframework.com.utl.sim.service.EgovFileScrty;
 @Controller
 public class KP1950CodeMgrController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
-	@Resource(name = "GrantService")
+	@Resource(name = "grantService")
     private GrantService grantService;
 
 	/** log */

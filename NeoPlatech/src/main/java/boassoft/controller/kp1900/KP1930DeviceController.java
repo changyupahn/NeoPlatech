@@ -20,16 +20,16 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1930DeviceController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "DeviceService")
+	@Resource(name = "deviceService")
     private DeviceService deviceService;
 
-	@Resource(name = "DeviceLogService")
+	@Resource(name = "deviceLogService")
     private DeviceLogService deviceLogService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
