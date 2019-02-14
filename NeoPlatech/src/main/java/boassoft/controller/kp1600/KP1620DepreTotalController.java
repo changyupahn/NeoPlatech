@@ -22,16 +22,16 @@ import boassoft.util.ExcelUtil;
 @Controller
 public class KP1620DepreTotalController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "DepreService")
+	@Resource(name = "depreService")
     private DepreService depreService;
 
-	@Resource(name = "DepreAssetService")
+	@Resource(name = "depreAssetService")
     private DepreAssetService depreAssetService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
