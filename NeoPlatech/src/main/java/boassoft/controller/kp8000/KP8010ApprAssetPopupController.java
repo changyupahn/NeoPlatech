@@ -26,16 +26,16 @@ import boassoft.util.SessionUtil;
 @Controller
 public class KP8010ApprAssetPopupController {
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "GrantMenuService")
+	@Resource(name = "grantMenuService")
     private GrantMenuService grantMenuService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

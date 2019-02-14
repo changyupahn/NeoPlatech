@@ -29,25 +29,25 @@ import boassoft.util.SessionUtil;
 @Controller
 public class KP8050ApprIoInPopupController {
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "GrantMenuService")
+	@Resource(name = "grantMenuService")
     private GrantMenuService grantMenuService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "ApprIoOutService")
+	@Resource(name = "apprIoOutService")
     private ApprIoOutService apprIoOutService;
 
-	@Resource(name = "ApprIoExtService")
+	@Resource(name = "apprIoExtService")
     private ApprIoExtService apprIoExtService;
 
-	@Resource(name = "ApprIoInService")
+	@Resource(name = "apprIoInService")
     private ApprIoInService apprIoInService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

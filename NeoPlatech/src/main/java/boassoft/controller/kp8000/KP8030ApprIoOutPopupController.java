@@ -24,19 +24,19 @@ import boassoft.util.SessionUtil;
 @Controller
 public class KP8030ApprIoOutPopupController {
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "GrantMenuService")
+	@Resource(name = "grantMenuService")
     private GrantMenuService grantMenuService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "ApprIoOutService")
+	@Resource(name = "apprIoOutService")
     private ApprIoOutService apprIoOutService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
