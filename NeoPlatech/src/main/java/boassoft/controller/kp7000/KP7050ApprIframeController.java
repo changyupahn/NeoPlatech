@@ -22,22 +22,22 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP7050ApprIframeController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ApprIoOutService")
+	@Resource(name = "apprIoOutService")
     private ApprIoOutService apprIoOutService;
 
-	@Resource(name = "ApprIoExtService")
+	@Resource(name = "apprIoExtService")
     private ApprIoExtService apprIoExtService;
 
-	@Resource(name = "ApprIoInService")
+	@Resource(name = "apprIoInService")
     private ApprIoInService apprIoInService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

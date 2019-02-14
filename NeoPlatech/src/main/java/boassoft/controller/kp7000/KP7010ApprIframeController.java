@@ -19,16 +19,16 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP7010ApprIframeController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ApprUsercngService")
+	@Resource(name = "apprUsercngService")
     private ApprUsercngService apprUsercngService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
