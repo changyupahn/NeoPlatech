@@ -24,10 +24,10 @@ import boassoft.util.SessionUtil;
 @Controller
 public class ReqstPrintController {
 
-	@Resource(name = "ReqstPrintService")
+	@Resource(name = "reqstPrintService")
     private ReqstPrintService reqstPrintService;
 	
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
     
 	/** log */

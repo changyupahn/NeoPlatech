@@ -16,7 +16,7 @@ import boassoft.util.CommonMap;
 @Controller
 public class MisLoginController {
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
     
     @RequestMapping(value="/mis/login.do")

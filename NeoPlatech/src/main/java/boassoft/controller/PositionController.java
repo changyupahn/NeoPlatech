@@ -11,7 +11,7 @@ import boassoft.service.PositionService;
 @Controller
 public class PositionController {
 
-	@Resource(name = "PositionService")
+	@Resource(name = "positionService")
     private PositionService positionService;
     
 	/** log */

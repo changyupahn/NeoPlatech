@@ -29,22 +29,22 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Controller
 public class TabController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "TabService")
+	@Resource(name = "tabService")
     private TabService tabService;
 
-	@Resource(name = "DeviceService")
+	@Resource(name = "deviceService")
     private DeviceService deviceService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "CommonXmlManage")
+	@Resource(name = "commonXmlManage")
     private CommonXmlManage commonXmlManage;
 	
-	@Resource(name = "DeviceLogService")
+	@Resource(name = "deviceLogService")
     private DeviceLogService deviceLogService;
 
 	@Resource(name = "deviceLogSeqIdGnrService")

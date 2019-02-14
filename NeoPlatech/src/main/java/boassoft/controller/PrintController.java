@@ -23,16 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PrintController {
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "InventoryService")
+	@Resource(name = "inventoryService")
     private InventoryService inventoryService;
 
-	@Resource(name = "PrintService")
+	@Resource(name = "printService")
     private PrintService printService;
 
-	@Resource(name = "CommonXmlManage")
+	@Resource(name = "commonXmlManage")
     private CommonXmlManage commonXmlManage;
 
 	/** log */
