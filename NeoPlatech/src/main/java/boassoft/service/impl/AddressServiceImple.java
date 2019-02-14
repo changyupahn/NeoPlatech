@@ -10,7 +10,7 @@ import boassoft.service.AddressService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("AddressService")
+@Service("addressService")
 public class AddressServiceImple extends EgovAbstractServiceImpl implements AddressService {
 
 	@Resource(name="AddressMapper")

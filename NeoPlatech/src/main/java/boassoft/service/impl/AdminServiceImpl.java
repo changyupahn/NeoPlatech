@@ -10,7 +10,7 @@ import boassoft.service.AdminService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("AdminService")
+@Service("adminService")
 public class AdminServiceImpl extends EgovAbstractServiceImpl implements AdminService{
 
 	@Resource(name="AdminMapper")
