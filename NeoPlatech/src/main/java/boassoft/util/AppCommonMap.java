@@ -3,7 +3,7 @@ package boassoft.util;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.springframework.stereotype.Component;
 
-@Component("AppCommonMap")
+@Component("appCommonMap")
 public class AppCommonMap extends ListOrderedMap{
 
 	private static final long serialVersionUID = 1688829812124549585L;

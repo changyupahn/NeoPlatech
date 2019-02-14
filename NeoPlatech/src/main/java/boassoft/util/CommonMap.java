@@ -20,12 +20,12 @@ import boassoft.security.KISA_SHA256;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.rte.psl.dataaccess.util.CamelUtil;
 
-@Component("CommonMap")
+@Component("commonMap")
 public class CommonMap extends ListOrderedMap {
 
 	private static final long serialVersionUID = 1688829812124549585L;
 
-    @Resource(name = "FileManage")
+    @Resource(name = "fileManage")
     private FileManage fileUtil;
 
 	public CommonMap() {
