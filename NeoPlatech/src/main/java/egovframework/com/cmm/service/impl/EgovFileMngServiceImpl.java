@@ -6,12 +6,13 @@ import java.util.Map;
 
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+
+import boassoft.mapper.FileManageMapper;
 
 /**
  * @Class Name : EgovFileMngServiceImpl.java
@@ -31,8 +32,8 @@ import org.springframework.stereotype.Service;
 @Service("EgovFileMngService")
 public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements EgovFileMngService {
 
-	@Resource(name = "FileManageDAO")
-	private FileManageDAO fileMngDAO;
+	@Resource(name = "FileManageMapper")
+	private FileManageMapper fileManageMapper;
 
 	/**
 	 * 여러 개의 파일을 삭제한다.
@@ -40,7 +41,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#deleteFileInfs(java.util.List)
 	 */
 	public void deleteFileInfs(List<?> fvoList) throws Exception {
-		fileMngDAO.deleteFileInfs(fvoList);
+		fileManageMapper.deleteFileInfs(fvoList);
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	public String insertFileInf(FileVO fvo) throws Exception {
 		String atchFileId = fvo.getAtchFileId();
 
-		fileMngDAO.insertFileInf(fvo);
+		fileManageMapper.insertFileInf(fvo);
 
 		return atchFileId;
 	}
@@ -65,7 +66,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 		String atchFileId = "";
 
 		if (fvoList.size() != 0) {
-			atchFileId = fileMngDAO.insertFileInfs(fvoList);
+			atchFileId = fileManageMapper.insertFileInfs(fvoList);
 		}
 		if (atchFileId == "") {
 			atchFileId = null;
@@ -79,7 +80,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#selectFileInfs(egovframework.com.cmm.service.FileVO)
 	 */
 	public List<FileVO> selectFileInfs(FileVO fvo) throws Exception {
-		return fileMngDAO.selectFileInfs(fvo);
+		return fileManageMapper.selectFileInfs(fvo);
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 */
 	public void updateFileInfs(List<?> fvoList) throws Exception {
 		//Delete & Insert
-		fileMngDAO.updateFileInfs(fvoList);
+		fileManageMapper.updateFileInfs(fvoList);
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#deleteFileInf(egovframework.com.cmm.service.FileVO)
 	 */
 	public void deleteFileInf(FileVO fvo) throws Exception {
-		fileMngDAO.deleteFileInf(fvo);
+		fileManageMapper.deleteFileInf(fvo);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#selectFileInf(egovframework.com.cmm.service.FileVO)
 	 */
 	public FileVO selectFileInf(FileVO fvo) throws Exception {
-		return fileMngDAO.selectFileInf(fvo);
+		return fileManageMapper.selectFileInf(fvo);
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#getMaxFileSN(egovframework.com.cmm.service.FileVO)
 	 */
 	public int getMaxFileSN(FileVO fvo) throws Exception {
-		return fileMngDAO.getMaxFileSN(fvo);
+		return fileManageMapper.getMaxFileSN(fvo);
 	}
 
 	/**
@@ -125,7 +126,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#deleteAllFileInf(egovframework.com.cmm.service.FileVO)
 	 */
 	public void deleteAllFileInf(FileVO fvo) throws Exception {
-		fileMngDAO.deleteAllFileInf(fvo);
+		fileManageMapper.deleteAllFileInf(fvo);
 	}
 
 	/**
@@ -134,8 +135,8 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#selectFileListByFileNm(egovframework.com.cmm.service.FileVO)
 	 */
 	public Map<String, Object> selectFileListByFileNm(FileVO fvo) throws Exception {
-		List<FileVO> result = fileMngDAO.selectFileListByFileNm(fvo);
-		int cnt = fileMngDAO.selectFileListCntByFileNm(fvo);
+		List<FileVO> result = fileManageMapper.selectFileListByFileNm(fvo);
+		int cnt = fileManageMapper.selectFileListCntByFileNm(fvo);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -151,6 +152,6 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	 * @see egovframework.com.cmm.service.EgovFileMngService#selectImageFileList(egovframework.com.cmm.service.FileVO)
 	 */
 	public List<FileVO> selectImageFileList(FileVO vo) throws Exception {
-		return fileMngDAO.selectImageFileList(vo);
+		return fileManageMapper.selectImageFileList(vo);
 	}
 }

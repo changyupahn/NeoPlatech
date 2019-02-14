@@ -8,12 +8,13 @@ import java.util.Map;
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+
+import boassoft.mapper.CmmUseMapper;
 
 /**
  * @Class Name : EgovCmmUseServiceImpl.java
@@ -33,8 +34,10 @@ import org.springframework.stereotype.Service;
 @Service("EgovCmmUseService")
 public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements EgovCmmUseService {
 
-    @Resource(name = "cmmUseDAO")
-    private CmmUseDAO cmmUseDAO;
+    //@Resource(name = "cmmUseDAO")
+    //private CmmUseDAO cmmUseDAO;	
+	@Resource(name = "CmmUseMapper")
+    private CmmUseMapper cmmUseMapper;
 
     /**
      * 공통코드를 조회한다.
@@ -44,7 +47,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
      * @throws Exception
      */
     public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) throws Exception {
-    	return cmmUseDAO.selectCmmCodeDetail(vo);
+    	return cmmUseMapper.selectCmmCodeDetail(vo);
     }
 
     /**
@@ -61,7 +64,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
 		Iterator<?> iter = voList.iterator();
 		while (iter.hasNext()) {
 		    vo = (ComDefaultCodeVO)iter.next();
-		    map.put(vo.getCodeId(), cmmUseDAO.selectCmmCodeDetail(vo));
+		    map.put(vo.getCodeId(), cmmUseMapper.selectCmmCodeDetail(vo));
 		}
 
 		return map;
@@ -75,7 +78,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
      * @throws Exception
      */
     public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) throws Exception {
-    	return cmmUseDAO.selectOgrnztIdDetail(vo);
+    	return cmmUseMapper.selectOgrnztIdDetail(vo);
     }
 
     /**
@@ -86,6 +89,6 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
      * @throws Exception
      */
     public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) throws Exception {
-    	return cmmUseDAO.selectGroupIdDetail(vo);
+    	return cmmUseMapper.selectGroupIdDetail(vo);
     }
 }
