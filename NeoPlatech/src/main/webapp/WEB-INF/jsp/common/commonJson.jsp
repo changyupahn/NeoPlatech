@@ -1,0 +1,1 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="UTF-8"%><%String jsonString = boassoft.util.RequestUtil.getString(request, "jsonString"); out.print(jsonString); %>
