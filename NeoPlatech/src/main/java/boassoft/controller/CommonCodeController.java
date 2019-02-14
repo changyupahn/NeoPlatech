@@ -17,7 +17,7 @@ import boassoft.util.CommonMap;
 @Controller
 public class CommonCodeController {
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 	
 	/** log */

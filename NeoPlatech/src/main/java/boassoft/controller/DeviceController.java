@@ -18,10 +18,10 @@ import boassoft.util.SessionUtil;
 @Controller
 public class DeviceController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 	
-	@Resource(name = "DeviceService")
+	@Resource(name = "deviceService")
     private DeviceService deviceService;
     
 	/** log */

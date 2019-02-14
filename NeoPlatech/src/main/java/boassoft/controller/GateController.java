@@ -20,10 +20,10 @@ import boassoft.util.DateUtil;
 @Controller
 public class GateController {
 
-	@Resource(name = "GateService")
+	@Resource(name = "gateService")
     private GateService gateService;
 	
-	@Resource(name = "CommonXmlManage")
+	@Resource(name = "commonXmlManage")
     private CommonXmlManage commonXmlManage;
     
 	/** log */
