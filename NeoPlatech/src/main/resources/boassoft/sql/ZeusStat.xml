@@ -2,16 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ZeusStatMapper">
 
-    <!--<sql id="pagingHeader">
-    </sql>
-
-    <sql id="pagingFooter">
-        <if test="pageIdx != null and pageIdx != ''">      
-          <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
-          </if>
-       </if> -->
-
   <select id="getZeusStatYearList" parameterType="cmap" resultType="cmap" >
 		SELECT  SUBSTRING(REGIST_DT,1,4) YEAR
 		FROM  	RFID_ZEUS_OPER_LIST
