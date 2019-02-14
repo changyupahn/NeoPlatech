@@ -27,28 +27,28 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1212VirtAssetController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ContractService")
+	@Resource(name = "contractService")
     private ContractService contractService;
 
-	@Resource(name = "ContractDtlService")
+	@Resource(name = "contractDtlService")
     private ContractDtlService contractDtlService;
 
-	@Resource(name = "InspItemService")
+	@Resource(name = "inspItemService")
     private InspItemService inspItemService;
 
-	@Resource(name = "VirtAssetService")
+	@Resource(name = "virtAssetService")
     private VirtAssetService virtAssetService;
 
-	@Resource(name = "PrintHistoryService")
+	@Resource(name = "printHistoryService")
     private PrintHistoryService printHistoryService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

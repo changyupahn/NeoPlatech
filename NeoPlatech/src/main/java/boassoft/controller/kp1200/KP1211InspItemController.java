@@ -26,22 +26,22 @@ import boassoft.util.StringUtil;
 @Controller
 public class KP1211InspItemController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ContractService")
+	@Resource(name = "contractService")
     private ContractService contractService;
 
-	@Resource(name = "ContractDtlService")
+	@Resource(name = "contractDtlService")
     private ContractDtlService contractDtlService;
 
-	@Resource(name = "InspItemService")
+	@Resource(name = "inspItemService")
     private InspItemService inspItemService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 
