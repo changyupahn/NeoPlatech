@@ -4,16 +4,6 @@
 
   <sql id="getGateListWhere">
    </sql>
-
-   <!--<sql id="pagingHeader">
-    </sql>
-
-    <sql id="pagingFooter">
-        <if test="pageIdx != null and pageIdx != ''">      
-          <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
-          </if>
-       </if> -->
     
      <select id="getGateList" parameterType="cmap" resultType="cmap" >
     	<include refid="pagingHeader"/>
