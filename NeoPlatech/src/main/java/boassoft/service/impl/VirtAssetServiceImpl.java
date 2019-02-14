@@ -15,7 +15,7 @@ import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
 import boassoft.util.StringUtil;
 
-@Service("VirtAssetService")
+@Service("virtAssetService")
 public class VirtAssetServiceImpl extends EgovAbstractServiceImpl implements VirtAssetService {
 
 	@Resource(name="VirtAssetMapper")

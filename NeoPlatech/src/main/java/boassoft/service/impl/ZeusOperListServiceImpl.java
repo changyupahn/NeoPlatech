@@ -2,12 +2,15 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import boassoft.mapper.ZeusOperListMapper;
 import boassoft.service.ZeusOperListService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
+@Service("zeusOperListService")
 public class ZeusOperListServiceImpl extends EgovAbstractServiceImpl implements ZeusOperListService{
 
 	@Resource(name="ZeusOperListMapper")

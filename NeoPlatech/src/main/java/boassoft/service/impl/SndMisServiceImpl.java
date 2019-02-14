@@ -10,7 +10,7 @@ import boassoft.service.SndMisService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("SndMisService")
+@Service("sndMisService")
 public class SndMisServiceImpl extends EgovAbstractServiceImpl implements SndMisService {
 
 	@Resource(name="SndMisMapper")

@@ -14,14 +14,14 @@ import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
 import boassoft.util.SessionUtil;
 
-@Service("UserService")
+@Service("userService")
 public class UserServiceImpl extends EgovAbstractServiceImpl implements UserService {
 
 	
 	@Resource(name="UserMapper")
 	private UserMapper userMapper;
 	
-	@Resource(name="GrantMenuService")
+	@Resource(name="grantMenuService")
     private GrantMenuService grantMenuService;
 	
 	public CommonMap gridSessionChk(CommonMap cmap, HttpServletRequest request) throws Exception{

@@ -10,7 +10,7 @@ import boassoft.service.ZeusStatService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("ZeusStatService")
+@Service("zeusStatService")
 public class ZeusStatServiceImpl extends EgovAbstractServiceImpl implements ZeusStatService {
 
 	@Resource(name="ZeusStatMapper")

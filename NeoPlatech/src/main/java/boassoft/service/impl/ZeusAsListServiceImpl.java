@@ -10,7 +10,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
-@Service("ZeusAsListService")
+@Service("zeusAsListService")
 public class ZeusAsListServiceImpl extends EgovAbstractServiceImpl implements  ZeusAsListService {
 
 	@Resource(name="ZeusAsListMapper")

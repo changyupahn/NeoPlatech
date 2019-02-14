@@ -17,7 +17,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
 
-@Service("PrintService")
+@Service("printService")
 public class PrintServiceImpl extends EgovAbstractServiceImpl implements PrintService {
 
 	

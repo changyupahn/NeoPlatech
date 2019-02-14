@@ -10,7 +10,7 @@ import boassoft.service.ReqstPrintService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("ReqstPrintService")
+@Service("reqstPrintService")
 public class ReqstPrintServiceImpl extends EgovAbstractServiceImpl implements ReqstPrintService{
 
 	@Resource(name="ReqstPrintMapper")

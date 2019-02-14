@@ -21,7 +21,7 @@ import boassoft.util.MultipartUtility;
 import egovframework.com.cmm.service.EgovProperties;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
-@Service("ZeusService")
+@Service("zeusService")
 public class ZeusServiceImpl extends EgovAbstractServiceImpl implements
 		ZeusService {
 

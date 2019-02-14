@@ -10,7 +10,7 @@ import boassoft.service.UserLogService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("UserLogService")
+@Service("userLogService")
 public class UserLogServiceImpl extends EgovAbstractServiceImpl implements UserLogService {
 
 	@Resource(name="UserLogMapper")

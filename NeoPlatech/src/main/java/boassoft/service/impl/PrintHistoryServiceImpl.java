@@ -13,7 +13,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
 
-@Service("PrintHistoryService")
+@Service("printHistoryService")
 public class PrintHistoryServiceImpl extends EgovAbstractServiceImpl implements PrintHistoryService {
 
 	@Resource(name="PrintHistoryMapper")

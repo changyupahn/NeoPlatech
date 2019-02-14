@@ -10,7 +10,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import boassoft.mapper.SystemMapper;
 
-@Service("SystemService")
+@Service("systemService")
 public class SystemServiceImpl extends EgovAbstractServiceImpl implements SystemService {
 
 	@Resource(name="SystemMapper")

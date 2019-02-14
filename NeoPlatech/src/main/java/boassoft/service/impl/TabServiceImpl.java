@@ -13,7 +13,7 @@ import boassoft.service.TabService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("TabService")
+@Service("tabService")
 public class TabServiceImpl extends EgovAbstractServiceImpl implements TabService{
 
 	@Resource(name="TabMapper")
