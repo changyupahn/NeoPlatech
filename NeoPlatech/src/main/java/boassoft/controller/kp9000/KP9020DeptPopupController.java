@@ -17,7 +17,7 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP9020DeptPopupController {
 
-	@Resource(name = "DeptService")
+	@Resource(name = "deptService")
     private DeptService deptService;
     
 	/** log */

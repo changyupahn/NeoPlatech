@@ -18,10 +18,10 @@ import boassoft.util.CommonMap;
 
 public class KP9060MkCompanyPopupController {
 
-	@Resource(name = "MkCompanyService")
+	@Resource(name = "mkCompanyService")
     private MkCompanyService mkCompanyService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

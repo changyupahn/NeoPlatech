@@ -18,7 +18,7 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP9040PosPopupController {
 
-	@Resource(name = "PositionService")
+	@Resource(name = "positionService")
     private PositionService positionService;
 
 	/** log */

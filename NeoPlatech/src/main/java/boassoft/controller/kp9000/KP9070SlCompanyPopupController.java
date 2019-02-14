@@ -19,10 +19,10 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP9070SlCompanyPopupController {
 
-	@Resource(name = "SlCompanyService")
+	@Resource(name = "slCompanyService")
     private SlCompanyService slCompanyService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

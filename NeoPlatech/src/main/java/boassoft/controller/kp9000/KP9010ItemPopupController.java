@@ -18,10 +18,10 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP9010ItemPopupController {
 
-	@Resource(name = "ItemService")
+	@Resource(name = "itemService")
     private ItemService itemService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
 	/** log */

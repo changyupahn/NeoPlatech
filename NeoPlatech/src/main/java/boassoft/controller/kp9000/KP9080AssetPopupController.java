@@ -21,10 +21,10 @@ import boassoft.util.SessionUtil;
 @Controller
 public class KP9080AssetPopupController {
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
 	/** log */
