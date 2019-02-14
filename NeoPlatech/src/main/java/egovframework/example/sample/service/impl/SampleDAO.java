@@ -41,7 +41,7 @@ import org.springframework.stereotype.Repository;
  *  Copyright (C) by MOPAS All right reserved.
  */
 
-@Repository("sampleDAO")
+//@Repository("sampleDAO")
 public class SampleDAO extends EgovAbstractDAO {
 
 	/**
