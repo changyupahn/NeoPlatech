@@ -22,16 +22,16 @@ import egovframework.com.utl.sim.service.EgovFileScrty;
 @Controller
 public class AppController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
 	private CommonMap commonMap;
 
-	@Resource(name = "AppService")
+	@Resource(name = "appService")
 	private AppService appService;
 
-	@Resource(name = "DeviceService")
+	@Resource(name = "deviceService")
 	private DeviceService deviceService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
 	private AssetService assetService;
 
 	/** log */

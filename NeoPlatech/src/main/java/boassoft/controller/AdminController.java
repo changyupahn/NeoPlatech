@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import boassoft.service.AdminService;
 import boassoft.service.impl.AdminServiceImpl;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
@@ -23,8 +24,8 @@ import egovframework.com.utl.sim.service.EgovFileScrty;
 @Controller
 public class AdminController {
 
-	@Resource(name = "AdminService")
-    private AdminServiceImpl adminService;	
+	@Resource(name = "adminService")
+    private AdminService adminService;	
 	
 	/** log */
     protected static final Log LOG = LogFactory.getLog(AdminController.class);

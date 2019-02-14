@@ -47,19 +47,19 @@ import boassoft.util.SessionUtil;
 @Controller
 public class AssetController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "InventoryService")
+	@Resource(name = "inventoryService")
     private InventoryService inventoryService;
 
-	@Resource(name = "AppService")
+	@Resource(name = "appService")
     private AppService appService;
 
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
 
 	@Resource(name = "assetNoIdGnrService")

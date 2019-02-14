@@ -18,10 +18,10 @@ import boassoft.util.SessionUtil;
 @Controller
 public class AddressController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 	
-	@Resource(name = "AddressService")
+	@Resource(name = "addressService")
     private AddressService addressService;
 	
 	/** log */
