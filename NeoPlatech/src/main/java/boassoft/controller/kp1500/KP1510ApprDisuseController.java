@@ -21,16 +21,16 @@ import boassoft.util.ExcelUtil;
 @Controller
 public class KP1510ApprDisuseController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ApprDisuseService")
+	@Resource(name = "apprDisuseService")
     private ApprDisuseService apprDisuseService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
