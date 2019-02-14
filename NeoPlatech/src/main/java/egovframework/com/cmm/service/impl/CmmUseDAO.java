@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
  * @see
  *
  */
-@Repository("cmmUseDAO")
+//@Repository("cmmUseDAO")
 public class CmmUseDAO extends EgovComAbstractDAO {
 
     /**
