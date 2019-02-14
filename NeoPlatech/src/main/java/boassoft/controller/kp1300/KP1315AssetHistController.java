@@ -27,22 +27,22 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Controller
 public class KP1315AssetHistController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "AssetHistoryService")
+	@Resource(name = "assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
-	@Resource(name = "InventoryService")
+	@Resource(name = "inventoryService")
     private InventoryService inventoryService;
 
-	@Resource(name = "AppService")
+	@Resource(name = "appService")
     private AppService appService;
 
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
 
 	@Resource(name = "assetNoIdGnrService")
@@ -54,10 +54,10 @@ public class KP1315AssetHistController {
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "ApprRqstService")
+	@Resource(name = "apprRqstService")
     private ApprRqstService apprRqstService;
 
 	/** log */

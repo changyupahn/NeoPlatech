@@ -24,25 +24,25 @@ import egovframework.com.cmm.EgovMessageSource;
 @Controller
 public class KP1314AssetInspController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ContractService")
+	@Resource(name = "contractService")
     private ContractService contractService;
 
-	@Resource(name = "ContractDtlService")
+	@Resource(name = "contractDtlService")
     private ContractDtlService contractDtlService;
 
-	@Resource(name = "InspItemService")
+	@Resource(name = "inspItemService")
     private InspItemService inspItemService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
