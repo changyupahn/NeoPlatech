@@ -20,16 +20,16 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Controller
 public class KP1150MkNationController {
 
-	@Resource(name = "MkNationService")
+	@Resource(name = "mkNationService")
     private MkNationService mkNationService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
 	@Resource(name = "natnSeqIdGnrService")
     private EgovIdGnrService natnSeqIdGnrService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

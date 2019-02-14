@@ -22,19 +22,19 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 public class KP1180BldngController {
 
 	
-	@Resource(name = "BldngService")
+	@Resource(name = "bldngService")
     private BldngService bldngService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
 	@Resource(name = "bldngSeqIdGnrService")
     private EgovIdGnrService bldngSeqIdGnrService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
 	/** log */

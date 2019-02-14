@@ -21,19 +21,19 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 @Controller
 public class KP1110ItemController {
 
-	@Resource(name = "ItemService")
+	@Resource(name = "itemService")
     private ItemService itemService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
 	@Resource(name = "itemSeqIdGnrService")
     private EgovIdGnrService itemSeqIdGnrService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
 	/** log */

@@ -17,7 +17,7 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1130PositionController {
 
-	@Resource(name = "PositionService")
+	@Resource(name = "positionService")
     private PositionService positionService;
 	
 	/** log */

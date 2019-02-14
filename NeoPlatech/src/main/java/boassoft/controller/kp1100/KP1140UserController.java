@@ -19,10 +19,10 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1140UserController {
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "DeptService")
+	@Resource(name = "deptService")
     private DeptService deptService;
 
 	/** log */

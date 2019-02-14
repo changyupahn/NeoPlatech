@@ -17,7 +17,7 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1120DeptController {
 
-	@Resource(name = "DeptService")
+	@Resource(name = "deptService")
     private DeptService deptService;
     
 	/** log */
