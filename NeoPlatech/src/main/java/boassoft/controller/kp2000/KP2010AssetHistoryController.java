@@ -20,13 +20,13 @@ import boassoft.util.ExcelUtil;
 @Controller
 public class KP2010AssetHistoryController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "AssetHistoryService")
+	@Resource(name = "assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

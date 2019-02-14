@@ -21,13 +21,13 @@ import boassoft.util.ExcelUtil;
 @Controller
 public class KP2020PrintHistoryController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "PrintHistoryService")
+	@Resource(name = "printHistoryService")
     private PrintHistoryService printHistoryService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
