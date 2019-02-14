@@ -36,7 +36,7 @@ import egovframework.com.cmm.service.EgovProperties;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.Globals;
 
-@Component("FileManage")
+@Component("fileManage")
 public class FileManage {
 	 public static final int BUFF_SIZE = 2048;
 
