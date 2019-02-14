@@ -15,7 +15,7 @@ import boassoft.util.MessageUtils;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 
-@Service("ApprAssetService")
+@Service("apprAssetService")
 public class ApprAssetServiceImpl extends EgovAbstractServiceImpl implements ApprAssetService {
 
 	@Resource(name="ApprAssetMapper")

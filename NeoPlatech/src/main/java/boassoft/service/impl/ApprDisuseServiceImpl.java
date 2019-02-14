@@ -18,7 +18,7 @@ import boassoft.util.DateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 
-@Service("ApprDisuseService")
+@Service("apprDisuseService")
 public class ApprDisuseServiceImpl extends EgovAbstractServiceImpl implements  ApprDisuseService {
 
 	@Resource(name="ApprDisuseMapper")
@@ -39,7 +39,7 @@ public class ApprDisuseServiceImpl extends EgovAbstractServiceImpl implements  A
 	@Resource(name="SndMisMapper")
     private SndMisMapper sndMisMapper;
 
-	@Resource(name="AssetHistoryService")
+	@Resource(name="assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
 	@Resource(name = "sndSeqIdGnrService")

@@ -16,7 +16,7 @@ import boassoft.util.ApprHttpUtil;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("ApprIoExtService")
+@Service("apprIoExtService")
 public class ApprIoExtServiceImpl extends EgovAbstractServiceImpl implements ApprIoExtService {
 
 	@Resource(name="ApprIoExtMapper")
@@ -31,7 +31,7 @@ public class ApprIoExtServiceImpl extends EgovAbstractServiceImpl implements App
 	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 	
-	@Resource(name="AssetHistoryService")
+	@Resource(name="assetHistoryService")
     private AssetHistoryService assetHistoryService;
 	
 	@Override
