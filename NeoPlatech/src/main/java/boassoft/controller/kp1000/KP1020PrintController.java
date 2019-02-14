@@ -22,16 +22,16 @@ import net.sf.json.JSONObject;
 @Controller
 public class KP1020PrintController {
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "GrantMenuService")
+	@Resource(name = "grantMenuService")
     private GrantMenuService grantMenuService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "PrintService")
+	@Resource(name = "printService")
     private PrintService printService;
 
 	/** log */

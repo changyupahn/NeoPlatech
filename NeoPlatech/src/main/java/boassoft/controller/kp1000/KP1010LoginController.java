@@ -24,16 +24,16 @@ import boassoft.util.DateUtil;
 @Controller
 public class KP1010LoginController {
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 	
-	@Resource(name = "UserLogService")
+	@Resource(name = "userLogService")
     private UserLogService userLogService;
 
-	@Resource(name = "GrantMenuService")
+	@Resource(name = "grantMenuService")
     private GrantMenuService grantMenuService;
 
-	@Resource(name = "LogService")
+	@Resource(name = "logService")
     private LogService logService;
 
 	@Resource(name = "userLogSeqIdGnrService")
