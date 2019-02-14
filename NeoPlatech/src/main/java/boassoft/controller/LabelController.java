@@ -19,13 +19,13 @@ import boassoft.util.SessionUtil;
 @Controller
 public class LabelController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 	
-	@Resource(name = "LabelService")
+	@Resource(name = "labelService")
     private LabelService labelService;
 	
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
     
 	/** log */

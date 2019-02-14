@@ -16,7 +16,7 @@ import boassoft.service.InventoryStatService;
 @Controller
 public class InventoryStatController {
 
-	@Resource(name = "InventoryStatService")
+	@Resource(name = "inventoryStatService")
     private InventoryStatService inventoryStatService;
     
 	/** log */

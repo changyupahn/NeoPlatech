@@ -26,10 +26,10 @@ import boassoft.util.SessionUtil;
 public class InventoryController {
 
 	
-	@Resource(name = "InventoryService")
+	@Resource(name = "inventoryService")
     private InventoryService inventoryService;
 	
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
 	
 	@Resource(name = "egovMessageSource")

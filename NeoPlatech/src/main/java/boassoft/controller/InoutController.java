@@ -17,10 +17,10 @@ import boassoft.util.CommonMap;
 @Controller
 public class InoutController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 	
-	@Resource(name = "InoutService")
+	@Resource(name = "inoutService")
     private InoutService inoutService;
     
 	/** log */
