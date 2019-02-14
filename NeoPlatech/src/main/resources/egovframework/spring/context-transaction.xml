@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
     	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
     	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
-
+<!-- 
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
@@ -20,5 +20,40 @@
 		<aop:pointcut id="requiredTx" expression="execution(* egovframework.example.sample..impl.*Impl.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
 	</aop:config>
+-->
 
+   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource-mysql" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- <tx:method name="modify*" propagation="REQUIRED" /> -->
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<bean id="neoTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource-mssql" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="neoTransactionManager" />
+	<tx:advice id="neoTxAdvice" transaction-manager="neoTransactionManager">
+		<tx:attributes>
+			<!-- <tx:method name="modify*" propagation="REQUIRED" /> -->
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+	
+		<aop:config>
+		<aop:pointcut id="serviceMethods" expression="execution(* egovframework.sample..impl.*Impl.*(..)) || execution(* boassoft..impl.*Impl.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" />
+		<aop:advisor advice-ref="neoTxAdvice" pointcut-ref="serviceMethods" />
+	</aop:config>
+	
+	
 </beans>

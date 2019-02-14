@@ -7,9 +7,9 @@
     <bean class="org.springmodules.validation.commons.DefaultValidatorFactory" id="validatorFactory">
         <property name="validationConfigLocations">
             <list>
-                <value>/WEB-INF/config/egovframework/validator/validator-rules.xml</value>
-                <value>/WEB-INF/config/egovframework/validator/validator.xml</value>
-            				<value>classpath:/egovframework/validator/com-rules.xml</value>
+                <!-- <value>/WEB-INF/config/egovframework/validator/validator-rules.xml</value>
+                <value>/WEB-INF/config/egovframework/validator/validator.xml</value> -->
+            	<value>classpath:/egovframework/validator/com-rules.xml</value>
 				<value>classpath:/egovframework/validator/validator-rules.xml</value>
 				<value>classpath:/egovframework/validator/**/*.xml</value>
 </list>

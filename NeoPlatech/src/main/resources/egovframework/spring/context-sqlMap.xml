@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
 	<!-- SqlMap setup for iBATIS Database Layer -->
-	<!-- <bean id="sqlMapClient" class="egovframework.rte.psl.orm.ibatis.SqlMapClientFactoryBean">
+	<!--  <bean id="sqlMapClient" class="egovframework.rte.psl.orm.ibatis.SqlMapClientFactoryBean">
 		<property name="configLocation" value="classpath:/egovframework/sqlmap/example/sql-map-config.xml"/>
 		<property name="dataSource" ref="dataSource"/>
-	</bean> -->
+	</bean> 
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
 	   <property name="dataSource" ref="dataSource" />
@@ -16,17 +16,49 @@
 	
       <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg ref="sqlSessionFactory" />
-      </bean>
+      </bean> -->
 
      <!-- mybatis mapper auto scanning -->
-     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-	 <property name="basePackage" value="boassoft.mapper" />
+     <!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	 <property name="basePackage" value="boassoft.mapper" /> -->
 
-</bean>
-
-
-
-
-
+    <!-- hsql
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+        <property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/sampledb"/>
+        <property name="username" value="sa"/>
+    </bean>
+    -->  
+    
+    <!-- Mysql -->  
+    <!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/neoplatech_posid" />
+        <property name="username" value="neoplatech_rfid"/>
+        <property name="password" value="neopla12!@"/>
+    </bean> -->
+    <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/boasrfid_posid" />
+        <property name="username" value="boasrfid"/>
+        <property name="password" value="bo392766"/>
+    </bean>
+    
+    
+    <!-- oracle
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:example" />
+        <property name="username" value="user"/>
+        <property name="password" value="password"/>
+    </bean>
+    -->
+    
+    <bean id="dataSource-mssql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        <property name="url" value="jdbc:sqlserver://123.142.216.12:51384;DatabaseName=NeoWareHouse" />
+        <property name="username" value="BoasSoft"/>
+        <property name="password" value="bosa1102"/>
+    </bean>
 
 </beans>
