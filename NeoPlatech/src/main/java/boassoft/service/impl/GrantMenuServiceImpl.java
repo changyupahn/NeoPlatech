@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import boassoft.mapper.GrandMenuMapper;
 
-@Service("GrantMenuService")
+@Service("grantMenuService")
 public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements GrantMenuService {
 
 	@Resource(name="GrandMenuMapper")

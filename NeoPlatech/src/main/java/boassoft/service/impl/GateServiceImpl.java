@@ -13,7 +13,7 @@ import boassoft.service.GateService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("GateService")
+@Service("gateService")
 public class GateServiceImpl extends EgovAbstractServiceImpl implements GateService {
 
 	@Resource(name="GateMapper")

@@ -10,7 +10,7 @@ import boassoft.service.DeptService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("DeptService")
+@Service("deptService")
 public class DeptServiceImpl extends EgovAbstractServiceImpl implements DeptService {
 
 	@Resource(name="DeptMapper")

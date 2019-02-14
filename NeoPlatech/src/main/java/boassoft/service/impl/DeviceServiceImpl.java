@@ -9,7 +9,7 @@ import boassoft.service.DeviceService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("DeviceService")
+@Service("deviceService")
 public class DeviceServiceImpl extends EgovAbstractServiceImpl implements  DeviceService {
 
 	@Resource(name="DeviceMapper")

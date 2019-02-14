@@ -1,8 +1,11 @@
 package boassoft.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import boassoft.service.EtubeService;
 import boassoft.util.CommonMap;
 
+@Service("etubeService")
 public class EtubeServiceImpl implements EtubeService{
 
 	@Override
