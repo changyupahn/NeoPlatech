@@ -1,0 +1,335 @@
+@charset "utf-8";
+/*
+  Css Name : button.css
+  Description : 버튼 CSS
+  Modification Information
+
+      수정일        수정자          수정내용
+    ----------     --------    ---------------------------
+    2008.10.15		장동한			최초 생성
+    2011.08.24		이기하			이미지 경로 수정
+
+    author   : 공통컴포넌트 개발팀 장동한
+    since    : 2008.10.15
+*/
+
+.button, .button a, .button button, .button input {
+position : relative;
+margin : 0;
+display : inline-block;
+border : 0;
+white-space : nowrap;
+vertical-align : top;
+overflow : visible;
+}
+.button {
+height : 20px;
+padding : 0;
+margin-right : 2px;
+background-position : left top;
+}
+.button a, .button button, .button input {
+left : 2px;
+cursor : pointer;
+}
+.button a, .button button, .button input {
+height : 20px;
+padding : 0 8px 0 8px;
+line-height : 20px;
+background-position : right top;
+}
+.button, .button a, .button button, .button input {
+background-image : url(/images/egovframework/com/cmm/btn/bu2.jpg);
+color : black;
+}
+.button *:hover, .button *:active, .button *:focus {
+color : red;
+}
+.button a {
+padding : 0 10px 0 10px;
+}
+
+.button2, .button2 a, .button2 button, .button2 input {
+position : relative;
+margin : 0;
+display : inline-block;
+border : 0;
+white-space : nowrap;
+vertical-align : top;
+overflow : visible;
+}
+.button2 {
+height : 22px;
+padding : 0;
+margin-right : 2px;
+background-position : left top;
+}
+.button2 a, .button2 button, .button2 input {
+left : 2px;
+cursor : pointer;
+}
+.button2 a, .button2 button, .button2 input {
+height : 22px;
+padding : 2px 8px 0 8px;
+line-height : 22px;
+background-position : right top;
+}
+.button2, .button2 a, .button2 button, .button2 input {
+background-image : url(/images/egovframework/com/cmm/btn/bu2_2.jpg);
+color : black;
+}
+.button2 *:hover, .button2 *:active, .button2 *:focus {
+color : red;
+}
+.button2 a {
+padding : 0 10px 0 10px;
+}
+
+.link, .link a, .link button, .link input {
+border-style : none;
+background-color : transparent;
+cursor : pointer;
+}
+.link, .link a, .link button, .link input {
+color : black;
+}
+.link *:hover, .link *:active, .link *:focus {
+color : red;
+}
+.btnNew {
+border : 0 solid #000;
+color : #000000;
+background-image : url(/images/egovframework/com/cmm/btn/bu2_bg.gif);
+cursor : pointer;
+}
+form {
+margin : 0;
+}
+
+.invisible {
+width:0px;
+height:0px;
+visibility: hidden;
+}
+
+
+.button_blue {
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:0px;
+	-moz-border-radius-topright:0px;
+	border-top-right-radius:0px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:40px;
+	line-height:40px;
+	width:131px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #528ecc;
+}
+.button_blue:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+	background-color:#378de5;
+}.button_blue:active {
+	position:relative;
+	top:1px;
+}
+
+.button_red {
+	-moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+	box-shadow:inset 0px 1px 0px 0px #f5978e;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+	background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+	background-color:#f24537;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:0px;
+	-moz-border-radius-topright:0px;
+	border-top-right-radius:0px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0;
+	border:1px solid #d02718;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:40px;
+	line-height:40px;
+	width:131px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #810e05;
+}
+.button_red:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+	background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+	background-color:#c62d1f;
+}.button_red:active {
+	position:relative;
+	top:1px;
+}
+
+.button_orange {
+	-moz-box-shadow:inset 0px 1px 0px 0px #fce2c1;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #fce2c1;
+	box-shadow:inset 0px 1px 0px 0px #fce2c1;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25) );
+	background:-moz-linear-gradient( center top, #ffc477 5%, #fb9e25 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25');
+	background-color:#ffc477;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:0px;
+	-moz-border-radius-topright:0px;
+	border-top-right-radius:0px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0;
+	border:1px solid #eeb44f;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:40px;
+	line-height:40px;
+	width:131px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #cc9f52;
+}
+.button_orange:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fb9e25), color-stop(1, #ffc477) );
+	background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
+	background-color:#fb9e25;
+}.button_orange:active {
+	position:relative;
+	top:1px;
+}
+
+.button_blue2 {
+	-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0) );
+	background:-moz-linear-gradient( center top, #3d94f6 5%, #1e62d0 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0');
+	background-color:#3d94f6;
+	-webkit-border-top-left-radius:5px;
+	-moz-border-radius-topleft:5px;
+	border-top-left-radius:5px;
+	-webkit-border-top-right-radius:5px;
+	-moz-border-radius-topright:5px;
+	border-top-right-radius:5px;
+	-webkit-border-bottom-right-radius:5px;
+	-moz-border-radius-bottomright:5px;
+	border-bottom-right-radius:5px;
+	-webkit-border-bottom-left-radius:5px;
+	-moz-border-radius-bottomleft:5px;
+	border-bottom-left-radius:5px;
+	text-indent:0;
+	border:1px solid #337fed;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:40px;
+	line-height:40px;
+	width:131px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #1570cd;
+}
+.button_blue2:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
+	background:-moz-linear-gradient( center top, #1e62d0 5%, #3d94f6 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6');
+	background-color:#1e62d0;
+}.button_blue2:active {
+	position:relative;
+	top:1px;
+}
+
+.btn_black, .btn_black a, .btn_black button, .btn_black input {
+position : relative;
+margin : 0;
+display : inline-block;
+border : 0;
+white-space : nowrap;
+vertical-align : top;
+overflow : visible;
+}
+.btn_black {
+height : 27px;
+padding : 0;
+margin-right : 7px;
+background-position : left top;
+}
+.btn_black a, .btn_black button, .btn_black input {
+left : 7px;
+cursor : pointer;
+}
+.btn_black a, .btn_black button, .btn_black input {
+height : 27px;
+padding : 0 8px 0 2px;
+line-height : 27px;
+background-position : right top;
+font-family:돋움, 굴림, Arial, AppleGothic, sans-serif;
+font-size:12px;
+font-weight:bold;
+}
+.btn_black, .btn_black a, .btn_black button, .btn_black input {
+background-image : url(/images/egovframework/com/cmm/btn/bu3.png);
+color : #dddddd;
+}
+.btn_black *:hover, .btn_black *:active, .btn_black *:focus {
+color : #37bde7;
+}
+.btn_black, .btn_black a, .btn_black button, .btn_black input {
+border-style : none;
+background-color : transparent;
+cursor : pointer;
+}

@@ -1,0 +1,53 @@
+@charset "utf-8";
+body {
+	margin:0px;
+	padding:0px;
+	background-color:#ffffff;
+	font-family:맑은 고딕, 돋움, 굴림, Arial, AppleGothic, sans-serif;
+	font-size:10pt;
+	color:#000000;
+	line-height:160%;
+}
+h2{ 
+	font-size:16pt;
+	font-weight:bold;
+	text-align:center;
+}
+h3{ 
+	font-size:13pt;
+	font-weight:bold;
+	text-align:left;
+}
+h4{ 
+	font-size:11pt;
+	text-align:left;
+}
+th{
+	color:#000000;
+	font-size:10pt;
+}
+td{
+	color:#000000;
+	font-size:10pt;
+}
+.table-print-summary th{
+	text-align:left;
+}
+.table-print-summary td{
+	text-align:left;
+}
+.table-print-list{
+	border:1px solid black;
+	border-collapse:collapse;
+}
+.table-print-list th{
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	padding:2px;
+	background-color:#eeeeee;
+}
+.table-print-list td{
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	padding:2px;
+}
