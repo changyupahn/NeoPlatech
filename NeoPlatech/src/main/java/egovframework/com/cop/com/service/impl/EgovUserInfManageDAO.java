@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
  *
  * </pre>
  */
-@Repository("EgovUserInfManageDAO")
+//@Repository("EgovUserInfManageDAO")
 public class EgovUserInfManageDAO extends EgovComAbstractDAO {
 
 	/**

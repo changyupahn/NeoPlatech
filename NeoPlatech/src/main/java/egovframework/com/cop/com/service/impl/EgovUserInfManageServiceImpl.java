@@ -6,12 +6,13 @@ import java.util.Map;
 
 import egovframework.com.cop.com.service.EgovUserInfManageService;
 import egovframework.com.cop.com.service.UserInfVO;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+
+import boassoft.mapper.EgovUserInfManageMapper;
 
 /**
  * 협업에서 사용할 사용자 조회 서비스 기능 구현 클래스
@@ -32,8 +33,8 @@ import org.springframework.stereotype.Service;
 @Service("EgovUserInfManageService")
 public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implements EgovUserInfManageService {
 
-	@Resource(name = "EgovUserInfManageDAO")
-	private EgovUserInfManageDAO userInfDAO;
+	@Resource(name = "EgovUserInfManageMapper")
+	private EgovUserInfManageMapper egovUserInfManageMapper;
 
 	/**
 	 * 동호회 운영자 목록을 조회한다.
@@ -42,8 +43,8 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public Map<String, Object> selectClubOprtrList(UserInfVO userVO) throws Exception {
-		List<UserInfVO> result = userInfDAO.selectClubOprtrList(userVO);
-		int cnt = userInfDAO.selectClubOprtrListCnt(userVO);
+		List<UserInfVO> result = egovUserInfManageMapper.selectClubOprtrList(userVO);
+		int cnt = egovUserInfManageMapper.selectClubOprtrListCnt(userVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -60,8 +61,8 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public Map<String, Object> selectClubUserList(UserInfVO userVO) throws Exception {
-		List<UserInfVO> result = userInfDAO.selectClubUserList(userVO);
-		int cnt = userInfDAO.selectClubUserListCnt(userVO);
+		List<UserInfVO> result = egovUserInfManageMapper.selectClubUserList(userVO);
+		int cnt = egovUserInfManageMapper.selectClubUserListCnt(userVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -78,8 +79,8 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public Map<String, Object> selectCmmntyMngrList(UserInfVO userVO) throws Exception {
-		List<UserInfVO> result = userInfDAO.selectCmmntyMngrList(userVO);
-		int cnt = userInfDAO.selectCmmntyMngrListCnt(userVO);
+		List<UserInfVO> result = egovUserInfManageMapper.selectCmmntyMngrList(userVO);
+		int cnt = egovUserInfManageMapper.selectCmmntyMngrListCnt(userVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -96,8 +97,8 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public Map<String, Object> selectCmmntyUserList(UserInfVO userVO) throws Exception {
-		List<UserInfVO> result = userInfDAO.selectCmmntyUserList(userVO);
-		int cnt = userInfDAO.selectCmmntyUserListCnt(userVO);
+		List<UserInfVO> result = egovUserInfManageMapper.selectCmmntyUserList(userVO);
+		int cnt = egovUserInfManageMapper.selectCmmntyUserListCnt(userVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -114,8 +115,8 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public Map<String, Object> selectUserList(UserInfVO userVO) throws Exception {
-		List<UserInfVO> result = userInfDAO.selectUserList(userVO);
-		int cnt = userInfDAO.selectUserListCnt(userVO);
+		List<UserInfVO> result = egovUserInfManageMapper.selectUserList(userVO);
+		int cnt = egovUserInfManageMapper.selectUserListCnt(userVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -132,7 +133,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public List<UserInfVO> selectAllClubUser(UserInfVO userVO) throws Exception {
-		return userInfDAO.selectAllClubUser(userVO);
+		return egovUserInfManageMapper.selectAllClubUser(userVO);
 	}
 
 	/**
@@ -142,6 +143,6 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public List<UserInfVO> selectAllCmmntyUser(UserInfVO userVO) throws Exception {
-		return userInfDAO.selectAllCmmntyUser(userVO);
+		return egovUserInfManageMapper.selectAllCmmntyUser(userVO);
 	}
 }
