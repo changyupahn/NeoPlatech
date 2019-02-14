@@ -5,16 +5,6 @@
     <sql id="getUserLogListWhere">
     </sql>
 
-    <!--<sql id="pagingHeader">
-    </sql>
-
-    <sql id="pagingFooter">
-        <if test="pageIdx != null and pageIdx != ''">      
-          <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
-          </if>
-       </if> -->
-
     <select id="getUserLogList" parameterType="cmap" resultType="cmap" >
     	<include refid="pagingHeader"/>
         SELECT	A.*
