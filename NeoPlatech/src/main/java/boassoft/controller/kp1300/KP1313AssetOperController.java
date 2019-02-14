@@ -20,6 +20,7 @@ import boassoft.service.AssetAsService;
 import boassoft.service.AssetOperListService;
 import boassoft.service.AssetService;
 import boassoft.service.UserService;
+import boassoft.service.ZeusAsListService;
 //import boassoft.service.ZeusAsListService;
 import boassoft.util.CamelUtil;
 import boassoft.util.CommonList;
@@ -34,22 +35,22 @@ import egovframework.com.cmm.service.EgovProperties;
 public class KP1313AssetOperController {
 
 	
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "AssetOperListService")
+	@Resource(name = "assetOperListService")
     private AssetOperListService assetOperListService;
 
-	//@Resource(name = "ZeusAsListService")
-    //private ZeusAsListService zeusAsListService;
+	@Resource(name = "zeusAsListService")
+    private ZeusAsListService zeusAsListService;
 
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

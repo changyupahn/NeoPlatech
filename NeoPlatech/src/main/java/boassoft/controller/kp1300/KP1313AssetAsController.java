@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import boassoft.service.AssetAsService;
 import boassoft.service.AssetService;
 import boassoft.service.UserService;
+import boassoft.service.ZeusAsListService;
 //import boassoft.service.ZeusAsListService;
 import boassoft.util.CamelUtil;
 import boassoft.util.CommonList;
@@ -22,22 +23,22 @@ import egovframework.com.cmm.EgovMessageSource;
 @Controller
 public class KP1313AssetAsController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "AssetAsService")
+	@Resource(name = "assetAsService")
     private AssetAsService assetAsService;
 
-	//@Resource(name = "ZeusAsListService")
-    //private ZeusAsListService zeusAsListService;
+	@Resource(name = "zeusAsListService")
+    private ZeusAsListService zeusAsListService;
 
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

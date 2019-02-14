@@ -38,19 +38,19 @@ public class KP1311AssetDtlController {
 	@Resource(name = "commonMap")
 	private CommonMap commonMap;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "AssetHistoryService")
+	@Resource(name = "assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
-	@Resource(name = "InventoryService")
+	@Resource(name = "inventoryService")
     private InventoryService inventoryService;
 
-	@Resource(name = "AppService")
+	@Resource(name = "appService")
     private AppService appService;
 
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
 
 	@Resource(name = "assetSeqIdGnrService")
@@ -62,16 +62,16 @@ public class KP1311AssetDtlController {
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "DeptService")
+	@Resource(name = "deptService")
     private DeptService deptService;
 
-	@Resource(name = "SndMisService")
+	@Resource(name = "sndMisService")
     private SndMisService sndMisService;
 
-	@Resource(name = "CommonCodeService")
+	@Resource(name = "commonCodeService")
     private CommonCodeService commonCodeService;
 
 	/** log */

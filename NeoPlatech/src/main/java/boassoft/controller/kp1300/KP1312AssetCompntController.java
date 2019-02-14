@@ -26,22 +26,22 @@ import egovframework.com.cmm.EgovMessageSource;
 @Controller
 public class KP1312AssetCompntController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "AssetSubService")
+	@Resource(name = "assetSubService")
     private AssetSubService assetSubService;
 
-	@Resource(name = "AssetCompntService")
+	@Resource(name = "assetCompntService")
     private AssetCompntService assetCompntService;
 
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
