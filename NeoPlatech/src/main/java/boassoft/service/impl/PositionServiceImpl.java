@@ -11,7 +11,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
 
-@Service("PositionService")
+@Service("positionService")
 public class PositionServiceImpl extends EgovAbstractServiceImpl implements  PositionService{
 
 	@Resource(name="PositionMapper")

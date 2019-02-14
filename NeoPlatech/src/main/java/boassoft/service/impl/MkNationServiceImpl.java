@@ -10,7 +10,7 @@ import boassoft.service.MkNationService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("MkNationService")
+@Service("mkNationService")
 public class MkNationServiceImpl extends EgovAbstractServiceImpl implements MkNationService {
 
 	@Resource(name="MkNationMapper")

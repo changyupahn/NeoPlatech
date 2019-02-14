@@ -12,7 +12,7 @@ import boassoft.service.InspAssetService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("InspAssetService")
+@Service("inspAssetService")
 public class InspAssetServiceimpl extends EgovAbstractServiceImpl implements InspAssetService {
 
 	@Resource(name="InspAssetMapper")
@@ -21,7 +21,7 @@ public class InspAssetServiceimpl extends EgovAbstractServiceImpl implements Ins
 	@Resource(name="VirtAssetMapper")
     private VirtAssetMapper virtAssetMapper;
 	
-	@Resource(name="AssetHistoryService")
+	@Resource(name="assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
 	@Override

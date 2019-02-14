@@ -9,7 +9,7 @@ import boassoft.service.GrantService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("GrantService")
+@Service("grantService")
 public class GrantServiceImpl implements GrantService {
 
 	@Resource(name="GrantMapper")

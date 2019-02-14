@@ -11,7 +11,7 @@ import boassoft.service.LogService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("LogService")
+@Service("logService")
 public class LogServiceImpl extends EgovAbstractServiceImpl implements LogService {
 
 	@Resource(name="LogMapper")

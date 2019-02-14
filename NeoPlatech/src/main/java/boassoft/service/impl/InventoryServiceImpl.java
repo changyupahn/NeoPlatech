@@ -11,7 +11,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
 
-@Service("InventoryService")
+@Service("inventoryService")
 public class InventoryServiceImpl extends EgovAbstractServiceImpl implements InventoryService {
 
 	@Resource(name = "InventoryMapper")

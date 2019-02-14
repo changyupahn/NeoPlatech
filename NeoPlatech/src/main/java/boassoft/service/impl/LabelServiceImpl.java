@@ -10,7 +10,7 @@ import boassoft.service.LabelService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("LabelService")
+@Service("labelService")
 public class LabelServiceImpl extends EgovAbstractServiceImpl implements LabelService {
 
 	@Resource(name="LabelMapper")

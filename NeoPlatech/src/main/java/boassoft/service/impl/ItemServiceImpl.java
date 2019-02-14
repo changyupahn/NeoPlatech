@@ -10,7 +10,7 @@ import boassoft.service.ItemService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("ItemService")
+@Service("itemService")
 public class ItemServiceImpl extends EgovAbstractServiceImpl implements ItemService{
 
 	@Resource(name="ItemMapper")
