@@ -6,13 +6,12 @@ import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import boassoft.mapper.AppMapper;
-import boassoft.service.AdminService;
 import boassoft.service.AppService;
 import boassoft.util.AppCommonList;
 import boassoft.util.CommonMap;
 import boassoft.util.CommonList;
 
-@Service("AppService")
+@Service("appService")
 public class AppServiceImpl extends EgovAbstractServiceImpl implements AppService{
 
 	@Resource(name="AppMapper")

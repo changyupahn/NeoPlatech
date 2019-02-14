@@ -9,7 +9,7 @@ import boassoft.service.AssetCompntService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("AssetCompntServic")
+@Service("assetCompntService")
 public class AssetCompntServiceImpl implements  AssetCompntService {
 
 	@Resource(name="AssetCompntMapper")

@@ -16,7 +16,7 @@ import boassoft.util.CommonMap;
 import egovframework.com.cmm.service.EgovProperties;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
-@Service("ApprIoOutService")
+@Service("apprIoOutService")
 public class ApprIoOutServiceImpl extends EgovAbstractServiceImpl implements ApprIoOutService{
 
 	@Resource(name="ApprIoOutMapper")
@@ -31,7 +31,7 @@ public class ApprIoOutServiceImpl extends EgovAbstractServiceImpl implements App
 	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
-	@Resource(name="AssetHistoryService")
+	@Resource(name="assetHistoryService")
     private AssetHistoryService assetHistoryService;
 	
 	@Override

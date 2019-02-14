@@ -36,7 +36,7 @@ import boassoft.util.DateUtil;
 import boassoft.util.StringUtil;
 import boassoft.util.HttpZeusUtil;
 
-@Service("BatchService")
+@Service("batchService")
 public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchService{
 
 	@Resource(name="BatchMapper")
@@ -69,7 +69,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 	@Resource(name="ApprAssetMapper")
     private ApprAssetMapper apprAssetMapper;
 
-	@Resource(name="AssetHistoryService")
+	@Resource(name="assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
 	@Resource(name="ApprIoOutMapper")
@@ -87,7 +87,7 @@ public class BatchServiceImpl extends EgovAbstractServiceImpl implements BatchSe
 	@Resource(name="AssetMapper")
     private AssetMapper assetMapper;
 
-	@Resource(name="BatchMysqlService")
+	@Resource(name="batchMysqlService")
     private BatchMysqlService batchMysqlService;
 
 	/** 제우스 장비 동기화 */

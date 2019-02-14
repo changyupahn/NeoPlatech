@@ -10,7 +10,7 @@ import boassoft.service.BldngService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("BldngService")
+@Service("bldngService")
 public class BldngServiceImpl extends EgovAbstractServiceImpl implements BldngService{
 
 	@Resource(name="BldngMapper")

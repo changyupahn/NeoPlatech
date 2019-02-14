@@ -9,7 +9,7 @@ import boassoft.service.AssetOperListService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("AssetOperListService")
+@Service("assetOperListService")
 public class AssetOperListServiceImpl implements AssetOperListService {
 
 	@Resource(name="AssetOperListMapper")

@@ -19,7 +19,7 @@ import boassoft.util.StringUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 
-@Service("AssetService")
+@Service("assetService")
 public class AssetServiceImpl extends EgovAbstractServiceImpl implements AssetService {
 
 	@Resource(name="AssetMapper")
@@ -28,13 +28,13 @@ public class AssetServiceImpl extends EgovAbstractServiceImpl implements AssetSe
 	@Resource(name="DeptMapper")
     private DeptMapper deptMapper;
 	
-	@Resource(name="VirtAssetService")
+	@Resource(name="virtAssetService")
     private VirtAssetService virtAssetService;
 	
 	@Resource(name="SndMisMapper")
     private SndMisMapper sndMisMapper;
 	
-	@Resource(name="AssetHistoryService")
+	@Resource(name="assetHistoryService")
     private AssetHistoryService assetHistoryService;
 	
 	@Resource(name = "sndSeqIdGnrService")

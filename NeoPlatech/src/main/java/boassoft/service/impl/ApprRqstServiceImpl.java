@@ -11,7 +11,7 @@ import boassoft.service.ApprRqstService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("ApprRqstService")
+@Service("apprRqstService")
 public class ApprRqstServiceImpl extends EgovAbstractServiceImpl implements ApprRqstService {
 
 	@Resource(name="ApprRqstMapper")

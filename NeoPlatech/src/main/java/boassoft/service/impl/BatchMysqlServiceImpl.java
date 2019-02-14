@@ -10,7 +10,7 @@ import boassoft.service.BatchMysqlService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("BatchMysqlService")
+@Service("batchMysqlService")
 public class BatchMysqlServiceImpl extends EgovAbstractServiceImpl implements BatchMysqlService {
 
 	@Resource(name="BatchMysqlMapper")

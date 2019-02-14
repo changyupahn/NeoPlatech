@@ -10,7 +10,7 @@ import boassoft.service.AssetAsService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("AssetAsService")
+@Service("assetAsService")
 public class AssetAsServiceImpl extends EgovAbstractServiceImpl implements AssetAsService {
 
 	@Resource(name="AssetAsMapper")

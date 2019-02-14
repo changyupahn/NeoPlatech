@@ -10,7 +10,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import boassoft.mapper.CommonCodeMapper;
 
-@Service("CommonCodeService")
+@Service("commonCodeService")
 public class CommonCodeServiceImpl extends EgovAbstractServiceImpl implements CommonCodeService {
 
 	@Resource(name="CommonCodeMapper")

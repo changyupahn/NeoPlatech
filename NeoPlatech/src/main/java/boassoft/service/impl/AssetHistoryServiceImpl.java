@@ -13,7 +13,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import boassoft.mapper.AssetHistoryMapper;
 
-@Service("AssetHistoryService")
+@Service("assetHistoryService")
 public class AssetHistoryServiceImpl extends EgovAbstractServiceImpl implements  AssetHistoryService{
 
 	@Resource(name="AssetHistoryMapper")
@@ -22,7 +22,7 @@ public class AssetHistoryServiceImpl extends EgovAbstractServiceImpl implements 
 	@Resource(name = "histSeqIdGnrService")
     private EgovIdGnrService histSeqIdGnrService;
 	
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
 	
 	public CommonList getAssetHistoryList(CommonMap cmap) throws Exception {

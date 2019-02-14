@@ -10,7 +10,7 @@ import boassoft.service.ContractService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
-@Service("ContractService")
+@Service("contractService")
 public class ContractServiceImpl extends EgovAbstractServiceImpl implements ContractService {
 
 	@Resource(name="ContractMapper")
