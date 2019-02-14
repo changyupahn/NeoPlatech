@@ -29,7 +29,7 @@ import boassoft.util.StringUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 
-@Component("CommonXmlManage")
+@Component("commonXmlManage")
 public class CommonXmlManage {
 
 public static final int BUFF_SIZE = 2048;
