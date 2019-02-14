@@ -36,22 +36,22 @@ import egovframework.com.cmm.service.EgovProperties;
 @Controller
 public class KP1810ZeusController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ZeusService")
+	@Resource(name = "zeusService")
     private ZeusService zeusService;
 
-	@Resource(name = "ZeusCodeService")
+	@Resource(name = "zeusCodeService")
     private ZeusCodeService zeusCodeService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "BatchService")
+	@Resource(name = "batchService")
     private BatchService batchService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
 	/** log */

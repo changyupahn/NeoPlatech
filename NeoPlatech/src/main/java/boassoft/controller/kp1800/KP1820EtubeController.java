@@ -20,13 +20,13 @@ import boassoft.util.CommonMap;
 @Controller
 public class KP1820EtubeController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "EtubeService")
+	@Resource(name = "etubeService")
     private EtubeService etubeService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */

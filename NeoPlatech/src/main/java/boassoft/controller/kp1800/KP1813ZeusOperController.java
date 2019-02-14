@@ -33,25 +33,25 @@ import egovframework.com.cmm.service.EgovProperties;
 @Controller
 public class KP1813ZeusOperController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
 	private CommonMap commonMap;
 
-	@Resource(name = "ZeusService")
+	@Resource(name = "zeusService")
 	private ZeusService zeusService;
 
-	@Resource(name = "ZeusStatService")
+	@Resource(name = "zeusStatService")
 	private ZeusStatService zeusStatService;
 
-	@Resource(name = "ZeusOperListService")
+	@Resource(name = "zeusOperListService")
 	private ZeusOperListService zeusOperListService;
 
-	@Resource(name = "ZeusAsListService")
+	@Resource(name = "zeusAsListService")
 	private ZeusAsListService zeusAsListService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
 	private UserService userService;
 
-	@Resource(name = "BatchService")
+	@Resource(name = "batchService")
 	private BatchService batchService;
 
 	/** log */
