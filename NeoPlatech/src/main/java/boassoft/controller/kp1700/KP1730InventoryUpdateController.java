@@ -29,28 +29,28 @@ import boassoft.util.ExcelUtil;
 @Controller
 public class KP1730InventoryUpdateController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "InventoryService")
+	@Resource(name = "inventoryService")
     private InventoryService inventoryService;
 
-	@Resource(name = "AssetService")
+	@Resource(name = "assetService")
     private AssetService assetService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
-	@Resource(name = "AssetHistoryService")
+	@Resource(name = "assetHistoryService")
     private AssetHistoryService assetHistoryService;
 
-	@Resource(name = "SndMisService")
+	@Resource(name = "sndMisService")
     private SndMisService sndMisService;
 
 	@Resource(name = "sndSeqIdGnrService")
     private EgovIdGnrService sndSeqIdGnrService;
 
-	@Resource(name = "SystemService")
+	@Resource(name = "systemService")
     private SystemService systemService;
 
 	/** log */
