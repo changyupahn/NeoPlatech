@@ -25,19 +25,19 @@ import boassoft.util.SessionUtil;
 @Controller
 public class KP1410ApprUsercngController {
 
-	@Resource(name = "CommonMap")
+	@Resource(name = "commonMap")
     private CommonMap commonMap;
 
-	@Resource(name = "ApprUsercngService")
+	@Resource(name = "apprUsercngService")
     private ApprUsercngService apprUsercngService;
 
-	@Resource(name = "ApprAssetService")
+	@Resource(name = "apprAssetService")
     private ApprAssetService apprAssetService;
 
-	@Resource(name = "ApprRqstService")
+	@Resource(name = "apprRqstService")
     private ApprRqstService apprRqstService;
 
-	@Resource(name = "UserService")
+	@Resource(name = "userService")
     private UserService userService;
 
 	/** log */
