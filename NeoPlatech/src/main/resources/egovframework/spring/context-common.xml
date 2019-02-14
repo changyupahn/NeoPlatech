@@ -1,30 +1,32 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <context:component-scan base-package="egovframework">
-       <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
-    </context:component-scan>
-
-	<bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource">
+  
+	 <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource">
 		<property name="basenames">
 			<list>
 				<value>classpath:/egovframework/message/message-common</value>
 				<value>classpath:/egovframework/rte/fdl/idgnr/messages/idgnr</value>
-				<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>
-							<value>classpath:/egovframework/message/com/message-common</value>
-				<value>classpath:/egovframework/egovProps/globals</value>
-</list>
+				<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>				
+				<value>classpath:/egovframework/egovProps/globals</value> 
+             </list>
 		</property>
 		<property name="cacheSeconds">
 			<value>60</value>
 		</property>
-	</bean>
+	</bean> 
+	
+	<bean id="egovMessageSource" class="egovframework.com.cmm.EgovMessageSource">
+        <property name="reloadableResourceBundleMessageSource">
+            <ref bean="messageSource" />
+        </property>
+    </bean>
 	
 	<bean class="egovframework.rte.fdl.cmmn.trace.LeaveaTrace" id="leaveaTrace">
 		<property name="traceHandlerServices">
 			<list>
 				<ref bean="traceHandlerService"/>
-							<ref bean="egov.traceHandlerService"/>
-</list>
+				<!-- <ref bean="egov.traceHandlerService"/> -->
+            </list>
 		</property>
 	</bean>
 
@@ -46,5 +48,25 @@
 	
 	<bean class="org.springframework.util.AntPathMatcher" id="antPathMater"/>
 	<bean class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" id="defaultTraceHandler"/>
+	 
+	
+    <!-- MULTIPART RESOLVERS -->
+    <!-- regular spring resolver -->
+    <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="spring.RegularCommonsMultipartResolver">
+        <property name="maxUploadSize" value="600000000"/>
+        <property name="maxInMemorySize" value="100000000"/>
+    </bean>
+
+    <!-- choose one from above and alias it to the name Spring expects -->
+    <!-- alias name="local.MultiCommonsMultipartResolver" alias="multipartResolver" /-->
+    <alias alias="multipartResolver" name="spring.RegularCommonsMultipartResolver"/> 
+	 
+	<context:component-scan base-package="egovframework">
+       <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan> 
+    
+      <context:component-scan base-package="boassoft">
+       <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
 	 
 </beans>

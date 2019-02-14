@@ -2,8 +2,26 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
+    <!--
+	[blockSize]
+	DB 테이블이나 시퀀스 기반이기 때문에 WAS가 이중화 되어 있어셔도 사용가능하십니다. (중복되지 않음)
+	다만, 이중화된 상태에서 blockSize가 1 이상인 경우는 생성되는 시점과 순서가 일치하지 않을 수 있습니다.
+	blockSize만큼 증가 시킨 후에 DB 상에 기록한 후에 메모리 상에 생성된 id를 제공하기 때문입니다.
+	생성되는 순서가 중요하신 경우라면 blockSize를 1로 하시고, 그렇지 않으신 경우라면 blockSize를 1 이상으로 설정하시면 되실 것 같습니다.
+
+	[prefix]
+	키 값 앞에 붙일 문자열
+
+	[cipers]
+	키 값의 최소 길이
+
+	[fillChar]
+	키 값이 cipers 설정 길이보다 작을 경우 fillChar 설정된 값으로 채움.
+	-->
+
+
 	<bean name="egovIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource-mysql" />
 		<property name="strategy" 	ref="mixPrefixSample" />
 		<property name="blockSize" 	value="10"/>
 		<property name="table"	   	value="IDS"/>
@@ -14,5 +32,243 @@
 		<property name="cipers"   value="5" />
 		<property name="fillChar" value="0" />
 	</bean>	
+	
+	 <bean name="egovFileIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="dataSource-mysql" />
+        <property name="strategy"   ref="fileStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="FILE_ID"/>
+    </bean>
+    <bean name="fileStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="FILE_" />
+        <property name="cipers"   value="15" />
+        <property name="fillChar" value="0" />
+    </bean>
+    
+    <bean name="itemSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="itemSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="ITEM_SEQ"/>
+	</bean>
+	<bean name="itemSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<bean name="bldngSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="bldngSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="BLDNG_SEQ"/>
+	</bean>
+	<bean name="bldngSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="natnSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="natnSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="NATN_SEQ"/>
+	</bean>
+	<bean name="natnSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="compSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="compSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="COMP_SEQ"/>
+	</bean>
+	<bean name="compSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="inspItemSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="inspItemSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="INSP_ITEM_SEQ"/>
+	</bean>
+	<bean name="inspItemSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="assetSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="assetSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="ASSET_SEQ"/>
+	</bean>
+	<bean name="assetSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="printSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="printSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="PRINT_SEQ"/>
+	</bean>
+	<bean name="printSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="histSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="histSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="HIST_SEQ"/>
+	</bean>
+	<bean name="histSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="deviceLogSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="deviceLogSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="DEVICE_LOG_SEQ"/>
+	</bean>
+	<bean name="deviceLogSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<bean name="userLogSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="userLogSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="DEVICE_LOG_SEQ"/>
+	</bean>
+	<bean name="userLogSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="sndSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="sndSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="DEVICE_LOG_SEQ"/>
+	</bean>
+	<bean name="sndSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="logSeqIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="logSeqMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="RFID_SEQ"/>
+		<property name="tableName"	value="DEVICE_LOG_SEQ"/>
+	</bean>
+	<bean name="logSeqMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="12" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+
+	<bean name="assetNoIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="assetNoMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="ASSET_NO"/>
+	</bean>
+	<bean name="assetNoMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="10" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<bean name="rfidNoIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource-mysql" />
+		<property name="strategy" ref="rfidNoMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="RFID_NO"/>
+	</bean>
+	<bean name="rfidNoMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="" />
+		<property name="cipers" value="10" />
+		<property name="fillChar" value="0" />
+	</bean>
 			
 </beans>
