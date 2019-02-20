@@ -2,6 +2,7 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.service.EgovProperties;
@@ -15,6 +16,7 @@ import boassoft.service.AssetHistoryService;
 import boassoft.util.ApprHttpUtil;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+
 
 @Service("apprIoExtService")
 public class ApprIoExtServiceImpl extends EgovAbstractServiceImpl implements ApprIoExtService {

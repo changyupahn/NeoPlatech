@@ -2,6 +2,7 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import boassoft.mapper.ApprAssetMapper;
@@ -14,6 +15,7 @@ import boassoft.util.CommonMap;
 import boassoft.util.MessageUtils;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
+
 
 @Service("apprAssetService")
 public class ApprAssetServiceImpl extends EgovAbstractServiceImpl implements ApprAssetService {
