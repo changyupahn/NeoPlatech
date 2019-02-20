@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/jsp/common/head.jsp" %>
 <script type="text/javascript">
 function forward(){
-	location.href = "/index.do";
+	location.href = "/adminIndex.do";
 }
 </script>
 </head>
