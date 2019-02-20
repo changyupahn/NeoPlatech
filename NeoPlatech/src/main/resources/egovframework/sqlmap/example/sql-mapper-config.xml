@@ -5,7 +5,7 @@
 
     <settings>
         <setting name="cacheEnabled" value="false"/>
-        <setting name="jdbcTypeForNull" value="NULL"/>
+        <setting name="jdbcTypeForNull" value="NULL"/>        
     </settings>
     <typeAliases>
 		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
@@ -15,7 +15,84 @@
 		<typeAlias  alias="appcmap" type="boassoft.util.AppCommonMap"/>
         <typeAlias  alias="commonXml" type="boassoft.common.CommonXml"/>
         <typeAlias  alias="omap" type="org.apache.commons.collections.map.ListOrderedMap"/>
-        <typeAlias  alias="ComDefaultCodeVO" type="egovframework.com.cmm.ComDefaultCodeVO"/>
-        <typeAlias  alias="UserInfVO" type="egovframework.com.cop.com.service.UserInfVO"/>			
+        <!-- <typeAlias  alias="ComDefaultCodeVO" type="egovframework.com.cmm.ComDefaultCodeVO"/> -->
+        <typeAlias  alias="UserInfVO" type="egovframework.com.cop.com.service.UserInfVO"/>	
     </typeAliases>
+    
+     <mappers>
+        <mapper resource="boassoft/sql/Address.xml" />        
+        <mapper resource="boassoft/sql/Admin.xml" />
+        <mapper resource="boassoft/sql/App.xml" />
+        <mapper resource="boassoft/sql/ApprAsset.xml" />
+        <mapper resource="boassoft/sql/ApprDisuse.xml" />
+        <mapper resource="boassoft/sql/ApprFile.xml" />
+        <mapper resource="boassoft/sql/ApprIoExt.xml" />
+        <mapper resource="boassoft/sql/ApprIoExtAsset.xml" />
+        <mapper resource="boassoft/sql/ApprIoIn.xml" />
+        <mapper resource="boassoft/sql/ApprIoInAsset.xml" />
+        <mapper resource="boassoft/sql/ApprIoOut.xml" />
+        <mapper resource="boassoft/sql/ApprRqst.xml" />
+        <mapper resource="boassoft/sql/ApprUsercng.xml" />
+        <mapper resource="boassoft/sql/Asset.xml" />
+        <mapper resource="boassoft/sql/AssetAs.xml" />
+        <mapper resource="boassoft/sql/AssetAsList.xml" />
+        <mapper resource="boassoft/sql/AssetCompnt.xml" />
+        <mapper resource="boassoft/sql/AssetFile.xml" />
+        <mapper resource="boassoft/sql/AssetHistory.xml" />
+        <mapper resource="boassoft/sql/AssetOperList.xml" />
+        <mapper resource="boassoft/sql/AssetSub.xml" />
+        <mapper resource="boassoft/sql/Batch.xml" />
+        <mapper resource="boassoft/sql/BatchMysql.xml" />
+        <mapper resource="boassoft/sql/Bldng.xml" />
+        <mapper resource="boassoft/sql/CommonCode.xml" />
+        <mapper resource="boassoft/sql/Contract.xml" />
+        <mapper resource="boassoft/sql/ContractDtl.xml" />
+        <mapper resource="boassoft/sql/Depre.xml" />
+        <mapper resource="boassoft/sql/DepreAsset.xml" />
+        <mapper resource="boassoft/sql/Dept.xml" />
+        <mapper resource="boassoft/sql/Device.xml" />
+        <mapper resource="boassoft/sql/DeviceLog.xml" />
+        <mapper resource="boassoft/sql/Etube.xml" />
+        <mapper resource="boassoft/sql/Gate.xml" />
+        <mapper resource="boassoft/sql/Grant.xml" />
+        <mapper resource="boassoft/sql/GrantMenu.xml" />
+        <mapper resource="boassoft/sql/Inout.xml" />
+        <mapper resource="boassoft/sql/InspAsset.xml" />
+        <mapper resource="boassoft/sql/Inspection.xml" />
+        <mapper resource="boassoft/sql/InspItem.xml" />
+        <mapper resource="boassoft/sql/Inventory.xml" />
+        <mapper resource="boassoft/sql/InventoryStat.xml" />
+        <mapper resource="boassoft/sql/Item.xml" />
+        <mapper resource="boassoft/sql/Label.xml" />
+        <mapper resource="boassoft/sql/Log.xml" />
+        <mapper resource="boassoft/sql/Mis.xml" />
+        <mapper resource="boassoft/sql/MkCompany.xml" />
+        <mapper resource="boassoft/sql/MkNation.xml" />
+        <mapper resource="boassoft/sql/Position.xml" />
+        <mapper resource="boassoft/sql/Print.xml" />
+        <mapper resource="boassoft/sql/PrintHistory.xml" />
+        <mapper resource="boassoft/sql/Purcontract.xml" />
+        <mapper resource="boassoft/sql/Puroutsrc.xml" />
+        <mapper resource="boassoft/sql/Purproddtl.xml" />
+        <mapper resource="boassoft/sql/ReqstPrint.xml" />
+        <mapper resource="boassoft/sql/Sample.xml" />
+        <mapper resource="boassoft/sql/SlCompany.xml" />
+        <mapper resource="boassoft/sql/SndMis.xml" />
+        <mapper resource="boassoft/sql/System.xml" />
+        <mapper resource="boassoft/sql/Tab.xml" />
+        <mapper resource="boassoft/sql/User.xml" />
+        <mapper resource="boassoft/sql/UserDept.xml" />
+        <mapper resource="boassoft/sql/UserLog.xml" />
+        <mapper resource="boassoft/sql/VirtAsset.xml" />
+        <mapper resource="boassoft/sql/Zeus.xml" />
+        <mapper resource="boassoft/sql/ZeusAs.xml" />
+        <mapper resource="boassoft/sql/ZeusAsList.xml" />
+        <mapper resource="boassoft/sql/ZeusCode.xml" />
+        <mapper resource="boassoft/sql/ZeusOper.xml" />
+        <mapper resource="boassoft/sql/ZeusOperList.xml" />
+        <mapper resource="boassoft/sql/ZeusStat.xml" />
+        <mapper resource="egovframework/sqlmap/example/mappers/CmmUse.xml" />               
+        <mapper resource="egovframework/sqlmap/example/mappers/EgovUserInfManage.xml" /> 
+        <mapper resource="egovframework/sqlmap/example/mappers/FileManage.xml" />
+   </mappers>
 </configuration>
