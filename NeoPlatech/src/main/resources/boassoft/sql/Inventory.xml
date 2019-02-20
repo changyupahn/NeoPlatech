@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="InventoryeMapper">
+<mapper namespace="boassoft.mapper.InventoryeMapper">
+    
+    
+    <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
     
      <sql id="getAssetListWhere">
         <if test="sUseYn != null and sUseYn != ''">    		
@@ -928,7 +940,7 @@
 						) lpd on lpd.asset_seq = inv.asset_seq
 		where 1=1
 		<include refid="getInventoryDetailListWhere"/>
-		<include refid="getAssetList.Where"/>
+		<include refid="getAssetListWhere"/>
 		<if test="dataOrder != null and dataOrder !== ''">        
         	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.asset_no #{dataOrderArrow}        
         </if>
