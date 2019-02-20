@@ -2,6 +2,7 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import boassoft.mapper.DepreAssetMapper;
@@ -9,6 +10,7 @@ import boassoft.service.DepreAssetService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
 
 @Service("depreAssetService")
 public class DepreAssetServiceImpl extends EgovAbstractServiceImpl implements DepreAssetService {

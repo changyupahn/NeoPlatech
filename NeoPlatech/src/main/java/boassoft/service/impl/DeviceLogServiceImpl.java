@@ -2,6 +2,7 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -9,6 +10,7 @@ import boassoft.mapper.DeviceLogMapper;
 import boassoft.service.DeviceLogService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+
 
 @Service("deviceLogService")
 public class DeviceLogServiceImpl extends EgovAbstractServiceImpl  implements DeviceLogService{
