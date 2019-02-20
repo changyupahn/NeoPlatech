@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="BldngMapper">
+<mapper namespace="boassoft.mapper.BldngMapper">
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT #{pageLimit}, #{pageSize}
+          </if>
+       </if> 
+    </sql>
 
    <sql id="getBldngListWhere">
         <if test="sUseYn != null and sUseYn != ''">      			
@@ -23,7 +34,7 @@
         SELECT	bldng.*
         FROM 	rfid_bldng bldng
         WHERE 	bldng.USE_YN = 'Y'
-		<include refid="Bldng.getBldngList.Where" />
+		<include refid="getBldngListWhere" />
 		ORDER BY bldng.BLDNG_LEVEL, bldng.SORT_NUM
         <include refid="pagingFooter"/>
     </select>
