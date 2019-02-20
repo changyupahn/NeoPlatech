@@ -2,12 +2,14 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import boassoft.mapper.AssetCompntMapper;
 import boassoft.service.AssetCompntService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+
 
 @Service("assetCompntService")
 public class AssetCompntServiceImpl implements  AssetCompntService {

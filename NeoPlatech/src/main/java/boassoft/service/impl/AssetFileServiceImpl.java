@@ -2,6 +2,7 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -9,6 +10,7 @@ import boassoft.mapper.AssetFileMapper;
 import boassoft.service.AssetFileService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+
 
 @Service("assetFileService")
 public class AssetFileServiceImpl extends EgovAbstractServiceImpl implements AssetFileService{
