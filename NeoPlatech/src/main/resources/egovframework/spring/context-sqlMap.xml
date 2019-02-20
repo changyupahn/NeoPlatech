@@ -19,8 +19,9 @@
       </bean> -->
 
      <!-- mybatis mapper auto scanning -->
-     <!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-	 <property name="basePackage" value="boassoft.mapper" /> -->
+      <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	   <property name="basePackage" value="boassoft.mapper" />
+	  </bean>  
 
     <!-- hsql
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -36,8 +37,14 @@
         <property name="url" value="jdbc:mysql://127.0.0.1:3306/neoplatech_posid" />
         <property name="username" value="neoplatech_rfid"/>
         <property name="password" value="neopla12!@"/>
-    </bean> -->
+    </bean> 
     <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.0.47:3306/boasrfid_posid" />
+        <property name="username" value="boasrfid_posid"/>
+        <property name="password" value="bo392766"/>
+    </bean>-->
+     <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://127.0.0.1:3306/boasrfid_posid" />
         <property name="username" value="boasrfid"/>
