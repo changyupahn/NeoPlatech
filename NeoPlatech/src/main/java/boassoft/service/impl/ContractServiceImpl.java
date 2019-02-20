@@ -2,6 +2,7 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -9,6 +10,7 @@ import boassoft.mapper.ContractMapper;
 import boassoft.service.ContractService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+
 
 @Service("contractService")
 public class ContractServiceImpl extends EgovAbstractServiceImpl implements ContractService {
