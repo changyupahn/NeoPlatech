@@ -19,5 +19,5 @@ public interface ApprIoExtMapper {
 	
 	public void deleteApprIoExt(CommonMap cmap) throws Exception;
 	
-	
+	public void deleteApprIoExt2(CommonMap cmap) throws Exception;
 }
