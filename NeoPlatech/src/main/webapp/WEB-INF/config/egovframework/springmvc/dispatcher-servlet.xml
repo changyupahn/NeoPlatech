@@ -10,16 +10,22 @@
    <!--
 		- The controllers are autodetected POJOs labeled with the @Controller annotation.
 	-->
+	
+	<!-- Annotation 활성화 -->
+    <mvc:annotation-driven></mvc:annotation-driven> 
+	
 	<context:component-scan base-package="egovframework">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		<!--<context:exclude-filter type="regex" expression="(service|contraoller|mapper)\..*"/>-->
 	</context:component-scan>
 
     <context:component-scan base-package="boassoft">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		<!--<context:exclude-filter type="regex" expression="(service|contraoller|mapper)\..*"/>-->
 	</context:component-scan>
 	
 	<!--
@@ -50,9 +56,7 @@
 
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
 		  p:viewClass="org.springframework.web.servlet.view.JstlView"
-		  p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
-
-	
+		  p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>	
 			
     <!-- For Pagination Tag -->
     <bean id="imageRenderer" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationRenderer"/>
