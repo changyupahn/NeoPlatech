@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AddressMapper">
+<mapper namespace="boassoft.mapper.AddressMapper">
     
    <insert id="insertAddress" parameterType="cmap">
         INSERT INTO rfid_address
 		(addr_user_id, addr_type_cd, title, org_no, sping_address, sping_tel, sping_name, use_yn, frst_regist_pnttm, frst_register_id, last_updt_pnttm, last_updusr_id) 
 		VALUES 
 		(#{addrUserId}, #{addrTypeCd}, #{title}, #{orgNo}, #{spingAddress}, #{spingTel}, #{spingName}, #{useYn}, #{frstRegistPnttm}, #{frstRegisterId}, #{lastUpdtPnttm}, #{lastUpdusrId})
-		
-		<selectKey keyProperty="addrSeq" resultType="int" order="AFTER">
-			SELECT LAST_INSERT_ID()
-		</selectKey>
+			
 	</insert>
    
    <update id="deleteAddress" parameterType="cmap">

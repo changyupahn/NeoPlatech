@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AdminMapper">
+<mapper namespace="boassoft.mapper.AdminMapper">
 
 
    <sql id="pagingHeader">
@@ -14,9 +14,9 @@
        </if> 
     </sql>
 
-   <select id="getValidationQuery" parameterType="cmap" resultType="cmap" >
+  <select id="getValidationQuery" parameterType="cmap" resultType="cmap" >
     	select '1' as result from dual
-    </select>
+    </select> 
     
     <select id="getAdminLoginView" parameterType="cmap" resultType="cmap" >
 		SELECT user_id, 
@@ -95,7 +95,7 @@
     	and print_id = #{print_id_n}
     </select>
     
-    <select id="insertAdminPrintS" parameterType="cmap" resultType="cmap" >
+    <select id="getAdminPrintS" parameterType="cmap" resultType="cmap" >
     	select *
     	from rfid_print
     	where 1=1
@@ -106,7 +106,12 @@
     	delete from rfid_print where print_id = #{print_id}
     </delete>
     
-    <insert id="insertUserPrint" parameterType="cmap">
+    <insert id="insertUserPrintN" parameterType="cmap">
+    	insert into rfid_print( print_id,print_name,print_ip,print_port,label_file_loc,frst_regist_pnttm,frst_register_id,last_updt_pnttm,last_updusr_id )
+		values ( #{print_id},#{print_nm},#{print_ip},#{print_port},#{label_file_loc},#{frst_regist_pnttm},#{frst_register_id},#{last_updt_pnttm},#{last_updusr_id} )
+    </insert>
+    
+     <insert id="insertUserPrintS" parameterType="cmap">
     	insert into rfid_print( print_id,print_name,print_ip,print_port,label_file_loc,frst_regist_pnttm,frst_register_id,last_updt_pnttm,last_updusr_id )
 		values ( #{print_id},#{print_nm},#{print_ip},#{print_port},#{label_file_loc},#{frst_regist_pnttm},#{frst_register_id},#{last_updt_pnttm},#{last_updusr_id} )
     </insert>
