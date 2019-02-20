@@ -28,7 +28,7 @@
 		<result property="trgetId" column="TRGET_ID" />
 	</resultMap>
 	
-	<select id="selectUserList" parameterType="UserInfVO" resultMap="UserInfs" >
+	<select id="selectUserList" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="UserInfs" >
 	   	<![CDATA[
 			SELECT 
 				ESNTL_ID, USER_ID, USER_NM, USER_ZIP, USER_ADRES, USER_EMAIL
@@ -47,7 +47,7 @@
 		]]>			
 	</select>
 	
-	<select id="selectUserListCnt" parameterType="UserInfVO" resultType="int" >
+	<select id="selectUserListCnt" parameterType="egovframework.com.cop.com.service.UserInfVO" resultType="int" >
 	  <![CDATA[
 			SELECT 
 				COUNT(ESNTL_ID)
@@ -62,7 +62,7 @@
 		  </choose>		  	
 	</select>
 	
-	<select id="selectCmmntyUserList" parameterType="UserInfVO" resultMap="UserInfList" >
+	<select id="selectCmmntyUserList" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
 			SELECT 
 				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT,
@@ -85,7 +85,7 @@
 		]]>				
  	</select>
  	
-	<select id="selectCmmntyUserListCnt" parameterType="UserInfVO" resultType="int" >
+	<select id="selectCmmntyUserListCnt" parameterType="egovframework.com.cop.com.service.UserInfVO" resultType="int" >
 		<![CDATA[
 			SELECT 
 				COUNT(a.ESNTL_ID)
@@ -103,7 +103,7 @@
 		  </choose>
 	</select>
 	
-	<select id="selectCmmntyMngrList" parameterType="UserInfVO" resultMap="UserInfList" >
+	<select id="selectCmmntyMngrList" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
 			SELECT 
 				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT, 
@@ -128,7 +128,7 @@
 		]]>				
  	</select>
  	
-	<select id="selectCmmntyMngrListCnt" parameterType="UserInfVO" resultType="int" >
+	<select id="selectCmmntyMngrListCnt" parameterType="egovframework.com.cop.com.service.UserInfVO" resultType="int" >
 		<![CDATA[
 			SELECT 
 				COUNT(a.ESNTL_ID)
@@ -149,7 +149,7 @@
 	</select>
 	
 
-	<select id="selectClubUserList" parameterType="UserInfVO" resultMap="UserInfList" >
+	<select id="selectClubUserList" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
 			SELECT 
 				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT,
@@ -190,7 +190,7 @@
 		 </choose>			
 	</select>
 
-	<select id="selectClubOprtrList" parameterType="UserInfVO" resultMap="UserInfList" >
+	<select id="selectClubOprtrList" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
 			SELECT 
 				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT,
@@ -215,7 +215,7 @@
 		]]>				
  	</select>
  	
-	<select id="selectClubOprtrListCnt" parameterType="UserInfVO" resultType="int" >
+	<select id="selectClubOprtrListCnt" parameterType="egovframework.com.cop.com.service.UserInfVO" resultType="int" >
 		<![CDATA[
 			SELECT 
 				COUNT(a.ESNTL_ID)
@@ -235,7 +235,7 @@
 		 </choose>	
 	</select>
 
-	<select id="selectAllClubUser" parameterType="UserInfVO" resultMap="AllUserInfList" >
+	<select id="selectAllClubUser" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="AllUserInfList" >
 		<![CDATA[
 			SELECT EMPLYR_ID as ESNTL_ID, CLB_ID as TRGET_ID 
 			FROM COMTNCLUBUSER WHERE USE_AT = 'Y'
@@ -243,7 +243,7 @@
 		]]>
 	</select>
 	
-	<select id="selectAllCmmntyUser" parameterType="UserInfVO" resultMap="AllUserInfList" >
+	<select id="selectAllCmmntyUser" parameterType="egovframework.com.cop.com.service.UserInfVO" resultMap="AllUserInfList" >
 		<![CDATA[
 			SELECT EMPLYR_ID as ESNTL_ID, CMMNTY_ID as TRGET_ID 
 			FROM COMTNCMMNTYUSER WHERE USE_AT = 'Y'

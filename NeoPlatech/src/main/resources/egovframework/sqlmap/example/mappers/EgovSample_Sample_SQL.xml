@@ -10,7 +10,7 @@
 		<result property="regUser" column="reg_user"/>
 	</resultMap>
 
-	<insert id="insertSample" parameterType="SampleVO">
+	<insert id="insertSample" parameterType="egovframework.example.sample.service.SampleVO">
 
 			INSERT INTO SAMPLE
 				( ID
@@ -53,7 +53,7 @@
 
 	</select>
 
-	<select id="selectSampleList" parameterType="searchVO" resultType="egovMap">
+	<select id="selectSampleList" parameterType="egovframework.example.sample.service.SampleDefaultVO" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
 
 			SELECT
 				ID, NAME, DESCRIPTION, USE_YN, REG_USER
@@ -73,7 +73,7 @@
 			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
 	</select>
 
-	<select id="selectSampleListTotCnt" parameterType="searchVO" resultType="int">
+	<select id="selectSampleListTotCnt" parameterType="egovframework.example.sample.service.SampleDefaultVO" resultType="int">
 
 			SELECT COUNT(*) totcnt
 			FROM SAMPLE

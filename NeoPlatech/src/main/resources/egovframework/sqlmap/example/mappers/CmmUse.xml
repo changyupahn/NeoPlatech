@@ -10,7 +10,7 @@
 		<result property="codeDc"   	column="CODE_DC"  />
   </resultMap>
 	
-	<select id="selectCmmCodeDetail" parameterType="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+	<select id="selectCmmCodeDetail" parameterType="egovframework.com.cmm.ComDefaultCodeVO" resultMap="CmmCodeDetail">
 		<![CDATA[ 
 			SELECT 
 			CODE_ID, CODE, CODE_NM, CODE_DC
@@ -22,7 +22,7 @@
 		]]>
 	</select>
 	
-	<select id="selectOgrnztIdDetail" parameterType="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+	<select id="selectOgrnztIdDetail" parameterType="egovframework.com.cmm.ComDefaultCodeVO" resultMap="CmmCodeDetail">
             <![CDATA[ 
             SELECT 
                 #tableNm#     CODE_ID, 
@@ -40,7 +40,7 @@
             </choose>
     </select>
     
-   <select id="selectGroupIdDetail" parameterType="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+   <select id="selectGroupIdDetail" parameterType="egovframework.com.cmm.ComDefaultCodeVO" resultMap="CmmCodeDetail">
             <![CDATA[ 
             SELECT 
                 #{tableNm}     CODE_ID, 
