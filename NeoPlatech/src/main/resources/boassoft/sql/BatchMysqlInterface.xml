@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.BatchMysqlInterfaceMapper">
+
+
+    <insert id="insertLgNewOrderPlanList" parameterType="cmap" >
+        INSERT INTO RFID_IF_LG_NEW_ORDER_PLAN_LIST (
+        		OD_KEY
+				, PRIM_KEY
+				, LG_LINE
+				, DEMAND_ID
+				, BUYER
+				, MODEL
+				, SUFFIX
+				, FIX_DAY
+				, TOOL
+				, PART_NO
+				, RESIN_CORE
+				, REMARK
+				, ITEM
+				, PLAN_QTY
+				, INJECTION_QTY
+				, QTY
+				, RESIDUAL_QTY
+				, LGE_DATE
+				, START_TIME
+				, TEST_DATE_TEXT
+				, LINE_TEXT
+				, BLANK_TEXT
+				, DEMAN_ID2
+				, ENTER_DATE
+				, LAST_NUM
+				, ORDER_TYPE
+				, IP_ADDRESS
+				, STANDARD_DATE
+        ) VALUES (
+				#{odKey}
+				,#{primKey}
+				,#{lgLine}
+				,#{demandId}
+				,#{buyer}
+				,#{model}
+				,#{suffix}
+				,#{fixDay}
+				,#{tool}
+				,#{partNo}
+				,#{resinCore}
+				,#{remark}
+				,#{item}
+				,#{planQty}
+				,#{injectionQty}
+				,#{qty}
+				,#{residualQty}
+				,#{lgEdate}
+				,#{startTime}
+				,#{testDateText}
+				,#{lineText}
+				,#{blankText}
+				,#{demandId2}
+				,#{enterDate}
+				,#{lastNum}
+				,#{orderType}
+				,#{ipAddress}
+				,#{standardDate}
+        )
+    </insert>
+    
+     <delete id="deleteLgNewOrderPlanList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_LG_NEW_ORDER_PLAN_LIST
+        WHERE 	LEFT(ENTER_DATE,10) = #{enterDate}
+    </delete>
+    
+     <insert id="insertMatrialBom" parameterType="cmap" >
+        INSERT INTO RFID_IF_MARTIAL_BOM (
+             B_KEY
+            , PART
+            , PART_NO
+            , DESCRIPTION
+            , QTY
+            , UNIT
+            , M_PART_NO
+            , MODEL
+            , DRAW_NO
+            , NEO_NAME
+            , REMARK
+            , IN_TIME
+            , COMPANY
+          ) VALUES (  
+               #{bKey}
+			 , #{part}
+			 , #{partNo}
+             , #{description}
+             , #{qty}
+             , #{unit}
+             , #{mPartNo}
+             , #{model}
+             , #{drawNo}
+             , #{neoName}
+             , #{remark}
+             , #{inTime}
+             , #{company}
+         )
+     </insert>
+     
+     <delete id="deleteMatrialBom" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_MARTIAL_BOM
+        WHERE 	LEFT(IN_TIME,10) = #{enterDate}
+    </delete>
+    
+    <insert id="insertPackingWoSendListODOnlyList" parameterType="cmap" >
+     <selectKey resultType="string" keyProperty="odId" order="BEFORE">
+        SELECT get_seq('subPartOdOnly')     
+     </selectKey>
+       INSERT INTO RFID_IF_SUBPART_WOSENDLIST_ODONLY
+       (
+          OD_ID
+        ,  DEMAND_ID
+         , LGE_DATE
+         , NEO_DATE
+         , GAP_DAY
+         , LG_LINE
+         , TOOL
+         , M_PART_NO
+         , PLAN_QTY
+         , LGM_PART_NAME
+         , SUB_PART_NO
+         , SUB_PART_NAME
+         , BOM_QTY
+         , SUM_QTY
+         , SUM_QTY_CNG
+         , UNIT
+         , VENDOR
+         , OSP
+         , OUT_PLACE
+         , CHK_DAY
+         , IN_DATE         
+       )
+       VALUES
+       (
+          #{odId}
+         , #{demandId}
+         , #{lgeDate}
+         , #{neoDate}
+         , #{gapDay}
+         , #{lgLine}
+         , #{tool}
+         , #{mPartNo}
+         , #{planQty}
+         , #{lgmPartName}
+         , #{subPartNo}
+         , #{subPartName}
+         , #{bomQty}
+         , #{sumQty}
+         , #{sumQtyCng}
+         , #{unit}
+         , #{vendor}
+         , #{osp}
+         , #{outPlace}
+         , #{chkDay}
+         , #{inDate}
+       )              
+    </insert>
+    
+    <delete id="deletePackingWoSendListODOnlyList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
+        WHERE 	LEFT(IN_TIME,10) = #{enterDate}
+    </delete>
+    
+</mapper>

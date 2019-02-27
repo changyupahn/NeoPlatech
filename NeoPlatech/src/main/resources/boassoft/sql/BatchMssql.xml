@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.BatchMssqlMapper">
+
+ <select id="getLGNewOrderPlanList" parameterType="cmap" resultType="cmap" >
+   	 SELECT CAST(odKey AS DECIMAL(22,0)) AS OD_KEY
+      , primKey AS PRIM_KEY
+      , LGLine AS LG_LINE
+      , DemandID AS DEMAND_ID
+      , Buyer AS BUYER
+      , Model  AS MODEL
+      , Suffix  AS SUFFIX
+      , FixDay AS FIX_DAY
+      , Tool AS TOOL
+      , PartNo  AS PART_NO
+      , ResinCore  AS RESIN_CORE
+      , Remark  AS REMARK
+      , Item  AS ITEM
+      , PlanQTY  AS PLAN_QTY
+      , InjectionQTY  AS INJECTION_QTY
+      , QTY  AS QTY
+      , ResidualQTY  AS RESIDUAL_QTY
+      , CONVERT(CHAR(23), LGEDate, 21) AS LGE_DATE
+      , StartTime  AS START_TIME
+      , TestDateText  AS TEST_DATE_TEXT
+      , LineText  AS LINE_TEXT
+      , BlankText  AS BLANK_TEXT
+      , DemanID2  AS DEMAN_ID2
+      , CONVERT(CHAR(23), EnterDate, 21)  AS ENTER_DATE
+      , CAST(LastNum AS DECIMAL(22,0)) AS LAST_NUM
+      , OrderType  AS ORDER_TYPE
+      , IpAddress  AS IP_ADDRESS
+      , CONVERT(CHAR(23), StandardDate, 21) AS STANDARD_DATE 
+		FROM 	LG_NewOrderPlanList_View  WHERE EnterDate > GETDATE() -1 
+ </select>
+
+ <select id="getMartialBOM" parameterType="cmap" resultType="cmap" >
+ SELECT    CAST(bKey AS DECIMAL(22,0)) B_KEY
+           , PartNoDeche AS PART_NO_DECHE
+			  , PartNo AS PART_NO
+			  , description AS DESCRIPTION
+			  , CAST(Qty AS DECIMAL(22,0)) AS QTY
+			  , Unit AS UNIT
+			  , MPartNo AS M_PART_NO
+			  , Model AS MODEL
+			  , DrawNo AS DRAW_NO
+			  , NeoName AS NEO_NAME
+			  , Remark AS REMARK
+			  , CONVERT(CHAR(23), InTime, 21) AS IN_TIME 
+			  , company AS COMPANY
+              FROM  Matrial_BOM_View WHERE InTime > GETDATE() -1   
+ </select>
+
+ <select id="getPackingWoSendListODOnlyList" parameterType="cmap" resultType="cmap" >
+    SELECT    DemandID  AS DEMAND_ID
+              , CONVERT(CHAR(23), LGEDate, 21) AS LGE_DATE
+              , CONVERT(CHAR(23), NEODate, 21) AS NEO_DATE
+              , CAST(GapDay AS DECIMAL(22,0)) AS GAP_DAY
+              , LGLine AS LG_LINE
+              , Tool AS TOOL
+              , MPartNo AS M_PART_NO
+              , PlanQTY AS PLAN_QTY
+              , LGMPartName AS LGM_PART_NAME
+              , SubPartNo AS SUB_PART_NO
+              , SubPartName AS SUB_PART_NAME
+              , BOMQty AS BOM_QTY
+              , SumQty AS SUM_QTY
+              , SumQtyCng AS SUM_QTY_CNG
+              , Unit AS UNIT
+              , Vendor AS VENDOR
+              , OSP AS OSP
+              , OutPlace AS OUT_PLACE
+              , CHKDay AS CHK_DAY             
+              , InDate AS IN_DATE
+     FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -2   
+ 
+ </select>
+
+</mapper>
