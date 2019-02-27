@@ -11,6 +11,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 
+import boassoft.service.BatchService;
 import boassoft.service.impl.BatchServiceImpl;
 
 public class BatchScheduler {
@@ -20,10 +21,10 @@ public class BatchScheduler {
 	 */
 	private Scheduler sched;
 	
-	private BatchServiceImpl scheduleBatchService;
+	private BatchService batchService;
 
-	public void setBatchService(BatchServiceImpl scheduleBatchService) {
-		this.scheduleBatchService = scheduleBatchService;
+	public void setBatchService(BatchService batchService) {
+		this.batchService = batchService;
 	}
 	
 	/** log */
@@ -46,7 +47,7 @@ public class BatchScheduler {
 		//String batchCycle = "10 * * * * ?"; //1분 마다
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
-		jobMap.put("scheduleBatchService", scheduleBatchService);
+		jobMap.put("batchService", batchService);
 		JobDataMap jobDataMap = new JobDataMap(jobMap);
 		
 		// Job 만들기
@@ -99,16 +100,17 @@ public class BatchScheduler {
 	 *
 	 */
 	public void init() throws Exception {
-		// 스케줄러 생성하기
-		SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
+			// 스케줄러 생성하기
+	/*	SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
 		sched = schedFact.getScheduler();
 		// Set up the listener
-		BatchJobListener listener = new BatchJobListener();
+		BatchJobListener2 listener = new BatchJobListener2();
 		sched.addJobListener(listener);
 		
 		 insertBatchSchdul();
 		 
 		 sched.start();
+	*/	 
 	}
 	
 	/**
