@@ -17,14 +17,27 @@ public class BatchJobListener implements JobListener {
 	}
 
 	/**
+	 * Batch 작업을 실행한 후에 Batch결과 '에러'상태로 저장한다.
+	 * 
+	 * @param jobContext JobExecutionContext
+	 * 
+	 * @see org.quartz.JobListener#jobExecutionVetoed(JobExecutionContext jobContext) 
+	 */
+	@Override
+	public void jobExecutionVetoed(JobExecutionContext jobContext) {
+		// TODO Auto-generated method stub	
+		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "jobExecutionVetoed ");
+	}
+
+	/**
 	 * Batch 작업을 실행하기전에 Batch결과 '수행중'상태로 저장한다. 
 	 * 
 	 * @param jobContext JobExecutionContext 
 	 * @see org.quartz.JobListener#jobToBeExecuted(JobExecutionContext jobContext) 
 	 */
 	@Override
-	public void jobExecutionVetoed(JobExecutionContext jobContext) {
-		// TODO Auto-generated method stub
+	public void jobToBeExecuted(JobExecutionContext jobContext) {
+		// TODO Auto-generated method stub		
 		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "jobToBeExecuted ");
 	}
 
@@ -35,24 +48,11 @@ public class BatchJobListener implements JobListener {
 	 * @see org.quartz.JobListener#jobWasExecuted(JobExecutionContext jobContext) 
 	 */
 	@Override
-	public void jobToBeExecuted(JobExecutionContext jobContext) {
-		// TODO Auto-generated method stub
-		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "jobWasExecuted ");
-		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "수행시간 : " + jobContext.getFireTime() + "," + jobContext.getJobRunTime());
-	}
-
-	/**
-	 * Batch 작업을 실행한 후에 Batch결과 '에러'상태로 저장한다.
-	 * 
-	 * @param jobContext JobExecutionContext
-	 * 
-	 * @see org.quartz.JobListener#jobExecutionVetoed(JobExecutionContext jobContext) 
-	 */
-	@Override
 	public void jobWasExecuted(JobExecutionContext jobContext,
 			JobExecutionException jee) {
-		// TODO Auto-generated method stub
-		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "jobExecutionVetoed ");
+		// TODO Auto-generated method stub		
+		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "jobWasExecuted ");
+		System.out.println("job[" + jobContext.getJobDetail().getName() + "] " + "수행시간 : " + jobContext.getFireTime() + "," + jobContext.getJobRunTime());
 	}
 
 }
