@@ -94,5 +94,6 @@
         <mapper resource="egovframework/sqlmap/example/mappers/CmmUse.xml" />               
         <mapper resource="egovframework/sqlmap/example/mappers/EgovUserInfManage.xml" /> 
         <mapper resource="egovframework/sqlmap/example/mappers/FileManage.xml" />
+        <mapper resource="boassoft/sql/BatchMysqlInterface.xml" /> 
    </mappers>
 </configuration>

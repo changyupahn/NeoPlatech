@@ -46,7 +46,7 @@
     </bean>-->
      <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/boasrfid_posid" />
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/boasrfid_posid?useUnicode=true" />
         <property name="username" value="boasrfid"/>
         <property name="password" value="bo392766"/>
     </bean>
@@ -63,9 +63,9 @@
     
     <bean id="dataSource-mssql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-        <property name="url" value="jdbc:sqlserver://123.142.216.12:51384;DatabaseName=NeoWareHouse" />
+        <property name="url" value="jdbc:sqlserver://123.142.216.12:51381;DatabaseName=NeoWareHouse" />
         <property name="username" value="BoasSoft"/>
-        <property name="password" value="bosa1102"/>
+        <property name="password" value="boas1102"/>
     </bean>
 
 </beans>
