@@ -343,4 +343,14 @@
      <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
    </bean>
    
+   <bean id="BatchMysqlInterfaceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.BatchMysqlInterfaceMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+   <bean id="BatchMssqlMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.BatchMssqlMapper" />
+     <property name="sqlSessionFactory" ref="mssqlSessionFactory" />
+   </bean>
+   
 </beans>

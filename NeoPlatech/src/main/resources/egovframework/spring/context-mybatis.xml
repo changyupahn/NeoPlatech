@@ -26,6 +26,14 @@
 		<property name="basePackage" value="boasoft.mapper" />
 	</bean> --> 
  
+  <!-- SqlSession setup for MyBatis Database Layer -->
+	 <bean id="mssqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource-mssql" />
+		<property name="configLocation" value="classpath:egovframework/sqlmap/example/mssql-mapper-config.xml" /> 
+		<!-- <property name="mapperLocations" value="classpath:/boassoft/sql/*.xml" /> --> 
+	</bean>
+ 
    <mybatis:scan base-package="boasoft.mapper" factory-ref="mysqlSessionFactory"/> 
+   <mybatis:scan base-package="boasoft.mapper" factory-ref="mssqlSessionFactory"/> 
 
 </beans>
