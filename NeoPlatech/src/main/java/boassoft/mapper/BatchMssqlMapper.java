@@ -12,4 +12,10 @@ public interface BatchMssqlMapper {
 	public CommonList getMartialBOM(CommonMap cmap) throws Exception;
 	
 	public CommonList getPackingWoSendListODOnlyList(CommonMap cmap) throws Exception;
+
+	public CommonList getPublicProductList(CommonMap cmap) throws Exception;
+
+	public CommonList getSubPartSendList(CommonMap cmap) throws Exception;
+
+	public CommonList getPackingWoSendList(CommonMap cmap) throws Exception;
 }
