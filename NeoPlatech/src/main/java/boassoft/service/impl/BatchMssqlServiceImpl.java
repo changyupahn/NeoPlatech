@@ -35,6 +35,24 @@ public class BatchMssqlServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return batchMssqlMapper.getPackingWoSendListODOnlyList(cmap) ;
 	}
+
+	@Override
+	public CommonList getPublicProductList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		return batchMssqlMapper.getPublicProductList(cmap);
+	}
+
+	@Override
+	public CommonList getSubPartSendList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		return batchMssqlMapper.getSubPartSendList(cmap);
+	}
+
+	@Override
+	public CommonList getPackingWoSendList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		return batchMssqlMapper.getPackingWoSendList(cmap);
+	}
 	
 	
 
