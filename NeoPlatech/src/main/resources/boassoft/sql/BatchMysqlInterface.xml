@@ -68,7 +68,7 @@
      <delete id="deleteLgNewOrderPlanList" parameterType="cmap" >
         DELETE
         FROM 	RFID_IF_LG_NEW_ORDER_PLAN_LIST
-        WHERE 	LEFT(ENTER_DATE,10) = #{enterDate}
+        WHERE 	LEFT(ENTER_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
      <insert id="insertMatrialBom" parameterType="cmap" >
@@ -106,7 +106,7 @@
      <delete id="deleteMatrialBom" parameterType="cmap" >
         DELETE
         FROM 	RFID_IF_MARTIAL_BOM
-        WHERE 	LEFT(IN_TIME,10) = #{enterDate}
+        WHERE 	LEFT(IN_TIME,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
     <insert id="insertPackingWoSendListODOnlyList" parameterType="cmap" >
@@ -166,7 +166,152 @@
     <delete id="deletePackingWoSendListODOnlyList" parameterType="cmap" >
         DELETE
         FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
-        WHERE 	LEFT(IN_TIME,10) = #{enterDate}
+        WHERE 	LEFT(IN_TIME,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
+    
+     <insert id="insertPublicProductList" parameterType="cmap" >
+       INSERT INTO RFID_IF_PUBLIC_PRODUCT_LIST
+       (
+         PN_KEY , BAR_CODE_NO, ENTER_DATE, ENTER_TIME, ACTIVE_LOCATION
+         , ACTIVE_POSITION, PREVIOUS_LOCATION, DAECHA_NO, DAECHA_KIND, TEAM_NAME
+         , HO_GI, GOODS_KIND, WORKER1, WORKER2, WORK_ORDER
+         , PART_NO, MODEL, TOOL, PITEM, QTY
+         , ITEM1, ITEM2, QTY1, QTY2, CORE
+         , RESIN_CODE, COLOR, REMARK, SCAN_TYPE, SCAN_TIME
+         , NEW_TIME, INDEX_KEY, KANBAN_NO, CHK, SO_KEY
+         , OUT_DATE, OUT_CHK, WORK_DEPT, LINE_DEPT, NOW_POSITION
+         , S_DAECHA_NO, PRE_KEY, PRE_BARCODE_NO, INJECTION_DATE, INJECTION_BARCODE_NO
+         , INP_KEY, PRIM_KEY, QM_KEY, F_CHK, BUILDING
+         , G_KEY, DEMAND_ID, CHECK_DATE, BARCODE_FULL_NO, LR_TYPE
+         , DAECHA_TYPE
+       )
+       VALUES
+       (
+          #{pnKey}, #{barCodeNo}, #{enterDate}, #{enterTime}, #{activeLocation}
+          , #{activePosition}, #{previousLocation}, #{daechaHo}, #{daechaKind}, #{teamName}
+          , #{hoGi}, #{goodsKind}, #{worker1}, #{worker2}, #{workOrder}
+          , #{partNo}, #{model}, #{tool}, #{pitem}, #{qty}
+          , #{item1}, #{item2}, #{qty1}, #{qty2}, #{core}
+          , #{resinCode}, #{color}, #{remark}, #{scanType}, #{scanTime}
+          , #{newTime}, #{indexKey}, #{kanbanNo}, #{chk}, #{soKey}
+          , #{outDate}, #{outChk}, #{workDept}, #{lineDept}, #{nowPosition}
+          , #{sDaechaNo}, #{preKey}, #{preBarcodeNo}, #{inejctionDate}, #{injectionBarcodeNo}
+          , #{inpKey}, #{primKey}, #{qmKey}, #{fChk}, #{building}
+          , #{gKey}, #{demandId}, #{checkDate}, #{barcodeFullNo} , #{lrType}
+          , #{daechaType}
+       )       
+     </insert>
+     
+     <delete id="deletePublicProductList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_PUBLIC_PRODUCT_LIST
+        WHERE 	LEFT(ENTER_DATE,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
+    
+     <insert id="insertSubPartSendList" parameterType="cmap" >
+       INSERT INTO RFID_IF_SUBPART_SENDLIST_ALL
+       (
+         PT_OD_ID
+         , SUB_PT_OD_ID
+         , DEMAND_ID
+         , LG_PART_NO
+         , LG_OD_QTY
+         , PROD_TYPE
+         , NEO_LINE
+         , NEO_PLAN_KEY
+         , SEND_TIME
+         , SENDING_PC_NAME
+         , GO_WITH
+         , RE_PRINT
+         , SUB_PART_NO
+         , SUB_PART_DESC
+         , VENDOR
+         , BOM_QTY
+         , SUB_UNIT
+         , SUB_SUM_QTY
+         , DEMAND_FLOOR
+         , OSP
+       )
+       VALUES
+       (
+         #{ptOdId}
+         , #{subPtOdId}
+         , #{demamdId}
+         , #{lgPartNo}
+         , #{lgOdQty}
+         , #{prodType}
+         , #{neoLine}
+         , #{neoPlanKey}
+         , #{sendTime}
+         , #{sendingPcName}
+         , #{goWith}
+         , #{rePrint}
+         , #{subPartNo}
+         , #{subPartDesc}
+         , #{vendor}
+         , #{bomQty}
+         , #{subUnit}
+         , #{subSumQty}
+         , #{demandFloor}
+         , #{osp}         
+       )
+      </insert> 
+       
+     <delete id="deleteSubPartSendList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_SUBPART_SENDLIST_ALL
+        WHERE 	LEFT(SEND_TIME,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
+    
+     <insert id="insertPackingWoSendList" parameterType="cmap" >
+       INSERT INTO RFID_IF_PACKING_WOSENDLIST_ALL
+       (
+         OD_ID
+         , DEMAND_ID
+         , IN_DATE
+         , LG_PART_NO
+         , LG_OD_QTY
+         , TOOL_NAME
+         , DRAW_NO
+         , VENDOR
+         , SUB_PART_NAME
+         , PART_NUMBER     
+         , RESULT_QTY
+         , ROW_NUM
+         , CALCU_TRUE
+         , OD_QTY_ID
+         , NEO_OD_TIME
+         , NEO_OD_DAY
+         , NEO_OD_QTY
+         , FINAL_VENDOR
+       )
+       VALUES
+       ( 
+         #{odId}
+         , #{demandId}
+         , #{inDate}
+         , #{lgPartNo}
+         , #{lgOdQty}
+         , #{toolName}
+         , #{drawNo}
+         , #{vendor}
+         , #{subPartName}
+         , #{partNumber}         
+         , #{resultQty}
+         , #{rowNum}
+         , #{calcuTrue}
+         , #{odQtyId}
+         , #{neoOdTime}
+         , #{neoOdDay}
+         , #{neoOdQty}
+         , #{finalVendor}         
+       )     
+     </insert>
+     
+      <delete id="deletePackingWoSendList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_PACKING_WOSENDLIST_ALL
+        WHERE 	LEFT(IN_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
 </mapper>

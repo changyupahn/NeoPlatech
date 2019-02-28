@@ -3,6 +3,7 @@
 <mapper namespace="boassoft.mapper.BatchMssqlMapper">
 
  <select id="getLGNewOrderPlanList" parameterType="cmap" resultType="cmap" >
+   <![CDATA[
    	 SELECT CAST(odKey AS DECIMAL(22,0)) AS OD_KEY
       , primKey AS PRIM_KEY
       , LGLine AS LG_LINE
@@ -32,9 +33,11 @@
       , IpAddress  AS IP_ADDRESS
       , CONVERT(CHAR(23), StandardDate, 21) AS STANDARD_DATE 
 		FROM 	LG_NewOrderPlanList_View  WHERE EnterDate > GETDATE() -1 
+	]]>	
  </select>
 
  <select id="getMartialBOM" parameterType="cmap" resultType="cmap" >
+ <![CDATA[
  SELECT    CAST(bKey AS DECIMAL(22,0)) B_KEY
            , PartNoDeche AS PART_NO_DECHE
 			  , PartNo AS PART_NO
@@ -49,9 +52,11 @@
 			  , CONVERT(CHAR(23), InTime, 21) AS IN_TIME 
 			  , company AS COMPANY
               FROM  Matrial_BOM_View WHERE InTime > GETDATE() -1   
+   ]]>           
  </select>
 
  <select id="getPackingWoSendListODOnlyList" parameterType="cmap" resultType="cmap" >
+ <![CDATA[
     SELECT    DemandID  AS DEMAND_ID
               , CONVERT(CHAR(23), LGEDate, 21) AS LGE_DATE
               , CONVERT(CHAR(23), NEODate, 21) AS NEO_DATE
@@ -73,7 +78,123 @@
               , CHKDay AS CHK_DAY             
               , InDate AS IN_DATE
      FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -2   
- 
+ ]]> 
  </select>
+ 
+ <select id="getPublicProductList" parameterType="cmap" resultType="cmap" >
+ <![CDATA[
+    SELECT  CAST(pnKey AS DECIMAL(22,0)) AS PN_KEY
+      , BarcodeNo AS BAR_CODE_NO
+      , EnterDate AS ENTER_DATE
+      , EnterTime AS ENTER_TIME 
+      , ActiveLocation AS ACTIVE_LOCATION
+      , ActivePosition AS ACTIVE_POSITION
+      , PreviousLocation AS PREVIOUS_LOCATION
+      , DaechaNo AS DAECHA_NO
+      , DaechaKind AS DAECHA_KIND
+      , TeamName AS TEAM_NAME
+      , Hogi AS HO_GI
+      , GoodsKind AS GOODS_KIND
+      , Worker1 AS WORKER1
+      , Worker2 AS WORKER2
+      , WorkOrder AS WORK_ORDER
+      , PartNo AS PART_NO
+      , Model AS MODEL
+      , Tool AS TOOL
+      , pItem AS PITEM
+      , CAST(QTY AS DECIMAL(22,0)) AS QTY
+      , Item1 AS ITEM1
+      , Item2 AS ITEM2
+      , CAST(QTY1 AS DECIMAL(22,0))  AS QTY1
+      , CAST(QTY2 AS DECIMAL(22,0))  AS QTY2
+      , Core AS CORE
+      , ResinCode AS RESIN_CODE
+      , Color AS COLOR
+      , Remark AS REMARK
+      , ScanType AS SCAN_TYPE
+      , ScanTime AS SCAN_TIME
+      , newTime AS NEW_TIME
+      , CAST(IndexKey AS DECIMAL(22,0)) AS INDEX_KEY
+      , KanbanNo AS KANBAN_NO
+      , CAST(chk AS DECIMAL(22,0)) AS CHK
+      , CAST(soKey AS DECIMAL(22,0)) AS SO_KEY
+      , OutDate AS OUT_DATE
+      , CAST(outChk AS DECIMAL(22,0)) AS OUT_CHK
+      , workDept AS WORK_DEPT
+      , LineDept AS LINE_DEPT
+      , nowPosition AS NOW_POSITION
+      , sDaechaNo AS S_DAECHA_NO
+      , CAST(preKey AS DECIMAL(22,0)) AS PRE_KEY
+      , preBarcodeNo AS PRE_BARCODE_NO
+      , injectionDate AS INJECTION_DATE
+      , injectionBarcodeNo AS INJECTION_BARCODE_NO
+      , CAST(InpKey AS DECIMAL(22,0)) AS INP_KEY
+      , CAST(primKey AS DECIMAL(22,0)) AS PRIM_KEY
+      , CAST(qmKey AS DECIMAL(22,0)) AS QM_KEY
+      , CAST(fChk AS DECIMAL(22,0)) AS F_CHK
+      , building AS BUILDING
+      , CAST(gKey AS DECIMAL(22,0)) AS G_KEY
+      , DemandID AS DEMAND_ID
+      , CheckDate AS CHECK_DATE
+      , BarcodeFullNo AS BARCODE_FULL_NO
+      , LRtype AS LR_TYPE
+      , DaechaType AS DAECHA_TYPE
+     FROM  PublicProductList_View WHERE EnterDate > GETDATE() -1   
+   ]]>   
+ </select>
+ 
+  <select id="getSubPartSendList" parameterType="cmap" resultType="cmap" >
+  <![CDATA[
+    SELECT  CAST(PtOdID AS DECIMAL(22,0)) AS PT_OD_ID
+      , SubPtOdID AS SUB_PT_OD_ID
+      , DemandID AS DEMAND_ID
+      , LG_PartNo AS LG_PART_NO
+      , LG_ODQty AS LG_OD_QTY
+      , ProdType AS PROD_TYPE
+      , NEOLine AS NEO_LINE
+      , NEOPlanKey AS NEO_PLAN_KEY
+      , CONVERT(CHAR(23), SendTime, 21) AS SEND_TIME
+      , SendingPCName AS SENDING_PC_NAME
+      , GoWith AS GO_WITH
+      , RePrint AS RE_PRINT
+      , SubPartNo AS SUB_PART_NO
+      , SubPartDESC AS SUB_PART_DESC
+      , Vendor AS VENDOR
+      , BOMQty AS BOM_QTY
+      , SubUnit AS SUB_UNIT
+      , SubSumQty AS SUB_SUM_QTY
+      , Floor AS DEMAND_FLOOR
+      , OSP AS OSP         
+    FROM  View_MWHS_subPart_SendList_All WHERE SendTime > GETDATE() -1 
+   ]]>  
+  </select>
+  
+  <select id="getPackingWoSendList" parameterType="cmap" resultType="cmap" >
+  <![CDATA[
+      SELECT  CAST(odID AS DECIMAL(22,0)) AS OD_ID
+       , DemandID  AS DEMAND_ID
+       , CONVERT(CHAR(23), InTime, 21) AS IN_TIME
+       , CONVERT(CHAR(23), JoinDay, 21) AS JOIN_DAY
+       , PkgPoNo AS PKG_PO_NO
+       , ProdStyle AS PROD_STYLE
+       , Line AS LINE
+       , LG_PartNo AS LG_PART_NO
+       , ToolName AS TOOL_NAME
+       , LG_ODQty AS LG_OD_QTY
+       , DrawNo AS DRAW_NO
+       , Vendor AS VENDOR
+       , SubPartName AS SUB_PART_NAME
+       , PartNumber AS PART_NUMBER     
+       , ResultQty AS RESULT_QTY
+       , RowNum AS ROW_NUM
+       , CalcuTrue AS CALCU_TRUE
+       , odQtyID AS OD_QTY_ID
+       , NEO_ODTime AS NEO_OD_TIME
+       , CONVERT(CHAR(23), NEO_ODDay, 21)  AS NEO_OD_DAY
+       , Neo_ODQty AS NEO_OD_QTY
+       , Final_Vendor AS FINAL_VENDOR
+       FROM  View_MWHS_Packing_WOSendList_All WHERE InTime > GETDATE() -1 
+   ]]>  
+  </select>
 
 </mapper>
