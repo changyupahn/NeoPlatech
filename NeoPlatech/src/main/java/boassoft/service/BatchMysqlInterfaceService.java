@@ -15,4 +15,17 @@ public interface BatchMysqlInterfaceService {
 	public void deletePackingWoSendListODOnlyList(CommonMap cmap) throws Exception;
 	
 	public void insertPackingWoSendListODOnlyList(CommonMap cmap) throws Exception;
+
+	public void deletePublicProductList(CommonMap cmap) throws Exception;
+
+	public void insertPublicProductList(CommonMap cmap) throws Exception;
+	
+	public void deleteSubPartSendList(CommonMap cmap) throws Exception;
+
+	public void insertSubPartSendList(CommonMap cmap) throws Exception;
+
+	public void deletePackingWoSendList(CommonMap cmap) throws Exception;
+
+	public void insertPackingWoSendList(CommonMap cmap) throws Exception;
+
 }
