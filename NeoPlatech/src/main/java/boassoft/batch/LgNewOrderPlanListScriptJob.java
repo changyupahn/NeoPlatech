@@ -2,6 +2,7 @@ package boassoft.batch;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -61,15 +62,23 @@ public class LgNewOrderPlanListScriptJob implements Job {
 
 		try {
 			CommonMap cmap = new CommonMap();
-
+			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar c1 = Calendar.getInstance();
-			String strToday = sdf.format(c1.getTime());
+			
+			Calendar c1 = new GregorianCalendar();
+			c1.add(Calendar.DATE, -1); // 오늘날짜로부터 -1		
 
-			cmap.put("enterDate", strToday);
+			String strYesterDay = sdf.format(c1.getTime()); // String으로 저장
+			
+			Calendar c2 = Calendar.getInstance();
+			String strToday = sdf.format(c2.getTime());
 
+			cmap.put("startDate", strYesterDay);
+			//System.out.println(" row startDate  : "+ strYesterDay + " ");
+			cmap.put("endDate", strToday);
+			//System.out.println(" row endDate  : "+ strToday + " ");
+			
 			CommonList clist = new CommonList();
-
 			batchMysqlInterfaceService.deleteLgNewOrderPlanList(cmap);
 
 			clist = batchMssqlService.getLGNewOrderPlanList(cmap);
