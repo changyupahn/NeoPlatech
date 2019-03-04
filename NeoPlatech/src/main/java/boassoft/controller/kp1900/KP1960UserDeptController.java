@@ -46,8 +46,10 @@ public class KP1960UserDeptController {
     @RequestMapping(value="/kp1900/kp1960.do")
 	public String kp1960(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
+    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
+    	cmap.put("pageLimit", pageLimit);
 
     	//검색값 유지
     	model.addAttribute("cmRequest",cmap);
@@ -62,6 +64,13 @@ public class KP1960UserDeptController {
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
     	cmap.put("pageIdx", "1");
     	cmap.put("pageSize", "9999");
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
+    	
+    	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
 
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
@@ -71,7 +80,10 @@ public class KP1960UserDeptController {
     	}
 
     	cmap.put("sGrantNo", "DHD");
+    	System.out.println(" cmap " + "  : " + cmap.toString());
     	CommonList resultList = userService.getUserList(cmap);
+    	System.out.println(" resultList " + "  : " + resultList.toString());
+    	System.out.println(" resultList.size() " + "  : " + resultList.size());
     	CommonMap result = new CommonMap();
     	result.put("resultList", resultList);
     	result.put("totalRow", resultList.totalRow);
