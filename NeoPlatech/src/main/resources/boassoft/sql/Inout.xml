@@ -9,7 +9,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -53,7 +53,7 @@
         where 1=1
         <include refid="WheregetInoutList"/>
         <if test="dataOrder != null and dataOrder != ''">        
-        	ORDER BY #{$dataOrder} #{dataOrderArrow}, a.seq desc        
+        	ORDER BY ${$dataOrder} ${dataOrderArrow}, a.seq desc        
         </if>
         <if test="dataOrder == null or dataOrder == ''">       
         	ORDER BY a.seq desc        

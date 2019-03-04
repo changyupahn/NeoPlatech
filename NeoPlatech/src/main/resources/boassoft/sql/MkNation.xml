@@ -9,7 +9,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -74,14 +74,14 @@
 		WHERE 	T1.use_yn = 'Y'
 		<if test="searchKeyword != null and searchKeyword !== ''">       
             AND (
-                T1.natn_cd LIKE concat('%', #searchKeyword# ,'%')
+                T1.natn_cd LIKE concat('%', #{searchKeyword} ,'%')
                 OR
-                T1.natn_name LIKE concat('%', #searchKeyword# ,'%')
+                T1.natn_name LIKE concat('%', #{searchKeyword} ,'%')
                 OR
-                T1.remark LIKE concat('%', #searchKeyword# ,'%')
+                T1.remark LIKE concat('%', #{searchKeyword} ,'%')
                 )        
         </if>
-        <if test="searchKeyword == null or searchKeyword === ''">          
+        <if test="searchKeyword == null or searchKeyword == ''">          
 			AND 1 = 2        
         </if>
  	</select>
