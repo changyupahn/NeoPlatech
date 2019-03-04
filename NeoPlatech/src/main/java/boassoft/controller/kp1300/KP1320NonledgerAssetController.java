@@ -62,8 +62,10 @@ public class KP1320NonledgerAssetController {
     @RequestMapping(value="/kp1300/kp1320.do")
 	public String kp1320(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
+    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
+    	cmap.put("pageLimit", pageLimit);  
     	cmap.put("sAssetDiv", "2");
 
     	//화면표시관리 (자산목록)
@@ -82,8 +84,15 @@ public class KP1320NonledgerAssetController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
     	cmap.put("sAssetDiv", "2");
 
+    	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
+    	
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
     	if (!gridSessionChk.isEmpty()) {
@@ -105,8 +114,10 @@ public class KP1320NonledgerAssetController {
 
     	//복수검색 설정
     	assetService.setSearchArr(cmap);
-
+    	System.out.println(" cmap " + "  : " + cmap.toString());
     	CommonList assetList = assetService.getAssetList(cmap);
+    	System.out.println(" assetList " + "  : " + assetList.toString());
+    	System.out.println(" assetList.size() " + "  : " + assetList.size());
     	CommonMap result = new CommonMap();
     	result.put("resultList", assetList);
     	result.put("totalRow", assetList.totalRow);
