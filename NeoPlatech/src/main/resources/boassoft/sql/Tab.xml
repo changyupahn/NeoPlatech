@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -81,7 +81,7 @@
 		where 1=1
         <include refid="getAssetListXmlWhere"/>
         <if test="dataOrder != null and dataOrder != ''">        
-        	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.asset_no        
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.asset_no        
         </if>
         <if test="dataOrder == null or dataOrder == ''">       
         	ORDER BY ast.asset_no        
@@ -119,7 +119,7 @@
 		where 1=1
 		<include refid="getInventoryListWhere"/>
 		 <if test="dataOrder != null and dataOrder != ''">  		
-        	ORDER BY invm.inv_year #{dataOrderArrow}, #{dataOrder} #{dataOrderArrow}        
+        	ORDER BY invm.inv_year ${dataOrderArrow}, ${dataOrder} ${dataOrderArrow}        
         </if>
         <if test="dataOrder == null or dataOrder == ''">         
         	ORDER BY invm.inv_year desc, invm.inv_no desc        
@@ -214,7 +214,7 @@
 		where 1=1
 		<include refid="getInventoryDetailListWhere"/>
 		 <if test="dataOrder != null and dataOrder != ''">         
-        	ORDER BY #{dataOrder} #{dataOrderArrow}, ast.aqusit_dt desc        
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.aqusit_dt desc        
           </if>
         <if test="dataOrder == null or dataOrder == ''">           
         	ORDER BY ast.aqusit_dt desc        
@@ -254,7 +254,7 @@
 		where 1=1
 		<include refid="getUserListXmlWhere"/>
 		<if test="dataOrder != null and dataOrder != ''">		
-        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        	ORDER BY ${dataOrder} ${dataOrderArrow}        
         </if>
         <if test="dataOrder == null or dataOrder == ''">          
         	ORDER BY user_name        
@@ -286,7 +286,7 @@
 		where 1=1
 		<include refid="getDeptListXmlWhere"/>
 		<if test="dataOrder != null and dataOrder != ''">		
-        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        	ORDER BY ${dataOrder} ${dataOrderArrow}        
         </if>
         <if test="dataOrder == null or dataOrder == ''">         
         	ORDER BY dept_name        
@@ -317,7 +317,7 @@
 		where 1=1
 		<include refid="getPosListXmlWhere"/>
 		<if test="dataOrder != null and dataOrder != ''">			
-        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+        	ORDER BY ${dataOrder} ${dataOrderArrow}        
         </if>
         <if test="dataOrder == null or dataOrder == ''">         
         	ORDER BY pos.pos_name        

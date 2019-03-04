@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -58,12 +58,12 @@
 		<if test="sUserNo != null and sUserNo != ''">		
 			AND A.USER_NO = #{sUserNo}		
 		</if>
-		<if test="sUserName != null and sUserName !== ''">
-		   <if test="sUserNo == null or sUserNo === ''">		
+		<if test="sUserName != null and sUserName != ''">
+		   <if test="sUserNo == null or sUserNo == ''">		
 			AND A.USER_NAME LIKE concat('%', #{sUserName} ,'%')			
 		   </if>
 		</if>
-		<if test="sDeptNo != null and sDeptNo !== ''">	
+		<if test="sDeptNo != null and sDeptNo != ''">	
 		 <choose>
 		     <when test="sDeptNo == '00000'">			
 			and A.dept_no in (
@@ -90,15 +90,15 @@
 		     </when>
 		   </choose>
 		</if> 
-		<if test="sDeptName != null and sDeptName !== ''">		
-		  <if test="sDeptNo == null or sDeptNo === ''">		
+		<if test="sDeptName != null and sDeptName != ''">		
+		  <if test="sDeptNo == null or sDeptNo == ''">		
 			AND A.DEPT_NAME LIKE concat('%', #{sDeptName} ,'%')						
 		  </if>
 		</if>
-		<if test="sGrantNo != null and sGrantNo !== ''">		
+		<if test="sGrantNo != null and sGrantNo != ''">		
 			AND A.GRANT_NO = #{sGrantNo}		
 		</if>
-		<if test="searchKeyword != null and searchKeyword !== ''">
+		<if test="searchKeyword != null and searchKeyword != ''">
 		  <choose>
 		    <when test="searchNumGubun == '1'">			
             AND A.user_name like concat('%', #{searchKeyword} ,'%')            
@@ -111,7 +111,7 @@
             </when>        
           </choose>
         </if>
-        <if test="searchKeyword2 != null and searchKeyword2 !== ''">
+        <if test="searchKeyword2 != null and searchKeyword2 != ''">
 		  <choose>
 		    <when test="searchGubun2 == '1'">	    
             AND A.user_name like concat('%', #{searchKeyword2} ,'%')            
@@ -154,7 +154,7 @@
     <select id="getUserView" parameterType="cmap" resultType="cmap" >
         SELECT	A.*
         FROM 	RFID_USER A
-        WHERE 	A.USER_NO = #userNo#
+        WHERE 	A.USER_NO = #{userNo}
     </select>
 
     <insert id="insertUser" parameterType="cmap" >
