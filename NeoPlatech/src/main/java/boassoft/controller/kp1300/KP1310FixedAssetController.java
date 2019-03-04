@@ -67,8 +67,10 @@ public class KP1310FixedAssetController {
     @RequestMapping(value="/kp1300/kp1310.do")
 	public String kp1310(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
+    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
+    	cmap.put("pageLimit", pageLimit);     	
     	cmap.put("sAssetDiv", "1");
 
     	//화면표시관리 (자산목록)
@@ -87,7 +89,15 @@ public class KP1310FixedAssetController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
     	cmap.put("sAssetDiv", "1");
+    	
+    	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
+    	System.out.println(" sAssetDiv " + "  : " + "1");
 
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
@@ -95,16 +105,16 @@ public class KP1310FixedAssetController {
     		model.addAttribute("printString", gridSessionChk.toJsonString());
         	return "common/commonString";
     	}
-
+    	System.out.println(" searchGubun " + "  : " + cmap.getString("searchGubun"));
     	//파라미터
     	if ("1".equals(cmap.getString("searchGubun"))) {
     		cmap.put("searchKeyword", cmap.getString("searchKeyword").toUpperCase());
     	}
 
-//    	//사용자 기본 파라미터 설정
+    	//사용자 기본 파라미터 설정
 //    	if (!"GRANT_MGR".equals(cmap.getString("ssGrantRead"))
 //    			&& "USR".equals(cmap.getString("searchDiv"))) {
-//    		cmap.put("sUserNo", cmap.getString("sUserNo", SessionUtil.getString("userNo")));
+//   		cmap.put("sUserNo", cmap.getString("sUserNo", SessionUtil.getString("userNo")));
 //    		cmap.put("sUserName", cmap.getString("sUserName", SessionUtil.getString("userName")));
 //    		cmap.put("sDeptNo", cmap.getString("sDeptNo", SessionUtil.getString("deptNo")));
 //    		cmap.put("sDeptName", cmap.getString("sDeptName", SessionUtil.getString("deptName")));
@@ -112,8 +122,10 @@ public class KP1310FixedAssetController {
 
     	//복수검색 설정
     	assetService.setSearchArr(cmap);
-
+    	System.out.println(" cmap " + "  : " + cmap.toString());
     	CommonList assetList = assetService.getAssetList(cmap);
+    	System.out.println(" assetList " + "  : " + assetList.toString());
+    	System.out.println(" assetList.size() " + "  : " + assetList.size());
     	CommonMap result = new CommonMap();
     	result.put("resultList", assetList);
     	result.put("totalRow", assetList.totalRow);
