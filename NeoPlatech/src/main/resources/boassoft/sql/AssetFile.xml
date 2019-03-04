@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -87,7 +87,7 @@
       <delete id="deleteAssetFile2" parameterType="cmap" >
         DELETE
         FROM 	RFID_ASSET_FILE
-        WHERE 	ASSET_NO = #assetNo#
+        WHERE 	ASSET_NO = #{assetNo}
     </delete>
     
     <select id="getAssetFileListAll" parameterType="cmap" resultType="cmap" >

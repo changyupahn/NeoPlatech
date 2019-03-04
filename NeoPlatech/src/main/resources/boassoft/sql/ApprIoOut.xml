@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -20,27 +20,27 @@
           <choose>
 		    <when test="sAssetDiv == 'GRANT_USR'">       	
 				AND (
-					B.RQST_USER_NO = #ssUserNo#
+					B.RQST_USER_NO = #{ssUserNo}
 					OR
 					EXISTS (
 							SELECT 	1
 							FROM 	RFID_APPR_ASSET T1
 									INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
 							WHERE	T1.RQSTNO = A.RQSTNO
-									AND T2.USER_NO = #ssUserNo#
+									AND T2.USER_NO = #{ssUserNo}
 							)
 					)
 			</when>		
 			<when test="ssGrantRead == 'GRANT_DHD'">  			
 				AND (
-					B.RQST_DEPT_NO = #ssDeptNo#
+					B.RQST_DEPT_NO = #{ssDeptNo}
 					OR
 					EXISTS (
 							SELECT 	1
 							FROM 	RFID_APPR_ASSET T1
 									INNER JOIN RFID_ASSET T2 ON T1.ASSET_SEQ = T2.ASSET_SEQ
 							WHERE	T1.RQSTNO = A.RQSTNO
-									AND T2.USER_NO = #ssUserNo#
+									AND T2.USER_NO = #{ssUserNo}
 							)
 					)
 			</when>
@@ -205,7 +205,7 @@
  		 <if test="sItemCd != null and sItemCd != ''">    	 		
  			AND D.ITEM_CD LIKE concat('%',#{sItemCd},'%') 		
  		</if>
- 		<if test="sItemName != null and sItemName !== ''">	
+ 		<if test="sItemName != null and sItemName != ''">	
 		  <if test="sItemCd == null or sItemCd == ''">	 		
  			AND D.ITEM_NAME LIKE concat('%',#{sItemName},'%') 		
  		</if>

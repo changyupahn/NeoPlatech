@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -132,7 +132,7 @@
     </sql>
 
       <select id="getApprDisuseList" parameterType="cmap" resultType="cmap" >
-    	<include refid="boassoft.mapper.ApprDisuseMapper.pagingHeader"/>
+    	<include refid="pagingHeader"/>
 		SELECT
 		        A.RQSTNO,
 		        A.RETURN_RESE_DT,
@@ -175,7 +175,7 @@
         WHERE 	1=1
 		<include refid="getApprDisuseListWhere" />
         ORDER BY A.RQSTNO DESC
-        <include refid="boassoft.mapper.ApprDisuseMapper.pagingFooter"/>
+        <include refid="pagingFooter"/>
     </select>
 
 

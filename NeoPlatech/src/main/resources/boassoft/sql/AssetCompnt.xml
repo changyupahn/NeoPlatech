@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -96,15 +96,15 @@
         UPDATE 	RFID_ASSET_COMPNT
         SET
 				USE_YN = 'N'
-				,LAST_UPDT_PNTTM = #lastUpdtPnttm#
-				,LAST_UPDUSR_ID = #lastUpdusrId#
-        WHERE 	ASSET_SEQ = #assetSeq#
+				,LAST_UPDT_PNTTM = #{lastUpdtPnttm}
+				,LAST_UPDUSR_ID = #{lastUpdusrId}
+        WHERE 	ASSET_SEQ = #{assetSeq}
     </update>
 
     <delete id="deleteAssetCompnt2" parameterType="cmap" >
         DELETE
         FROM 	RFID_ASSET_COMPNT
-        WHERE 	ASSET_SEQ = #assetSeq#
+        WHERE 	ASSET_SEQ = #{assetSeq}
     </delete>
     
     
