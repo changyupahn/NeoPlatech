@@ -12,22 +12,22 @@ import boassoft.util.SessionUtil;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import boassoft.mapper.GrandMenuMapper;
+import boassoft.mapper.GrantMenuMapper;
 
 @Service("grantMenuService")
 public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements GrantMenuService {
 
-	@Resource(name="GrandMenuMapper")
-	private GrandMenuMapper grandMenuMapper;
+	@Resource(name="GrantMenuMapper")
+	private GrantMenuMapper grantMenuMapper;
 	
 	public CommonList getGrantMenuList(CommonMap cmap) throws Exception {
-		CommonList list = grandMenuMapper.getGrantMenuList(cmap);
-		list.totalRow = grandMenuMapper.getGrantMenuListCnt(cmap);
+		CommonList list = grantMenuMapper.getGrantMenuList(cmap);
+		list.totalRow = grantMenuMapper.getGrantMenuListCnt(cmap);
 		return list;
 	}
 	
 	public CommonMap getGrantMenuView(CommonMap cmap) throws Exception{
-		return grandMenuMapper.getGrantMenuView(cmap);
+		return grantMenuMapper.getGrantMenuView(cmap);
 	}
 	
 	public void setGrantMenu(CommonMap cmap, HttpServletRequest request) throws Exception{
@@ -35,7 +35,7 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 		param.put("grantNo", SessionUtil.getString("grantNo"));
 		param.put("menuNo", RequestUtil.getMenuNo(request));
 
-		CommonMap viewData = grandMenuMapper.getGrantMenuView(param);
+		CommonMap viewData = grantMenuMapper.getGrantMenuView(param);
 
 		//읽기 권환
 		if ("Y".equals(viewData.getString("grantManagerYn"))) {
@@ -67,7 +67,7 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 		cmap.put("grantNo", grantNo);
 		cmap.put("menuNo", menuNo);
 		
-		CommonMap viewData = grandMenuMapper.getGrantMenuView(cmap);
+		CommonMap viewData = grantMenuMapper.getGrantMenuView(cmap);
 		
 		if ("Y".equals(viewData.getString("grantManagerYn"))) {
 			result = "GRANT_MGR";
@@ -89,7 +89,7 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 		cmap.put("grantNo", grantNo);
 		cmap.put("menuNo", menuNo);
 		
-		CommonMap viewData = grandMenuMapper.getGrantMenuView(cmap);
+		CommonMap viewData = grantMenuMapper.getGrantMenuView(cmap);
 
 		if ("Y".equals(viewData.getString("grantManagerYn"))) {
 			result = "GRANT_MGR";
@@ -105,7 +105,7 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 	}
 	
 	public int insertGrantMenu(CommonMap cmap) throws Exception{
-    	return grandMenuMapper.insertGrantMenu(cmap);
+    	return grantMenuMapper.insertGrantMenu(cmap);
 	}
 
 	 public int insertGrantMenuAll(CommonMap cmap, CommonList list) throws Exception{
@@ -113,7 +113,7 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 		 int resultCnt = 0;
 
 	    	//삭제 후 저장
-		 grandMenuMapper.deleteGrantMenuAll(cmap);
+		 grantMenuMapper.deleteGrantMenuAll(cmap);
 		 
 		//저장
 	    	for (int i=0; i<list.size(); i++) {
@@ -123,7 +123,7 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 	    		param.put("frstRegisterId", cmap.getString("ssUserNo"));
 	    		param.put("lastUpdusrId", cmap.getString("ssUserNo"));
 
-	    		grandMenuMapper.insertGrantMenu(param);
+	    		grantMenuMapper.insertGrantMenu(param);
 
 	    		resultCnt++;
 	    	}
@@ -132,10 +132,10 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 	 }
 	 
 	 public void updateGrantMenu(CommonMap cmap) throws Exception{
-		 grandMenuMapper.updateGrantMenu(cmap);
+		 grantMenuMapper.updateGrantMenu(cmap);
 	}
 	 
 	 public void deleteGrantMenu(CommonMap cmap) throws Exception{
-		 grandMenuMapper.deleteGrantMenu(cmap);
+		 grantMenuMapper.deleteGrantMenu(cmap);
 	} 
 }
