@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -29,7 +29,7 @@
             AND A.COL1 IN (
             ]]>
                         <foreach item="checkbox" index="index" collection="checkbox" open="(" close=")" separator=",">                        
-                        #{checkbox[]}
+                        #{checkbox}
                         </foreach>
           <![CDATA[              
                         )

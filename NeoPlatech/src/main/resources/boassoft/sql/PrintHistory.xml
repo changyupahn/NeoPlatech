@@ -8,19 +8,19 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
 
    <sql id="getPrintHistoryListWhere">
-        <if test="sAssetNo != null and sAssetNo !== ''">    	
+        <if test="sAssetNo != null and sAssetNo != ''">    	
     		AND A.ASSET_NO like concat('%', #{sAssetNo} ,'%')    	
     	</if>
-    	<if test="sAssetName != null and sAssetName !== ''">    	
+    	<if test="sAssetName != null and sAssetName != ''">    	
     		AND A.ASSET_NAME like concat('%', #{sAssetName} ,'%')    	
     	</if>
-    	<if test="sAssetSize != null and sAssetSize !== ''">    	
+    	<if test="sAssetSize != null and sAssetSize != ''">    	
     		AND A.ASSET_SIZE like concat('%', #{sAssetSize} ,'%')    	
     	</if>
     </sql>

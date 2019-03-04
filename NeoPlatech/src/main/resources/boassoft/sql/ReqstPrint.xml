@@ -8,7 +8,7 @@
     <sql id="pagingFooter">
         <if test="pageIdx != null and pageIdx != ''">      
           <if test="pageSize != null and pageSize != ''">        
-                LIMIT #{pageLimit}, #{pageSize}
+                LIMIT ${pageLimit}, ${pageSize}
           </if>
        </if> 
     </sql>
@@ -47,7 +47,7 @@
 				and pr.print_status_cd = 'T'
 		where pr.use_yn = 'Y'
 		<if test="dataOrder != null and dataOrder != ''">		
-			ORDER BY #{dataOrder} #{dataOrderArrow}, ast.rfid_no desc		
+			ORDER BY ${dataOrder} ${dataOrderArrow}, ast.rfid_no desc		
 		</if>
 		<if test="dataOrder == null or dataOrder == ''">		
 			ORDER BY ast.rfid_no desc		
