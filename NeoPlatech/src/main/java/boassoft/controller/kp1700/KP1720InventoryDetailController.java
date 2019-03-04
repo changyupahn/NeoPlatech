@@ -47,16 +47,26 @@ public class KP1720InventoryDetailController {
     @RequestMapping(value="/kp1700/kp1720.do")
 	public String kp1720(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
+    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
-
+    	cmap.put("pageLimit", pageLimit);   
+    	
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
+    	
     	//마지막 재물조사 차수
     	CommonMap invLast = inventoryService.getInventoryLast(cmap);
+    	System.out.println(" invLast " + "  : " + invLast.toString());
     	model.addAttribute("invLast",invLast);
     	
     	//화면표시관리 (재물조사목록)
 		cmap.put("dispType", "INVENTORY_LIST");
+		System.out.println(" cmap " + "  : " + cmap.toString());
 		CommonList dispAssetList = systemService.getDispMngList(cmap);
+		System.out.println(" dispAssetList " + "  : " + dispAssetList.toString());
+    	System.out.println(" dispAssetList.size() " + "  : " + dispAssetList.size());
 		model.addAttribute("dispAssetList", dispAssetList);
 
     	//검색값 유지
@@ -70,8 +80,15 @@ public class KP1720InventoryDetailController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
     	cmap.put("sAssetDiv", "11");
-    	cmap.put("sInvTargetYn", "Y");    	
+    	cmap.put("sInvTargetYn", "Y");
+    	
+    	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
     	
     	if ("hosil".equalsIgnoreCase(cmap.getString("dataOrder"))) {
     		cmap.put("dataOrder", "inv.hosil");
@@ -86,8 +103,10 @@ public class KP1720InventoryDetailController {
 
     	//복수검색 설정
     	assetService.setSearchArr(cmap);
-
+    	System.out.println(" cmap " + "  : " + cmap.toString());
     	CommonList resultList = inventoryService.getInventoryDetailList(cmap);
+    	System.out.println(" resultList " + "  : " + resultList.toString());
+    	System.out.println(" resultList.size() " + "  : " + resultList.size());
     	CommonMap result = new CommonMap();
     	result.put("resultList", resultList);
     	result.put("totalRow", resultList.totalRow);
@@ -115,10 +134,17 @@ public class KP1720InventoryDetailController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
     	cmap.put("sAssetDiv", "11");
     	cmap.put("sInvTargetYn", "Y");
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", "999999");
+    	
+    	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
 
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
@@ -132,9 +158,10 @@ public class KP1720InventoryDetailController {
 
     	//복수검색 설정
     	assetService.setSearchArr(cmap);
-
+    	System.out.println(" cmap " + "  : " + cmap.toString());
     	CommonList resultList = inventoryService.getInventoryDetailList(cmap);
-    	
+    	System.out.println(" resultList " + "  : " + resultList.toString());
+    	System.out.println(" resultList.size() " + "  : " + resultList.size());
     	String excelFileName = "재물조사내역";
     	
     	if (resultList.size() > 1) {

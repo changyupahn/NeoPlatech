@@ -35,9 +35,11 @@ public class KP1710InventoryMasterController {
     @RequestMapping(value="/kp1700/kp1710.do")
 	public String kp1710(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
+    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
-
+    	cmap.put("pageLimit", pageLimit);
+    	
     	//재물조사연도 목록
     	CommonList invYearList = inventoryService.getInventoryYearList(cmap);
     	model.addAttribute("invYearList", invYearList);
@@ -61,16 +63,25 @@ public class KP1710InventoryMasterController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
+    	
+    	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize " + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit " + "  : " + cmap.getInt("pageLimit"));
+    	
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
     	if (!gridSessionChk.isEmpty()) {
     		model.addAttribute("printString", gridSessionChk.toJsonString());
         	return "common/commonString";
     	}
-
+    	System.out.println(" cmap " + "  : " + cmap.toString());
     	CommonList resultList = inventoryService.getInventoryList(cmap);
     	CommonMap result = new CommonMap();
+    	System.out.println(" getDeviceList " + "  : " + resultList.toString());
+    	System.out.println(" getDeviceList.size() " + "  : " + resultList.size());
     	result.put("resultList", resultList);
     	result.put("totalRow", resultList.totalRow);
     	model.addAttribute("printString", result.toJsonString());
