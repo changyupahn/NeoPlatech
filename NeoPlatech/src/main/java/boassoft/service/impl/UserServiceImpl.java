@@ -27,10 +27,14 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 	public CommonMap gridSessionChk(CommonMap cmap, HttpServletRequest request) throws Exception{
 		CommonMap result = new CommonMap();
 		
+		
 		//세션값
 		cmap.put("ssUserNo", SessionUtil.getString("userNo"));
 		cmap.put("ssDeptNo", SessionUtil.getString("deptNo"));
 
+		System.out.println(" ssUserNo " + " : " + SessionUtil.getString("userNo"));
+		System.out.println(" ssDeptNo " + " : " + SessionUtil.getString("deptNo"));
+		
 		//세션 체크
     	if ("".equals(cmap.getString("ssUserNo"))
     			) {

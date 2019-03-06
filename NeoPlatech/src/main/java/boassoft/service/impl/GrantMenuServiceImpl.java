@@ -36,7 +36,8 @@ public class GrantMenuServiceImpl extends EgovAbstractServiceImpl implements Gra
 		param.put("menuNo", RequestUtil.getMenuNo(request));
 
 		CommonMap viewData = grantMenuMapper.getGrantMenuView(param);
-
+         System.out.println(" viewData " + " : " + viewData.toString());  
+         
 		//읽기 권환
 		if ("Y".equals(viewData.getString("grantManagerYn"))) {
 			cmap.put("ssGrantRead", "GRANT_MGR");
