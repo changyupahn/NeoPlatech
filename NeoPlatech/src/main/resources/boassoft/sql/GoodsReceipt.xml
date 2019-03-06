@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.GoodsReceiptMapper">
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+     <sql id="getGoodsReceiptWhere">  
+         <if test="sDemandId != null and sDemandId != ''"> 		
+    		AND A.DEMAND_ID = #{sDemandId}
+        </if>    
+        <if test="sModel != null and sModel != ''"> 		
+    		AND A.MODEL = #{sDemandId}
+        </if>
+        <if test="sLgLine != null and sLgLine != ''"> 		
+    		AND A.LG_LINE = #{sLgLine}
+        </if>
+        <if test="sBuyer != null and sBuyer != ''"> 		
+    		AND A.BUYER = #{sBuyer}
+        </if>
+     </sql>
+     
+     <select id="getGoodsReceiptList" parameterType="cmap" resultType="cmap">
+          <include refid="pagingHeader"/>
+              SELECT A.OD_KEY
+               , A.PRIM_KEY
+               , A.DEMAND_ID
+               , A.BUYER
+               , A.LG_LINE
+               , A.MODEL
+               , A.FIX_DAY
+               , A.PART_NO
+               , A.ITEM
+               , A.RESIN_CORE
+               , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY
+               , COALESCE(A.INJECTION_QTY,0) AS INJECTION_QTY
+               , COALESCE(A.QTY,0) AS QTY
+               , COALESCE(A.RESIDUAL_QTY,0) AS RESIDUAL_QTY
+             FROM RFID_If_LG_NEW_ORDER_PLAN_LIST A  
+              WHERE 1 = 1  
+               <include refid="getGoodsReceiptWhere" />  
+               <if test="histOrder != null and histOrder != ''"> 
+		        <choose>
+                 <when test="histOrder == 'ASC'">			
+				  ORDER A.OD_KEY ASC			
+			     </when>
+			     <when test="histOrder == 'DESC'">					
+				  ORDER BY A.OD_KEY DESC			
+		         </when>
+		         </choose>  
+		    </if> 
+		    <if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY A.PRIM_KEY DESC		
+        </if>
+        <include refid="pagingFooter"/>
+     </select>  
+     
+      <select id="getGoodsReceiptListCnt" parameterType="cmap" resultType="int">
+      SELECT	COUNT(*)
+        FROM 	RFID_If_LG_NEW_ORDER_PLAN_LIST A 
+          WHERE 1 = 1
+		     <include refid="getGoodsReceiptWhere" />      
+      </select>
+</mapper>
+

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.WareHouseMapper">
+
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+     <sql id="getWareHouseListWhere"> 
+      <if test="sOrgMgr != null and sOrgMgr != ''"> 		
+    		AND V.PARENT_DEPT_NO = #{sOrgMgr}
+       </if>
+       <if test="sOrg != null and sOrg != ''"> 		
+    		AND W.AD_ORG_ID = #{sOrg} 	
+       </if>
+      <if test="value != null and value != ''"> 		
+    		AND ( W.WAREHOUSE_CODE = #{value} OR W.NAME LIKE '%'|| #{value} || '%' )   	
+       </if>
+       <if test="isactive != null and isactive != ''"> 		
+           AND W.USE_YN = #{isactive}
+       </if>
+     </sql>
+    
+     <select id="getWareHouseList" parameterType="cmap" resultType="cmap">
+         <include refid="pagingHeader"/>
+             SELECT W.M_WAREHOUSE_ID
+             , W.USE_YN
+             , W.VALUE
+             , W.NAME
+             , W.DESCRIPTION
+             , W.POSTAL_D
+             , W.ADDRESS1_D
+		     , W.ADDRESS2_D
+		     , W.POSTAL_R
+		     , W.ADDRESS1_R
+		     , W.ADDRESS2_R
+		     , W.M_RETURNLOCATOR_ID
+		     , W.WAREHOUSE_CODE
+		     , W.WAREHOUSE_ADDR
+		     FROM RFID_M_WAREHOUSE W 
+		     LEFT OUTER JOIN RFID_DEPT V ON W.AD_ORG_ID = V.DEPT_NO
+		     WHERE 1 = 1
+         <include refid="getWareHouseListWhere" />
+		<if test="histOrder != null and histOrder != ''"> 
+		  <choose>
+           <when test="histOrder == 'ASC'">			
+				ORDER W.M_WAREHOUSE_ID ASC			
+			</when>
+			<when test="histOrder == 'DESC'">					
+				ORDER BY W.M_WAREHOUSE_ID DESC			
+		     </when>
+		   </choose>  
+		</if>
+		<if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY WAREHOUSE_CODE DESC		
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getWareHouseListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        FROM 	RFID_M_WAREHOUSE W          
+		     LEFT OUTER JOIN RFID_DEPT V ON W.AD_ORG_ID = V.DEPT_NO
+		     WHERE 1 = 1
+		     <include refid="getWareHouseListWhere" />
+    </select>
+            
+</mapper>
