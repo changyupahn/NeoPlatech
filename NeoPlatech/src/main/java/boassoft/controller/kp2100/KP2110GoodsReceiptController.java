@@ -10,10 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import boassoft.controller.kp1900.KP1970WareHouseController;
+
 import boassoft.service.GoodsReceiptService;
 import boassoft.service.UserService;
-import boassoft.service.WareHouseService;
 import boassoft.util.CamelUtil;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
@@ -64,11 +63,11 @@ public class KP2110GoodsReceiptController {
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
     	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
     	
-    	System.out.println(" dataOrder  kp22110Ajax " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp22110Ajax " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp22110Ajax" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp22110Ajax " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp22110Ajax " + "  : " + cmap.getInt("pageLimit"));
+    	System.out.println(" dataOrder  kp2110Ajax " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	System.out.println(" dataOrderArrow kp2110Ajax " + "  : " + cmap.getString("dataOrderArrow"));
+    	System.out.println(" pageSize  kp2110Ajax" + "  : " + cmap.getInt("pageSize"));
+    	System.out.println(" pageIdx  kp2110Ajax " + "  : " + cmap.getInt("pageIdx"));
+    	System.out.println(" pageLimit kp2110Ajax " + "  : " + cmap.getInt("pageLimit"));
     	
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
