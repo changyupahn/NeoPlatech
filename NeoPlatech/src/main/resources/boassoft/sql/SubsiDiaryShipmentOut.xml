@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.SubsiDiaryShipmentOutMapper">
+
+ <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <sql id="getSubsiDiaryShipmentOutWhere"> 
+    </sql>
+    
+     <select id="getSubsiDiaryShipmentOutList" parameterType="cmap" resultType="cmap">
+        <include refid="pagingHeader"/>
+            <![CDATA[
+         SELECT 
+                  A.OD_ID
+                 , A.DEMAND_ID
+                 , A.LGE_DATE
+                 , A.NEO_DATE
+                 , A.GAP_DAY
+                 , A.LG_LINE
+                 , A.TOOL
+                 , A.M_PART_NO                 
+                 , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
+                 , A.LGM_PART_NAME
+                 , A.SUB_PART_NO
+                 , A.SUB_PART_NAME
+                 , COALESCE(A.BOM_QTY,0) AS BOM_QTY
+                 , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
+                 , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
+                   ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
+                 , A.UNIT
+                 , A.VENDOR
+                 , A.OSP
+                 , A.OUT_PLACE
+                 , A.CHK_DAY
+                 , A.IN_DATE 
+                FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
+                WHERE 1 = 1
+               ]]> 
+              <include refid="getSubsiDiaryShipmentOutWhere" /> 
+              <if test="histOrder != null and histOrder != ''"> 
+		        <choose>
+                 <when test="histOrder == 'ASC'">			
+				  ORDER A.OD_ID ASC			
+			     </when>
+			     <when test="histOrder == 'DESC'">					
+				  ORDER BY A.OD_ID DESC			
+		         </when>
+		         </choose>  
+		    </if> 
+		    <if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY A.DEMAND_ID DESC		
+           </if>
+        <include refid="pagingFooter"/> 
+     </select>
+    
+     <select id="getSubsiDiaryShipmentOutListCnt" parameterType="cmap" resultType="int"> 
+         SELECT	COUNT(*)
+        FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY A 
+          WHERE 1 = 1
+		     <include refid="getSubsiDiaryShipmentOutWhere" />     
+     </select>  
+</mapper>    
