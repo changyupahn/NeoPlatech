@@ -166,7 +166,7 @@
     <delete id="deletePackingWoSendListODOnlyList" parameterType="cmap" >
         DELETE
         FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
-        WHERE 	LEFT(IN_TIME,10) BETWEEN #{startDate} AND #{endDate}
+        WHERE 	LEFT(IN_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
      <insert id="insertPublicProductList" parameterType="cmap" >

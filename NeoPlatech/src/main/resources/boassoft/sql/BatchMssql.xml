@@ -77,7 +77,7 @@
               , OutPlace AS OUT_PLACE
               , CHKDay AS CHK_DAY             
               , InDate AS IN_DATE
-     FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -2   
+     FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -10   
  ]]> 
  </select>
  
@@ -196,5 +196,5 @@
        FROM  View_MWHS_Packing_WOSendList_All WHERE InTime > GETDATE() -1 
    ]]>  
   </select>
-
+    
 </mapper>
