@@ -2,14 +2,15 @@ package boassoft.service.impl;
 
 import javax.annotation.Resource;
 
-import boassoft.mapper.SubsiDiaryReceiptMapper;
+import org.springframework.stereotype.Service;
+
 import boassoft.mapper.SubsiDiaryShipmentOutMapper;
-import boassoft.service.SubsiDiaryReceiptService;
 import boassoft.service.SubsiDiaryShipmentOutService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
+@Service("subsiDiaryShipmentOutService")
 public class SubsiDiaryShipmentOutServiceImpl extends EgovAbstractServiceImpl implements SubsiDiaryShipmentOutService {
 
 	@Resource(name="SubsiDiaryShipmentOutMapper")

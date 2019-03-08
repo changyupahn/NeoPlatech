@@ -26,7 +26,7 @@ public class PackingReceiptServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		CommonList list = packingReceiptMapper.getPackingReceiptList(cmap);
 		list.totalRow = packingReceiptMapper.getPackingReceiptListCnt(cmap);		
-		return null;
+		return list;
 	}
 
 }
