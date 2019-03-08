@@ -75,6 +75,21 @@ public class PackingWoSendListODOnlyScriptJob implements Job {
 				for(int i = 0; i < clist.size() ; i++){
 					 CommonMap gmap = clist.getMap(i);
 					
+					 System.out.println(" row odId " + i + " 번째  " + " : "+ gmap.getString("odId") + " ");
+					 System.out.println(" row odQtyId " + i + " 번째  " + " : "+ gmap.getString("odQtyId") + " ");
+					 System.out.println(" row pkgPoNo " + i + " 번째  " + " : "+ gmap.getString("pkgPoNo") + " ");
+					 System.out.println(" row demandId " + i + " 번째  " + " : "+ gmap.getString("demandId") + " ");
+					 System.out.println(" row toolName " + i + " 번째  " + " : "+ gmap.getString("toolName") + " ");
+					 System.out.println(" row lgPartNo " + i + " 번째  " + " : "+ gmap.getString("lgPartNo") + " ");
+					 System.out.println(" row lgOdQty " + i + " 번째  " + " : "+ gmap.getString("lgOdQty") + " ");
+					 System.out.println(" row line " + i + " 번째  " + " : "+ gmap.getString("line") + " ");
+					 System.out.println(" row finalVendor " + i + " 번째  " + " : "+ gmap.getString("finalVendor") + " ");
+					 System.out.println(" row class " + i + " 번째  " + " : "+ gmap.getString("class") + " ");
+					 System.out.println(" row partNumber " + i + " 번째  " + " : "+ gmap.getString("partNumber") + " ");					 
+					 System.out.println(" row resultQty " + i + " 번째  " + " : "+ gmap.getString("resultQty") + " ");
+					 System.out.println(" row neoOdDay " + i + " 번째  " + " : "+ gmap.getString("neoOdDay") + " ");
+					 System.out.println(" row neoOdQty " + i + " 번째  " + " : "+ gmap.getString("neoOdQty") + " ");
+					 System.out.println(" row neoOdTime " + i + " 번째  " + " : "+ gmap.getString("neoOdTime") + " ");
 					 
 					 batchMysqlInterfaceService.insertPackingWoSendListODOnlyList(gmap);
 				}
@@ -91,3 +106,4 @@ public class PackingWoSendListODOnlyScriptJob implements Job {
 	}
 
 }
+
