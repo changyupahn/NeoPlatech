@@ -59,7 +59,8 @@ public class PublicProductListScheduler {
 		//String batchCycle = "10 0/1 * * * ?"; //1분 마다
 		//String batchCycle = "0 0/2 * * * ?"; //2분 마다
 		//String batchCycle = "0 0/10 * * * ?"; //10분 마다
-		String batchCycle = "10 * * * * ?"; //1분 마다
+		//String batchCycle = "10 * * * * ?"; //1분 마다
+		 String batchCycle = "0 0 3 * * ?"; //매일 새벽 3시 마다
 	
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		//jobMap.put("batchService", batchService);
