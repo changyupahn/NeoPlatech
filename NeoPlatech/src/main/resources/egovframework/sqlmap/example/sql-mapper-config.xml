@@ -95,5 +95,13 @@
         <mapper resource="egovframework/sqlmap/example/mappers/EgovUserInfManage.xml" /> 
         <mapper resource="egovframework/sqlmap/example/mappers/FileManage.xml" />
         <mapper resource="boassoft/sql/BatchMysqlInterface.xml" /> 
+        <mapper resource="boassoft/sql/WareHouse.xml" /> 
+        <mapper resource="boassoft/sql/GoodsReceipt.xml" />
+        <mapper resource="boassoft/sql/PackingReceipt.xml" />
+        <mapper resource="boassoft/sql/SubsiDiaryReceipt.xml" />
+        <mapper resource="boassoft/sql/GoodsShipmentOut.xml" />
+        <mapper resource="boassoft/sql/SubsiDiaryShipmentOut.xml" />
+        <mapper resource="boassoft/sql/PackingShipmentOut.xml" />
+        <mapper resource="boassoft/sql/Tablet.xml" />
    </mappers>
 </configuration>
