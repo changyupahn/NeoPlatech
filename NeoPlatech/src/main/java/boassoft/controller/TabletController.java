@@ -265,7 +265,7 @@ public class TabletController {
 	
 	
 	
-	@RequestMapping(value="/goods/selecGoodsShipmentOutListXml.do")
+	@RequestMapping(value="/goods/shipment/selecGoodsShipmentOutListXml.do")
 	public String goodsselecGoodsShipmentOutListXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/selecGoodsShipmentOutListXml.do" + " - " + cmap);
@@ -297,7 +297,7 @@ public class TabletController {
 		
 	}
 	
-	@RequestMapping(value="/goods/uploadGoodsShipmentOut.do")
+	@RequestMapping(value="/goods/shipment/uploadGoodsShipmentOut.do")
 	public String goodsShipmentSyncUpload(final MultipartHttpServletRequest multiRequest, HttpServletRequest request, ModelMap model) throws Exception {
     	String xmlString = "";
     	
