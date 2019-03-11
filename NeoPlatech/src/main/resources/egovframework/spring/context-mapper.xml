@@ -178,8 +178,8 @@
      <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
    </bean>
    
-    <bean id="GrandMenuMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-     <property name="mapperInterface" value="boassoft.mapper.GrandMenuMapper" />
+    <bean id="GrantMenuMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.GrantMenuMapper" />
      <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
    </bean>
    
@@ -351,6 +351,41 @@
    <bean id="BatchMssqlMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
      <property name="mapperInterface" value="boassoft.mapper.BatchMssqlMapper" />
      <property name="sqlSessionFactory" ref="mssqlSessionFactory" />
+   </bean>
+   
+   <bean id="WareHouseMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.WareHouseMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+    <bean id="GoodsReceiptMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.GoodsReceiptMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+    <bean id="PackingReceiptMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.PackingReceiptMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+   <bean id="SubsiDiaryReceiptMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.SubsiDiaryReceiptMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+   <bean id="GoodsShipmentOutMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.GoodsShipmentOutMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+    <bean id="SubsiDiaryShipmentOutMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.SubsiDiaryShipmentOutMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
+    <bean id="PackingShipmentOutMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.PackingShipmentOutMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
    </bean>
    
 </beans>
