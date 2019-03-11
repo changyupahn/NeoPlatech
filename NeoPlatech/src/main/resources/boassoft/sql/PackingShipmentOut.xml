@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.PackingShipmentOutMapper">
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <sql id="getPackingShipmentOutWhere">
+    </sql>
+    
+    <select id="getPackingShipmentOutList" parameterType="cmap" resultType="cmap">
+       <include refid="pagingHeader"/>
+       SELECT 
+        A.OD_ID
+        , A.DEMAND_ID
+        , A.IN_DATE
+        , A.LG_PART_NO
+        , COALESCE(A.LG_OD_QTY,0) AS LG_OD_QTY
+        , A.TOOL_NAME 
+        , A.DRAW_NO
+        , A.VENDOR
+        , A.SUB_PART_NAME
+        , A.PART_NUMBER
+        , A.DESC
+        , COALESCE(A.RESULT_QTY,0) AS RESULT_QTY
+        , A.ROW_NUM
+        , A.CALCU_TRUE
+        , A.OD_QTY_ID
+        , A.NEO_OD_TIME
+        , A.NEO_OD_DAY
+        , A.NEO_OD_QTY
+        , A.FINAL_VENDOR
+     FROM RFID_IF_PACKING_WOSENDLIST_ALL A  
+               WHERE 1 = 1 
+         <include refid="getPackingShipmentOutWhere" />  
+               <if test="histOrder != null and histOrder != ''"> 
+		        <choose>
+                 <when test="histOrder == 'ASC'">			
+				  ORDER A.OD_ID ASC			
+			     </when>
+			     <when test="histOrder == 'DESC'">					
+				  ORDER BY A.OD_ID DESC			
+		         </when>
+		         </choose>  
+		    </if>  
+		     <if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY A.DEMAND_ID DESC		
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getPackingShipmentOutListCnt" parameterType="cmap" resultType="int">    
+      SELECT	COUNT(*)
+        FROM 	RFID_IF_PACKING_WOSENDLIST_ALL A 
+          WHERE 1 = 1
+		     <include refid="getPackingShipmentOutWhere" />      
+      </select>
+      
+</mapper>      

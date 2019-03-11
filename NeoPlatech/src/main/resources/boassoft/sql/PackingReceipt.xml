@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.PackingReceiptMapper">
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+    <sql id="getPackingReceiptWhere">    
+        <if test="sDemandId != null and sDemandId != ''"> 		
+    		AND A.DEMAND_ID = #{sDemandId}
+        </if>    
+        <if test="sToolName != null and sToolName != ''"> 		
+    		AND A.TOOL_NAME = #{sToolName}
+        </if>
+        <if test="sLine != null and sLine != ''"> 		
+    		AND A.LINE = #{sLine}
+        </if>
+        <if test="sFinalVendor != null and sFinalVendor != ''"> 		
+    		AND A.FINAL_VENDOR = #{sFinalVendor}
+        </if> 
+        <if test="sPkgPoNo != null and sPkgPoNo != ''"> 		
+    		AND A.PKG_PO_NO = #{sPkgPoNo}
+        </if>   
+    </sql>
+    
+    <select id="getPackingReceiptList" parameterType="cmap" resultType="cmap">
+       <include refid="pagingHeader"/>
+           SELECT A.OD_ID
+             , A.OD_QTY_ID
+             , A.PKG_PO_NO
+             , A.DEMAND_ID
+             , A.TOOL_NAME
+             , A.LG_PART_NO
+             , COALESCE(A.LG_OD_QTY,0) AS LG_OD_QTY
+             , A.LINE
+             , A.FINAL_VENDOR
+             , A.CLASS
+             , A.PART_NUMBER
+             , A.DESC
+             , COALESCE(A.RESULT_QTY,0) AS RESULT_QTY
+             , A.NEO_OD_TIME
+             , A.NEO_OD_DAY
+             , COALESCE(A.NEO_OD_QTY,0) AS NEO_OD_QTY
+        FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
+              WHERE 1 = 1 
+         <include refid="getPackingReceiptWhere" />  
+               <if test="histOrder != null and histOrder != ''"> 
+		        <choose>
+                 <when test="histOrder == 'ASC'">			
+				  ORDER A.OD_KEY ASC			
+			     </when>
+			     <when test="histOrder == 'DESC'">					
+				  ORDER BY A.OD_KEY DESC			
+		         </when>
+		         </choose>  
+		    </if> 
+    
+        <if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY A.OD_QTY_ID DESC		
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getPackingReceiptListCnt" parameterType="cmap" resultType="int">    
+      SELECT	COUNT(*)
+        FROM 	RFID_IF_PACKING_WOSENDLIST_ODONLY A 
+          WHERE 1 = 1
+		     <include refid="getPackingReceiptWhere" />      
+      </select>
+      
+</mapper>      

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.GoodsShipmentOutMapper">
+
+  <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+
+    <sql id="getGoodsShipmentOutWhere">
+          <if test="sDemandId != null and sDemandId != ''"> 		
+    		AND A.DEMAND_ID = #{sDemandId}
+        </if>    
+        <if test="sLgPartNo!= null and sLgPartNo!= ''"> 		
+    		AND A.LG_PART_NO = #{sLgPartNo!=}
+        </if>
+        <if test="sNeoLine != null and sNeoLine != ''"> 		
+    		AND A.NEO_LINE = #{sLgLine}
+        </if>
+        <if test="sVendor != null and sVendor != ''"> 		
+    		AND A.VENDOR = #{sVendor}
+        </if>  
+    </sql>
+    
+    <select id="getGoodsShipmentOutList" parameterType="cmap" resultType="cmap">
+        <include refid="pagingHeader"/>
+           SELECT 
+             A.PT_OD_ID 
+            , A.SUB_PT_OD_ID
+            , A.DEMAND_ID
+            , A.LG_PART_NO
+            , A.LG_OD_QTY
+            , A.PROD_TYPE
+            , A.NEO_LINE
+            , A.NEO_PLAN_KEY
+            , A.SEND_TIME 
+            , A.SENDING_PC_NAME
+            , A.GO_WITH
+            , A.RE_PRINT
+            , A.SUB_PART_NO
+            , A.SUB_PART_DESC
+            , A.VENDOR
+            , A.BOM_QTY
+            , A.SUB_UNIT  
+            , A.SUB_SUM_QTY
+            , A.DEMAND_FLOOR
+            , A.OSP
+           FROM RFID_IF_SUBPART_SENDLIST_ALL A
+           WHERE 1 = 1
+            <include refid="getGoodsShipmentOutWhere" />  
+               <if test="histOrder != null and histOrder != ''"> 
+		        <choose>
+                 <when test="histOrder == 'ASC'">			
+				  ORDER A.PT_OD_ID ASC			
+			     </when>
+			     <when test="histOrder == 'DESC'">					
+				  ORDER BY A.PT_OD_ID DESC			
+		         </when>
+		         </choose>  
+		    </if> 
+		    <if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY A.SUB_PT_OD_ID DESC		
+        </if>
+        <include refid="pagingFooter"/>
+    </select>
+    
+    <select id="getGoodsShipmentOutListCnt" parameterType="cmap" resultType="int">
+      SELECT	COUNT(*)
+        FROM 	RFID_IF_SUBPART_SENDLIST_ALL A 
+          WHERE 1 = 1
+		     <include refid="getGoodsShipmentOutWhere" />      
+      </select>
+
+</mapper>
