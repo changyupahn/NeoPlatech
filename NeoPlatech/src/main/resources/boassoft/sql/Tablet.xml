@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boassoft.mapper.TabletMapper">
+
+   <sql id="pagingHeader">
+    </sql>
+
+    <sql id="pagingFooter">
+        <if test="pageIdx != null and pageIdx != ''">      
+          <if test="pageSize != null and pageSize != ''">        
+                LIMIT ${pageLimit}, ${pageSize}
+          </if>
+       </if> 
+    </sql>
+    
+     <sql id="getGoodsShipmentOutWhere">
+          <if test="sDemandId != null and sDemandId != ''"> 		
+    		AND A.DEMAND_ID = #{sDemandId}
+        </if>    
+        <if test="sLgPartNo!= null and sLgPartNo!= ''"> 		
+    		AND A.LG_PART_NO = #{sLgPartNo!=}
+        </if>
+        <if test="sNeoLine != null and sNeoLine != ''"> 		
+    		AND A.NEO_LINE = #{sLgLine}
+        </if>
+        <if test="sVendor != null and sVendor != ''"> 		
+    		AND A.VENDOR = #{sVendor}
+        </if>  
+    </sql>
+    
+    <select id="getGoodsShipmentOutListXml" parameterType="cmap" resultType="commonXml" >
+        <include refid="pagingHeader"/>  
+            SELECT 
+             COALESCE(A.PT_OD_ID,' ') AS pt_od_id 
+            , COALESCE(A.SUB_PT_OD_ID , ' ') AS sub_pt_od_id
+            , COALESCE(A.DEMAND_ID, ' ') AS demand_id 
+            , COALESCE(A.LG_PART_NO, ' ') AS lg_part_no  
+            , COALESCE(A.LG_OD_QTY, ' ') AS lg_od_qty
+            , COALESCE(A.PROD_TYPE, ' ') AS prod_type
+            , COALESCE(A.NEO_LINE, ' ') AS neo_line
+            , COALESCE(A.NEO_PLAN_KEY, ' ') AS neo_plan_key
+            , COALESCE(A.SEND_TIME, ' ') AS send_time 
+            , COALESCE(A.SENDING_PC_NAME,' ') AS sending_pc_name
+            , COALESCE(A.GO_WITH,' ') AS go_with
+            , COALESCE(A.RE_PRINT, ' ') AS re_print
+            , COALESCE(A.SUB_PART_NO, ' ') AS sub_part_no
+            , COALESCE(A.SUB_PART_DESC, ' ') AS sub_part_desc
+            , COALESCE(A.VENDOR, ' ') AS vendor
+            , COALESCE(A.BOM_QTY, ' ') AS bom_qty
+            , COALESCE(A.SUB_UNIT, ' ') AS sub_unit  
+            , COALESCE(A.SUB_SUM_QTY, ' ') AS sub_sum_qty
+            , COALESCE(A.DEMAND_FLOOR, ' ') AS demand_floor
+            , COALESCE(A.OSP, ' ') AS osp
+           FROM RFID_IF_SUBPART_SENDLIST_ALL A		
+          WHERE PT_OD_ID = #{ptOdId}   		 		
+       ORDER BY A.PT_OD_ID, B.SUB_PART_NO
+        <include refid="getGoodsShipmentOutWhere" /> 
+         <if test="dataOrder != null and dataOrder != ''">        
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, A.PT_OD_ID, A.SUB_PART_NO      
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">       
+        	ORDER BY A.PT_OD_ID, A.SUB_PART_NO      
+        </if> 
+            <include refid="pagingFooter"/>         
+    </select>
+    
+      <select id="getGoodsShipmentOutListCnt" parameterType="cmap" resultType="int" >
+    	 SELECT	COUNT(*)
+        FROM 	RFID_IF_SUBPART_SENDLIST_ALL A 
+          WHERE 1 = 1
+		<include refid="getGoodsShipmentOutWhere"/>
+    </select>     
+    
+    
+    <update id="updateIGoodsShipmentOut" parameterType="cmap" >
+    	<![CDATA[
+    	  UPDATE RFID_IF_SUBPART_SEND_LIST_ALL
+    	  SET 
+    	     DEMAND_ID = #{demandId}
+    	     , LG_PART_NO = #{lgPartNo}
+    	     , LG_OD_QTY = #{lgOdQty}
+    	     , PROD_TYPE = #{prodType}
+    	     , NEO_LINE = #{neoLine}
+    	     , NEO_PLAN_KEY = #{neoPlanKey}
+    	     , SEND_TIME = #{sendTime}
+    	     , SENDING_PC_NAME = #{sendingPcName}
+    	     , GO_WITH = #{goWith}
+    	     , RE_PRINT = #{rePrint}
+    	     , SUB_PART_NO = #{subPartNo}
+    	     , SUB_PART_DESC = #{subPartDesc}
+    	     , VENDOR = #{vendor}
+    	     , BOM_QTY = #{bomQty}
+    	     , SUB_UNIT = #{subUnit}
+    	     , SUB_SUM_QTY = #{subSumQty}
+    	     , DEMAND_FLOOR = #{demandFloor}
+    	     , A.OSP = #{osp}
+    	     , RSLTDATE = #{rsltdate}
+    	     , RSLTSTATE = #{rsltstate}
+    	     , RSLT_USER_ID = #{rsltUserId}
+    	     , READDATE = #{readdate}
+    	     , READSTATE = #{readstate}
+    	     , READ_USER_ID = #{read_user_id}
+    	  WHERE 
+    	   PT_OD_ID = #{ptOdId}
+    	   AND SUB_PT_OD_ID = #{subPtOdId}
+      ]]>
+    </update>	    
+    	
+</mapper> 
