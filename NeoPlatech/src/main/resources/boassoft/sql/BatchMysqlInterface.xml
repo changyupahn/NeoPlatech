@@ -109,64 +109,49 @@
         WHERE 	LEFT(IN_TIME,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
-    <insert id="insertPackingWoSendListODOnlyList" parameterType="cmap" >
-     <selectKey resultType="string" keyProperty="odId" order="BEFORE">
-        SELECT get_seq('subPartOdOnly')     
-     </selectKey>
-       INSERT INTO RFID_IF_SUBPART_WOSENDLIST_ODONLY
+    <insert id="insertPackingWoSendListODOnlyList" parameterType="cmap" >    
+       INSERT INTO RFID_IF_PACKING_WOSENDLIST_ODONLY
        (
           OD_ID
-        ,  DEMAND_ID
-         , LGE_DATE
-         , NEO_DATE
-         , GAP_DAY
-         , LG_LINE
-         , TOOL
-         , M_PART_NO
-         , PLAN_QTY
-         , LGM_PART_NAME
-         , SUB_PART_NO
-         , SUB_PART_NAME
-         , BOM_QTY
-         , SUM_QTY
-         , SUM_QTY_CNG
-         , UNIT
-         , VENDOR
-         , OSP
-         , OUT_PLACE
-         , CHK_DAY
-         , IN_DATE         
+        ,  OD_QTY_ID
+         , PKG_PO_NO
+         , DEMAND_ID
+         , TOOL_NAME
+         , LG_PART_NO
+         , LG_OD_QTY
+         , LINE
+         , FINAL_VENDOR
+         , CLASS
+         , PART_NUMBER         
+         , RESULT_QTY
+         , NEO_OD_DAY
+         , NEO_OD_QTY
+         , NEO_OD_TIME                 
        )
        VALUES
        (
           #{odId}
+         , #{odQtyId}
+         , #{pkgPoNo}
          , #{demandId}
-         , #{lgeDate}
-         , #{neoDate}
-         , #{gapDay}
-         , #{lgLine}
-         , #{tool}
-         , #{mPartNo}
-         , #{planQty}
-         , #{lgmPartName}
-         , #{subPartNo}
-         , #{subPartName}
-         , #{bomQty}
-         , #{sumQty}
-         , #{sumQtyCng}
-         , #{unit}
-         , #{vendor}
-         , #{osp}
-         , #{outPlace}
-         , #{chkDay}
-         , #{inDate}
+         , #{toolName}
+         , #{lgPartNo}
+         , #{lgOdQty}
+         , #{line}
+         , #{finalVendor}
+         , #{class}
+         , #{partNumber}        
+         , #{resultQty}
+         , #{neoOdDay}
+         , #{neoOdQty}
+         , #{neoOdTime}
        )              
     </insert>
     
     <delete id="deletePackingWoSendListODOnlyList" parameterType="cmap" >
         DELETE
-        FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
-        WHERE 	LEFT(IN_DATE,10) BETWEEN #{startDate} AND #{endDate}
+        FROM 	RFID_IF_PACKING_WOSENDLIST_ODONLY
+        WHERE 	LEFT(NEO_OD_TIME,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
      <insert id="insertPublicProductList" parameterType="cmap" >
@@ -236,7 +221,7 @@
        (
          #{ptOdId}
          , #{subPtOdId}
-         , #{demamdId}
+         , #{demandId}
          , #{lgPartNo}
          , #{lgOdQty}
          , #{prodType}
@@ -311,6 +296,66 @@
       <delete id="deletePackingWoSendList" parameterType="cmap" >
         DELETE
         FROM 	RFID_IF_PACKING_WOSENDLIST_ALL
+        WHERE 	LEFT(IN_DATE,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
+    
+     <insert id="insertSubPartWoSendListODOnlyList" parameterType="cmap" >
+     <selectKey resultType="string" keyProperty="odId" order="BEFORE">
+        SELECT get_seq('subPartOdOnly')     
+     </selectKey>
+       INSERT INTO RFID_IF_SUBPART_WOSENDLIST_ODONLY
+       (
+          OD_ID
+        ,  DEMAND_ID
+         , LGE_DATE
+         , NEO_DATE
+         , GAP_DAY
+         , LG_LINE
+         , TOOL
+         , M_PART_NO
+         , PLAN_QTY
+         , LGM_PART_NAME
+         , SUB_PART_NO
+         , SUB_PART_NAME
+         , BOM_QTY
+         , SUM_QTY
+         , SUM_QTY_CNG
+         , UNIT
+         , VENDOR
+         , OSP
+         , OUT_PLACE
+         , CHK_DAY
+         , IN_DATE         
+       )
+       VALUES
+       (
+          #{odId}
+         , #{demandId}
+         , #{lgeDate}
+         , #{neoDate}
+         , #{gapDay}
+         , #{lgLine}
+         , #{tool}
+         , #{mPartNo}
+         , #{planQty}
+         , #{lgmPartName}
+         , #{subPartNo}
+         , #{subPartName}
+         , #{bomQty}
+         , #{sumQty}
+         , #{sumQtyCng}
+         , #{unit}
+         , #{vendor}
+         , #{osp}
+         , #{outPlace}
+         , #{chkDay}
+         , #{inDate}
+       )              
+    </insert>
+    
+    <delete id="deleteSubPartWoSendListODOnlyList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
         WHERE 	LEFT(IN_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     

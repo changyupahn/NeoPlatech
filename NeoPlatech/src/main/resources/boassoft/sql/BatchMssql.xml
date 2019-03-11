@@ -57,27 +57,22 @@
 
  <select id="getPackingWoSendListODOnlyList" parameterType="cmap" resultType="cmap" >
  <![CDATA[
-    SELECT    DemandID  AS DEMAND_ID
-              , CONVERT(CHAR(23), LGEDate, 21) AS LGE_DATE
-              , CONVERT(CHAR(23), NEODate, 21) AS NEO_DATE
-              , CAST(GapDay AS DECIMAL(22,0)) AS GAP_DAY
-              , LGLine AS LG_LINE
-              , Tool AS TOOL
-              , MPartNo AS M_PART_NO
-              , PlanQTY AS PLAN_QTY
-              , LGMPartName AS LGM_PART_NAME
-              , SubPartNo AS SUB_PART_NO
-              , SubPartName AS SUB_PART_NAME
-              , BOMQty AS BOM_QTY
-              , SumQty AS SUM_QTY
-              , SumQtyCng AS SUM_QTY_CNG
-              , Unit AS UNIT
-              , Vendor AS VENDOR
-              , OSP AS OSP
-              , OutPlace AS OUT_PLACE
-              , CHKDay AS CHK_DAY             
-              , InDate AS IN_DATE
-     FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -10   
+    SELECT   CAST(odID AS DECIMAL(22,0)) AS OD_ID
+             , CAST(odQtyID AS DECIMAL(22,0)) AS OD_QTY_ID
+             , PkgPoNo AS PKG_PO_NO
+             , DemandID AS DEMAND_ID
+             , ToolName AS TOOL_NAME
+             , LG_PartNo AS LG_PART_NO
+             , CAST(LG_ODQty AS DECIMAL(22,0)) AS LG_OD_QTY
+             , Line AS LINE
+             , Final_Vendor AS FINAL_VENDOR
+             , Class AS CLASS
+             , PartNumber AS PART_NUMBER           
+             , CAST(ResultQty AS DECIMAL(22,0)) AS RESULT_QTY
+             , CONVERT(CHAR(23), NEO_ODDay, 21) AS NEO_ODDAY
+             , CAST(Neo_ODQty AS DECIMAL(22,0)) AS NEO_OD_QTY
+             , CONVERT(CHAR(23), NEO_ODTime, 21) AS NEO_ODTIME                       
+     FROM  NeoAuto.dbo.View_MWHS_Packing_WOSendList_ODOnly WHERE NEO_ODTime > GETDATE() - 2   
  ]]> 
  </select>
  
@@ -196,5 +191,31 @@
        FROM  View_MWHS_Packing_WOSendList_All WHERE InTime > GETDATE() -1 
    ]]>  
   </select>
+  
+   <select id="getSubPartWoSendListODOnlyList" parameterType="cmap" resultType="cmap" >
+ <![CDATA[
+    SELECT    DemandID  AS DEMAND_ID
+              , CONVERT(CHAR(23), LGEDate, 21) AS LGE_DATE
+              , CONVERT(CHAR(23), NEODate, 21) AS NEO_DATE
+              , CAST(GapDay AS DECIMAL(22,0)) AS GAP_DAY
+              , LGLine AS LG_LINE
+              , Tool AS TOOL
+              , MPartNo AS M_PART_NO
+              , PlanQTY AS PLAN_QTY
+              , LGMPartName AS LGM_PART_NAME
+              , SubPartNo AS SUB_PART_NO
+              , SubPartName AS SUB_PART_NAME
+              , BOMQty AS BOM_QTY
+              , SumQty AS SUM_QTY
+              , SumQtyCng AS SUM_QTY_CNG
+              , Unit AS UNIT
+              , Vendor AS VENDOR
+              , OSP AS OSP
+              , OutPlace AS OUT_PLACE
+              , CHKDay AS CHK_DAY             
+              , InDate AS IN_DATE
+     FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -10   
+ ]]> 
+ </select>
     
 </mapper>
