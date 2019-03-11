@@ -28,4 +28,8 @@ public interface BatchMysqlInterfaceService {
 
 	public void insertPackingWoSendList(CommonMap cmap) throws Exception;
 
+	public void deleteSubPartWoSendListODOnlyList(CommonMap cmap) throws Exception;
+	
+	public void insertSubPartWoSendListODOnlyList(CommonMap gmap) throws Exception;
+
 }
