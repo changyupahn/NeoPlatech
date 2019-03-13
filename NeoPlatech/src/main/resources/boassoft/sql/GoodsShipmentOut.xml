@@ -15,17 +15,32 @@
 
     <sql id="getGoodsShipmentOutWhere">
           <if test="sDemandId != null and sDemandId != ''"> 		
-    		AND A.DEMAND_ID = #{sDemandId}
+    		AND A.DEMAND_ID LIKE concat('%',#{sDemandId},'%')
         </if>    
         <if test="sLgPartNo!= null and sLgPartNo!= ''"> 		
-    		AND A.LG_PART_NO = #{sLgPartNo!=}
+    		AND A.LG_PART_NO  LIKE concat('%',#{sLgPartNo},'%')
         </if>
         <if test="sNeoLine != null and sNeoLine != ''"> 		
-    		AND A.NEO_LINE = #{sLgLine}
+    		AND A.NEO_LINE LIKE concat('%',#{sNeoLine},'%')
         </if>
+          <if test="sNeoPlanKey != null and sNeoPlanKey != ''"> 		
+    		AND A.NEO_PLAN_KEY LIKE concat('%',#{sNeoPlanKey},'%')
+        </if>       
         <if test="sVendor != null and sVendor != ''"> 		
-    		AND A.VENDOR = #{sVendor}
+    		AND A.VENDOR  LIKE concat('%',#{sVendor},'%')
         </if>  
+          <if test="sSubPartNo != null and sSubPartNo != ''"> 		
+    		AND A.SUB_PART_NO  LIKE concat('%',#{sSubPartNo},'%')
+        </if>
+         <if test="sRePrint != null and sRePrint != ''"> 		
+    		AND A.RE_PRINT  LIKE concat('%',#{sRePrint},'%')
+        </if>
+        <if test="sSubPartDesc != null and sSubPartDesc != ''"> 		
+    		AND A.SUB_PART_DESC  LIKE concat('%',#{sSubPartDesc},'%')
+        </if>
+        <if test="sGoWith != null and sGoWith != ''"> 		
+    		AND A.GO_WIDTH  LIKE concat('%',#{sGoWith},'%')
+        </if>
     </sql>
     
     <select id="getGoodsShipmentOutList" parameterType="cmap" resultType="cmap">
@@ -39,7 +54,7 @@
             , A.PROD_TYPE
             , A.NEO_LINE
             , A.NEO_PLAN_KEY
-            , A.SEND_TIME 
+            , LEFT(A.SEND_TIME,10) AS SEND_TIME
             , A.SENDING_PC_NAME
             , A.GO_WITH
             , A.RE_PRINT

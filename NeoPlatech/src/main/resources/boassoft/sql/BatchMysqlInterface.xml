@@ -216,6 +216,12 @@
          , SUB_SUM_QTY
          , DEMAND_FLOOR
          , OSP
+         , RSLTDATE
+         , RSLTSTATE
+         , RSLT_USER_NO
+         , READDATE
+         , READSTATE
+         , READ_USER_NO
        )
        VALUES
        (
@@ -238,7 +244,13 @@
          , #{subUnit}
          , #{subSumQty}
          , #{demandFloor}
-         , #{osp}         
+         , #{osp}
+         , NULL
+         , NULL
+         , NULL
+         , NULL
+         , NULL
+         , NULL         
        )
       </insert> 
        
