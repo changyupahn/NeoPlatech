@@ -388,4 +388,9 @@
      <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
    </bean>
    
+   <bean id="TabletMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+     <property name="mapperInterface" value="boassoft.mapper.TabletMapper" />
+     <property name="sqlSessionFactory" ref="mysqlSessionFactory" />
+   </bean>
+   
 </beans>
