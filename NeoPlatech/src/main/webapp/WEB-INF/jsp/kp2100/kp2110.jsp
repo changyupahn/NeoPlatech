@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/jsp/common/doctype.jsp" %>    
 <%@ include file="/WEB-INF/jsp/common/default.jsp" %>    
 <%
-String pageTitle = "부품입고관리";
+String pageTitle = "부자재입고관리";
 String curAction = "/kp2100/kp2110.do";
 String curGridAction = "/kp2100/kp2110Ajax.do";
 String curSearchAction = "/kp2100/kp2110Search.do";
@@ -11,7 +11,7 @@ String xlsDnAction = "/kp2100/kp2110Excel.do";
 String detailAction = "/kp1900/kp1311.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
 
-int colbasewid = 320; //검색 폼 동적 사이즈 구성을 위한 넓이 값
+int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
 %>  
 <html>
 <head>
@@ -32,24 +32,44 @@ function fnGridResize() {
 	$("#listInfo01").setGridHeight($(window).height() - $('#SearchBox').height() - heightHip);
 }
 
-var colNames01 = [
-                  'rowNum','odKey','primKey','주문번호','라인','모델','품번','주문수량','사출수량','조햡수량','잔량'
-                  ];
-                  
-var colModel01 = [      
-                    {name:'rowNum', index:'rowNum', width:'0px', hidden:true},
-                    {name:'odKey', index:'odKey', width:'0px', hidden:true},
-                    {name:'primKey', index:'primKey', width:'0px', hidden:true},
-                    {name:'demandId', index:'demandId', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-  				    {name:'lgLine', index:'lgLine', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},  				    
-  				    {name:'model', index:'model', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},  				    
-  				    {name:'partNo', index:'partNo', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-  				    {name:'planQty', index:'planQty', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-  				    {name:'injectionQty', index:'injectionQty', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-  				    {name:'qty', index:'qty', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-  				    {name:'residualQty', index:'residualQty', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'}  				 
-  				  ];
 
+var colNames01 = [
+                  'rowNum'
+                 , '구분ID'
+                 , '고유key'
+                 , '구매처'
+                 , '모델번호'
+                 , '제품일련번호'
+                 , '원재료명'
+                 , 'LG측제번'
+                 , 'LG투입라인명'
+                 , '제품구분기호'
+                 , '조립수량'
+                 , '사출수량'
+                 , '생산잔량'                                  
+                 , '주문수량'
+                 , '확정일'
+                 ];
+                  
+
+var colModel01 = [  
+                  {name:'rowNum', index:'rowNum', width:'0px', hidden:true}
+                 ,{name:'odKey', index:'odKey', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'} 
+                 ,{name:'primKey', index:'primKey', width:'400px', align:'LEFT', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'buyer', index:'buyer', width:'100px', align:'LEFT', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'model', index:'model', width:'100px', align:'LEFT', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'partNo', index:'partNo', width:'100px', align:'LEFT', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'resinCore', index:'resinCore', width:'300px', align:'LEFT', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'demandId', index:'demandId', width:'250px', align:'LEFT', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'lgLine', index:'lgLine', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'item', index:'item', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                 ,{name:'qty', index:'qty', width:'100px', align:'RIGHT', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                 ,{name:'injectionQty', index:'injectionQty', width:'100px', align:'RIGHT', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                 ,{name:'residualQty', index:'residualQty', width:'100px', align:'RIGHT', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}                                 
+                 ,{name:'planQty', index:'planQty', width:'100px', align:'RIGHT', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                 ,{name:'fixDay', index:'fixDay', width:'100px', hidden:true, align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                ];
+                  
 var groupHeaders01 = [];
 
 function fnGridList() {
@@ -70,14 +90,14 @@ function fnGridList() {
 		rowNum:-1,
 		gridview:true,
 		viewrecords: true,
-//		shrinkToFit: false,
-		cellEdit : false,
+		shrinkToFit: false,
+		cellEdit : true,
 // 		sortname: 'repoDt',
 // 		sortorder: 'desc',
 		sortable : true,
 		width: $(window).width() - widthHip,
 		height: $(window).height() - heightHip,
-		multiselect: false,
+		multiselect: true,
 		loadError: function(xhr,status,error){
 			alert(status+'\n'+error);
 		},
@@ -98,6 +118,7 @@ function fnGridList() {
 
 		},
 		gridComplete : function() {
+			fnGridResize();
 		}
 	});
 }
@@ -201,6 +222,7 @@ function fnInitSearchForm() {
 	</td>
 	<td width="50%" style="text-align: right;">
 		<span class="button"><input type="submit" value="<spring:message code="button.search"/>" onclick="fnSearch();"></span>
+		<span class="button"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
 		<span class="button"><input type="button" value="<spring:message code="button.download.excel"/>" onclick="fnXlsDn();"></span>
 		&nbsp;
 	</td>
