@@ -202,6 +202,7 @@ public class ExcelUtil {
     	hwb.write(response.getOutputStream());
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void write2(HttpServletRequest request, HttpServletResponse response, CommonList dataList, String excelFileName, String[] headerListLgc1, String[] headerListLgc2, String[] headerListPhc, String[] headerListTyp, String[][] mergedRegion, String[] headerListWidth, int height) throws Exception {
 		excelFileName = excelFileName + "_"+ DateUtil.getFormatDate() +".xls";
     	excelFileName = new String(excelFileName.getBytes("euc-kr"),"8859_1");
@@ -285,6 +286,7 @@ public class ExcelUtil {
 	}
 
 	/** ZEUS현황 엑셀다운로드 전용 */
+	@SuppressWarnings("deprecation")
 	public static void write3(HttpServletRequest request, HttpServletResponse response, CommonList dataList, String excelFileName, String[] headerListLgc1, String[] headerListLgc2, String[] headerListPhc, String[] headerListTyp, String[][] mergedRegion, String[] headerListWidth, int height) throws Exception {
 		excelFileName = excelFileName + "_"+ DateUtil.getFormatDate() +".xls";
     	excelFileName = new String(excelFileName.getBytes("euc-kr"),"8859_1");
