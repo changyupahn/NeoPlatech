@@ -15,20 +15,26 @@
     
     <sql id="getPackingReceiptWhere">    
         <if test="sDemandId != null and sDemandId != ''"> 		
-    		AND A.DEMAND_ID = #{sDemandId}
-        </if>    
+    		AND A.DEMAND_ID LIKE concat('%',#{sDemandId},'%')
+        </if>  
+        <if test="sLgPartNo != null and sLgPartNo != ''"> 		
+    		AND A.LG_PART_NO LIKE concat('%',#{sLgPartNo},'%')
+        </if>  
         <if test="sToolName != null and sToolName != ''"> 		
-    		AND A.TOOL_NAME = #{sToolName}
+    		AND A.TOOL_NAME LIKE concat('%',#{sToolName},'%')
         </if>
         <if test="sLine != null and sLine != ''"> 		
-    		AND A.LINE = #{sLine}
+    		AND A.LINE LIKE concat('%',#{sLine},'%')
         </if>
         <if test="sFinalVendor != null and sFinalVendor != ''"> 		
-    		AND A.FINAL_VENDOR = #{sFinalVendor}
+    		AND A.FINAL_VENDOR  LIKE concat('%',#{sFinalVendor},'%')
         </if> 
         <if test="sPkgPoNo != null and sPkgPoNo != ''"> 		
-    		AND A.PKG_PO_NO = #{sPkgPoNo}
+    		AND A.PKG_PO_NO LIKE concat('%',#{sPkgPoNo},'%')
         </if>   
+         <if test="sOdQtyId != null and sOdQtyId != ''"> 		
+    		AND A.OD_QTY_ID LIKE concat('%',#{sOdQtyId},'%')
+        </if>  
     </sql>
     
     <select id="getPackingReceiptList" parameterType="cmap" resultType="cmap">

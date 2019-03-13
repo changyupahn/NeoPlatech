@@ -13,19 +13,54 @@
        </if> 
     </sql>
     
-     <sql id="getGoodsReceiptWhere">  
+     <sql id="getGoodsReceiptWhere">      
+         <if test="sPrimKey != null and sPrimKey != ''"> 		
+    		AND A.PRIM_KEY LIKE concat('%',#{sPrimKey},'%')
+        </if>                
          <if test="sDemandId != null and sDemandId != ''"> 		
-    		AND A.DEMAND_ID = #{sDemandId}
+    		AND A.DEMAND_ID LIKE concat('%',#{sDemandId},'%')
         </if>    
         <if test="sModel != null and sModel != ''"> 		
-    		AND A.MODEL = #{sDemandId}
+    		AND A.MODEL LIKE concat('%',#{sModel},'%')
         </if>
         <if test="sLgLine != null and sLgLine != ''"> 		
-    		AND A.LG_LINE = #{sLgLine}
+    		AND A.LG_LINE LIKE concat('%',#{sLgLine},'%') 
         </if>
         <if test="sBuyer != null and sBuyer != ''"> 		
-    		AND A.BUYER = #{sBuyer}
+    		AND A.BUYER  LIKE concat('%',#{sBuyer},'%') 
         </if>
+        <if test="sResinCore != null and sResinCore != ''">        	
+    		AND A.RESIN_CORE LIKE concat('%',#{sResinCore},'%')    	
+        </if>
+         <if test="sTool != null and sTool != ''">        	
+    		AND A.TOOL LIKE concat('%',#{sTool},'%')    	
+        </if>
+        <if test="sSuffix != null and sSuffix != ''">        	
+    		AND A.SUFFIX LIKE concat('%',#{sSuffix},'%')    	
+        </if>
+         <if test="sPartNo != null and sPartNo != ''">        	
+    		AND A.PART_NO LIKE concat('%',#{sPartNo},'%')    	
+        </if>
+        <if test="searchDtKeywordS != null and searchDtKeywordS != ''">     	    	
+    		<choose>
+            <when test="searchDtGubun == '1'">    	
+			 AND A.LGE_DATE <![CDATA[ >= ]]> #{searchDtKeywordS}			
+			</when>
+			 <when test="searchDtGubun == '5'"> 			
+			AND A.ENTER_DATE <![CDATA[ >= ]]> #{searchDtKeywordS}
+			</when>
+		   </choose>	
+		</if>   					
+		<if test="searchDtKeywordE != null and searchDtKeywordE != ''">     	    	
+    	  <choose>
+            <when test="searchDtGubun == '1'">  	
+			AND A.LGE_DATE <![CDATA[ <= ]]> #{searchDtKeywordE}
+			</when>			
+			<when test="searchDtGubun == '5'">			
+			AND A.ENTER_DATE <![CDATA[ <= ]]> #{searchDtKeywordE}
+			</when>
+		  </choose>
+		</if>  
      </sql>
      
      <select id="getGoodsReceiptList" parameterType="cmap" resultType="cmap">
