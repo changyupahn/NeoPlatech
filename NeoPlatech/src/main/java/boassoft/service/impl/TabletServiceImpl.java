@@ -4,14 +4,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
+
 import boassoft.common.CommonXmlList;
-import boassoft.common.GoodsXmlList;
-import boassoft.mapper.TabMapper;
 import boassoft.mapper.TabletMapper;
 import boassoft.service.TabletService;
 import boassoft.util.CommonMap;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
+@Service("tabletService")
 public class TabletServiceImpl extends EgovAbstractServiceImpl implements TabletService{
 
 	@Resource(name="TabletMapper")
