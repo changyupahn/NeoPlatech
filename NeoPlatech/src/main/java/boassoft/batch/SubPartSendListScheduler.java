@@ -63,6 +63,7 @@ public class SubPartSendListScheduler {
 		//String batchCycle = "10 * * * * ?"; //1분 마다
 		String batchCycle = "0 0 2 * * ?"; //매일 새벽 2시 마다
 		
+		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		//jobMap.put("batchService", batchService);
 		jobMap.put("batchMssqlService", batchMssqlService);
