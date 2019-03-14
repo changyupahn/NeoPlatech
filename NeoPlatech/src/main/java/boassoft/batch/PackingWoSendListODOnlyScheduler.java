@@ -54,7 +54,7 @@ public class PackingWoSendListODOnlyScheduler {
 		//String batchCycle = "0 0/2 * * * ?"; //2분 마다
 		//String batchCycle = "0 0/10 * * * ?"; //10분 마다
 		//String batchCycle = "10 * * * * ?"; //1분 마다
-		String batchCycle = "0 0 7 * * ?"; //1분 마다
+		String batchCycle = "0 0 7 * * ?"; //매일 아침 7시 
 	
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		//jobMap.put("batchService", batchService);		

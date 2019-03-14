@@ -53,14 +53,14 @@ public class SubPartWoSendListODOnlyScheduler {
 		
 		System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
-		String batchId = "batch_007";
+		String batchId = "batch_009";
 		//String batchCycle = "0 10 4 * * ?"; //매일 새벽 4시 10분
 		//String batchCycle = "0 20 12 * * ?";
 		//String batchCycle = "10 0/1 * * * ?"; //1분 마다
 		//String batchCycle = "0 0/2 * * * ?"; //2분 마다
 		//String batchCycle = "0 0/10 * * * ?"; //10분 마다
 		//String batchCycle = "10 * * * * ?"; //1분 마다
-		String batchCycle = "0 0 1 * * ?"; //매일 새벽 1시 마다
+		String batchCycle = "0 0 6 * * ?"; //매일 새벽 6시 마다
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		//jobMap.put("batchService", batchService);
