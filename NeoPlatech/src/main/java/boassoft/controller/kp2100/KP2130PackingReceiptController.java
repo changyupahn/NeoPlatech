@@ -46,7 +46,7 @@ public class KP2130PackingReceiptController {
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);
     	
-    	//화면표시관리 (부자재입고목록)
+    	//화면표시관리 (포장재입고목록)
     	cmap.put("dispType", "PACKING_RECEIPT_LIST");
     	CommonList packingReceiptList = systemService.getDispMngList(cmap);
     	model.addAttribute("packingReceiptList", packingReceiptList);
