@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- <bean id="batchService" class="boassoft.service.impl.BatchServiceImpl" /> -->    
+    <bean id="batchMssqlService" class="boassoft.service.impl.BatchMssqlServiceImpl" />
+    <bean id="batchMysqlInterfaceService" class="boassoft.service.impl.BatchMysqlInterfaceServiceImpl" />
+
+    <!-- 배치관리 스케줄러 -->
+     <bean id="batchScheduler" class="boassoft.batch.BatchScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchService" ref="batchService"/>
+    </bean> 
+    
+  
+    <!-- 배치관리 스케줄러 -->
+     <bean id="lgNewOrderPlanListScheduler" class="boassoft.batch.LgNewOrderPlanListScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean>   
+    
+    <!-- 배치관리 스케줄러 -->
+      <bean id="matrialBomScheduler" class="boassoft.batch.MatrialBomScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean> 
+    
+    <!-- 배치관리 스케줄러 -->
+     <bean id="packingWoSendListODOnlyScheduler" class="boassoft.batch.PackingWoSendListODOnlyScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean>   
+    
+     <!-- 배치관리 스케줄러 -->
+       <bean id="publicProductListScheduler" class="boassoft.batch.PublicProductListScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean>   
+    
+     <!-- 배치관리 스케줄러 -->
+       <bean id="subPartSendListScheduler" class="boassoft.batch.SubPartSendListScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean>  
+    
+    <!-- 배치관리 스케줄러 -->
+       <bean id="packingWoSendListScheduler" class="boassoft.batch.PackingWoSendListScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean> 
+        
+    <!-- 배치관리 스케줄러 -->
+     <bean id="subPartWoSendListODOnlyScheduler" class="boassoft.batch.SubPartWoSendListODOnlyScheduler"
+        init-method="init" destroy-method="destroy">
+        <property name="batchMssqlService" ref="batchMssqlService"/>
+        <property name="batchMysqlInterfaceService" ref="batchMysqlInterfaceService"/>
+    </bean>    
+            
+
+</beans>
