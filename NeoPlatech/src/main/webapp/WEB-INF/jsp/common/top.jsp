@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%
 String topGrantReadYnArr = boassoft.util.SessionUtil.getString("grantReadYnArr");
-
+System.out.println(" topGrantReadYnArr " + " : " + topGrantReadYnArr);
 String topUserId = boassoft.util.StringUtil.nvl((String)session.getAttribute("userNo"), "");
 String topUserNm = boassoft.util.StringUtil.nvl((String)session.getAttribute("userName"), "");
 boolean bManager = false;
@@ -128,6 +128,25 @@ function fnLogout() {
 				<% } %>
 			</ol>
 		</li>
+		<% } %>		
+		<% if (topGrantReadYnArr.indexOf("KP2100") > -1) { %>
+		<li class="">
+			<a href="javascript:;" onclick="fnTopMenu('/kp2100/kp2110.do')">물품취득관리</a>
+			<ol>
+				<% if (topGrantReadYnArr.indexOf("KP2110") > -1) { %>
+				<li><a href="/kp2100/kp2110.do" style="color:#ffffff">부자재입고관리</a></li>
+				<% } %>
+				<% if (topGrantReadYnArr.indexOf("KP2130") > -1) { %>
+				<li><a href="/kp2100/kp2130.do" style="color:#ffffff">포장재입고관리</a></li>
+				<% } %>
+				<% if (topGrantReadYnArr.indexOf("KP2150") > -1) { %>
+				<li><a href="/kp2100/kp2150.do" style="color:#ffffff">부자재출고관리</a></li>
+				<% } %>
+				<% if (topGrantReadYnArr.indexOf("KP2170") > -1) { %>
+				<li><a href="/kp2100/kp2170.do" style="color:#ffffff">포장재출고관리</a></li>
+				<% } %>
+			</ol>
+		</li>
 		<% } %>
 		<% if (topGrantReadYnArr.indexOf("KP1900") > -1) { %>
 		<li class="">
@@ -144,6 +163,9 @@ function fnLogout() {
 				<% } %>
 				<% if (topGrantReadYnArr.indexOf("KP1930") > -1) { %>
 				<li><a href="/kp1900/kp1930.do" style="color:#ffffff">단말기관리</a></li>
+				<% } %>
+				<% if (topGrantReadYnArr.indexOf("KP1970") > -1) { %>
+				<li><a href="/kp1900/kp1970.do" style="color:#ffffff">창고관리</a></li>
 				<% } %>
 			</ol>
 		</li>
