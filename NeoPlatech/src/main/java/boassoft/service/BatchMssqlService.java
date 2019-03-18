@@ -19,4 +19,6 @@ public interface BatchMssqlService {
 
 	public CommonList getSubPartWoSendListODOnlyList(CommonMap cmap) throws Exception;
 
+	public CommonList getInjectionProductPalletList(CommonMap cmap) throws Exception;
+
 }
