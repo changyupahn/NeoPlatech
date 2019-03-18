@@ -15,18 +15,18 @@
     </sql>
     
      <sql id="getWareHouseListWhere"> 
-      <if test="sOrgMgr != null and sOrgMgr != ''"> 		
-    		AND V.PARENT_DEPT_NO = #{sOrgMgr}
-       </if>
-       <if test="sOrg != null and sOrg != ''"> 		
-    		AND W.AD_ORG_ID = #{sOrg} 	
-       </if>
-      <if test="value != null and value != ''"> 		
-    		AND ( W.WAREHOUSE_CODE = #{value} OR W.NAME LIKE '%'|| #{value} || '%' )   	
-       </if>
-       <if test="isactive != null and isactive != ''"> 		
-           AND W.USE_YN = #{isactive}
-       </if>
+      <if test="sOrgName != null and sOrgName != ''"> 		
+    		AND V.DEPT_NAME LIKE concat('%',#{sOrgName},'%')
+       </if>     
+      <if test="sWarehouseCode != null and sWarehouseCode != ''"> 		
+    		AND  W.WAREHOUSE_CODE LIKE concat('%',#{sWarehouseCode},'%') 	
+       </if>  
+       <if test="sName != null and sName != ''"> 		
+    		AND W.NAME LIKE concat('%',#{sName},'%') 	
+       </if>          
+            <if test="sUseYn != null and sUseYn != ''"> 		
+              AND W.USE_YN = #{sUseYn}
+        </if>       
      </sql>
     
      <select id="getWareHouseList" parameterType="cmap" resultType="cmap">
@@ -46,13 +46,13 @@
 		     , W.WAREHOUSE_CODE
 		     , W.WAREHOUSE_ADDR
 		     FROM RFID_M_WAREHOUSE W 
-		     LEFT OUTER JOIN RFID_DEPT V ON W.AD_ORG_ID = V.DEPT_NO
+		     INNER JOIN RFID_DEPT V ON W.AD_ORG_ID = V.DEPT_NO
 		     WHERE 1 = 1
          <include refid="getWareHouseListWhere" />
 		<if test="histOrder != null and histOrder != ''"> 
 		  <choose>
            <when test="histOrder == 'ASC'">			
-				ORDER W.M_WAREHOUSE_ID ASC			
+				ORDER BY W.M_WAREHOUSE_ID ASC			
 			</when>
 			<when test="histOrder == 'DESC'">					
 				ORDER BY W.M_WAREHOUSE_ID DESC			
@@ -60,7 +60,7 @@
 		   </choose>  
 		</if>
 		<if test="histOrder == null and histOrder == ''"> 		
-			ORDER BY WAREHOUSE_CODE DESC		
+			ORDER BY W.WAREHOUSE_CODE DESC		
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -68,7 +68,7 @@
     <select id="getWareHouseListCnt" parameterType="cmap" resultType="int">
         SELECT	COUNT(*)
         FROM 	RFID_M_WAREHOUSE W          
-		     LEFT OUTER JOIN RFID_DEPT V ON W.AD_ORG_ID = V.DEPT_NO
+		     INNER JOIN RFID_DEPT V ON W.AD_ORG_ID = V.DEPT_NO
 		     WHERE 1 = 1
 		     <include refid="getWareHouseListWhere" />
     </select>
