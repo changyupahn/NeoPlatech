@@ -104,4 +104,18 @@ public class BatchMysqlInterfaceServiceImpl extends EgovAbstractServiceImpl impl
 		batchMysqlInterfaceMapper.insertSubPartWoSendListODOnlyList(cmap);
 	}
 
+	@Override
+	public void deleteInjectionProductPalletList(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.deleteInjectionProductPalletList(cmap);
+	}
+
+	@Override
+	public void insertInjectionProductPalletList(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertInjectionProductPalletList(cmap);
+	}
+
 }
