@@ -216,6 +216,53 @@
               , InDate AS IN_DATE
      FROM  View_MWHS_SubPart_WOSendList_ODOnly WHERE InDate > GETDATE() -10   
  ]]> 
- </select>
+ </select>     
+    
+    <select id="getInjectionProductPalletList" parameterType="cmap" resultType="cmap" >
+    <![CDATA[
+    SELECT  CAST(InpKey AS DECIMAL(22,0)) AS INP_KEY
+      , CAST(psKey AS DECIMAL(22,0)) AS PS_KEY
+      , InpDate AS INP_DATE
+      , InpItem AS INP_ITEM
+      , GoodsKind AS GOODS_KIND
+      , InpTime AS INP_TIME
+      , Hogi AS HO_GI
+      , PlanDate AS PLAN_DATE
+      , Tool AS TOOL
+      , Core AS CORE
+      , DaechaLabelNo AS DAECHA_LABEL_NO
+      , BarcodeNo AS BAR_CODE_NO
+      , DaechaKind AS DAECHA_KIND
+      , ResinCode AS RESIN_CODE
+      , Worker1 AS WORKER1
+      , Worker2 AS WORKER2
+      , Item2 AS ITEM2
+      , Team AS TEAM
+      , CAST(QTY2 AS DECIMAL(22,0)) AS QTY2
+      , CAST(QTY AS DECIMAL(22,0)) AS QTY
+      , Remark AS REMARK
+      , CAST(GoodsQTY AS DECIMAL(22,0)) AS GOODS_QTY
+      , CAST(ActiveQTY AS DECIMAL(22,0)) AS ACTIVE_QTY
+      , PartNo AS PART_NO
+      , PrdType AS PRD_TYPE
+      , LimitQTY AS LIMIT_QTY
+      , WorkOrder AS WORK_ORDER
+      , LGLine AS LG_LINE
+      , DueDate AS DUE_DATE
+      , OrderQTY AS ORDER_QTY
+      , Color AS COLOR
+      , pnKey AS PN_KEY
+      , workDept AS WORK_DEPT
+      , LineDept AS LINE_DEPT
+      , primKey AS PRIM_KEY
+      , BarcodeFullNo AS BARCODE_FULL_NO
+      , MoldNo AS MOL_NO      
+      , CAST(PalletNo AS DECIMAL(22,0)) AS PALLET_NO
+      , CAST(PalletFull AS DECIMAL(22,0)) AS PALLET_FULL
+      , Buyer AS BUYER
+      , RFIDKey AS RFID_KEY
+     FROM Injection_ProductPallet_List       
+     ]]>
+    </select>
     
 </mapper>

@@ -4,7 +4,7 @@
 
 
     <insert id="insertLgNewOrderPlanList" parameterType="cmap" >
-        INSERT INTO RFID_IF_LG_NEW_ORDER_PLAN_LIST (
+        INSERT IGNORE INTO RFID_IF_LG_NEW_ORDER_PLAN_LIST (
         		OD_KEY
 				, PRIM_KEY
 				, LG_LINE
@@ -72,7 +72,7 @@
     </delete>
     
      <insert id="insertMatrialBom" parameterType="cmap" >
-        INSERT INTO RFID_IF_MARTIAL_BOM (
+        INSERT IGNORE INTO RFID_IF_MARTIAL_BOM (
              B_KEY
             , PART
             , PART_NO
@@ -155,7 +155,7 @@
     </delete>
     
      <insert id="insertPublicProductList" parameterType="cmap" >
-       INSERT INTO RFID_IF_PUBLIC_PRODUCT_LIST
+       INSERT IGNORE INTO RFID_IF_PUBLIC_PRODUCT_LIST
        (
          PN_KEY , BAR_CODE_NO, ENTER_DATE, ENTER_TIME, ACTIVE_LOCATION
          , ACTIVE_POSITION, PREVIOUS_LOCATION, DAECHA_NO, DAECHA_KIND, TEAM_NAME
@@ -194,7 +194,7 @@
     </delete>
     
      <insert id="insertSubPartSendList" parameterType="cmap" >
-       INSERT INTO RFID_IF_SUBPART_SENDLIST_ALL
+       INSERT IGNORE INTO RFID_IF_SUBPART_SENDLIST_ALL
        (
          PT_OD_ID
          , SUB_PT_OD_ID
@@ -261,7 +261,7 @@
     </delete>
     
      <insert id="insertPackingWoSendList" parameterType="cmap" >
-       INSERT INTO RFID_IF_PACKING_WOSENDLIST_ALL
+       INSERT IGNORE INTO RFID_IF_PACKING_WOSENDLIST_ALL
        (
          OD_ID
          , DEMAND_ID
@@ -315,7 +315,7 @@
      <selectKey resultType="string" keyProperty="odId" order="BEFORE">
         SELECT get_seq('subPartOdOnly')     
      </selectKey>
-       INSERT INTO RFID_IF_SUBPART_WOSENDLIST_ODONLY
+       INSERT IGNORE INTO RFID_IF_SUBPART_WOSENDLIST_ODONLY
        (
           OD_ID
         ,  DEMAND_ID
@@ -370,5 +370,103 @@
         FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
         WHERE 	LEFT(IN_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
+    
+    <insert id="insertInjectionProductPalletList" parameterType="cmap" >
+       INSERT IGNORE INTO RFID_IF_INJECTION_PRODUCTPALLET_LIST
+       (
+          INP_KEY
+          , PS_KEY
+          , INP_DATE
+          , INP_ITEM
+          , GOODS_KIND
+          , INP_TIME
+          , HO_GI
+          , PLAN_DATE
+          , TOOL
+          , CORE
+          , DAECHA_LABEL_NO
+          , BAR_CODE_NO
+          , DAECHA_KIND
+          , RESIN_CODE
+          , WORKER1
+          , WORKER2
+          , ITEM2
+          , TEAM
+          , QTY2
+          , QTY
+          , REMARK
+          , GOODS_QTY
+          , ACTIVE_QTY
+          , PART_NO
+          , PRD_TYPE
+          , LIMIT_QTY
+          , WORK_ORDER
+          , LG_LINE
+          , DUE_DATE
+          , ORDER_QTY
+          , COLOR
+          , PN_KEY
+          , WORK_DEPT
+          , LINE_DEPT
+          , PRIM_KEY
+          , BARCODE_FULL_NO
+          , MOL_NO
+          , PALLET_NO
+          , PALLET_FULL
+          , BUYER
+          , RFID_KEY          
+       )
+       VALUES
+       (
+          #{impKey}
+          , #{psKey}
+          , #{inpDate}
+          , #{inpItem}
+          , #{goodsKind}
+          , #{inpTime}
+          , #{hoGi}
+          , #{planDate}
+          , #{tool}
+          , #{core}
+          , #{daechaLabelNo}
+          , #{barCodeNo}
+          , #{daechaKind}
+          , #{resinCode}
+          , #{worker1}
+          , #{worker2}
+          , #{item2}
+          , #{team}
+          , #{qty2}
+          , #{qty}
+          , #{remark}
+          , #{goodsQty}
+          , #{activeQty}
+          , #{partNo}
+          , #{prdType}
+          , #{limitQty}
+          , #{workOrder}
+          , #{lgLine}
+          , #{dueDate}
+          , #{orderQty}
+          , #{color}
+          , #{pnKey}
+          , #{workDept}
+          , #{lineDept}
+          , #{primKey}
+          , #{barcodeFullNo}
+          , #{molNo}
+          , #{palletNo}
+          , #{palletFull}
+          , #{buyer}
+          , #{rfidKey}
+       )           
+    </insert>
+    
+    <delete id="deleteInjectionProductPalletList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_INJECTION_PRODUCTPALLET_LIST
+        WHERE 	LEFT(INP_DATE,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
+    
     
 </mapper>
