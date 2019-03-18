@@ -11,7 +11,7 @@ String xlsDnAction = "/kp1900/kp1970Excel.do";
 String detailAction = "/kp1900/kp1311.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
 
-int colbasewid = 320; //검색 폼 동적 사이즈 구성을 위한 넓이 값
+int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
 %>  
 <html>
 <head>
@@ -33,19 +33,35 @@ function fnGridResize() {
 	$("#listInfo01").setGridHeight($(window).height() - $('#SearchBox').height() - heightHip);
 }
 
-var colNames01 = [
-                  'rowNum','mWareHouseLocId','mWareHouseId','창고그룹코드','창고그룹명','우편번호','기본주소','상세주소'
+var colNames01 = ['rowNum'                  
+                  , '일련번호'
+                  , '창고코드'   
+                  , '창고명'
+                  , '창고상세주소'
+                  , '우편번호지번'
+                  , '기본주소지번'
+                  , '상세주소지번'
+                  , '우편번호도로'
+                  , '기본주소도로'                  
+                  , '상세주소도로'                  
+                  , '비고'                  
                   ];
-var colModel01 = [
-                  {name:'rowNum', index:'rowNum', width:'0px', hidden:true},
-                  {name:'mWareHouseLocId', index:'mWareHouseLocId', width:'0px', hidden:true},
-                  {name:'mWareHouseId', index:'mWareHouseId', width:'0px', hidden:true},
-              	  {name:'wareHouseCode', index:'wareHouseCode', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-				  {name:'name', index:'name', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-				  {name:'postalD', index:'name', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-				  {name:'address1D', index:'name', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-				  {name:'address2D', index:'name', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'}
-				  ];
+
+                  var colModel01 = [
+                  				{name:'rowNum', index:'assetSeq', width:'0px', hidden:true}
+                  				,{name:'mWarehouseId', index:'mWareHouseId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  				,{name:'warehouseCode', index:'warehouseCode', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  				,{name:'name', index:'name', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  				,{name:'warehouseAddr', index:'warehouseAddr', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'postalD', index:'postalD', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'address1D', index:'address1D', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'address2D', index:'address2D', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'postalR', index:'postalR', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'address1R', index:'address2R', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'address2R', index:'address2R', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                ,{name:'description', index:'description', width:'200px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ];
+
 
 var groupHeaders01 = [];
 
@@ -67,8 +83,8 @@ function fnGridList() {
 	    rowNum:-1,
 		gridview:true,
 		viewrecords: true,
-//		shrinkToFit: false,
-		cellEdit : false,
+		shrinkToFit: false,
+		cellEdit : true,
 // 		sortname: 'repoDt',
 // 		sortorder: 'desc',
 		sortable : true,
@@ -199,6 +215,7 @@ function fnInitSearchForm() {
 	</td>
 	<td width="50%" style="text-align: right;">
 		<span class="button"><input type="submit" value="<spring:message code="button.search"/>" onclick="fnSearch();"></span>
+		<span class="button"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
 		<span class="button"><input type="button" value="<spring:message code="button.download.excel"/>" onclick="fnXlsDn();"></span>
 		&nbsp;
 	</td>
