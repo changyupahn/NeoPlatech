@@ -52,8 +52,8 @@ public class InjectionProductPalletListScheduler {
 		//String batchCycle = "10 0/1 * * * ?"; //1분 마다
 		//String batchCycle = "0 0/2 * * * ?"; //2분 마다
 		//String batchCycle = "0 0/1 * * * ?"; //10분 마다
-		String batchCycle = "10 * * * * ?"; //1분 마다
-		//String batchCycle = "0 30 1 * * ?"; //매일 새벽 1시 30분 
+		//String batchCycle = "10 * * * * ?"; //1분 마다
+		String batchCycle = "0 30 1 * * ?"; //매일 새벽 1시 30분 
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		
