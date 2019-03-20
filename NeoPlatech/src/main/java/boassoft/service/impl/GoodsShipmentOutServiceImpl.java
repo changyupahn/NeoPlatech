@@ -25,5 +25,15 @@ public class GoodsShipmentOutServiceImpl extends EgovAbstractServiceImpl impleme
 		return list;
 	}
 	
+
+	@Override
+	public CommonList getGoodsShipmentOutDetailList(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		CommonList list = goodsShipmentOutMapper.getGoodsShipmentOutDetailList(cmap);
+		list.totalRow = goodsShipmentOutMapper.getGoodsShipmentOutDetailListCnt(cmap);
+		return list;
+	}	
+	
 	
 }
