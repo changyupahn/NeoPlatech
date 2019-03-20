@@ -64,7 +64,7 @@
             <include refid="pagingFooter"/>         
     </select>
     
-      <select id="getGoodsShipmentOutListCnt" parameterType="cmap" resultType="int" >
+      <select id="getGoodsShipmentOutListXmlCnt" parameterType="cmap" resultType="int" >
     	 SELECT	COUNT(*)
         FROM 	RFID_IF_SUBPART_SENDLIST_ALL A 
           WHERE 1 = 1
