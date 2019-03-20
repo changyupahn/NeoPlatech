@@ -468,5 +468,164 @@
         WHERE 	LEFT(INP_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
+     <insert id="insertAssayProductPalletList" parameterType="cmap" >
+       INSERT IGNORE INTO RFID_IF_ASSAY_PRODUCTPALLET_LIST
+       (
+         AP_KEY
+         , BA_KEY
+         , AS_KEY
+         , SCAN_TIME
+         , SCAN_DATE
+         , SCAN_PLACE 
+         , SCAN_TYPE
+         , BARCODE_NO
+         , DAECHA_LABEL_NO
+         , DAECHA_KIND
+         , GOODS_KIND
+         , ITEM
+         , MODEL
+         , PART_NO
+         , CORE
+         , COLOR
+         , RESIN
+         , RESIN_CODE
+         , QTY
+         , REMARK
+         , TEAM
+         , PRODUCT_LINE
+         , SPRAY_COLOR
+         , PN_KEY
+         , KABAN_NO
+         , WORK_ORDER
+         , WORK_DEPT
+         , LINE_DEPT
+         , S_DAECHA_NO
+         , PALLET_NO
+         , PALLET_FULL
+         , BUYER
+         , ORDER_QTY
+         , RFID_KEY
+        )
+        VALUES
+        (
+          #{apKey}
+          , #{baKey}
+          , #{asKey}
+          , #{scanTime}
+          , #{scanDate}
+          , #{scanPlace}
+          , #{scanType}
+          , #{barcodeNo}
+          , #{daechaLabelNo}
+          , #{daechaKind}
+          , #{goodsKind}
+          , #{item}
+          , #{model}
+          , #{partNo}
+          , #{core}
+          , #{color}
+          , #{resin}
+          , #{resinCode}
+          , #{qty}
+          , #{remark}
+          , #{team}
+          , #{productLine}
+          , #{sprayColor}
+          , #{pnKey}
+          , #{kanbanNo}
+          , #{workOrder}
+          , #{workDept}
+          , #{lineDept}
+          , #{sDaechaNo}
+          , #{palletNo}
+          , #{palletFull}          
+          , #{Buyer}
+          , #{orderQty}
+          , #{rfidKey}
+        )                     
+      </insert> 
+    
+    <delete id="deleteAssayProductPalletList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_ASSAY_PRODUCTPALLET_LIST
+        WHERE 	LEFT(SCAN_DATE,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
+    
+    <insert id="insertLgGanpanList" parameterType="cmap" >
+       INSERT IGNORE INTO RFID_IF_LG_GANPAN_LIST
+       (
+           G_KEY
+         , NO_NUM
+         , CHK
+         , PRODUCT_DATE
+         , WORK_ORDER
+         , PART_NO
+         , DELIVERY_QUEST_QTY
+         , PRINT_AVAIL_QTY
+         , ORDER_DATE
+         , PRODUCT_LINE
+         , PRINT_AVAIL_TIME
+         , COMPLETE_TYPE
+         , CONTAINER_TYPE
+         , CON_QTY
+         , KANBAN_NO
+         , KANBAN_QTY
+         , ENTER_TIME
+         , OS_KEY
+         , ENTER_MAN
+         , OLD_KANBAN_NO
+         , WO_ROW_NUM
+         , MY_IP
+         , DAECHA_LABEL_NO
+         , SCAN_TIME
+         , AS_KEY
+         , S_DAECHA_NO
+         , CHECK_OUT_CHUL_HA
+         , ACD_KEY
+         , PN_KEY
+         , TOOL
+         , RFID_KEY       
+       )
+       VALUES
+       (
+          #{gKey}
+          , #{noNum}
+          , #{chk}
+          , #{productDate}
+          , #{workOrder}
+          , #{partNo}
+          , #{deliveryQuestQty}
+          , #{printAvailQty}
+          , #{orderDate}
+          , #{productLine}
+          , #{printAvailQty}
+          , #{completeType}
+          , #{containerType}
+          , #{conQty}
+          , #{kanbanNo}
+          , #{kanbanQty}
+          , #{enterTime}
+          , #{osKey}
+          , #{enterMan}
+          , #{oldKanbanNo}
+          , #{woRowNum}
+          , #{myIp}
+          , #{daechaLabelNo}
+          , #{scanTime}
+          , #{asKey}
+          , #{sDaechaNo}
+          , #{checkOut}
+          , #{acdKey}
+          , #{pnKey}
+          , #{tool}
+          , #{rfidKey}                    
+       )
+    </insert> 
+    
+     <delete id="deleteLgGanpanList" parameterType="cmap" >
+        DELETE
+        FROM 	RFID_IF_LG_GANPAN_LIST
+        WHERE 	LEFT(PRODUCT_DATE,10) BETWEEN #{startDate} AND #{endDate}
+    </delete>
     
 </mapper>

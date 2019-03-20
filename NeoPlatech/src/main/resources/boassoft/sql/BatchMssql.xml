@@ -265,4 +265,82 @@
      ]]>
     </select>
     
+    <select id="getAssayProductPalletList" parameterType="cmap" resultType="cmap" >
+    <![CDATA[
+       SELECT  CAST(apKey AS DECIMAL(22,0)) AS AP_KEY
+       , CAST(baKey AS DECIMAL(22,0)) AS BA_KEY
+       , CAST(asKey AS DECIMAL(22,0)) AS AS_KEY
+       , CONVERT(CHAR(23), ScanTime, 21) AS SCAN_TIME
+       , CONVERT(CHAR(23), ScanDate, 21) AS SCAN_DATE
+       , ScanPlace AS SCAN_PLACE
+       , ScanType AS SCAN_TYPE
+       , BarcodeNo AS BARCODE_NO
+       , DaechaLabelNo AS DAECHA_LABEL_NO
+       , DaechaKind AS DAECHA_KIND
+       , GoodsKind AS GOODS_KIND
+       , Item AS ITEM
+       , Model AS MODEL
+       , PartNo AS PART_NO
+       , Core AS CORE
+       , Color AS COLOR
+       , Resin AS RESIN
+       , ResinCode AS RESIN_CODE       
+       , CAST(QTY AS DECIMAL(22,0)) AS QTY
+       , Remark AS REMARK  
+       , Team AS TEAM
+       , ProductLine AS PRODUCT_LINE
+       , SprayColor AS SPRAY_COLOR
+       , pnKey AS PN_KEY
+       , KanbanNo AS KABAN_NO
+       , WorkOrder AS WORK_ORDER
+       , workDept AS WORK_DEPT
+       , LineDept AS LINE_DEPT
+       , sDaechaNo AS S_DAECHA_NO          
+       , CAST(PalletNo AS DECIMAL(22,0)) AS PALLET_NO
+       , CAST(PalletFull AS DECIMAL(22,0)) AS PALLET_FULL
+       , Buyer AS BUYER
+       , CAST(OrderQty AS DECIMAL(22,0)) AS ORDER_QTY
+       , RFIDKey AS RFID_KEY
+       FROM Assay_ProductPallet_List
+     ]]>
+    </select>
+    
+     <select id="getLgGanpanList" parameterType="cmap" resultType="cmap" >
+    <![CDATA[
+        SELECT 
+         CAST(gKey AS DECIMAL(22,0)) AS G_KEY
+         , CAST(NoNum AS DECIMAL(22,0)) AS NO_NUM
+         , Chk AS CHK         
+         , CONVERT(CHAR(23), ProductDate, 21) AS PRODUCT_DATE         
+        , WorkOrder AS WORK_ORDER
+         , PartNo AS PART_NO
+         , CAST(DeliveryQuestQTY AS DECIMAL(22,0)) AS DELIVERY_QUEST_QTY       
+         , CAST(PrintAvailQTY AS DECIMAL(22,0)) AS PRINT_AVAIL_QTY
+          , CONVERT(CHAR(23), OrderDate, 21) AS ORDER_DATE
+         , ProductLine AS PRODUCT_LINE
+         , PrintAvailTime AS PRINT_AVAIL_TIME
+         , CompleteType AS COMPLETE_TYPE
+         , ContainerType AS CONTAINER_TYPE
+         , CAST(ContQTY AS DECIMAL(22,0)) AS CONT_QTY
+         , KanbanNo AS KANBAN_NO
+         , CAST(KanbanQTY AS DECIMAL(22,0)) AS KANBAN_QTY
+         , CONVERT(CHAR(23), EnterTime, 21) AS ENTER_TIME     
+			, CAST(osKey AS DECIMAL(22,0)) AS OS_KEY        
+         , CONVERT(CHAR(23), EnterMan, 21) AS ENTER_MAN
+         , oldKanbanNo AS OLD_KANBAN_NO
+         , CAST(woRowNum AS DECIMAL(22,0)) AS WO_ROW_NUM  
+         , myIP AS MY_IP
+         , DaechaLabelNo AS DAECHA_LABEL_NO         
+			, CONVERT(CHAR(23), ScanTime, 21) AS SCAN_TIME        
+         , CAST(asKey AS DECIMAL(22,0)) AS AS_KEY
+         , sDaechaNo AS S_DAECHA_NO      
+         , CAST(checkOutChulha AS DECIMAL(22,0)) AS CHECK_OUT_CHUL_HA
+         , CAST(acdKey AS DECIMAL(22,0)) AS ACD_KEY     
+         , CAST(pnKey AS DECIMAL(22,0)) AS PN_KEY
+         , TOOL  AS TOOL
+         , RFIDKey  AS RFID_KEY  
+         FROM LG_Ganpan_List
+    ]]>
+    </select>
+    
 </mapper>
