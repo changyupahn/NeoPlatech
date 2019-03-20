@@ -32,11 +32,19 @@ public interface BatchMysqlInterfaceMapper {
 
 	public int deleteSubPartWoSendListODOnlyList(CommonMap cmap) throws Exception;
 
-	public void insertSubPartWoSendListODOnlyList(CommonMap cmap) throws Exception;
+	public int insertSubPartWoSendListODOnlyList(CommonMap cmap) throws Exception;
 
-	public void deleteInjectionProductPalletList(CommonMap cmap) throws Exception;
+	public int deleteInjectionProductPalletList(CommonMap cmap) throws Exception;
 
-	public void insertInjectionProductPalletList(CommonMap cmap) throws Exception;
+	public int insertInjectionProductPalletList(CommonMap cmap) throws Exception;
+
+	public int deleteAssayProductPalletList(CommonMap cmap) throws Exception;
+
+	public int insertAssayProductPalletList(CommonMap cmap) throws Exception;
+
+	public int deleteLgGanpanList(CommonMap cmap) throws Exception;
+
+	public int insertLgGanpanList(CommonMap cmap) throws Exception;
 	
 	
 }
