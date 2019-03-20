@@ -79,7 +79,7 @@
                , COALESCE(A.INJECTION_QTY,0) AS INJECTION_QTY
                , COALESCE(A.QTY,0) AS QTY
                , COALESCE(A.RESIDUAL_QTY,0) AS RESIDUAL_QTY
-             FROM RFID_If_LG_NEW_ORDER_PLAN_LIST A  
+             FROM RFID_IF_LG_NEW_ORDER_PLAN_LIST A  
               WHERE 1 = 1  
                <include refid="getGoodsReceiptWhere" />  
                <if test="histOrder != null and histOrder != ''"> 
@@ -104,5 +104,6 @@
           WHERE 1 = 1
 		     <include refid="getGoodsReceiptWhere" />      
       </select>
+              
 </mapper>
 

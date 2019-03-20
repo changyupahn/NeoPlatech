@@ -85,11 +85,44 @@
         <include refid="pagingFooter"/>
     </select>
     
-    <select id="getGoodsShipmentOutListCnt" parameterType="cmap" resultType="int">
-      SELECT	COUNT(*)
+     <select id="getGoodsShipmentOutListCnt" parameterType="cmap" resultType="int" >
+    	 SELECT	COUNT(*)
         FROM 	RFID_IF_SUBPART_SENDLIST_ALL A 
           WHERE 1 = 1
-		     <include refid="getGoodsShipmentOutWhere" />      
+		<include refid="getGoodsShipmentOutWhere"/>
+    </select>   
+    
+       <select id="getGoodsShipmentOutDetailList" parameterType="cmap" resultType="cmap">                  
+         SELECT    A.PT_OD_ID 
+            , A.SUB_PT_OD_ID
+            , A.DEMAND_ID
+            , A.LG_PART_NO
+            , A.LG_OD_QTY
+            , A.PROD_TYPE
+            , A.NEO_LINE
+            , A.NEO_PLAN_KEY
+            , LEFT(A.SEND_TIME,10) AS SEND_TIME
+            , A.SENDING_PC_NAME
+            , A.GO_WITH
+            , A.RE_PRINT
+            , A.SUB_PART_NO
+            , A.SUB_PART_DESC
+            , A.VENDOR
+            , A.BOM_QTY
+            , A.SUB_UNIT  
+            , A.SUB_SUM_QTY
+            , A.DEMAND_FLOOR
+            , A.OSP			
+        FROM RFID_IF_SUBPART_SENDLIST_ALL A
+       WHERE A.GO_WITH  LIKE concat('%',#{goWith},'%')			
+       ORDER BY A.PT_OD_ID, A.SUB_PART_NO
       </select>
+      
+       <select id="getGoodsShipmentOutDetailListCnt" parameterType="cmap" resultType="int" >
+    	 SELECT	COUNT(*)
+        FROM 	RFID_IF_SUBPART_SENDLIST_ALL A 
+           WHERE A.GO_WITH  LIKE concat('%',#{goWith},'%')	
+		<include refid="getGoodsShipmentOutWhere"/>
+    </select>          
 
 </mapper>
