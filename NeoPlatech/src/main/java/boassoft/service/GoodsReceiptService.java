@@ -6,4 +6,5 @@ import boassoft.util.CommonMap;
 public interface GoodsReceiptService {
 
 	public CommonList getGoodsReceiptList(CommonMap cmap) throws Exception;
+	
 }
