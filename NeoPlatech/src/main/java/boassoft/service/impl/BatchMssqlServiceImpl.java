@@ -67,6 +67,19 @@ public class BatchMssqlServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return batchMssqlMapper.getInjectionProductPalletList(cmap);
 	}
+
+	@Override
+	public CommonList getAssayProductPalletList(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return batchMssqlMapper.getAssayProductPalletList(cmap);
+	}
+
+	@Override
+	public CommonList getLgGanpanList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		return batchMssqlMapper.getLgGanpanList(cmap);
+	}
 	
 	
 
