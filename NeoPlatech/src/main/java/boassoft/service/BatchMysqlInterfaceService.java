@@ -36,4 +36,12 @@ public interface BatchMysqlInterfaceService {
 
 	public void insertInjectionProductPalletList(CommonMap gmap) throws Exception;
 
+	public void deleteAssayProductPalletList(CommonMap cmap) throws Exception;
+
+	public void insertAssayProductPalletList(CommonMap cmap) throws Exception;
+
+	public void deleteLgGanpanList(CommonMap cmap) throws Exception;
+
+	public void insertLgGanpanList(CommonMap cmap) throws Exception;
+
 }
