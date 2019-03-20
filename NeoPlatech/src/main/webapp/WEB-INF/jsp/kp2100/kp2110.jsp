@@ -107,6 +107,9 @@ function fnGridList() {
  			$('#dataOrderArrow').val(sortOrder);
  			fnGridReload("1");
 		},
+		ondblClickRow:function(rowId){
+			fnDetail(rowId);
+		},
 		loadComplete : function(data) {
 			//paging 처리
 			pagingUtil.setHTML($('#pageIdx').val(), $('#pageSize').val(), data.totalRow, 'paginate');
