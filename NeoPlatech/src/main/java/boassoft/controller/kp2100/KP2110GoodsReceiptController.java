@@ -40,8 +40,8 @@ public class KP2110GoodsReceiptController {
 	@RequestMapping(value="/kp2100/kp2110.do")
 	public String kp2110(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
-		int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-		cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);
     	
@@ -71,7 +71,7 @@ public class KP2110GoodsReceiptController {
 		CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));
     	
     	System.out.println(" dataOrder  kp2110Ajax " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	System.out.println(" dataOrderArrow kp2110Ajax " + "  : " + cmap.getString("dataOrderArrow"));
@@ -115,8 +115,8 @@ public class KP2110GoodsReceiptController {
 	public String kp2110Excel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
 		
-		int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-		cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
     	cmap.put("pageLimit", pageLimit); 
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
