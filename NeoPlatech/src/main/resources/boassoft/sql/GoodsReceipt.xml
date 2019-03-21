@@ -104,6 +104,125 @@
           WHERE 1 = 1
 		     <include refid="getGoodsReceiptWhere" />      
       </select>
-              
+      
+      <select id="getOptionVendorList" parameterType="cmap" resultType="cmap">
+         SELECT @rownum:=@rownum+1 AS ROWNUM 
+         , A.VENDOR AS CODE
+		 , A.VENDOR AS CODE_NAME FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
+		 , (SELECT @rownum:=0) TMP
+         WHERE 1 = 1
+         GROUP BY A.VENDOR
+		 ORDER BY ROWNUM           
+       </select>
+       
+       <select id="getOptionItemList" parameterType="cmap" resultType="cmap">
+       SELECT  @rownum:=@rownum+1 ROWNUM 
+         , A.SUB_PART_NAME CODE
+		 , A.SUB_PART_NAME CODE_NAME FROM rfid_if_subpart_wosendlist_odonly A
+         , (SELECT @rownum:=0) TMP
+          WHERE 1 = 1
+          AND A.VENDOR LIKE concat('%',#{paramSltValue},'%')
+          GROUP BY A.VENDOR
+		  ORDER BY ROWNUM       
+       </select>
+       
+       <select id="getOptionPNoList" parameterType="cmap" resultType="cmap">
+        SELECT  @rownum:=@rownum+1 ROWNUM
+          , A.SUB_PART_NAME AS CODE 
+          , A.SUB_PART_NAME CODE_NAME
+		   FROM rfid_if_subpart_wosendlist_odonly A
+		  , (SELECT @rownum:=0) TMP
+           WHERE 1 = 1
+           AND VENDOR LIKE concat('%',#{codeId},'%')
+           AND SUB_PART_NAME LIKE concat('%',#{sltValue},'%')	
+           GROUP BY A.VENDOR
+	       ORDER BY ROWNUM
+	   </select>
+	   
+	   <select id="getGoodsReceiptDetailList" parameterType="cmap" resultType="cmap">
+	    <include refid="pagingHeader"/>
+	    <![CDATA[
+	    SELECT 
+                  A.OD_ID
+                 , A.DEMAND_ID
+                 , A.LGE_DATE
+                 , A.NEO_DATE
+                 , A.GAP_DAY
+                 , A.LG_LINE
+                 , A.TOOL
+                 , A.M_PART_NO                 
+                 , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
+                 , A.LGM_PART_NAME
+                 , A.SUB_PART_NO
+                 , A.SUB_PART_NAME
+                 , COALESCE(A.BOM_QTY,0) AS BOM_QTY
+                 , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
+                 , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
+                   ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
+                 , A.UNIT
+                 , A.VENDOR
+                 , A.OSP
+                 , A.OUT_PLACE
+                 , A.CHK_DAY
+                 , A.IN_DATE 
+                 , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
+                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+                FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
+                WHERE 1 = 1      
+          ]]>                 
+          <if test="vendor != null and vendor != ''">              
+          AND VENDOR LIKE concat('%',#{vendor},'%')
+          </if>
+          <if test="subPartName != null and subPartName != ''"> 	
+          AND SUB_PART_NAME LIKE concat('%',#{subPartName},'%')	
+         </if>
+        GROUP BY A.VENDOR
+	    ORDER BY A.LGE_DATE
+	     <include refid="pagingFooter"/> 	   
+	   </select>
+       
+     <select id="getGoodsReceiptDetailListCnt" parameterType="cmap" resultType="int">   
+      <![CDATA[      
+         SELECT COUNT(*) FROM 
+           (
+               SELECT 
+                  A.OD_ID
+                 , A.DEMAND_ID
+                 , A.LGE_DATE
+                 , A.NEO_DATE
+                 , A.GAP_DAY
+                 , A.LG_LINE
+                 , A.TOOL
+                 , A.M_PART_NO                 
+                 , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
+                 , A.LGM_PART_NAME
+                 , A.SUB_PART_NO
+                 , A.SUB_PART_NAME
+                 , COALESCE(A.BOM_QTY,0) AS BOM_QTY
+                 , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
+                 , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
+                   ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
+                 , A.UNIT
+                 , A.VENDOR
+                 , A.OSP
+                 , A.OUT_PLACE
+                 , A.CHK_DAY
+                 , A.IN_DATE 
+                 , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
+                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND                
+                FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
+                WHERE 1 = 1        
+             ]]>            
+               <if test="vendor != null and vendor != ''"> 			 
+                 AND VENDOR LIKE concat('%',#{vendor},'%')
+               </if>
+               <if test="subPartName != null and subPartName != ''"> 	
+                 AND SUB_PART_NAME LIKE concat('%',#{subPartName},'%')	          
+                </if>   
+              GROUP BY A.VENDOR
+	         ORDER BY A.LGE_DATE
+          ) X	             
+     </select>  
+            
 </mapper>
 
