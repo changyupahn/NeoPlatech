@@ -8,7 +8,7 @@ String curAction = "/kp2100/kp2110.do";
 String curGridAction = "/kp2100/kp2110Ajax.do";
 String curSearchAction = "/kp2100/kp2110Search.do";
 String xlsDnAction = "/kp2100/kp2110Excel.do";
-String detailAction = "/kp1900/kp1311.do";
+String detailAction = "/kp2100/kp2111.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
 
 int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
@@ -161,9 +161,10 @@ function fnDetail(rowId) {
 	if (selRowId) {
 		var obj = $("#listInfo01").jqGrid('getRowData', selRowId);
 
-		$('#layerPop').click();
-		$('#iframe').attr("src", "<%=detailAction%>?mPrimKey=" + obj.mPrimKey);
-		$('#layer_iframe').show();
+		var frm = document.sForm;			
+		frm.action = "<%=detailAction%>";
+		frm.target = "_self";
+		frm.submit();
 	} else {
 		alert("상세보기 할 내역을 선택해 주세요");
 		return;
