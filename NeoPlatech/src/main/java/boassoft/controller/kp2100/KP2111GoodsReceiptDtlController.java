@@ -1,8 +1,16 @@
 package boassoft.controller.kp2100;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -79,7 +87,7 @@ public class KP2111GoodsReceiptDtlController {
     	
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
-    	System.out.println(" gridSessionChk kp22110Ajax " + "  : " + gridSessionChk.toString());
+    	System.out.println(" gridSessionChk kp2111DetailAjax " + "  : " + gridSessionChk.toString());
     	if (!gridSessionChk.isEmpty()) {
     		model.addAttribute("printString", gridSessionChk.toJsonString());
         	return "common/commonString";
@@ -95,6 +103,18 @@ public class KP2111GoodsReceiptDtlController {
     	model.addAttribute("printString", result.toJsonString());
 		
     	return "common/commonString";
+		
+	}
+	
+	@RequestMapping(value="/kp2100/kp2111Search.do")
+	public String kp2131Search(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		
+		CommonMap cmap = new CommonMap(request);
+		
+		//검색값 유지
+    	model.addAttribute("cmRequest",cmap);
+		
+    	return "kp2100/kp2111Search";
 		
 	}
 	
@@ -128,7 +148,7 @@ public class KP2111GoodsReceiptDtlController {
 	}
 	
 	
-	@RequestMapping(value="/code/optionPNoList.doo")	
+	@RequestMapping(value="/code/optionPNoList.do")	
 	public String optionPNoList(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
 		cmap.put("codeId", cmap.getString("paramCodeId"));
@@ -140,6 +160,66 @@ public class KP2111GoodsReceiptDtlController {
     	return "code/optionPNoList";
 		
 	}
+		
+	@RequestMapping(value="/kp2100/kp2111ComboItemAjax.do")	
+	public void Kp2111ComboItemSelect(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		CommonMap cmap = new CommonMap(request);
+		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
+		System.out.println (" codeId " + " : " + cmap.getString("codeId"));
+		CommonList commonCodeList = new CommonList();
+		try{
+			commonCodeList = goodsReceiptService.getOptionItemList(cmap);
+		}catch(Exception e){
+			LOG.error("[" + this.getClass().getName() + ".Kp2111ComboItemSelect().Exception()]" + e.getMessage());
+		}
+		
+		JSONArray json = JSONArray.fromObject(commonCodeList);
+		JSONObject j = new JSONObject();
+		j.put("LIST", json.toString());
+		PrintWriter pw = null;
+		
+		try{
+			pw = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "utf-8"));
+		}catch(UnsupportedEncodingException e){
+			LOG.error("[" + this.getClass().getName() + ".Kp2111ComboItemSelect().UnsupportedEncodingException()]" + e.getMessage());
+		}catch(IOException e){
+			LOG.error("[" + this.getClass().getName() + ".Kp2111ComboItemSelect().UnsupportedEncodingException()]" + e.getMessage());
+		}
+		
+		pw.print(j.toString());
+		pw.flush();
+		pw.close();
+	}
 	
-	
+	@RequestMapping(value="/kp2100/kp2111ComboPNoAjax.do")	
+	public void Kp2111ComboPNoSelect(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		CommonMap cmap = new CommonMap(request);
+		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
+		cmap.put("sltValue", cmap.getString("sRqstItemCd"));		
+		System.out.println (" codeId " + " : " + cmap.getString("codeId"));
+		System.out.println (" sltValue " + " : " + cmap.getString("sltValue"));
+		CommonList commonCodeList = new CommonList();
+		try{
+			commonCodeList = goodsReceiptService.getOptionPNoList(cmap);
+		}catch(Exception e){
+			LOG.error("[" + this.getClass().getName() + ".Kp2111ComboPNoSelect().Exception()]" + e.getMessage());
+		}
+		
+		JSONArray json = JSONArray.fromObject(commonCodeList);
+		JSONObject j = new JSONObject();
+		j.put("LIST", json.toString());
+		PrintWriter pw = null;
+		
+		try{
+			pw = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), "utf-8"));
+		}catch(UnsupportedEncodingException e){
+			LOG.error("[" + this.getClass().getName() + ".Kp2111ComboItemSelect().UnsupportedEncodingException()]" + e.getMessage());
+		}catch(IOException e){
+			LOG.error("[" + this.getClass().getName() + ".Kp2111ComboItemSelect().UnsupportedEncodingException()]" + e.getMessage());
+		}
+		
+		pw.print(j.toString());
+		pw.flush();
+		pw.close();
+	}
 }
