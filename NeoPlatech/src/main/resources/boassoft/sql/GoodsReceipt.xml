@@ -111,6 +111,7 @@
 		 , A.VENDOR AS CODE_NAME FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
 		 , (SELECT @rownum:=0) TMP
          WHERE 1 = 1
+         AND  A.VENDOR IS NOT NULL
          GROUP BY A.VENDOR
 		 ORDER BY ROWNUM           
        </select>
@@ -121,20 +122,22 @@
 		 , A.SUB_PART_NAME CODE_NAME FROM rfid_if_subpart_wosendlist_odonly A
          , (SELECT @rownum:=0) TMP
           WHERE 1 = 1
-          AND A.VENDOR LIKE concat('%',#{paramSltValue},'%')
+          AND A.VENDOR LIKE concat('%',#{codeId},'%')
+          AND  A.SUB_PART_NAME IS NOT NULL
           GROUP BY A.VENDOR
 		  ORDER BY ROWNUM       
        </select>
        
        <select id="getOptionPNoList" parameterType="cmap" resultType="cmap">
         SELECT  @rownum:=@rownum+1 ROWNUM
-          , A.SUB_PART_NAME AS CODE 
-          , A.SUB_PART_NAME CODE_NAME
+          , A.SUB_PART_NO AS CODE 
+          , A.SUB_PART_NO CODE_NAME
 		   FROM rfid_if_subpart_wosendlist_odonly A
 		  , (SELECT @rownum:=0) TMP
            WHERE 1 = 1
            AND VENDOR LIKE concat('%',#{codeId},'%')
-           AND SUB_PART_NAME LIKE concat('%',#{sltValue},'%')	
+           AND SUB_PART_NAME LIKE concat('%',#{sltValue},'%')
+           AND  A.SUB_PART_NAME IS NOT NULL	
            GROUP BY A.VENDOR
 	       ORDER BY ROWNUM
 	   </select>
@@ -170,12 +173,15 @@
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1      
           ]]>                 
-          <if test="vendor != null and vendor != ''">              
-          AND VENDOR LIKE concat('%',#{vendor},'%')
+          <if test="sRqstVendorCd != null and sRqstVendorCd != ''"> 			 
+             AND A.VENDOR LIKE concat('%',#{sRqstVendorCd},'%')
           </if>
-          <if test="subPartName != null and subPartName != ''"> 	
-          AND SUB_PART_NAME LIKE concat('%',#{subPartName},'%')	
-         </if>
+          <if test="sRqstItemCd != null and sRqstItemCd != ''"> 	
+             AND A.SUB_PART_NAME LIKE concat('%',#{sRqstItemCd},'%')	          
+          </if>  
+          <if test="sRqstPNoCd != null and sRqstPNoCd != ''"> 	
+             AND A.SUB_PART_NO LIKE concat('%',#{sRqstPNoCd},'%')	          
+          </if>  
         GROUP BY A.VENDOR
 	    ORDER BY A.LGE_DATE
 	     <include refid="pagingFooter"/> 	   
@@ -213,12 +219,15 @@
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1        
              ]]>            
-               <if test="vendor != null and vendor != ''"> 			 
-                 AND VENDOR LIKE concat('%',#{vendor},'%')
+               <if test="sRqstVendorCd != null and sRqstVendorCd != ''"> 			 
+                 AND A.VENDOR LIKE concat('%',#{sRqstVendorCd},'%')
                </if>
-               <if test="subPartName != null and subPartName != ''"> 	
-                 AND SUB_PART_NAME LIKE concat('%',#{subPartName},'%')	          
-                </if>   
+               <if test="sRqstItemCd != null and sRqstItemCd != ''"> 	
+                 AND A.SUB_PART_NAME LIKE concat('%',#{sRqstItemCd},'%')	          
+                </if>  
+                 <if test="sRqstPNoCd != null and sRqstPNoCd != ''"> 	
+                 AND A.SUB_PART_NO LIKE concat('%',#{sRqstPNoCd},'%')	          
+                </if>  
               GROUP BY A.VENDOR
 	         ORDER BY A.LGE_DATE
           ) X	             
