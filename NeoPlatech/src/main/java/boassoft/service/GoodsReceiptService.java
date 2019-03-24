@@ -15,4 +15,5 @@ public interface GoodsReceiptService {
 
 	public CommonList getGoodsReceiptDetailList(CommonMap cmap) throws Exception;
 	
+	
 }
