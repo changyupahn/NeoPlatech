@@ -52,6 +52,7 @@ public class GoodsReceiptServiceImpl extends EgovAbstractServiceImpl implements 
 		CommonList list = goodsReceiptMapper.getGoodsReceiptDetailList(cmap);
 		list.totalRow = goodsReceiptMapper.getGoodsReceiptDetailListCnt(cmap);
 		return list;
-	}	
+	}
+	
 
 }
