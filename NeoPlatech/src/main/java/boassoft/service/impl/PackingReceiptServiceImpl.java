@@ -29,4 +29,34 @@ public class PackingReceiptServiceImpl extends EgovAbstractServiceImpl implement
 		return list;
 	}
 
+	@Override
+	public CommonList getOptionVendorList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		CommonList list = packingReceiptMapper.getOptionVendorList(cmap);
+		return list;
+	}
+
+	@Override
+	public CommonList getOptionItemList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		CommonList list = packingReceiptMapper.getOptionItemList(cmap);
+		return list;
+	}
+
+	@Override
+	public CommonList getOptionPNoList(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		CommonList list = packingReceiptMapper.getOptionPNoList(cmap);
+		return list;
+	}
+
+	@Override
+	public CommonList getPackingReceiptDetailList(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		CommonList list = packingReceiptMapper.getPackingReceiptDetailList(cmap);
+		list.totalRow = packingReceiptMapper.getPackingReceiptDetailListCnt(cmap);
+		return list;
+	}
+
 }
