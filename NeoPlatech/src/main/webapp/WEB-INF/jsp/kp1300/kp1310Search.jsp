@@ -46,7 +46,7 @@ if (!ssAuthManager) {
 		<col width="240px" />
 		<col width="100px" />
 		<col width="240px" />
-		<col width="100px" />
+		<!--  --><col width="100px" />
 		<col width="240px" />
 	</colgroup>
 	<tr>
