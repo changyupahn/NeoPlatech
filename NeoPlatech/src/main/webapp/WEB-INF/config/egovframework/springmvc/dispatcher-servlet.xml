@@ -68,6 +68,18 @@
             </map>
         </property>
     </bean>			
+    
+     <!-- ajax view JSON rendering -->
+    <bean name="lenient" class="net.sf.json.util.CycleDetectionStrategy$LenientCycleDetectionStrategy"/>
+
+    <bean name="jsonConfig" class="net.sf.json.JsonConfig">
+       <property name="cycleDetectionStrategy" ref="lenient" />
+    </bean>
+
+    <bean name="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView" >
+       <property name="jsonConfig" ref="jsonConfig" />
+       <property name="contentType" value="application/json;charset=UTF-8"></property>
+    </bean>
 	
     <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/>
 </beans>
