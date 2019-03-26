@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/default.jsp" %>
 <%
-String curAction = "/kp2100/kp2111Search.do";
+String curAction = "/kp2100/kp2111.do";
 String curComboItemAction =  "/kp2100/kp2111ComboItemAjax.do";
 String curComboPNoAction =  "/kp2100/kp2111ComboPNoAjax.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
 int idx = 0;
 int colmax = 0;
-int colcnt = cmRequest.getInt("colcnt");
+int colcnt = 5 ; //cmRequest.getInt("colcnt");
 
 if (!ssAuthManager) {
 	cmRequest.put("sUserNo", cmRequest.getString("sUserNo", SessionUtil.getString("userNo")));
@@ -23,26 +23,28 @@ if (!ssAuthManager) {
 <%@ include file="/WEB-INF/jsp/common/jqGrid.jsp" %>
 <script type="text/javascript"> 
 $(document).ready(function(){
-
+    alert("  aaaa ");
 	$("#sRqstVendorCd").change(function(){
-		alert('bbb');
+		alert("  bbb ");
 		   if($("#sRqstVendorCd").val == ''){
 			   $("#sRqstItemCd option[value='']").attr("select", "true");
 			   $("#sRqstItemCd").attr("disabled", "true");
 		  	   
 		   }else{
-	     
+			   alert(" cccc ");
 			   $("select[name=sRqstItemCd]").removeAttr("disabled");
 			   fnItemCdChange($(this).val());
 	    
 		   }	
 		});
-		
+	alert(" ddd ");
 		$("#sRqstItemCd").change(function(){
+			alert(" eee");
 			   if($("#sRqstPNoCd").val == ''){
 				   $("#sRqstPNoCd option[value='']").attr("select", "true");
 				   $("#sRqstPNoCd").attr("disabled", "true");
 			   }else{
+				   alert(" fff");	   
 				   $("select[name=sRqstPNoCd]").removeAttr("disabled");
 				   fnPNoChange($(this).val());
 			   }	
@@ -53,7 +55,7 @@ $(document).ready(function(){
 
 function fnItemCdChange(obj){
 	var value = "sRqstVendorCd=" + obj;
-	
+	alert("2222");
 	$.ajax({
 		type:'POST',
 		url:'<%=curComboItemAction%>',
@@ -62,17 +64,19 @@ function fnItemCdChange(obj){
 			sRqstVendorCd : $("select[name=sRqstVendorCd]").val() 			
 		},
 		success:function(data){
-			
+			alert("333" + data.LIST);
 			if(data.LIST.length > 0){
 				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>선택</option>");	
 								
 				$.each(data.LIST, function(key,value){
-					$("sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					alert("4444" + value.code);
+					alert("55555" + value.codeName);
+					$("#sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");					
 				}); 								
 	
 			
 			}else{
-				$("sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
+				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
 			
 				return;
 			}			
@@ -102,15 +106,17 @@ function fnPNoChange(obj){
 			alert(data.LIST.length );
 			if(data.LIST.length > 0){
 				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>선택</option>");
-				alert("222");				
+				alert("333");				
 								
 				$.each(data.LIST, function(key,value){
+					alert("4444" + value.code);
+					alert("55555" + value.codeName);
 					$("#sRqstPNoCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 					
 				});
 				alert("333");
 			}else{
-				$("sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
+				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
 				alert("444");
 				return;
 			}			
@@ -161,7 +167,6 @@ function fnPNoChange(obj){
 		<col width="240px" />
 	</colgroup>
 		<tr>
-		
 	 <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>		
 		<th>업체명 :</th>
 		<td>
@@ -173,7 +178,7 @@ function fnPNoChange(obj){
 			</c:import>
 			</select>
 		</td>		
-     <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
 	    <th>ITEM :</th>
 		<td>
 			<select id="sRqstItemCd" name="sRqstItemCd" style="min-width:80px" >
@@ -194,7 +199,12 @@ function fnPNoChange(obj){
 			<c:param name="paramSltValue" value="" />
 			</c:import>
 			</select>
-		</td>	
+		</td>		
+	 <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>입고량 :</th>
+		<td>
+			<input type="text" id="sReceiptCnt" name="sReceiptCnt" value="<%=cmRequest.getString("sReceiptCnt")%>" class="def" />
+		</td>		    
 <% idx++; if (idx % colcnt > 0) { %><td colspan="<%=(colmax * 2) - ((idx % colcnt) * 2)%>">&nbsp;</td><% } %>		
 		</tr>
 	</table>		

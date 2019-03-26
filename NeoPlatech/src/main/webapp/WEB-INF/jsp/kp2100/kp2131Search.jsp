@@ -18,7 +18,7 @@ if (!ssAuthManager) {
 %>
 <script type="text/javascript"> 
 $(document).ready(function(){
-	/* $("#sRqstVendorCd").change(function(){
+	 $("#sRqstVendorCd").change(function(){
 		   if($("#sRqstVendorCd").val == ''){
 			   $("#sRqstItemCd option[value='']").attr("select", "true");
 			   $("#sRqstItemCd").attr("disabled", "true");
@@ -36,7 +36,7 @@ $(document).ready(function(){
 				   $("select[name=sRqstPNoCd]").removeAttr("disabled");
 				   fnPNoChange($(this).val());
 			   }	
-			}); */
+			}); 
 	
 });
 
@@ -56,10 +56,12 @@ function fnItemCdChange(obj){
 				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>선택</option>");
 				
 				$.each(data.LIST, function(key,value){
-					$("sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					alert("4444" + value.code);
+					alert("55555" + value.codeName);
+					$("#sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 				});
 			}else{
-				$("sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
+				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
 				return;
 			}			
 		},
@@ -70,7 +72,7 @@ function fnItemCdChange(obj){
 	
 }
 
-function fnPNoChange(){
+function fnPNoChange(obj){
 	
 	var value = "sRqstPNoCd=" + obj;
 	alert("111" + " : " + $("select[name=sRqstVendorCd]").val() );
@@ -85,14 +87,17 @@ function fnPNoChange(){
 			sRqstItemCd : $("select[name=sRqstItemCd]").val()
 		},
 		success:function(data){
+			alert("333" + data.LIST);
 			if(data.LIST.length > 0){
 				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>선택</option>");
 				
 				$.each(data.LIST, function(key,value){
-					$("sRqstPNoCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					alert("4444" + value.code);
+					alert("55555" + value.codeName);
+					$("#sRqstPNoCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 				});
 			}else{
-				$("sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
+				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
 				return;
 			}			
 		},
@@ -174,7 +179,13 @@ function fnPNoChange(){
 			<c:param name="paramSltValue" value="" />
 			</c:import>
 			</select>
-		</td>	
+		</td>
+			</td>	
+  <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>입고량 :</th>
+		<td>
+			<input type="text" id="sReceiptCnt" name="sReceiptCnt" value="<%=cmRequest.getString("sReceiptCnt")%>" class="def" />
+		</td>			
 <% idx++; if (idx % colcnt > 0) { %><td colspan="<%=(colmax * 2) - ((idx % colcnt) * 2)%>">&nbsp;</td><% } %>		
 		</tr>
 	</table>		
