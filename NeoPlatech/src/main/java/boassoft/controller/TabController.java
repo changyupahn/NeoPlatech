@@ -73,6 +73,7 @@ public class TabController {
     		//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
+    		cmap.put("frstRegistPnttm", DateUtil.getFormatDate("yyyyMMddHHmmss"));
     		deviceLogService.insertDeviceLog(cmap);
 
     		//디바이스번호 확인
@@ -216,6 +217,7 @@ public class TabController {
     		//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
+    		cmap.put("frstRegistPnttm", DateUtil.getFormatDate("yyyyMMddHHmmss"));
     		deviceLogService.insertDeviceLog(cmap);
 
     		//디바이스번호 확인
@@ -430,6 +432,7 @@ public class TabController {
     		//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
+    		cmap.put("frstRegistPnttm", DateUtil.getFormatDate("yyyyMMddHHmmss"));
     		deviceLogService.insertDeviceLog(cmap);
 
     		//디바이스번호 확인
@@ -555,6 +558,7 @@ public class TabController {
 	    	//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
+    		cmap.put("frstRegistPnttm", DateUtil.getFormatDate("yyyyMMddHHmmss"));
     		deviceLogService.insertDeviceLog(cmap);
 
 	    	//디바이스번호 확인
