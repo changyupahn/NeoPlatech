@@ -53,6 +53,17 @@ public class GoodsReceiptServiceImpl extends EgovAbstractServiceImpl implements 
 		list.totalRow = goodsReceiptMapper.getGoodsReceiptDetailListCnt(cmap);
 		return list;
 	}
+
+	@Override
+	public int updateQtyOnHand(CommonMap gmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+
+		resultCnt = goodsReceiptMapper.updateQtyOnHand(gmap);
+		
+		return resultCnt;
+    	    	
+	}
 	
 
 }
