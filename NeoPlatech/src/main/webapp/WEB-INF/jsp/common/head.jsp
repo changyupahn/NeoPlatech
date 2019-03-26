@@ -1,5 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
-<title>우체국금융개발원 RFID자산관리시스템</title>
+<title>네오플라테크창고관리시스템</title>
 
 <link rel="shortcut icon" href="/images/logo/favicon.ico?v=1" />
 
