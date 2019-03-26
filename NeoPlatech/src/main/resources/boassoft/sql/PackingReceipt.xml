@@ -99,7 +99,7 @@
 		 , A.TOOL_NAME CODE_NAME FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A
          , (SELECT @rownum:=0) TMP
           WHERE 1 = 1
-          AND A.TOOL_NAME LIKE concat('%',#{codeId},'%')
+          AND A.FINAL_VENDOR LIKE concat('%',#{codeId},'%')
           AND A.TOOL_NAME IS NOT NULL
           GROUP BY A.FINAL_VENDOR
 		  ORDER BY ROWNUM 	  
@@ -147,10 +147,10 @@
           AND A.FINAL_VENDOR LIKE concat('%',#{sRqstVendorCd},'%')
           </if>
           <if test="sRqstItemCd != null and sRqstItemCd != ''"> 	
-          AND A.TOOL_NAME LIKE concat('%',#{toolName},'%')	
+          AND A.TOOL_NAME LIKE concat('%',#{sRqstItemCd},'%')	
          </if>
          <if test="sRqstPNoCd != null and sRqstPNoCd != ''"> 	
-          AND A.PKG_PO_NO LIKE concat('%',#{PKG_PO_NO},'%')	
+          AND A.PKG_PO_NO LIKE concat('%',#{sRqstPNoCd},'%')	
          </if>
         GROUP BY A.FINAL_VENDOR
 	    ORDER BY A.NEO_OD_DAY
@@ -195,5 +195,13 @@
 	         ORDER BY A.NEO_OD_DAY
           ) X	             
      </select>  
+     
+     <update id="updateQtyOnHand" parameterType="cmap" >
+        UPDATE 	RFID_IF_PACKING_WOSENDLIST_ODONLY
+        SET
+				QTY_ON_HAND = #{qtyOnHand}
+				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
+        WHERE 	OD_ID = #{odId}				
+    </update>
 	   
 </mapper>      
