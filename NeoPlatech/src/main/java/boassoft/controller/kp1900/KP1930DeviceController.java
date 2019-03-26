@@ -38,8 +38,8 @@ public class KP1930DeviceController {
     @RequestMapping(value="/kp1900/kp1930.do")
 	public String kp1930(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);
     	//검색값 유지
@@ -53,7 +53,7 @@ public class KP1930DeviceController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));
     	
     	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
@@ -85,7 +85,7 @@ public class KP1930DeviceController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));
     	
     	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	System.out.println(" dataOrderArrow " + "  : " + cmap.getString("dataOrderArrow"));
