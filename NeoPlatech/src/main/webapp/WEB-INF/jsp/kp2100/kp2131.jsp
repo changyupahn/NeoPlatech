@@ -9,6 +9,8 @@ String curGridAction = "/kp2100/kp2131DetailAjax.do";
 String curSearchAction = "/kp2100/kp2131Search.do";
 String xlsDnAction = "/kp2100/kp2131Excel.do";
 String detailAction = "/kp2100/kp2131.do";
+String stockAction = "/kp2100/kp2131Stock.do";
+String recallAction = "/kp2100/kp2131Recall.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
 
 int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
@@ -129,10 +131,11 @@ function fnGridList() {
 
 function fnGridReload(pageIdx){
 	var frm = document.sForm;
+	alert("2222 " + " : " + pageIdx);
 	if (pageIdx) {
 		frm.pageIdx.value = pageIdx;
 	}
-
+	alert("2222 " + " : " + pageIdx);
 	$("#listInfo01").setGridParam({
 		postData: $('#sForm').serializeObject()
 	}).trigger("reloadGrid");
@@ -204,7 +207,116 @@ function fnInitSearchForm() {
 	});
 }
 	
+function fnStock(){
+	var ids = $('#listInfo01').jqGrid('getGridParam', 'selarrrow');
+	var saveJsonArray = [];
 
+	if (ids.length == 0) {
+		alert("입고 처리할 행을 선택해주세요.");
+		return;
+	}
+     alert(" ids.length" + " : " + ids.length  );
+	if (ids.length > 0) {
+		for (var i=0; i<ids.length; i++) {
+			var obj = $("#listInfo01").jqGrid('getRowData', ids[i]);
+			 //alert(" obj.odId" + " : " + obj.odId  );
+			 //alert(" obj.demandId" + " : " + obj.demandId  );			 
+			var saveJsonObj = {
+					odId: obj.odId ,
+					demandId : obj.demandId	,
+					sReceiptCnt : $("#sReceiptCnt").val(), 
+					sRqstVendorCd : $("select[name=sRqstVendorCd]").val(),
+					sRqstItemCd : 	$("select[name=sRqstItemCd]").val(),
+					sRqstPNoCd : $("select[name=sRqstPNoCd]").val()						
+			};
+			saveJsonArray.push(saveJsonObj);
+		}
+
+	
+	
+		if (confirm("입고 처리 하시겠습니까?")) {
+			fnLoadingS2();
+            alert("222" + " : " + "입고 ");
+            alert("222 JSON.stringify(saveJsonArray) " + " : " + JSON.stringify(saveJsonArray));
+			$.ajax({
+				type : "POST",
+				url : "<%=stockAction%>",
+				data : {
+					saveJsonArray : JSON.stringify(saveJsonArray)
+				},
+				dataType : "json",
+				success:function(data)
+				{
+					if (data.ret == "OK") {
+						alert("처리 되었습니다.");
+						fnGridList();
+					} else {
+						alert(data.retmsg);
+					}
+				},
+				error:function(xhr, ajaxOptions, thrownError)
+				{
+					alert("[ERROR] 처리 중 오류가 발생하였습니다.");
+				},
+				complete:function()
+				{
+					fnLoadingE2();
+				}
+			});
+		}
+	}
+}
+
+function fnRecall(){
+	var ids = $('#listInfo01').jqGrid('getGridParam', 'selarrrow');
+	var saveJsonArray = [];
+
+	if (ids.length == 0) {
+		alert("반품 처리할 행을 선택해주세요.");
+		return;
+	}
+
+	if (ids.length > 0) {
+		for (var i=0; i<ids.length; i++) {
+			var obj = $("#listInfo01").jqGrid('getRowData', ids[i]);
+			var saveJsonObj = {
+					odId: obj.odId ,
+					demandId : obj.demandId					
+			};
+			saveJsonArray.push(saveJsonObj);
+		}
+
+		if (confirm("반품 처리 하시겠습니까?")) {
+			fnLoadingS2();
+
+			$.ajax({
+				type : "POST",
+				url : "<%=recallAction%>",
+				data : {
+					saveJsonArray : JSON.stringify(saveJsonArray)
+				},
+				dataType : "json",
+				success:function(data)
+				{
+					if (data.ret == "OK") {
+						alert("처리 되었습니다.");
+						fnGridList();
+					} else {
+						alert(data.retmsg);
+					}
+				},
+				error:function(xhr, ajaxOptions, thrownError)
+				{
+					alert("[ERROR] 처리 중 오류가 발생하였습니다.");
+				},
+				complete:function()
+				{
+					fnLoadingE2();
+				}
+			});
+		}
+	}
+}
 </script>
 </head>
 <body>
@@ -231,6 +343,8 @@ function fnInitSearchForm() {
 		<span class="button"><input type="submit" value="<spring:message code="button.search"/>" onclick="fnSearch();"></span>
 		<span class="button"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
 		<span class="button"><input type="button" value="<spring:message code="button.download.excel"/>" onclick="fnXlsDn();"></span>
+		<span class="button"><input type="button" value="입고처리" onclick="fnStock();"></span>
+		<span class="button"><input type="button" value="반품처리" onclick="fnRecall();"></span>	
 		&nbsp;
 	</td>
 	</tr>
