@@ -211,7 +211,7 @@ public class KP2131PackingReceiptDtlController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/kp2100/kp2111Stock.do")
+	@RequestMapping(value="/kp2100/kp2131Stock.do")
 	public String Kp2111Stock(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
