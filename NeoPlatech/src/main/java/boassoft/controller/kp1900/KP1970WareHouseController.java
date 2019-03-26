@@ -41,8 +41,8 @@ public class KP1970WareHouseController {
 	@RequestMapping(value="/kp1900/kp1970.do")
 	public String kp1970(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
-		int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-		cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+		int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);     	
     	
@@ -103,8 +103,8 @@ public class KP1970WareHouseController {
 	public String kp2110Excel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
 		
-		int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-		cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
     	cmap.put("pageLimit", pageLimit); 
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
