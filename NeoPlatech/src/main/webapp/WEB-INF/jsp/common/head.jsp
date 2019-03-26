@@ -13,6 +13,7 @@
 <script type="text/javascript" src="/common/js/jquery.form.js"></script>
 <script type="text/javascript" src="/common/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="/common/js/jquery.Popup.js"></script>
+<script type="text/javascript" src="/common/js/jquery-barcode.js"></script>
 <script type="text/javascript" src="/common/js/default.js?<%=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date())%>"></script>
 <script type="text/javascript" src="/common/js/popup.js?<%=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date())%>"></script>
 <script type="text/javascript" src="/common/js/utils.js?<%=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date())%>"></script>
