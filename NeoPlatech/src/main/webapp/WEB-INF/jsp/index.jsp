@@ -44,11 +44,11 @@ $(document).ready(function(){
 		<form name="loginForm" method="post" action="/kp1000/kp1010IdLoginProc.do" onsubmit="return fnValidationChk()" >
 
 		<h1 style="color:#000000;font-size:42px;padding-top:20px;font-family:'Arial Bold';font-weight:normal;text-shadow: 2px 2px 2px #aaaaaa;">
-			<img src="/images/logo/logo_login.png" alt="우체국금융개발원" />
+			<img src="/images/logo/neo_logo1_533_80.png" width="300" alt="네오플라텍" />
 		</h1>
 
 		<div class="img">
-	    	<img src="/images/login/login_img.png" alt="" />
+	    	<img src="/images/login/login_img.png" alt="" width="300"/>
 	    </div>
 	    <div class="login_form">
 	    	<h2><img src="/images/login/login_h2.gif" alt="login" /></h2>
