@@ -45,8 +45,10 @@ public class KP1712InventoryTargetController {
     @RequestMapping(value="/kp1700/kp1712.do")
 	public String kp1712(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
+    	cmap.put("pageLimit", pageLimit);
 
     	//화면표시관리 (자산목록)
 		cmap.put("dispType", "ASSET_LIST");
@@ -64,6 +66,7 @@ public class KP1712InventoryTargetController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));
     	cmap.put("sAssetDiv", "11");
 
     	//그리드 세션 체크 및 메뉴 권한 설정
