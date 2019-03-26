@@ -59,4 +59,14 @@ public class PackingReceiptServiceImpl extends EgovAbstractServiceImpl implement
 		return list;
 	}
 
+	@Override
+	public int updateQtyOnHand(CommonMap gmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+
+		resultCnt = packingReceiptMapper.updateQtyOnHand(gmap);
+		
+		return resultCnt;
+	}
+
 }
