@@ -14,6 +14,8 @@ public interface GoodsReceiptService {
 	public CommonList getOptionPNoList(CommonMap cmap) throws Exception;
 
 	public CommonList getGoodsReceiptDetailList(CommonMap cmap) throws Exception;
+
+	public int updateQtyOnHand(CommonMap gmap) throws Exception;
 	
 	
 }
