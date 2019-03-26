@@ -231,7 +231,15 @@
               GROUP BY A.VENDOR
 	         ORDER BY A.LGE_DATE
           ) X	             
-     </select>  
+     </select>               
+     
+     <update id="updateQtyOnHand" parameterType="cmap" >
+        UPDATE 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
+        SET
+				QTY_ON_HAND = #{qtyOnHand}
+				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
+        WHERE 	OD_ID = #{odId}				
+    </update>
             
 </mapper>
 
