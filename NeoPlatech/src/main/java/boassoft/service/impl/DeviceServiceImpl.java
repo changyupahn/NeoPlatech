@@ -21,7 +21,7 @@ public class DeviceServiceImpl extends EgovAbstractServiceImpl implements  Devic
 	public CommonList getDeviceList(CommonMap cmap) throws Exception{
 		CommonList list = deviceMapper.getDeviceList(cmap);
 		list.totalRow = deviceMapper.getDeviceListCnt(cmap);
-		return null;
+		return list;
 		
 	}
 	
