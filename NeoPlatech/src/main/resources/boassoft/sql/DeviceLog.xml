@@ -55,7 +55,7 @@
 				#{deviceLogSeq}
 				,#{deviceno}
 				,#{accessIp}
-				,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+				,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
 		)
     </insert>
     
