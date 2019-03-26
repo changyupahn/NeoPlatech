@@ -21,4 +21,6 @@ public interface PackingReceiptMapper {
 
 	public int getPackingReceiptDetailListCnt(CommonMap cmap) throws Exception;
 
+	public int updateQtyOnHand(CommonMap gmap) throws Exception;
+
 }

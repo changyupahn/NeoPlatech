@@ -20,6 +20,8 @@ public interface GoodsReceiptMapper {
 	public CommonList getGoodsReceiptDetailList(CommonMap cmap) throws Exception;
 
 	public int getGoodsReceiptDetailListCnt(CommonMap cmap) throws Exception;
+
+	public int updateQtyOnHand(CommonMap gmap) throws Exception;
 	
 
 }
