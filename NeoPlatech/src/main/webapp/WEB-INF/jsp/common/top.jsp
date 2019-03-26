@@ -83,14 +83,52 @@ function fnLogout() {
 }
 </script>
 <div id="header">
-	<a href="javascript:;" class="logo" ><img src="/images/logo/logo_main.png" alt="우체국금융개발원 RFID자산관리시스템 " /></a>
+	<a href="javascript:;" class="logo" ><img src="/images/logo/neo_logo1_533_80.png" alt="네오플라텍창고/수불/재고시스템 " width="300" /></a>
 	<div class="login">
 		<span><spring:message code="common.login.result" arguments="<%=topUserNm%>" /></span>
 		<span class="btn_black"><a href="javascript:fnLogout();"><spring:message code="button.logout"/></a></span>
 	</div>
 	<div class="gnb">
 		<ul>
-		
+		<% if (topGrantReadYnArr.indexOf("KP1300") > -1) { %>
+		<li class="">
+			<a href="javascript:;" onclick="fnTopMenu('/kp1300/kp1310.do')">자산취득관리</a>
+			<ol>
+				<% if (topGrantReadYnArr.indexOf("KP1310") > -1) { %>
+				<li><a href="/kp1300/kp1310.do" style="color:#ffffff">자산현황</a></li>
+				<% } %>
+				<% if (topGrantReadYnArr.indexOf("KP1320") > -1) { %>
+				<li><a href="/kp1300/kp1320.do" style="color:#ffffff">자산검수</a></li>
+				<% } %>
+			</ol>
+		</li>
+		<% } %>
+		<% if (topGrantReadYnArr.indexOf("KP1700") > -1) { %>
+		<li class="">
+			<a href="javascript:;" onclick="fnTopMenu('/kp1700/kp1710.do')">재물조사관리</a>
+			<ol>
+				<% if (topGrantReadYnArr.indexOf("KP1710") > -1) { %>
+				<li><a href="/kp1700/kp1710.do" style="color:#ffffff">재물조사관리</a></li>
+				<% } %>
+				<% if (topGrantReadYnArr.indexOf("KP1720") > -1) { %>
+				<li><a href="/kp1700/kp1720.do" style="color:#ffffff">재물조사내역</a></li>
+				<% } %>
+				<%-- if (topGrantReadYnArr.indexOf("KP1730") > -1) { %>
+				<li><a href="/kp1700/kp1730.do" style="color:#ffffff">재물조사결과반영</a></li>
+				<% } --%>
+			</ol>
+		</li>
+		<% } %>
+		<% if (topGrantReadYnArr.indexOf("KP2000") > -1) { %>
+		<li class="">
+			<a href="javascript:;" onclick="fnTopMenu('/kp2000/kp2020.do')">자산이력관리</a>
+			<ol>
+				<% if (topGrantReadYnArr.indexOf("KP2020") > -1) { %>
+				<li><a href="/kp2000/kp2020.do" style="color:#ffffff">태그발행내역</a></li>
+				<% } %>
+			</ol>
+		</li>
+		<% } %>		
 		<% if (topGrantReadYnArr.indexOf("KP2100") > -1) { %>
 		<li class="">
 			<a href="javascript:;" onclick="fnTopMenu('/kp2100/kp2110.do')">물품취득관리</a>
