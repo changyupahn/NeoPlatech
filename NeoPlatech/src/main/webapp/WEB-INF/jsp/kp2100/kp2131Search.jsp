@@ -43,7 +43,7 @@ $(document).ready(function(){
 
 function fnItemCdChange(obj){
 	var value = "sRqstVendorCd=" + obj;
-	alert("111" + " : " + $("select[name=sRqstVendorCd]").val() );
+	
 	$.ajax({
 		type:'POST',
 		url:'<%=curComboItemAction%>',
@@ -56,8 +56,7 @@ function fnItemCdChange(obj){
 				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>선택</option>");
 				
 				$.each(data.LIST, function(key,value){
-					alert("4444" + value.code);
-					alert("55555" + value.codeName);
+				
 					$("#sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 				});
 			}else{
@@ -75,8 +74,7 @@ function fnItemCdChange(obj){
 function fnPNoChange(obj){
 	
 	var value = "sRqstPNoCd=" + obj;
-	alert("111" + " : " + $("select[name=sRqstVendorCd]").val() );
-	alert("222" + " : " + $("select[name=sRqstItemCd]").val());
+	
 	
 	$.ajax({
 		type:'POST',
@@ -87,13 +85,12 @@ function fnPNoChange(obj){
 			sRqstItemCd : $("select[name=sRqstItemCd]").val()
 		},
 		success:function(data){
-			alert("333" + data.LIST);
+			
 			if(data.LIST.length > 0){
 				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>선택</option>");
 				
 				$.each(data.LIST, function(key,value){
-					alert("4444" + value.code);
-					alert("55555" + value.codeName);
+				
 					$("#sRqstPNoCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 				});
 			}else{

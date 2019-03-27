@@ -131,11 +131,11 @@ function fnGridList() {
 
 function fnGridReload(pageIdx){
 	var frm = document.sForm;
-	alert("2222 " + " : " + pageIdx);
+	
 	if (pageIdx) {
 		frm.pageIdx.value = pageIdx;
 	}
-	alert("2222 " + " : " + pageIdx);
+	
 	$("#listInfo01").setGridParam({
 		postData: $('#sForm').serializeObject()
 	}).trigger("reloadGrid");
@@ -215,12 +215,16 @@ function fnStock(){
 		alert("입고 처리할 행을 선택해주세요.");
 		return;
 	}
-     alert(" ids.length" + " : " + ids.length  );
+	
+	if($("#sReceiptCnt").val() == ""){
+		alert("입고수량을 입력해주세요.");
+		return;
+	}
+     
 	if (ids.length > 0) {
 		for (var i=0; i<ids.length; i++) {
 			var obj = $("#listInfo01").jqGrid('getRowData', ids[i]);
-			 //alert(" obj.odId" + " : " + obj.odId  );
-			 //alert(" obj.demandId" + " : " + obj.demandId  );			 
+						 
 			var saveJsonObj = {
 					odId: obj.odId ,
 					demandId : obj.demandId	,
@@ -236,8 +240,7 @@ function fnStock(){
 	
 		if (confirm("입고 처리 하시겠습니까?")) {
 			fnLoadingS2();
-            alert("222" + " : " + "입고 ");
-            alert("222 JSON.stringify(saveJsonArray) " + " : " + JSON.stringify(saveJsonArray));
+           
 			$.ajax({
 				type : "POST",
 				url : "<%=stockAction%>",
