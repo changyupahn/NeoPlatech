@@ -16,14 +16,7 @@ import boassoft.util.CommonMap;
 import boassoft.util.DateUtil;
 
 public class LgNewOrderPlanListScriptJob implements Job {
-
-	/** batchService */
-	private BatchService batchService;
-
-	/** setBatchService */
-	public void setBatchService(BatchService batchService) {
-		this.batchService = batchService;
-	}
+	
 
 	/** batchMssqlService */
 	private BatchMssqlService batchMssqlService;
@@ -52,8 +45,7 @@ public class LgNewOrderPlanListScriptJob implements Job {
 			throws JobExecutionException {
 		System.out.println("egovBatchExecute() : "
 				+ DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
-
-		// setBatchService((BatchService)jobContext.getJobDetail().getJobDataMap().get("batchService"));
+		
 		setBatchMssqlService((BatchMssqlService) jobContext.getJobDetail()
 				.getJobDataMap().get("batchMssqlService"));
 		setBatchMysqlInterfaceService((BatchMysqlInterfaceService) jobContext
@@ -74,9 +66,9 @@ public class LgNewOrderPlanListScriptJob implements Job {
 			String strToday = sdf.format(c2.getTime());
 
 			cmap.put("startDate", strYesterDay);
-			//System.out.println(" row startDate  : "+ strYesterDay + " ");
+			
 			cmap.put("endDate", strToday);
-			//System.out.println(" row endDate  : "+ strToday + " ");
+			
 			
 			CommonList clist = new CommonList();
 			batchMysqlInterfaceService.deleteLgNewOrderPlanList(cmap);
