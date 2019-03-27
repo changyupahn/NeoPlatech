@@ -55,12 +55,6 @@ public class KP2150GoodsShipmentOutController {
     	//검색값 유지
     	model.addAttribute("cmRequest",cmap);
     	
-    	System.out.println(" dataOrder  kp2150 " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2150 " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2150" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2150 " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2150 " + "  : " + cmap.getInt("pageLimit")); 
-    	
 		return "kp2100/kp2150";
 		
 		
@@ -72,27 +66,17 @@ public class KP2150GoodsShipmentOutController {
 		CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));
-    	
-    	System.out.println(" dataOrder  kp2150Ajax " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2150Ajax " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2150Ajax" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2150Ajax " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2150Ajax " + "  : " + cmap.getInt("pageLimit"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));    
 		
     	//그리드 세션 체크 및 메뉴 권한 설정
-    	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
-    	System.out.println(" gridSessionChk kp22110Ajax " + "  : " + gridSessionChk.toString());
+    	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);    	
     	if (!gridSessionChk.isEmpty()) {
     		model.addAttribute("printString", gridSessionChk.toJsonString());
         	return "common/commonString";
     	}
     	
-    	System.out.println(" cmap kp2150Ajax " + "  : " + cmap.toString());
     	CommonList resultList = goodsShipmentOutService.GoodsShipmentOutList(cmap);
-    	System.out.println(" resultList  kp2150Ajax " + "  : " + resultList.toString());
-    	System.out.println(" resultList.size() kp21500Ajax  " + "  : " + resultList.size());
-
+    	
     	CommonMap result = new CommonMap();
     	result.put("resultList", resultList);
     	result.put("totalRow", resultList.totalRow);
@@ -139,11 +123,8 @@ public class KP2150GoodsShipmentOutController {
     		cmap.put("sDeptNo", cmap.getString("sDeptNo", SessionUtil.getString("deptNo")));
     		cmap.put("sDeptName", cmap.getString("sDeptName", SessionUtil.getString("deptName")));
     	}
-    	
-    	System.out.println(" cmap kp2150Excel " + "  : " + cmap.toString());
+    	    	
     	CommonList resultList = goodsShipmentOutService.GoodsShipmentOutList(cmap);
-    	System.out.println(" resultList  kp2110Excel " + "  : " + resultList.toString());
-    	System.out.println(" resultList.size() kp2110Excel  " + "  : " + resultList.size());
     	
     	//화면표시관리 (부자재출고목록)
     	cmap.put("dispType", "GOODS_SHIPMENT_OUT_LIST_EXCEL");

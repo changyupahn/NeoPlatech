@@ -62,25 +62,13 @@ public class KP2151GoodsShipmentOutDtlController {
   			String sBomQty = dispMng.getString("BOM_QTY");
   			String sSendingPcName = dispMng.getString("SENDING_PC_NAME");
   			String sSendTime = dispMng.getString("SEND_TIME");
-         	System.out.println(" /kp2100/kp2151.do sDemandId " + " : " + sDemandId );
-         	System.out.println(" /kp2100/kp2151.do sLgPartNo " + " : " + sLgPartNo );
-         	System.out.println(" /kp2100/kp2151.do sBomQty " + " : " + sBomQty );
-         	System.out.println(" /kp2100/kp2151.do sSendingPcName " + " : " + sSendingPcName );
-         	System.out.println(" /kp2100/kp2151.do sSendTime " + " : " + sSendTime );
+         	
          }
-    	
-    	
+    	    	
     	//검색값 유지
     	model.addAttribute("cmRequest",cmap);
     	model.addAttribute("viewData",dispMng);
-    	
-    	System.out.println(" dataOrder  kp2151 " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2151 " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2151" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2151 " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2151 " + "  : " + cmap.getInt("pageLimit")); 
-    	System.out.println(" goWith kp2151 " + "  : " + cmap.getInt("goWith")); 
-		
+    	    		
     	return "kp2100/kp2151";
 	
 	}
@@ -96,15 +84,7 @@ public class KP2151GoodsShipmentOutDtlController {
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
     	cmap.put("goWith", cmap.getString("goWith"));
-    	
-    	System.out.println(" dataOrder  kp2150DetailAjax " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2150DetailAjax " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2150DetailAjax" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2150DetailAjax " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2150DetailAjax " + "  : " + cmap.getInt("pageLimit"));
-    	System.out.println(" goWith kp2150DetailAjax " + "  : " + cmap.getInt("goWith"));
-		
-    	
+    	    
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
     	System.out.println(" gridSessionChk kp2150DetailAjax " + "  : " + gridSessionChk.toString());
@@ -112,11 +92,8 @@ public class KP2151GoodsShipmentOutDtlController {
     		model.addAttribute("printString", gridSessionChk.toJsonString());
         	return "common/commonString";
     	}
-    	
-    	System.out.println(" cmap kp2150DetailAjax " + "  : " + cmap.toString());
+    	    	
     	CommonList resultList = goodsShipmentOutService.getGoodsShipmentOutDetailList(cmap);
-    	System.out.println(" resultList  kp2150DetailAjax " + "  : " + resultList.toString());
-    	System.out.println(" resultList.size() kp2150DetailAjax  " + "  : " + resultList.size());
 
     	CommonMap result = new CommonMap();
     	result.put("resultList", resultList);
@@ -138,10 +115,7 @@ public class KP2151GoodsShipmentOutDtlController {
 		//화면표시관리 (부자재입고목록)
     	cmap.put("dispType", "GOODS_SHIPMENT_OUT_LIST");
     	CommonList goodsShipmentOutList = systemService.getDispMngList(cmap);
-    	model.addAttribute("goodsShipmentOutList", goodsShipmentOutList);
-		
-    	//CommonList goodsShipmentOutDetailList = goodsShipmentOutService.getGoodsShipmentOutDetailList(cmap);
-    	//model.addAttribute("goodsShipmentOutDetailList", goodsShipmentOutDetailList);
+    	model.addAttribute("goodsShipmentOutList", goodsShipmentOutList);		    	
 
     	//검색값 유지
     	model.addAttribute("cmRequest",cmap);
@@ -154,14 +128,7 @@ public class KP2151GoodsShipmentOutDtlController {
 	@RequestMapping(value="/kp2100/kp2151Search.do")
 	public String kp2150Search(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
         CommonMap cmap = new CommonMap(request);
-		
-    	System.out.println(" dataOrder  kp2151 " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2151 " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2151" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2151 " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2151 " + "  : " + cmap.getInt("pageLimit")); 
-    	System.out.println(" goWith kp2151 " + "  : " + cmap.getString("goWith")); 		        
-        
+		           
     	//자산상세
     	CommonMap dispMng = new CommonMap();
 
@@ -176,15 +143,8 @@ public class KP2151GoodsShipmentOutDtlController {
   			String sBomQty = dispMng.getString("BOM_QTY");
   			String sSendingPcName = dispMng.getString("SENDING_PC_NAME");
   			String sSendTime = dispMng.getString("SEND_TIME");
-         	System.out.println(" sDemandId " + " : " + sDemandId );
-         	System.out.println(" sLgPartNo " + " : " + sLgPartNo );
-         	System.out.println(" sBomQty " + " : " + sBomQty );
-         	System.out.println(" sSendingPcName " + " : " + sSendingPcName );
-         	System.out.println(" sSendTime " + " : " + sSendTime );
-         }
-        
- 			
- 		
+         	
+         }         			 		
          
     	model.addAttribute("viewData", dispMng);
         

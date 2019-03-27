@@ -52,13 +52,7 @@ public class KP2130PackingReceiptController {
     	model.addAttribute("packingReceiptList", packingReceiptList);
     	
     	//검색값 유지
-    	model.addAttribute("cmRequest",cmap);
-    	
-    	System.out.println(" dataOrder  kp2130 " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2130 " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2130" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2130 " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2130 " + "  : " + cmap.getInt("pageLimit"));     	    	
+    	model.addAttribute("cmRequest",cmap);    	    	 	    
     	
 		return "kp2100/kp2130";    	    	
 	}
@@ -69,13 +63,7 @@ public class KP2130PackingReceiptController {
 		CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));
-		
-    	System.out.println(" dataOrder  kp2130Ajax " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
-    	System.out.println(" dataOrderArrow kp2130Ajax " + "  : " + cmap.getString("dataOrderArrow"));
-    	System.out.println(" pageSize  kp2130Ajax" + "  : " + cmap.getInt("pageSize"));
-    	System.out.println(" pageIdx  kp2130Ajax " + "  : " + cmap.getInt("pageIdx"));
-    	System.out.println(" pageLimit kp2130Ajax " + "  : " + cmap.getInt("pageLimit"));
+    	cmap.put("pageLimit", cmap.getInt("pageLimit",0));		    	
     	
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
@@ -84,11 +72,8 @@ public class KP2130PackingReceiptController {
     		model.addAttribute("printString", gridSessionChk.toJsonString());
         	return "common/commonString";
     	}
-    	
-    	System.out.println(" cmap kp2130Ajax " + "  : " + cmap.toString());
-    	CommonList resultList = packingReceiptService.getPackingReceiptList(cmap);
-    	System.out.println(" resultList  kp2130Ajax " + "  : " + resultList.toString());
-    	System.out.println(" resultList.size() kp2130Ajax  " + "  : " + resultList.size());
+    	    
+    	CommonList resultList = packingReceiptService.getPackingReceiptList(cmap);    	
     	CommonMap result = new CommonMap();
     	result.put("resultList", resultList);
     	result.put("totalRow", resultList.totalRow);
@@ -135,10 +120,8 @@ public class KP2130PackingReceiptController {
     		cmap.put("sDeptName", cmap.getString("sDeptName", SessionUtil.getString("deptName")));
     	}
     	
-    	System.out.println(" cmap kp2130Excel " + "  : " + cmap.toString());
+    	
     	CommonList resultList = packingReceiptService.getPackingReceiptList(cmap);
-    	System.out.println(" resultList  kp2130Excel " + "  : " + resultList.toString());
-    	System.out.println(" resultList.size() kp2130Excel  " + "  : " + resultList.size());
     	
      	//화면표시관리 (자산목록)
     	cmap.put("dispType", "PACKING_RECEIPT_LIST_EXCEL");
