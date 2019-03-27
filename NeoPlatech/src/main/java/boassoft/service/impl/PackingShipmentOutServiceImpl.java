@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import boassoft.mapper.PackingReceiptMapper;
 import boassoft.mapper.PackingShipmentOutMapper;
 import boassoft.service.PackingShipmentOutService;
 import boassoft.util.CommonList;
