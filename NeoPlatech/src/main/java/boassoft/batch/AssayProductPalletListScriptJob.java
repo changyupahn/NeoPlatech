@@ -48,8 +48,7 @@ public class AssayProductPalletListScriptJob implements Job {
 		// TODO Auto-generated method stub
 		System.out.println("egovBatchExecute() : "
 				+ DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
-		
-		// setBatchService((BatchService)jobContext.getJobDetail().getJobDataMap().get("batchService"));
+				
 		setBatchMssqlService((BatchMssqlService) jobContext.getJobDetail()
 				.getJobDataMap().get("batchMssqlService"));
 		setBatchMysqlInterfaceService((BatchMysqlInterfaceService) jobContext
@@ -71,9 +70,9 @@ public class AssayProductPalletListScriptJob implements Job {
 			String strToday = sdf.format(c2.getTime());
 			
 			cmap.put("startDate", strYesterDay);
-			//System.out.println(" row startDate  : "+ strYesterDay + " ");
+			
 			cmap.put("endDate", strToday);
-			//System.out.println(" row endDate  : "+ strToday + " ");
+			
 			
 			CommonList clist = new CommonList();
 			
