@@ -21,11 +21,6 @@ public class PublicProductListScheduler {
 	 */
 	private Scheduler sched;
 	
-	private BatchService batchService;
-
-	public void setBatchService(BatchService batchService) {
-		this.batchService = batchService;
-	}
 	
 	/** batchMssqlService */
 	private BatchMssqlService batchMssqlService;
@@ -53,17 +48,10 @@ public class PublicProductListScheduler {
 		
         System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
-		String batchId = "batch_007";
-		//String batchCycle = "0 10 4 * * ?"; //매일 새벽 4시 10분
-		//String batchCycle = "0 20 12 * * ?";
-		//String batchCycle = "10 0/1 * * * ?"; //1분 마다
-		//String batchCycle = "0 0/2 * * * ?"; //2분 마다
-		//String batchCycle = "0 0/10 * * * ?"; //10분 마다
-		//String batchCycle = "10 * * * * ?"; //1분 마다
-		 String batchCycle = "0 0 3 * * ?"; //매일 새벽 3시 마다
+		String batchId = "batch_007";	
+		String batchCycle = "0 0 3 * * ?"; //매일 새벽 3시 마다
 	
-		HashMap<String, Object> jobMap = new HashMap<String, Object>();
-		//jobMap.put("batchService", batchService);
+		HashMap<String, Object> jobMap = new HashMap<String, Object>();		
 		jobMap.put("batchMssqlService", batchMssqlService);
 		jobMap.put("batchMysqlInterfaceService", batchMysqlInterfaceService);
 		
@@ -76,8 +64,7 @@ public class PublicProductListScheduler {
 		jobDetail.setJobClass(PublicProductListScriptJob.class);
 		jobDetail.setJobDataMap(jobDataMap);
 		
-		// Trigger 만들기
-		//Trigger trigger = TriggerUtils.makeImmediateTrigger(jobDetail.getName(), 1, 1000000);
+		// Trigger 만들기		
 		CronTrigger trigger = new CronTrigger(batchId, null, batchCycle);
 		System.out.println("배치스케줄을 등록합니다. 배치스케줄ID : " + batchId );
 		System.out.println(batchId + " - cronexpression : " + trigger.getCronExpression());
