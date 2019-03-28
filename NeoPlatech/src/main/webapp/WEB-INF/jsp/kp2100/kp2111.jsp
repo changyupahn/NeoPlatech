@@ -171,7 +171,10 @@ function fnSearch(){
 
 function fnXlsDn(){
 	var frm = document.sForm;
-	frm.pageIdx.value = "1";
+	frm.pageIdx.value = "1";	
+	frm.sRqstVendorCd.value = $("select[name=sRqstVendorCd]").val();
+	frm.sRqstItemCd.value = $("select[name=sRqstItemCd]").val();
+	frm.sRqstPNoCd.value = $("select[name=sRqstPNoCd]").val();
 	frm.action = "<%=xlsDnAction%>";
 	frm.target = "_self";
 	frm.submit();

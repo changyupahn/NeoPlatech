@@ -171,8 +171,7 @@ function fnDetail(rowId) {
 		var obj = $("#listInfo01").jqGrid('getRowData', selRowId);
 
 		var frm = document.sForm;
-		frm.goWith.value = obj.goWith;	
-		alert(' goWith  ' + " : " + obj.goWith);
+		frm.goWith.value = obj.goWith;			
 		frm.action = "<%=detailAction%>";
 		frm.target = "_self";
 		frm.submit();

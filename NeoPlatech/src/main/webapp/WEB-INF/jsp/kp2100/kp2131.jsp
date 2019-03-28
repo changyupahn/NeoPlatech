@@ -136,6 +136,10 @@ function fnGridReload(pageIdx){
 		frm.pageIdx.value = pageIdx;
 	}
 	
+	frm.sRqstVendorCd.value = $("select[name=sRqstVendorCd]").val();
+	frm.sRqstItemCd.value = $("select[name=sRqstItemCd]").val();
+	frm.sRqstPNoCd.value = $("select[name=sRqstPNoCd]").val();
+	
 	$("#listInfo01").setGridParam({
 		postData: $('#sForm').serializeObject()
 	}).trigger("reloadGrid");
@@ -148,6 +152,9 @@ function fnSearch(){
 function fnXlsDn(){
 	var frm = document.sForm;
 	frm.pageIdx.value = "1";
+	frm.sRqstVendorCd.value = $("select[name=sRqstVendorCd]").val();
+	frm.sRqstItemCd.value = $("select[name=sRqstItemCd]").val();
+	frm.sRqstPNoCd.value = $("select[name=sRqstPNoCd]").val();
 	frm.action = "<%=xlsDnAction%>";
 	frm.target = "_self";
 	frm.submit();
@@ -332,7 +339,9 @@ function fnRecall(){
 	<input type="hidden" id="pageIdx" name="pageIdx" value="<%=cmRequest.getString("pageIdx")%>" />
 	<input type="hidden" id="dataOrder" name="dataOrder" value="<%=cmRequest.getString("dataOrder")%>" />
 	<input type="hidden" id="dataOrderArrow" name="dataOrderArrow" value="<%=cmRequest.getString("dataOrderArrow", "asc")%>" />
-
+    <input type="hidden" id="sRqstVendorCd" name="sRqstVendorCd" value="<%=cmRequest.getString("sRqstVendorCd", "")%>" />
+	<input type="hidden" id="sRqstItemCd" name="sRqstItemCd" value="<%=cmRequest.getString("sRqstItemCd", "")%>" />
+	<input type="hidden" id="sRqstPNoCd" name="sRqstPNoCd" value="<%=cmRequest.getString("sRqstPNoCd", "")%>" />
 	<div id="divPopupLayer"></div>
 
 	<div id="SearchBox" class="SearchBox"></div>
