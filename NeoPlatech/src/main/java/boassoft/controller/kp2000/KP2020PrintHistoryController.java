@@ -34,8 +34,8 @@ public class KP2020PrintHistoryController {
     @RequestMapping(value="/kp2000/kp2020.do")
 	public String kp2020(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);     	
 
@@ -90,8 +90,11 @@ public class KP2020PrintHistoryController {
     @RequestMapping(value="/kp2000/kp2020Excel.do")
 	public String kp2020Excel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	int pageLimit = (cmap.getInt("page", 2) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+    	
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0"); 
     	cmap.put("sAssetDiv", "1");
 
     	//그리드 세션 체크 및 메뉴 권한 설정

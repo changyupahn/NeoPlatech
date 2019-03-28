@@ -47,8 +47,8 @@ public class KP1720InventoryDetailController {
     @RequestMapping(value="/kp1700/kp1720.do")
 	public String kp1720(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);   
     	
@@ -134,10 +134,10 @@ public class KP1720InventoryDetailController {
     	CommonMap cmap = new CommonMap(request);
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("pageLimit", cmap.getInt("pageLimit",1));
+    	cmap.put("pageLimit", "0");
     	cmap.put("sAssetDiv", "11");
     	cmap.put("sInvTargetYn", "Y");
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
     	
     	System.out.println(" dataOrder " + "  : " + CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
@@ -217,8 +217,9 @@ public class KP1720InventoryDetailController {
     @RequestMapping(value="/kp1700/kp1720CateExcel.do")
 	public String kp1720CateExcel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0");
 
     	CommonList resultList = inventoryStatService.getAssetCateStat(cmap);
 
@@ -276,8 +277,9 @@ public class KP1720InventoryDetailController {
     @RequestMapping(value="/kp1700/kp1720DeptExcel.do")
 	public String kp1720DeptExcel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0");
 
     	CommonList resultList = inventoryStatService.getDeptStat(cmap);
 
@@ -336,8 +338,9 @@ public class KP1720InventoryDetailController {
     @RequestMapping(value="/kp1700/kp1720HosilExcel.do")
 	public String kp1720HosilExcel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0");
 
     	CommonList resultList = inventoryStatService.getHosilStat(cmap);
 
