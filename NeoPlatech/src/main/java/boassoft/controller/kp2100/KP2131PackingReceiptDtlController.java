@@ -22,6 +22,8 @@ import boassoft.service.UserService;
 import boassoft.util.CamelUtil;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+import boassoft.util.ExcelUtil;
+import boassoft.util.SessionUtil;
 
 @Controller
 public class KP2131PackingReceiptDtlController {
@@ -387,4 +389,78 @@ public class KP2131PackingReceiptDtlController {
     	return resultMap.toJsonString(model);
 		
 	}
+	
+	@RequestMapping(value="/kp2100/kp2131Excel.do")
+	public String kp2130Excel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		CommonMap cmap = new CommonMap(request);
+		
+		int pageLimit = (cmap.getInt("page", 2) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
+    	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0"); 
+    	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("sRqstVendorCd", (cmap.getString("sRqstVendorCd", "")).substring(1));
+		cmap.put("sRqstItemCd", (cmap.getString("sRqstItemCd", "")).substring(1));
+		cmap.put("sRqstPNoCd", (cmap.getString("sRqstPNoCd", "")).substring(1));
+    	
+    	//그리드 세션 체크 및 메뉴 권한 설정
+    	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);    	
+    	if (!gridSessionChk.isEmpty()) {
+    		model.addAttribute("printString", gridSessionChk.toJsonString());
+        	return "common/commonString";
+    	}
+    	
+    	//사용자 기본 파라미터 설정
+    	if (!"GRANT_MGR".equals(cmap.getString("ssGrantRead"))
+    			&& "USR".equals(cmap.getString("searchDiv"))) {
+    		cmap.put("sUserNo", cmap.getString("sUserNo", SessionUtil.getString("userNo")));
+    		cmap.put("sUserName", cmap.getString("sUserName", SessionUtil.getString("userName")));
+    		cmap.put("sDeptNo", cmap.getString("sDeptNo", SessionUtil.getString("deptNo")));
+    		cmap.put("sDeptName", cmap.getString("sDeptName", SessionUtil.getString("deptName")));
+    	}
+    	
+    	System.out.println("  pageIdx" + " : " + cmap.getString("pageIdx", "0"));
+    	System.out.println("  pageSize" + " : " + cmap.getString("pageSize", "0"));
+    	System.out.println("  pageLimit" + " : " + cmap.getString("pageLimit", "0"));
+    	System.out.println("  dataOrder" + " : " + cmap.getString("dataOrder", "0"));
+    	System.out.println("  dataOrderArrow" + " : " + cmap.getString("dataOrderArrow", "0"));
+    	System.out.println("  sRqstVendorCd" + " : " + cmap.getString("sRqstVendorCd", "") );
+    	System.out.println("  sRqstItemCd" + " : " + cmap.getString("sRqstItemCd", ""));
+    	System.out.println("  sRqstPNoCd" + " : " + cmap.getString("sRqstPNoCd", ""));
+		
+    	
+    	CommonList resultList = packingReceiptService.getPackingReceiptDetailList(cmap);
+    	
+    	System.out.println("  resultList.size()" + " : " + resultList.size());
+    	
+    	//화면표시관리 (자산목록)
+    	cmap.put("dispType", "PACKING_RECEIPT_DETAIL_LIST_EXCEL");
+    	CommonList dispMngList = systemService.getDispMngList(cmap);
+    	
+    	System.out.println("  resultList.size()" + " : " + resultList.size());
+    	
+    	int headerSize = dispMngList.size();
+    	String[] headerListLgc1 = new String[headerSize];
+    	String[] headerListLgc2 = null;
+    	String[] headerListPhc = new String[headerSize];
+    	String[] headerListTyp = new String[headerSize];
+    	String[] headerListWidth = new String[headerSize];
+    	String[][] mergedRegion = null;
+    	int idx = 0;
+    	
+    	while (idx<dispMngList.size()) {
+    		CommonMap dispMng = dispMngList.getMap(idx);
+    		headerListLgc1[idx] = dispMng.getString("logical_name");
+			headerListPhc[idx] = dispMng.getString("physical_name");
+			headerListTyp[idx] = dispMng.getString("data_disp_type");
+			headerListWidth[idx] = "" + Math.round(dispMng.getInt("default_width",100) / 10);
+			idx++;
+    	}
+    	
+    	ExcelUtil.write2(request, response, resultList, "포장재입고확인목록", headerListLgc1, headerListLgc2, headerListPhc, headerListTyp, mergedRegion, headerListWidth, 20);
+    	    	
+		return null;
+		
+	}	
 }

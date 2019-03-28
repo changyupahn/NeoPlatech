@@ -16,6 +16,8 @@ import boassoft.service.UserService;
 import boassoft.util.CamelUtil;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+import boassoft.util.ExcelUtil;
+import boassoft.util.SessionUtil;
 
 @Controller
 public class KP2151GoodsShipmentOutDtlController {
@@ -77,10 +79,10 @@ public class KP2151GoodsShipmentOutDtlController {
 	public String kp2151GoodsShipmentOutDetailAjax(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
-		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		int pageLimit = (cmap.getInt("page", 2) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
 		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
-    	cmap.put("pageLimit", pageLimit); 
+    	cmap.put("pageLimit", "0"); 
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
     	cmap.put("goWith", cmap.getString("goWith"));
@@ -153,4 +155,73 @@ public class KP2151GoodsShipmentOutDtlController {
 		
     	return "kp2100/kp2151Search";		
 	}
+		
+	@RequestMapping(value="/kp2100/kp2151Excel.do")
+	public String kp2150Excel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+        CommonMap cmap = new CommonMap(request);
+        
+        int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
+    	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0"); 
+    	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+    	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+    	cmap.put("goWith", cmap.getString("goWith"));
+    	
+    	System.out.println("  pageIdx" + " : " + cmap.getString("pageIdx", "0"));
+    	System.out.println("  pageSize" + " : " + cmap.getString("pageSize", "0"));
+    	System.out.println("  pageLimit" + " : " + cmap.getString("pageLimit", "0"));
+    	System.out.println("  dataOrder" + " : " + cmap.getString("dataOrder", "0"));
+    	System.out.println("  dataOrderArrow" + " : " + cmap.getString("dataOrderArrow", "0"));
+    	System.out.println("  goWith" + " : " + cmap.getString("goWith", "") );
+    
+    	
+    	//그리드 세션 체크 및 메뉴 권한 설정
+    	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);    	
+    	if (!gridSessionChk.isEmpty()) {
+    		model.addAttribute("printString", gridSessionChk.toJsonString());
+        	return "common/commonString";
+    	}
+    	
+    	//사용자 기본 파라미터 설정
+    	if (!"GRANT_MGR".equals(cmap.getString("ssGrantRead"))
+    			&& "USR".equals(cmap.getString("searchDiv"))) {
+    		cmap.put("sUserNo", cmap.getString("sUserNo", SessionUtil.getString("userNo")));
+    		cmap.put("sUserName", cmap.getString("sUserName", SessionUtil.getString("userName")));
+    		cmap.put("sDeptNo", cmap.getString("sDeptNo", SessionUtil.getString("deptNo")));
+    		cmap.put("sDeptName", cmap.getString("sDeptName", SessionUtil.getString("deptName")));
+    	}
+    	
+    	CommonList resultList = goodsShipmentOutService.getGoodsShipmentOutDetailList(cmap);
+    	   
+    	System.out.println("  resultList.size()" + " : " + resultList.size());
+    	
+    	//화면표시관리 (부자재출고목록)
+    	cmap.put("dispType", "GOODS_SHIPMENT_OUT_LIST_EXCEL");
+    	CommonList dispMngList = systemService.getDispMngList(cmap);
+    	int headerSize = dispMngList.size();
+    	String[] headerListLgc1 = new String[headerSize];
+    	String[] headerListLgc2 = null;
+    	String[] headerListPhc = new String[headerSize];
+    	String[] headerListTyp = new String[headerSize];
+    	String[] headerListWidth = new String[headerSize];
+    	String[][] mergedRegion = null;
+    	
+        int idx = 0;
+    	
+    	while (idx<dispMngList.size()) {
+    		CommonMap dispMng = dispMngList.getMap(idx);
+    		headerListLgc1[idx] = dispMng.getString("logical_name");
+			headerListPhc[idx] = dispMng.getString("physical_name");
+			headerListTyp[idx] = dispMng.getString("data_disp_type");
+			headerListWidth[idx] = "" + Math.round(dispMng.getInt("default_width",100) / 10);
+			idx++;
+    	}
+    	
+    	ExcelUtil.write2(request, response, resultList, "부자재출고확인목록", headerListLgc1, headerListLgc2, headerListPhc, headerListTyp, mergedRegion, headerListWidth, 20);
+    	
+    	
+		return null;
+        
+	}   
 }

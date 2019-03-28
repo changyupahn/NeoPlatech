@@ -102,13 +102,17 @@ public class KP2170PackingShipmentOutController {
 		
         CommonMap cmap = new CommonMap(request);
 		
-		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
-		cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+		int pageLimit = (cmap.getInt("page", 2) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", "999999");
-    	cmap.put("pageLimit", pageLimit); 
+    	cmap.put("pageLimit", "1"); 
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	
+    	System.out.println("  pageIdx" + " : " + cmap.getString("pageIdx", "0"));
+    	System.out.println("  pageSize" + " : " + cmap.getString("pageSize", "0"));
+    	System.out.println("  pageLimit" + " : " + cmap.getString("pageLimit", "0"));
+    	System.out.println("  dataOrder" + " : " + cmap.getString("dataOrder", "0"));
+    	System.out.println("  dataOrderArrow" + " : " + cmap.getString("dataOrderArrow", "0"));
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);    	
     	if (!gridSessionChk.isEmpty()) {

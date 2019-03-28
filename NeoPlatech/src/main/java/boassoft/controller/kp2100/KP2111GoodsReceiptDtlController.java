@@ -421,14 +421,17 @@ public class KP2111GoodsReceiptDtlController {
 			HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
 
-		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0))
+		int pageLimit = (cmap.getInt("page", 2) - cmap.getInt("pageIdx", 0))
 				* cmap.getInt("pageSize", 50);
 		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
 		cmap.put("pageSize", "999999");
-		cmap.put("pageLimit", pageLimit);
+		cmap.put("pageLimit", "0");
 		cmap.put("dataOrder",
 				CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
 		cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+		cmap.put("sRqstVendorCd", (cmap.getString("sRqstVendorCd", "")).substring(1));
+		cmap.put("sRqstItemCd", (cmap.getString("sRqstItemCd", "")).substring(1));
+		cmap.put("sRqstPNoCd", (cmap.getString("sRqstPNoCd", "")).substring(1));
 
 		// 그리드 세션 체크 및 메뉴 권한 설정
 		CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
@@ -454,7 +457,19 @@ public class KP2111GoodsReceiptDtlController {
 							SessionUtil.getString("deptName")));
 		}
 		
+		System.out.println("  pageIdx" + " : " + cmap.getString("pageIdx", "0"));
+    	System.out.println("  pageSize" + " : " + cmap.getString("pageSize", "0"));
+    	System.out.println("  pageLimit" + " : " + cmap.getString("pageLimit", "0"));
+    	System.out.println("  dataOrder" + " : " + cmap.getString("dataOrder", "0"));
+    	System.out.println("  dataOrderArrow" + " : " + cmap.getString("dataOrderArrow", "0"));
+    	System.out.println("  sRqstVendorCd" + " : " + cmap.getString("sRqstVendorCd", "") );
+    	System.out.println("  sRqstItemCd" + " : " + cmap.getString("sRqstItemCd", ""));
+    	System.out.println("  sRqstPNoCd" + " : " + cmap.getString("sRqstPNoCd", ""));
+		
 		CommonList resultList = goodsReceiptService.getGoodsReceiptDetailList(cmap);
+		
+		
+    	System.out.println("  resultList.size()" + " : " + resultList.size());
 		
 		// 화면표시관리 (자산목록)
 		cmap.put("dispType", "GOODS_RECEIPT_DETAIL_LIST_EXCEL");
