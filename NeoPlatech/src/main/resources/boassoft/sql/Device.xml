@@ -52,7 +52,7 @@
     	insert into rfid_device (
     			deviceno,devicenm,device_insp_name,frst_regist_pnttm,frst_register_id,last_updt_pnttm,last_updusr_id
     	) values (
-    			#{deviceno},#{devicenm},#{deviceInspName},#{frstRegistPnttm},#{frstRegisterId},#{lastUpdtPnttm},#{lastUpdusrId}
+    			#{deviceno},#{devicenm},#{deviceInspName},COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')),#{frstRegisterId},COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')),#{lastUpdusrId}
     	)
     </insert>
     
