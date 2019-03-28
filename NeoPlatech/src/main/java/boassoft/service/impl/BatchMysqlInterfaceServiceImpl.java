@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import boassoft.mapper.BatchMysqlInterfaceMapper;
 import boassoft.service.BatchMysqlInterfaceService;
+import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -140,6 +141,74 @@ public class BatchMysqlInterfaceServiceImpl extends EgovAbstractServiceImpl impl
 	public void insertLgGanpanList(CommonMap cmap) throws Exception {
 		// TODO Auto-generated method stub
 		batchMysqlInterfaceMapper.insertLgGanpanList(cmap);
+	}
+
+	@Override
+	public CommonList getSubPartWoSendListOdOnly(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return batchMysqlInterfaceMapper.getSubPartWoSendListOdOnly(cmap);
+	}
+
+	@Override
+	public void insertSubPartWoSendListOdOnly(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertSubPartWoSendListOdOnly(cmap);
+	}
+
+	@Override
+	public void insertSubPartWoSendListOdOnlyMStock(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertSubPartWoSendListOdOnlyMStock(cmap);
+	}
+
+	@Override
+	public void insertSubPartWoSendListOdOnlyMTransaction(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertSubPartWoSendListOdOnlyMTransaction(cmap);
+	}
+
+	@Override
+	public CommonList getSubPartWoSendListAll(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		return batchMysqlInterfaceMapper.getSubPartWoSendListAll(cmap);
+	}
+
+	@Override
+	public void insertSubPartWoSendListAllMStock(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertSubPartWoSendListAllMStock(cmap);
+	}
+
+	@Override
+	public void insertSubPartWoSendListAllMTransaction(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertSubPartWoSendListAllMTransaction(cmap);
+	}
+
+	@Override
+	public CommonList getPackingWoSendListAllCng(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return batchMysqlInterfaceMapper.getPackingWoSendListAllCng(cmap);
+	}
+
+	@Override
+	public void insertPackingWoSendListAllCngMStock(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertPackingWoSendListAllCngMStock(cmap);
+	}
+
+	@Override
+	public void insertPackingWoSendListAllCngMTransaction(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.insertPackingWoSendListAllCngMTransaction(cmap);
 	}
 
 }

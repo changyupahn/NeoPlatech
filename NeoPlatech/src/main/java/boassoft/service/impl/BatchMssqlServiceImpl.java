@@ -80,6 +80,27 @@ public class BatchMssqlServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return batchMssqlMapper.getLgGanpanList(cmap);
 	}
+
+	@Override
+	public void insertSubPartWoSendListOdOnlyInputQty(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMssqlMapper.insertSubPartWoSendListOdOnlyInputQty(cmap);
+	}
+
+	@Override
+	public void insertSubPartWoSendListAllInputQty(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMssqlMapper.insertSubPartWoSendListAllInputQty(cmap);
+	}
+
+	@Override
+	public void insertPackingWoSendListAllCngInputQty(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		batchMssqlMapper.insertPackingWoSendListAllCngInputQty(cmap);
+	}
 	
 	
 
