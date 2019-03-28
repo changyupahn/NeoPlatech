@@ -342,5 +342,17 @@
          FROM LG_Ganpan_List
     ]]>
     </select>
+   
+    <insert id="insertSubPartWoSendListOdOnlyInputQty" parameterType="cmap">
+     CALL MWHS_SubPart_WOSendList_cng_InputQty(#{qty},#{demandId}, #{subPartNo})
+    </insert>
+    
+     <insert id="insertSubPartWoSendListAllInputQty" parameterType="cmap">
+      CALL MWHS_SubPart_SendList_cng_InputQty(#{qty},#{goWith}, #{PartNo})
+     </insert>
+     
+     <insert id="insertPackingWoSendListAllCngInputQty" parameterType="cmap">
+      CALL MWHS_Packing_WoSendList_cng_InputQty(#{qty},#{odId})
+     </insert>
     
 </mapper>
