@@ -145,12 +145,13 @@ public class KP1930DeviceController {
 	    	//조회
 	    	CommonMap device = deviceService.getDeviceView(cmap);
 
-	    	if (device.isEmpty()) {
-	    		//등록
-		    	resultCnt = deviceService.insertDevice(cmap);
+	    	//nameMap!=null && !nameMap.isEmpty()	    	
+	    	if(device != null && !device.isEmpty()){
+	    	//수정
+	    		resultCnt = deviceService.updateDevice(cmap);			    	
 	    	} else {
-	    		//수정
-		    	resultCnt = deviceService.updateDevice(cmap);
+		    	//등록 	    	
+	    		resultCnt = deviceService.insertDevice(cmap);		    
 	    	}
 
     	} catch (Exception e) {
