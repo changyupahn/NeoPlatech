@@ -67,8 +67,8 @@ public class KP1310FixedAssetController {
     @RequestMapping(value="/kp1300/kp1310.do")
 	public String kp1310(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
-    	int pageLimit = (cmap.getInt("page", 1) - cmap.getInt("pageIdx", 1)) * cmap.getInt("pageSize", 50) ;
-    	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
+    	int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
+    	cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
     	cmap.put("pageSize", cmap.getString("pageSize", "50"));
     	cmap.put("pageLimit", pageLimit);     	
     	cmap.put("sAssetDiv", "1");
@@ -147,8 +147,10 @@ public class KP1310FixedAssetController {
     @RequestMapping(value="/kp1300/kp1310Excel.do")
 	public String kp1310Excel(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	CommonMap cmap = new CommonMap(request);
+    	int pageLimit = (cmap.getInt("page", 2) - cmap.getInt("pageIdx", 0)) * cmap.getInt("pageSize", 50) ;
     	cmap.put("pageIdx", cmap.getString("pageIdx", "1"));
     	cmap.put("pageSize", "999999");
+    	cmap.put("pageLimit", "0"); 
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
     	cmap.put("sAssetDiv", "1");
