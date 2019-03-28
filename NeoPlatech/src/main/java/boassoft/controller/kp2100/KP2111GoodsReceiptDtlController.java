@@ -22,6 +22,8 @@ import boassoft.service.UserService;
 import boassoft.util.CamelUtil;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
+import boassoft.util.ExcelUtil;
+import boassoft.util.SessionUtil;
 
 @Controller
 public class KP2111GoodsReceiptDtlController {
@@ -73,22 +75,21 @@ public class KP2111GoodsReceiptDtlController {
 				CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
 		cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
 		cmap.put("pageLimit", cmap.getInt("pageLimit", 0));
-		cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd",""));
+		cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd", ""));
 		cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd", ""));
-		cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ""));				
+		cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ""));
 
 		// 그리드 세션 체크 및 메뉴 권한 설정
 		CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
-		
+
 		if (!gridSessionChk.isEmpty()) {
 			model.addAttribute("printString", gridSessionChk.toJsonString());
 			return "common/commonString";
 		}
 
-		
 		CommonList resultList = goodsReceiptService
 				.getGoodsReceiptDetailList(cmap);
-		
+
 		CommonMap result = new CommonMap();
 		result.put("resultList", resultList);
 		result.put("totalRow", resultList.totalRow);
@@ -160,7 +161,7 @@ public class KP2111GoodsReceiptDtlController {
 		ModelAndView modelAndView = new ModelAndView();
 		CommonMap cmap = new CommonMap(request);
 		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
-	
+
 		CommonList commonCodeList = new CommonList();
 		try {
 			commonCodeList = goodsReceiptService.getOptionItemList(cmap);
@@ -171,7 +172,7 @@ public class KP2111GoodsReceiptDtlController {
 		HashMap<String, CommonList> resultMap = new HashMap<String, CommonList>();
 
 		resultMap.put("LIST", commonCodeList);
-	
+
 		modelAndView.addAllObjects(resultMap);
 		modelAndView.setViewName("jsonView");
 
@@ -200,197 +201,289 @@ public class KP2111GoodsReceiptDtlController {
 		modelAndView.setViewName("jsonView");
 		return modelAndView;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/kp2100/kp2111Stock.do")
-	public String Kp2111Stock(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-		
+	@RequestMapping(value = "/kp2100/kp2111Stock.do")
+	public String Kp2111Stock(HttpServletRequest request,
+			HttpServletResponse response, ModelMap model) throws Exception {
+
 		CommonMap cmap = new CommonMap(request);
-    	CommonMap resultMap = new CommonMap();
-    	int resultCnt = 0;
+		CommonMap resultMap = new CommonMap();
+		int resultCnt = 0;
 
-    	try {
-    		//세션 체크
-    		CommonMap procSessionChk = userService.procSessionChk(cmap, request);
-    		if (!procSessionChk.isEmpty()) {
-    			return procSessionChk.toJsonString(model);
-        	}
-	    	JSONArray saveJsonArray = JSONArray.fromObject(cmap.getString("saveJsonArray", "[]", false));
-	    	CommonList paramList = new CommonList();
-	    	
-	    	for (int i=0; i<saveJsonArray.size(); i++) {
-	    		JSONObject obj = saveJsonArray.getJSONObject(i);
-	    		CommonMap param = new CommonMap();
-	    		param.put("odId", obj.get("odId"));
-	    		param.put("demandId", obj.get("demandId"));
-	    		param.put("sReceiptCnt", obj.get("sReceiptCnt"));
-	    		param.put("sRqstVendorCd", obj.get("sRqstVendorCd"));
-	    		param.put("sRqstItemCd", obj.get("sRqstItemCd"));
-	    		param.put("sRqstPNoCd", obj.get("sRqstPNoCd"));
-	    		
-	    		
-	    		//필수 파라미터 체크
-		    	if ("".equals(param.getString("odId"))
-		    			) {
-		    		resultMap.put("ret", "ERR");
-		    		resultMap.put("retmsg", "필수 입력값이 누락되었습니다.");
-		    		return resultMap.toJsonString(model);
-		    	}
+		try {
+			// 세션 체크
+			CommonMap procSessionChk = userService
+					.procSessionChk(cmap, request);
+			if (!procSessionChk.isEmpty()) {
+				return procSessionChk.toJsonString(model);
+			}
+			JSONArray saveJsonArray = JSONArray.fromObject(cmap.getString(
+					"saveJsonArray", "[]", false));
+			CommonList paramList = new CommonList();
 
-		    	paramList.add(param);
-	    	}
-	    	
-    		//파라미터
-	    	cmap.put("frstRegisterId", cmap.getString("ssUserNo"));
-	    	cmap.put("lastUpdusrId", cmap.getString("ssUserNo"));
-	    	cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd",((CommonMap)paramList.get(0)).getString("sRqstVendorCd")));
-			cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd", ((CommonMap)paramList.get(0)).getString("sRqstItemCd")));
-			cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ((CommonMap)paramList.get(0)).getString("sRqstPNoCd")));
-			cmap.put("odId", cmap.getString("odId", ((CommonMap)paramList.get(0)).getString("odId") ));
-			cmap.put("demandId", cmap.getString("demandId", ((CommonMap)paramList.get(0)).getString("demandId")));
-			cmap.put("sReceiptCnt", cmap.getInt("sReceiptCnt", ((CommonMap)paramList.get(0)).getInt("sReceiptCnt")));
-			
-			CommonList resultList = goodsReceiptService.getGoodsReceiptDetailList(cmap);
+			for (int i = 0; i < saveJsonArray.size(); i++) {
+				JSONObject obj = saveJsonArray.getJSONObject(i);
+				CommonMap param = new CommonMap();
+				param.put("odId", obj.get("odId"));
+				param.put("demandId", obj.get("demandId"));
+				param.put("sReceiptCnt", obj.get("sReceiptCnt"));
+				param.put("sRqstVendorCd", obj.get("sRqstVendorCd"));
+				param.put("sRqstItemCd", obj.get("sRqstItemCd"));
+				param.put("sRqstPNoCd", obj.get("sRqstPNoCd"));
+
+				// 필수 파라미터 체크
+				if ("".equals(param.getString("odId"))) {
+					resultMap.put("ret", "ERR");
+					resultMap.put("retmsg", "필수 입력값이 누락되었습니다.");
+					return resultMap.toJsonString(model);
+				}
+
+				paramList.add(param);
+			}
+
+			// 파라미터
+			cmap.put("frstRegisterId", cmap.getString("ssUserNo"));
+			cmap.put("lastUpdusrId", cmap.getString("ssUserNo"));
+			cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd",
+					((CommonMap) paramList.get(0)).getString("sRqstVendorCd")));
+			cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd",
+					((CommonMap) paramList.get(0)).getString("sRqstItemCd")));
+			cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd",
+					((CommonMap) paramList.get(0)).getString("sRqstPNoCd")));
+			cmap.put(
+					"odId",
+					cmap.getString("odId",
+							((CommonMap) paramList.get(0)).getString("odId")));
+			cmap.put("demandId", cmap.getString("demandId",
+					((CommonMap) paramList.get(0)).getString("demandId")));
+			cmap.put("sReceiptCnt", cmap.getInt("sReceiptCnt",
+					((CommonMap) paramList.get(0)).getInt("sReceiptCnt")));
+
+			CommonList resultList = goodsReceiptService
+					.getGoodsReceiptDetailList(cmap);
 
 			double maxCnt = cmap.getDouble("sReceiptCnt", 0);
 			double disCnt = 0;
-			if(!resultList.isEmpty() && resultList.size() > 0){
-				for(int i = 0; i < resultList.size(); i++){
+			if (!resultList.isEmpty() && resultList.size() > 0) {
+				for (int i = 0; i < resultList.size(); i++) {
 					CommonMap gmap = resultList.getMap(i);
 					double sumQty = gmap.getDouble("sumQty");
-					System.out.println("999 sumQty " + " : " + sumQty );
-					if(maxCnt > 0){
-						System.out.println("000 maxCnt " + " : " + maxCnt );						      
-						// maxCnt 300 sumQty 150  입고량  소요량   maxCnt 5  sumQty  0
-						if(maxCnt >  sumQty){  // 입고량이  소요량보다 많으면  
-							disCnt = maxCnt - sumQty;  // 150
-					
-							// 재고가 있을때 주문량 적으면   50 
-							if(disCnt - gmap.getInt("qtyOnHand",0) >= 0){
-							   	gmap.put("qtyOnHand",disCnt - gmap.getInt("qtyOnHand",0));
-							   	gmap.put(gmap.getInt("preQtyOnHand",0),"0");
-							   	resultCnt = goodsReceiptService.updateQtyOnHand(gmap);
-							}else{  // 재고가 잇을때 주문량 보다 많으면 
-								gmap.put("qtyOnHand",gmap.getInt("qtyOnHand",0));
-								gmap.put("preQtyOnHand",disCnt);
-								resultCnt = goodsReceiptService.updateQtyOnHand(gmap);
+					System.out.println("999 sumQty " + " : " + sumQty);
+					if (maxCnt > 0) {
+						System.out.println("000 maxCnt " + " : " + maxCnt);
+						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
+						if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
+							disCnt = maxCnt - sumQty; // 150
+
+							// 재고가 있을때 주문량 적으면 50
+							if (disCnt - gmap.getInt("qtyOnHand", 0) >= 0) {
+								gmap.put("qtyOnHand",
+										disCnt - gmap.getInt("qtyOnHand", 0));
+								gmap.put(gmap.getInt("preQtyOnHand", 0), "0");
+								resultCnt = goodsReceiptService
+										.updateQtyOnHand(gmap);
+							} else { // 재고가 잇을때 주문량 보다 많으면
+								gmap.put("qtyOnHand",
+										gmap.getInt("qtyOnHand", 0));
+								gmap.put("preQtyOnHand", disCnt);
+								resultCnt = goodsReceiptService
+										.updateQtyOnHand(gmap);
 							}
-							maxCnt = maxCnt - disCnt; 
+							maxCnt = maxCnt - disCnt;
 
 							resultCnt++;
-							
+
 						}
-					}else{						
+					} else {
 						continue;
-					} 
+					}
 				}
 			}
-			
-    	} catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-    	if (resultCnt > 0) {
-	    	resultMap.put("ret", "OK");
-    		resultMap.put("retmsg", "성공");
-    	} else {
-    		resultMap.put("ret", "ERR");
-    		resultMap.put("retmsg", "처리 중 오류가 발생하였습니다.");
-    	}
-    	
-    	return resultMap.toJsonString(model);
-		
+
+		if (resultCnt > 0) {
+			resultMap.put("ret", "OK");
+			resultMap.put("retmsg", "성공");
+		} else {
+			resultMap.put("ret", "ERR");
+			resultMap.put("retmsg", "처리 중 오류가 발생하였습니다.");
+		}
+
+		return resultMap.toJsonString(model);
+
 	}
-	
-	@RequestMapping(value="/kp2100/kp2111Recall.do")
-	public String Kp2111Recall(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+
+	@RequestMapping(value = "/kp2100/kp2111Recall.do")
+	public String Kp2111Recall(HttpServletRequest request,
+			HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
-    	CommonMap resultMap = new CommonMap();
-    	int resultCnt = 0;
-    	
-    	try {
-    		//세션 체크
-    		CommonMap procSessionChk = userService.procSessionChk(cmap, request);
-    		if (!procSessionChk.isEmpty()) {
-    			return procSessionChk.toJsonString(model);
-        	}
-    		    	
-    		JSONArray saveJsonArray = JSONArray.fromObject(cmap.getString("saveJsonArray", "[]", false));
-	    	CommonList paramList = new CommonList();
-	    	
-	    	for (int i=0; i<saveJsonArray.size(); i++) {
-	    		JSONObject obj = saveJsonArray.getJSONObject(i);
-	    		CommonMap param = new CommonMap();
-	    		param.put("odId", obj.get("odId"));
+		CommonMap resultMap = new CommonMap();
+		int resultCnt = 0;
 
-	    		//필수 파라미터 체크
-		    	if ("".equals(param.getString("odId"))
-		    			) {
-		    		resultMap.put("ret", "ERR");
-		    		resultMap.put("retmsg", "필수 입력값이 누락되었습니다.");
-		    		return resultMap.toJsonString(model);
-		    	}
+		try {
+			// 세션 체크
+			CommonMap procSessionChk = userService
+					.procSessionChk(cmap, request);
+			if (!procSessionChk.isEmpty()) {
+				return procSessionChk.toJsonString(model);
+			}
 
-		    	paramList.add(param);
-	    	}
-	    	
-    		//파라미터
-	    	cmap.put("frstRegisterId", cmap.getString("ssUserNo"));
-	    	cmap.put("lastUpdusrId", cmap.getString("ssUserNo"));
-	    	cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd",""));
+			JSONArray saveJsonArray = JSONArray.fromObject(cmap.getString(
+					"saveJsonArray", "[]", false));
+			CommonList paramList = new CommonList();
+
+			for (int i = 0; i < saveJsonArray.size(); i++) {
+				JSONObject obj = saveJsonArray.getJSONObject(i);
+				CommonMap param = new CommonMap();
+				param.put("odId", obj.get("odId"));
+
+				// 필수 파라미터 체크
+				if ("".equals(param.getString("odId"))) {
+					resultMap.put("ret", "ERR");
+					resultMap.put("retmsg", "필수 입력값이 누락되었습니다.");
+					return resultMap.toJsonString(model);
+				}
+
+				paramList.add(param);
+			}
+
+			// 파라미터
+			cmap.put("frstRegisterId", cmap.getString("ssUserNo"));
+			cmap.put("lastUpdusrId", cmap.getString("ssUserNo"));
+			cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd", ""));
 			cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd", ""));
 			cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ""));
 			cmap.put("odId", cmap.getString("odId", ""));
 			cmap.put("demandId", cmap.getString("demandId", ""));
 			cmap.put("sReceiptCnt", cmap.getInt("sReceiptCnt", 0));
-			
-			CommonList resultList = goodsReceiptService.getGoodsReceiptDetailList(cmap);
+
+			CommonList resultList = goodsReceiptService
+					.getGoodsReceiptDetailList(cmap);
 			int maxCnt = cmap.getInt("sReceiptCnt", 0);
 			int disCnt = 0;
-			if(!resultList.isEmpty() && resultList.size() > 0){
-				for(int i = 0; i < resultList.size(); i++){
+			if (!resultList.isEmpty() && resultList.size() > 0) {
+				for (int i = 0; i < resultList.size(); i++) {
 					CommonMap gmap = resultList.getMap(i);
 					int sumQty = gmap.getInt("sumQty");
-					
-					if(maxCnt > 0){
-												      
-						// maxCnt 300 sumQty 150  입고량  소요량 
-						if(maxCnt >  sumQty){  // 입고량이  소요량보다 많으면  
-							disCnt = maxCnt - sumQty;  // 150
-							// 재고가 있을때 주문량 적으면   50 
-							if(disCnt - gmap.getInt("qtyOnHand",0) >= 0){
-							   	gmap.put("qtyOnHand",disCnt - gmap.getInt("qtyOnHand",0));
-							   	gmap.put(gmap.getInt("preQtyOnHand",0),"0");
-							   	
-							   	resultCnt = goodsReceiptService.updateQtyOnHand(gmap);
-							}else{  // 재고가 잇을때 주문량 보다 많으면 
-								gmap.put("qtyOnHand",gmap.getInt("qtyOnHand",0));
-								gmap.put("preQtyOnHand",disCnt);
-								resultCnt = goodsReceiptService.updateQtyOnHand(gmap);
+
+					if (maxCnt > 0) {
+
+						// maxCnt 300 sumQty 150 입고량 소요량
+						if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
+							disCnt = maxCnt - sumQty; // 150
+							// 재고가 있을때 주문량 적으면 50
+							if (disCnt - gmap.getInt("qtyOnHand", 0) >= 0) {
+								gmap.put("qtyOnHand",
+										disCnt - gmap.getInt("qtyOnHand", 0));
+								gmap.put(gmap.getInt("preQtyOnHand", 0), "0");
+
+								resultCnt = goodsReceiptService
+										.updateQtyOnHand(gmap);
+							} else { // 재고가 잇을때 주문량 보다 많으면
+								gmap.put("qtyOnHand",
+										gmap.getInt("qtyOnHand", 0));
+								gmap.put("preQtyOnHand", disCnt);
+								resultCnt = goodsReceiptService
+										.updateQtyOnHand(gmap);
 							}
-							
-							maxCnt = maxCnt - disCnt; 
+
+							maxCnt = maxCnt - disCnt;
 							resultCnt++;
 						}
-					}else{
+					} else {
 						continue;
 					}
 				}
 			}
-			
-    	} catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-    	if (resultCnt > 0) {
-	    	resultMap.put("ret", "OK");
-    		resultMap.put("retmsg", "성공");
-    	} else {
-    		resultMap.put("ret", "ERR");
-    		resultMap.put("retmsg", "처리 중 오류가 발생하였습니다.");
-    	}
-    	
-    	return resultMap.toJsonString(model);
-		
+
+		if (resultCnt > 0) {
+			resultMap.put("ret", "OK");
+			resultMap.put("retmsg", "성공");
+		} else {
+			resultMap.put("ret", "ERR");
+			resultMap.put("retmsg", "처리 중 오류가 발생하였습니다.");
+		}
+
+		return resultMap.toJsonString(model);
+
 	}
+
+	@RequestMapping(value = "/kp2100/kp2111Excel.do")
+	public String kp2111Excel(HttpServletRequest request,
+			HttpServletResponse response, ModelMap model) throws Exception {
+		CommonMap cmap = new CommonMap(request);
+
+		int pageLimit = (cmap.getInt("page", 0) - cmap.getInt("pageIdx", 0))
+				* cmap.getInt("pageSize", 50);
+		cmap.put("pageIdx", cmap.getString("pageIdx", "0"));
+		cmap.put("pageSize", "999999");
+		cmap.put("pageLimit", pageLimit);
+		cmap.put("dataOrder",
+				CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
+		cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
+
+		// 그리드 세션 체크 및 메뉴 권한 설정
+		CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
+		if (!gridSessionChk.isEmpty()) {
+			model.addAttribute("printString", gridSessionChk.toJsonString());
+			return "common/commonString";
+		}
+
+		// 사용자 기본 파라미터 설정
+		if (!"GRANT_MGR".equals(cmap.getString("ssGrantRead"))
+				&& "USR".equals(cmap.getString("searchDiv"))) {
+			cmap.put("sUserNo",
+					cmap.getString("sUserNo", SessionUtil.getString("userNo")));
+			cmap.put(
+					"sUserName",
+					cmap.getString("sUserName",
+							SessionUtil.getString("userName")));
+			cmap.put("sDeptNo",
+					cmap.getString("sDeptNo", SessionUtil.getString("deptNo")));
+			cmap.put(
+					"sDeptName",
+					cmap.getString("sDeptName",
+							SessionUtil.getString("deptName")));
+		}
+		
+		CommonList resultList = goodsReceiptService.getGoodsReceiptDetailList(cmap);
+		
+		// 화면표시관리 (자산목록)
+		cmap.put("dispType", "GOODS_RECEIPT_DETAIL_LIST_EXCEL");
+		CommonList dispMngList = systemService.getDispMngList(cmap);
+		
+		int headerSize = dispMngList.size();
+		String[] headerListLgc1 = new String[headerSize];
+		String[] headerListLgc2 = null;
+		String[] headerListPhc = new String[headerSize];
+		String[] headerListTyp = new String[headerSize];
+		String[] headerListWidth = new String[headerSize];
+		String[][] mergedRegion = null;
+		int idx = 0;
+		
+		while (idx < dispMngList.size()) {
+			CommonMap dispMng = dispMngList.getMap(idx);
+			headerListLgc1[idx] = dispMng.getString("logical_name");
+			headerListPhc[idx] = dispMng.getString("physical_name");
+			headerListTyp[idx] = dispMng.getString("data_disp_type");
+			headerListWidth[idx] = ""
+					+ Math.round(dispMng.getInt("default_width", 100) / 10);
+			idx++;
+		}
+
+		ExcelUtil.write2(request, response, resultList, "부자재입고확인목록",
+				headerListLgc1, headerListLgc2, headerListPhc, headerListTyp,
+				mergedRegion, headerListWidth, 20);
+		
+		return null;
+	}
+
 }
