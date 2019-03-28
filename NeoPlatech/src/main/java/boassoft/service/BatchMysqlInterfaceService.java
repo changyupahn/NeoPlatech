@@ -1,5 +1,6 @@
 package boassoft.service;
 
+import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
 public interface BatchMysqlInterfaceService {
@@ -43,5 +44,27 @@ public interface BatchMysqlInterfaceService {
 	public void deleteLgGanpanList(CommonMap cmap) throws Exception;
 
 	public void insertLgGanpanList(CommonMap cmap) throws Exception;
+
+	public CommonList getSubPartWoSendListOdOnly(CommonMap cmap) throws Exception;
+
+	public void insertSubPartWoSendListOdOnly(CommonMap cmap) throws Exception;
+
+	public void insertSubPartWoSendListOdOnlyMStock(CommonMap cmap) throws Exception;
+
+	public void insertSubPartWoSendListOdOnlyMTransaction(CommonMap cmap) throws Exception;
+
+	public CommonList getSubPartWoSendListAll(CommonMap cmap) throws Exception;
+
+	public void insertSubPartWoSendListAllMStock(CommonMap cmap) throws Exception;
+
+	public void insertSubPartWoSendListAllMTransaction(CommonMap cmap) throws Exception;
+
+	public CommonList getPackingWoSendListAllCng(CommonMap cmap) throws Exception;
+
+	public void insertPackingWoSendListAllCngMStock(CommonMap cmap) throws Exception;
+
+	public void insertPackingWoSendListAllCngMTransaction(CommonMap gmap) throws Exception;
+	
+
 
 }

@@ -25,4 +25,11 @@ public interface BatchMssqlService {
 
 	public CommonList getLgGanpanList(CommonMap cmap) throws Exception;
 
+	public void insertSubPartWoSendListOdOnlyInputQty(CommonMap cmap) throws Exception;
+
+	public void insertSubPartWoSendListAllInputQty(CommonMap cmap) throws Exception;
+
+	public void insertPackingWoSendListAllCngInputQty(CommonMap cmap) throws Exception;
+	
+
 }
