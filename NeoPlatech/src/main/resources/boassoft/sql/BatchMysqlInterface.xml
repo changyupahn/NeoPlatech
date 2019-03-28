@@ -628,4 +628,335 @@
         WHERE 	LEFT(PRODUCT_DATE,10) BETWEEN #{startDate} AND #{endDate}
     </delete>
     
+     <select id="getSubPartWoSendListOdOnly" parameterType="cmap" resultType="cmap" >
+     <![CDATA[
+      SELECT 
+                  A.OD_ID
+                 , A.DEMAND_ID
+                 , A.LGE_DATE
+                 , A.NEO_DATE
+                 , A.GAP_DAY
+                 , A.LG_LINE
+                 , A.TOOL
+                 , A.M_PART_NO                 
+                 , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
+                 , A.LGM_PART_NAME
+                 , A.SUB_PART_NO
+                 , A.SUB_PART_NAME
+                 , COALESCE(A.BOM_QTY,0) AS BOM_QTY
+                 , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
+                 , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
+                   ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
+                 , A.UNIT
+                 , A.VENDOR
+                 , A.OSP
+                 , A.OUT_PLACE
+                 , A.CHK_DAY
+                 , A.IN_DATE 
+                 , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
+                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+                FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
+                WHERE 1 = 1 
+                AND A.PRE_QTY_ON_HAND IS NOT NULL
+                ORDER BY A.LGE_DATE ASC
+          ]]>      
+     </select>
+     
+      <insert id="insertSubPartWoSendListOdOnlyMStock" parameterType="cmap" >
+        <selectKey resultType="string" keyProperty="mStockId" order="BEFORE">
+           SELECT get_seq('mStock')     
+        </selectKey>
+          INSERT INTO RFID_M_STOCK
+          (
+             M_STOCK_ID
+             , M_PRODUCT_ID
+             , M_WAREHOUSE_ID
+             , C_UOM_ID
+             , QTYONHAND
+             , PREQTYONHAND
+             , DATELASTINVENTORY
+             , USE_YN
+             , FRST_REGIST_PNTTM
+             , FRST_REGISTER_ID
+             , LAST_UPDT_PNTTM
+             , LAST_UPDUSR_ID            
+          )
+          VALUES
+          (
+            #{mStockId}
+            , #{mProductId}
+            , #{mWareHouseId}
+            , #{cUomId}
+            , #{qtyonhand}
+            , #{preqtyOnHand}
+            , #{dateLastInventory}
+            , #{useYn}
+            , #{frstRegistPnttm}
+            , #{frstRegisterId}
+            , #{lastUpdtPnttm}
+            , #{lastUpdusrId}
+          )          
+      </insert>
+    
+      <insert id="insertSubPartWoSendListOdOnlyMTransaction" parameterType="cmap" >
+       <selectKey resultType="string" keyProperty="mTransactionId" order="BEFORE">
+           SELECT get_seq('mTransaction')     
+        </selectKey>
+         INSERT INTO RFID_M_TRNASACTION
+          (
+            M_TRANSACTION_ID
+            , MOVEMETTYPE
+            , M_LOCATOR_ID
+            , M_PRODUCT_ID
+            , MOVEMENTDATE
+            , MOVEMENTQTY
+            , M_INLINE_ID
+            , M_OUTLINE_ID
+            , M_MOVEMENTLINE_ID
+            , M_INVENTORYLINE_ID
+            , C_UOM_ID
+            , USE_YN
+            , FRST_REGIST_PNTTM
+            , FRST_REGISTER_ID
+            , LAST_UPDT_PNTTM
+            , LAST_UPDUSR_ID 
+          )
+          VALUES
+          (
+            #{mTransactionId}
+            , #{moveMentType}
+            , #{mLocatorId}
+            , #{mProductId}
+            , #{movementdate}
+            , #{movementqty}
+            , #{mInlineId}
+            , #{mOutlineId}
+            , #{mMovementlineId}
+            , #{mInventorylineId}
+            , #{cUomId}
+            , #{useYn}
+            , #{frstRegistPnttm}
+            , #{frstRegisterId}
+            , #{lastUpdtPnttm}
+            , #{lastUpdusrId}
+          )          
+      </insert>
+           
+      <select id="getSubPartWoSendListAll" parameterType="cmap" resultType="cmap" >
+     <![CDATA[
+       SELECT    A.PT_OD_ID 
+            , A.SUB_PT_OD_ID
+            , A.DEMAND_ID
+            , A.LG_PART_NO
+            , A.LG_OD_QTY
+            , A.PROD_TYPE
+            , A.NEO_LINE
+            , A.NEO_PLAN_KEY
+            , LEFT(A.SEND_TIME,10) AS SEND_TIME
+            , A.SENDING_PC_NAME
+            , A.GO_WITH
+            , A.RE_PRINT
+            , A.SUB_PART_NO
+            , A.SUB_PART_DESC
+            , A.VENDOR
+            , A.BOM_QTY
+            , A.SUB_UNIT  
+            , A.SUB_SUM_QTY
+            , A.DEMAND_FLOOR
+            , A.OSP			
+        FROM RFID_IF_SUBPART_SENDLIST_ALL A
+       WHERE 1 = 1	
+       AND A.PRE_QTY_ON_HAND IS NOT NULL		
+       ORDER BY A.PT_OD_ID, A.SUB_PART_NO
+      ]]>      
+     </select>
+     
+      <insert id="insertSubPartWoSendListAllMStock" parameterType="cmap" >
+        <selectKey resultType="string" keyProperty="mStockId" order="BEFORE">
+           SELECT get_seq('mStock')     
+        </selectKey>
+          INSERT INTO RFID_M_STOCK
+          (
+             M_STOCK_ID
+             , M_PRODUCT_ID
+             , M_WAREHOUSE_ID
+             , C_UOM_ID
+             , QTYONHAND
+             , PREQTYONHAND
+             , DATELASTINVENTORY
+             , USE_YN
+             , FRST_REGIST_PNTTM
+             , FRST_REGISTER_ID
+             , LAST_UPDT_PNTTM
+             , LAST_UPDUSR_ID            
+          )
+          VALUES
+          (
+            #{mStockId}
+            , #{mProductId}
+            , #{mWareHouseId}
+            , #{cUomId}
+            , #{qtyonhand}
+            , #{preqtyOnHand}
+            , #{dateLastInventory}
+            , #{useYn}
+            , #{frstRegistPnttm}
+            , #{frstRegisterId}
+            , #{lastUpdtPnttm}
+            , #{lastUpdusrId}
+          )          
+      </insert>
+    
+      <insert id="insertSubPartWoSendListAllMTransaction" parameterType="cmap" >
+       <selectKey resultType="string" keyProperty="mTransactionId" order="BEFORE">
+           SELECT get_seq('mTransaction')     
+        </selectKey>
+         INSERT INTO RFID_M_TRNASACTION
+          (
+            M_TRANSACTION_ID
+            , MOVEMETTYPE
+            , M_LOCATOR_ID
+            , M_PRODUCT_ID
+            , MOVEMENTDATE
+            , MOVEMENTQTY
+            , M_INLINE_ID
+            , M_OUTLINE_ID
+            , M_MOVEMENTLINE_ID
+            , M_INVENTORYLINE_ID
+            , C_UOM_ID
+            , USE_YN
+            , FRST_REGIST_PNTTM
+            , FRST_REGISTER_ID
+            , LAST_UPDT_PNTTM
+            , LAST_UPDUSR_ID 
+          )
+          VALUES
+          (
+            #{mTransactionId}
+            , #{moveMentType}
+            , #{mLocatorId}
+            , #{mProductId}
+            , #{movementdate}
+            , #{movementqty}
+            , #{mInlineId}
+            , #{mOutlineId}
+            , #{mMovementlineId}
+            , #{mInventorylineId}
+            , #{cUomId}
+            , #{useYn}
+            , #{frstRegistPnttm}
+            , #{frstRegisterId}
+            , #{lastUpdtPnttm}
+            , #{lastUpdusrId}
+          )          
+      </insert>
+      
+       <select id="getPackingWoSendListAllCng" parameterType="cmap" resultType="cmap" >
+     <![CDATA[
+        SELECT A.OD_ID
+             , A.OD_QTY_ID
+             , A.PKG_PO_NO
+             , A.DEMAND_ID
+             , A.TOOL_NAME
+             , A.LG_PART_NO
+             , COALESCE(A.LG_OD_QTY,0) AS LG_OD_QTY
+             , A.LINE
+             , A.FINAL_VENDOR
+             , A.CLASS
+             , A.PART_NUMBER
+             , A.DESC
+             , COALESCE(A.RESULT_QTY,0) AS RESULT_QTY
+             , A.NEO_OD_TIME
+             , A.NEO_OD_DAY
+             , COALESCE(A.NEO_OD_QTY,0) AS NEO_OD_QTY
+             , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
+             , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+        FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
+              WHERE 1 = 1        
+        AND A.PRE_QTY_ON_HAND IS NOT NULL               
+        GROUP BY A.FINAL_VENDOR
+	    ORDER BY A.NEO_OD_DAY     
+      ]]>      
+     </select>
+     
+     <insert id="insertPackingWoSendListAllCngMStock" parameterType="cmap" >
+        <selectKey resultType="string" keyProperty="mStockId" order="BEFORE">
+           SELECT get_seq('mStock')     
+        </selectKey>
+          INSERT INTO RFID_M_STOCK
+          (
+             M_STOCK_ID
+             , M_PRODUCT_ID
+             , M_WAREHOUSE_ID
+             , C_UOM_ID
+             , QTYONHAND
+             , PREQTYONHAND
+             , DATELASTINVENTORY
+             , USE_YN
+             , FRST_REGIST_PNTTM
+             , FRST_REGISTER_ID
+             , LAST_UPDT_PNTTM
+             , LAST_UPDUSR_ID            
+          )
+          VALUES
+          (
+            #{mStockId}
+            , #{mProductId}
+            , #{mWareHouseId}
+            , #{cUomId}
+            , #{qtyonhand}
+            , #{preqtyOnHand}
+            , #{dateLastInventory}
+            , #{useYn}
+            , #{frstRegistPnttm}
+            , #{frstRegisterId}
+            , #{lastUpdtPnttm}
+            , #{lastUpdusrId}
+          )          
+      </insert>
+    
+      <insert id="insertPackingWoSendListAllCngMTransaction" parameterType="cmap" >
+       <selectKey resultType="string" keyProperty="mTransactionId" order="BEFORE">
+           SELECT get_seq('mTransaction')     
+        </selectKey>
+         INSERT INTO RFID_M_TRNASACTION
+          (
+            M_TRANSACTION_ID
+            , MOVEMETTYPE
+            , M_LOCATOR_ID
+            , M_PRODUCT_ID
+            , MOVEMENTDATE
+            , MOVEMENTQTY
+            , M_INLINE_ID
+            , M_OUTLINE_ID
+            , M_MOVEMENTLINE_ID
+            , M_INVENTORYLINE_ID
+            , C_UOM_ID
+            , USE_YN
+            , FRST_REGIST_PNTTM
+            , FRST_REGISTER_ID
+            , LAST_UPDT_PNTTM
+            , LAST_UPDUSR_ID 
+          )
+          VALUES
+          (
+            #{mTransactionId}
+            , #{moveMentType}
+            , #{mLocatorId}
+            , #{mProductId}
+            , #{movementdate}
+            , #{movementqty}
+            , #{mInlineId}
+            , #{mOutlineId}
+            , #{mMovementlineId}
+            , #{mInventorylineId}
+            , #{cUomId}
+            , #{useYn}
+            , #{frstRegistPnttm}
+            , #{frstRegisterId}
+            , #{lastUpdtPnttm}
+            , #{lastUpdusrId}
+          )          
+      </insert>
+     
 </mapper>
