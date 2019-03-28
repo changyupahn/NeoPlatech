@@ -26,4 +26,10 @@ public interface BatchMssqlMapper {
 	public CommonList getAssayProductPalletList(CommonMap cmap) throws Exception;
 
 	public CommonList getLgGanpanList(CommonMap cmap) throws Exception;
+
+	public int insertSubPartWoSendListOdOnlyInputQty(CommonMap cmap) throws Exception;
+
+	public int insertSubPartWoSendListAllInputQty(CommonMap cmap) throws Exception;
+
+	public int insertPackingWoSendListAllCngInputQty(CommonMap cmap) throws Exception;
 }

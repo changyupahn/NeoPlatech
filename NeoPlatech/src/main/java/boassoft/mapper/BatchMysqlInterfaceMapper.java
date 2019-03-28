@@ -1,5 +1,6 @@
 package boassoft.mapper;
 
+import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -45,6 +46,26 @@ public interface BatchMysqlInterfaceMapper {
 	public int deleteLgGanpanList(CommonMap cmap) throws Exception;
 
 	public int insertLgGanpanList(CommonMap cmap) throws Exception;
-	
-	
+
+	public int insertSubPartWoSendListOdOnly(CommonMap gmap) throws Exception;
+
+	public CommonList getSubPartWoSendListOdOnly(CommonMap cmap) throws Exception;
+
+	public int insertSubPartWoSendListOdOnlyMStock(CommonMap cmap) throws Exception;
+
+	public int insertSubPartWoSendListOdOnlyMTransaction(CommonMap cmap) throws Exception;
+
+	public CommonList getSubPartWoSendListAll(CommonMap cmap) throws Exception;
+
+	public int insertSubPartWoSendListAllMStock(CommonMap cmap) throws Exception;
+
+	public int insertSubPartWoSendListAllMTransaction(CommonMap cmap) throws Exception;
+
+	public CommonList getPackingWoSendListAllCng(CommonMap cmap) throws Exception;
+
+	public int insertPackingWoSendListAllCngMStock(CommonMap cmap) throws Exception;
+
+	public int insertPackingWoSendListAllCngMTransaction(CommonMap cmap) throws Exception;
+
+		
 }
