@@ -176,10 +176,10 @@
 				,#{userPw}
 				,#{userName}
 				,#{grantNo}
-				,#{useYn}
-				,#{frstRegistPnttm}
-				,#{frstRegisterId}
-				,#{lastUpdtPnttm}
+				,COALESCE(#{useYn},'Y','N')				
+				,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+				,#{frstRegisterId}				
+				,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
 				,#{lastUpdusrId}
 				,#{userKey}
 		FROM	DUAL

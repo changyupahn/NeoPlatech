@@ -28,6 +28,18 @@
               AND W.USE_YN = #{sUseYn}
         </if>       
      </sql>
+     
+      <sql id="getWareHouseDetailListWhere">          
+      <if test="sWarehouseCode != null and sWarehouseCode != ''"> 		
+    		AND  W.WAREHOUSE_CODE LIKE concat('%',#{sWarehouseCode},'%') 	
+       </if>  
+       <if test="sName != null and sName != ''"> 		
+    		AND W.NAME LIKE concat('%',#{sName},'%') 	
+       </if>          
+            <if test="sUseYn != null and sUseYn != ''"> 		
+              AND W.USE_YN = #{sUseYn}
+        </if>       
+     </sql>
     
      <select id="getWareHouseList" parameterType="cmap" resultType="cmap">
          <include refid="pagingHeader"/>
@@ -72,5 +84,55 @@
 		     WHERE 1 = 1
 		     <include refid="getWareHouseListWhere" />
     </select>
-            
+     
+    <select id="getWareHouseDetailList" parameterType="cmap" resultType="cmap">
+      <include refid="pagingHeader"/>
+   SELECT V.M_WAREHOUSE_LOC_ID AS M_WAREHOUSE_LOC_ID
+		, V.M_WAREHOUSE_ID	AS 	M_WAREHOUSE_ID
+		, CASE WHEN V.USE_YN = 'Y' THEN '사용'
+		   ELSE '미사용' END  AS USE_YN
+		, V.FRST_REGISTER_ID AS FRST_REGISTER_ID
+		, V.FRST_REGIST_PNTTM AS FRST_REGIST_PNTTM
+		, V.LAST_UPDUSR_ID AS LAST_UPDUSR_ID
+		, V.LAST_UPDT_PNTTM AS  LAST_UPDT_PNTTM
+		, W.VALUE AS VALUE
+		, W.NAME AS NAME
+		, CASE WHEN V.WAREHOUSE_TYPE = '01' THEN '양품' 
+		       WHEN V.WAREHOUSE_TYPE = '02' THEN '불량'
+		       ELSE '' END AS WAREHOUSE_TYPE
+		, CASE WHEN V.ISDEFAULT = 'Y' THEN '예'
+		   ELSE '아니오' END  AS ISDEFAULT
+		, CONCAT(W.VALUE,'_',W.NAME,'_',V.DESCRIPTION) AS  BUSINESS_NAME
+		, V.WAREHOUSE_LOC_CODE AS WAREHOUSE_LOC_CODE 	
+		, CASE WHEN V.ISTANGIBLE = 'Y' THEN '실물'
+		       ELSE '가상' END AS ISTANGIBLE
+		FROM RFID_M_WAREHOUSE_LOC V
+		INNER JOIN RFID_M_WAREHOUSE W
+		ON W.M_WAREHOUSE_ID = V.M_WAREHOUSE_ID
+		WHERE 1=1
+        <include refid="getWareHouseDetailListWhere" />
+		<if test="histOrder != null and histOrder != ''"> 
+		  <choose>
+           <when test="histOrder == 'ASC'">			
+				ORDER BY V.M_WAREHOUSE_LOC_ID ASC			
+			</when>
+			<when test="histOrder == 'DESC'">					
+				ORDER BY V.M_WAREHOUSE_LOC_ID DESC			
+		     </when>
+		   </choose>  
+		</if>
+		<if test="histOrder == null and histOrder == ''"> 		
+			ORDER BY V.WAREHOUSE_LOC_CODE DESC		
+        </if>
+        <include refid="pagingFooter"/>
+    </select>        
+    
+    <select id="getWareHouseDetailListCnt" parameterType="cmap" resultType="int">
+        SELECT	COUNT(*)
+        	FROM RFID_M_WAREHOUSE_LOC V
+		INNER JOIN RFID_M_WAREHOUSE W
+		ON W.M_WAREHOUSE_ID = V.M_WAREHOUSE_ID
+		WHERE 1=1
+		     <include refid="getWareHouseDetailListWhere" />
+    </select>
 </mapper>
