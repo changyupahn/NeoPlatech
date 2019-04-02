@@ -55,14 +55,30 @@ public class GoodsReceiptServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public int updateQtyOnHand(CommonMap gmap) throws Exception {
+	public int updateQtyOnHand(CommonMap cmap) throws Exception {
 		// TODO Auto-generated method stub
 		int resultCnt = 0;
 
-		resultCnt = goodsReceiptMapper.updateQtyOnHand(gmap);
+		resultCnt = goodsReceiptMapper.updateQtyOnHand(cmap);
 		
 		return resultCnt;
     	    	
+	}
+
+	@Override
+	public int insertRfidCInOrder(CommonMap cmap) throws Exception {		
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = goodsReceiptMapper.insertRfidCInOrder(cmap);
+		return resultCnt;
+	}
+
+	@Override
+	public int insertRfidCInOrderLine(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = goodsReceiptMapper.insertRfidCInOrderLine(cmap);
+		return resultCnt;
 	}
 	
 
