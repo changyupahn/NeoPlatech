@@ -355,8 +355,8 @@ function fnRecall(){
 		<span class="button"><input type="submit" value="<spring:message code="button.search"/>" onclick="fnSearch();"></span>
 		<span class="button"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
 		<span class="button"><input type="button" value="<spring:message code="button.download.excel"/>" onclick="fnXlsDn();"></span>
-		<span class="button"><input type="button" value="입고처리" onclick="fnStock();"></span>
-		<span class="button"><input type="button" value="반품처리" onclick="fnRecall();"></span>	
+		<!--  <span class="button"><input type="button" value="입고처리" onclick="fnStock();"></span>
+		<span class="button"><input type="button" value="반품처리" onclick="fnRecall();"></span>-->	
 		&nbsp;
 	</td>
 	</tr>
