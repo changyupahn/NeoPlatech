@@ -24,22 +24,19 @@ if (!ssAuthManager) {
 <script type="text/javascript"> 
 $(document).ready(function(){
    
-	$("#sRqstVendorCd").change(function(){
-		
-		   if($("#sRqstVendorCd").val == ''){
-			   $("#sRqstItemCd option[value='']").attr("select", "true");
-			   $("#sRqstItemCd").attr("disabled", "true");
-		  	   
-		   }else{
-		
+	$("select#sRqstVendorCd").change(function(){
+	
+	
+		   if($("#sRqstVendorCd").val == ''){	
+			   $("#sRqstItemCd option[value='']").attr("select", "true");	
+			   $("#sRqstItemCd").attr("disabled", "true");	
+		   }else{	
 			   $("select[name=sRqstItemCd]").removeAttr("disabled");
-			   fnItemCdChange($(this).val());
-	    
+			   fnItemCdChange($(this).val());	
 		   }	
 		});
 	
-		$("#sRqstItemCd").change(function(){
-			alert(" eee");
+		$("select#sRqstItemCd").change(function(){			
 			   if($("#sRqstPNoCd").val == ''){
 				   $("#sRqstPNoCd option[value='']").attr("select", "true");
 				   $("#sRqstPNoCd").attr("disabled", "true");
@@ -64,18 +61,24 @@ function fnItemCdChange(obj){
 			sRqstVendorCd : $("select[name=sRqstVendorCd]").val() 			
 		},
 		success:function(data){
-			
-			if(data.LIST.length > 0){
-				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>선택</option>");	
-								
+	
+			console.log(data.LIST)
+	
+			if(data.LIST != null){
+					
+				$("select#sRqstItemCd option").remove();
+				$("select#sRqstItemCd").append("<option value=''>선택</option>");				
+									
 				$.each(data.LIST, function(key,value){
-					$("#sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");					
+					
+					$("select#sRqstItemCd").append("<option value='" + value.code + "'>" + value.codeName+"</option>");					
+	
 				}); 								
 	
 			
 			}else{
-				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
-			
+				$("select#sRqstItemCd option").remove();
+				$("select#sRqstItemCd").append("<option value=''>NO ITEM!</option>");						
 				return;
 			}			
 		},
@@ -99,17 +102,22 @@ function fnPNoChange(obj){
 		},					
 		success:function(data){			 
 			
-			if(data.LIST.length > 0){
-				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>선택</option>");						
+			console.log(data.LIST)
+			
+			if(data.LIST != null){
+				
+				$("select#sRqstPNoCd option").remove();
+				$("select#sRqstPNoCd").append("<option value=''>선택</option>");														
 								
 				$.each(data.LIST, function(key,value){
-					$("#sRqstPNoCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+
+					$("select#sRqstPNoCd").append("<option value='" + value.code + "'>" + value.codeName+"</option>");					
 					
 				});
 				
 			}else{
-				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
-				
+				$("select#sRqstPNoCd option").remove();
+				$("select#sRqstPNoCd").append("<option value=''>NO PNO!</option>");									
 				return;
 			}			
 		},
@@ -162,7 +170,7 @@ function fnPNoChange(obj){
 	 <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>		
 		<th>업체명 :</th>
 		<td>
-			<select id="sRqstVendorCd" name="sRqstVendorCd" style="min-width:80px" >
+			<select id="sRqstVendorCd" name="sRqstVendorCd" style="min-width:80px" onchange="fnItemCdChange(this);">
 			<option value="">전체</option>
 			<c:import url="/code/optionVendorList.do" charEncoding="utf-8">
 			<c:param name="paramCodeId" value="" />
@@ -173,7 +181,7 @@ function fnPNoChange(obj){
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
 	    <th>ITEM :</th>
 		<td>
-			<select id="sRqstItemCd" name="sRqstItemCd" style="min-width:80px" >
+			<select id="sRqstItemCd" name="sRqstItemCd" style="min-width:80px" onchange="fnPNoChange(this);">
 			<option value="">전체</option>
 			<c:import url="/code/optionItemList.do" charEncoding="utf-8">
 			<c:param name="paramCodeId" value="" />

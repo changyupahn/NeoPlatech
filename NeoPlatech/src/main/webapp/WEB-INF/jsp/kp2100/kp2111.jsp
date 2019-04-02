@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/jsp/common/doctype.jsp" %>    
 <%@ include file="/WEB-INF/jsp/common/default.jsp" %>    
 <%
-String pageTitle = "부자재입고확인";
+String pageTitle = "부자재입고관리확인";
 String curAction = "/kp2100/kp2111.do";
 String curGridAction = "/kp2100/kp2111DetailAjax.do";
 String curSearchAction = "/kp2100/kp2111Search.do";
@@ -35,58 +35,58 @@ function fnGridResize() {
 }
 
 var colNames01 = ['rowNum'
+                  , 'LG주문번호'
+                  , '실제주문품번'
+                  , '부품명칭' 
+                  , '모델명' 
+                  , '업체명' 
+                  , 'LG일정'
+                  , '선행일정'
+                  , 'NEO일정'
+                  , '발주진행일자'   
+                  , '확정일자'  
                   , '제품번호'
-                  , '제품명'
-                  , '부품명칭'                 
+                  , '제품명'                               
                   , '단위'
                   , '일련번호'
-                  , '사급여부'
-                  , 'LG일정'
-                  , '확정일자'
-                  , '선행일정'
-                  , '발주진행일자'
-                  , '모델명'
-                  , '실제주문품번'
-                  , '업체명'
-                  , 'LG주문번호'
-                  , '공급방향'
-                  , 'NEO일정'
+                  , '사급여부'                                                                                                                      
+                  , '공급방향'               
                   , '담당자'
                   , '생산LINE'
                   , '소요수량'
                   , '단위소요수량'
                   , '총소요량'                 
                   , '현재고량'
-                  , '재고대기량'
                   , '주문수량'
+                  , '재고대기량'                 
                   ];
 
                   var colModel01 = [
                   {name:'rowNum', index:'rowNum', width:'0px', hidden:true}
-                  ,{name:'mPartNo', index:'mPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'lgmPartName', index:'lgmPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'subPartName', index:'subPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'unit', index:'unit', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'odId', index:'odId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'osp', index:'osp', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'lgeDate', index:'lgeDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'chkDay', index:'chkDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'gapDay', index:'gapDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
-                  ,{name:'inDate', index:'inDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'tool', index:'tool', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'subPartNo', index:'subPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'vendor', index:'vendor', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
                   ,{name:'demandId', index:'demandId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'outPlace', index:'outPlace', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'subPartNo', index:'subPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'subPartName', index:'subPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'tool', index:'tool', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'vendor', index:'vendor', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'lgeDate', index:'lgeDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'gapDay', index:'gapDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'neoDate', index:'neoDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'myCom', index:'myCom', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'lgLine', index:'lgLine', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
-                  ,{name:'sumQty', index:'sumQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
-                  ,{name:'bomQty', index:'bomQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'inDate', index:'inDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'} 
+                  ,{name:'chkDay', index:'chkDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}  
+                  ,{name:'mPartNo', index:'mPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'lgmPartName', index:'lgmPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                
+                  ,{name:'unit', index:'unit', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'odId', index:'odId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'osp', index:'osp', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                                                                                                                       
+                  ,{name:'outPlace', index:'outPlace', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}                  
+                  ,{name:'myCom', index:'myCom', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}
+                  ,{name:'lgLine', index:'lgLine', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}
+                  ,{name:'sumQty', index:'sumQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'bomQty', index:'bomQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'sumQtyCng', index:'sumQtyCng', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'qtyOnHand', index:'qtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
-                  ,{name:'preQtyOnHand', index:'preQtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'planQty', index:'planQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'preQtyOnHand', index:'preQtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}                 
                   ];
                   
 var groupHeaders01 = [];
@@ -109,8 +109,8 @@ function fnGridList() {
 		rowNum:-1,
 		gridview:true,
 		viewrecords: true,
-		shrinkToFit: false,
-		cellEdit : true,
+		shrinkToFit: true,
+		cellEdit : false,
 // 		sortname: 'repoDt',
 // 		sortorder: 'desc',
 		sortable : true,
@@ -127,7 +127,7 @@ function fnGridList() {
  			fnGridReload("1");
 		},
 		ondblClickRow:function(rowId){
-			fnDetail(rowId);
+			//fnDetail(rowId);
 		},
 		loadComplete : function(data) {
 			//paging 처리
