@@ -57,7 +57,7 @@ function fnItemCdChange(obj){
 				
 				$.each(data.LIST, function(key,value){
 				
-					$("#sRqstItemCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					$("#sRqstItemCd").find("option").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 				});
 			}else{
 				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
@@ -91,7 +91,7 @@ function fnPNoChange(obj){
 				
 				$.each(data.LIST, function(key,value){
 				
-					$("#sRqstPNoCd").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					$("#sRqstPNoCd").find("option").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
 				});
 			}else{
 				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
