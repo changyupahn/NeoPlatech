@@ -36,7 +36,7 @@ public class GoodsXmlManage {
 	
 	private static final Logger LOG = Logger.getLogger(GoodsXmlManage.class.getName());
 	
-	 public void writeXml(GoodsXmlList list, String downPath) throws Exception {
+	 public void writeXml(CommonXmlList list, String downPath) throws Exception {
 		 
 		//String downPath = "D:/asset/xml/inventory.xml";
 	    	
@@ -62,7 +62,7 @@ public class GoodsXmlManage {
 	    	}
 	 }
 	 
-	 public String writeXmlString(CommonXmlList list) throws Exception {
+	 public String writeXmlString(GoodsXmlList goodsXmlList) throws Exception {
 		 
 		 String str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 		 
@@ -72,7 +72,22 @@ public class GoodsXmlManage {
 	     xstream.alias("data", GoodsXmlList.class);
 	     xstream.addImplicitCollection(GoodsXmlList.class, "list");
 	     
-	     str = str + xstream.toXML(list);
+	     str = str + xstream.toXML(goodsXmlList);
+	     
+	     return str;
+	 }
+	 
+ public String writeXmlString(CommonXmlList commonXmlList) throws Exception {
+		 
+		 String str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+		 
+		 XStream xstream = new XStream(new CustomizedXppDriver(new XmlFriendlyReplacer("__", "_")));
+		 
+		 xstream.alias("item", GoodsXml.class);
+	     xstream.alias("data", GoodsXmlList.class);
+	     xstream.addImplicitCollection(GoodsXmlList.class, "list");
+	     
+	     str = str + xstream.toXML(commonXmlList);
 	     
 	     return str;
 	 }
