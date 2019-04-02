@@ -14,4 +14,7 @@ public interface TabletMapper {
 	public int getGoodsShipmentOutListXmlCnt(CommonMap cmap) throws Exception;
 
 	public void updateIGoodsShipmentOut(CommonMap cmap) throws Exception;
+
+	@SuppressWarnings("rawtypes")
+	public List getPackingReceptListXml(CommonMap cmap) throws Exception;
 }
