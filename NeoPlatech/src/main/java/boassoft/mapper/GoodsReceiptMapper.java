@@ -21,7 +21,11 @@ public interface GoodsReceiptMapper {
 
 	public int getGoodsReceiptDetailListCnt(CommonMap cmap) throws Exception;
 
-	public int updateQtyOnHand(CommonMap gmap) throws Exception;
+	public int updateQtyOnHand(CommonMap cmap) throws Exception;
+
+	public int insertRfidCInOrder(CommonMap cmap) throws Exception;
+
+	public int insertRfidCInOrderLine(CommonMap cmap) throws Exception;
 	
 
 }
