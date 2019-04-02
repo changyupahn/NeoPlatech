@@ -69,9 +69,9 @@
              , Class AS CLASS
              , PartNumber AS PART_NUMBER           
              , CAST(ResultQty AS DECIMAL(22,0)) AS RESULT_QTY
-             , CONVERT(CHAR(23), NEO_ODDay, 21) AS NEO_ODDAY
+             , CONVERT(CHAR(23), NEO_ODDay, 21) AS NEO_OD_DAY
              , CAST(Neo_ODQty AS DECIMAL(22,0)) AS NEO_OD_QTY
-             , CONVERT(CHAR(23), NEO_ODTime, 21) AS NEO_ODTIME                       
+             , CONVERT(CHAR(23), NEO_ODTime, 21) AS NEO_OD_TIME                       
      FROM  NeoAuto.dbo.View_MWHS_Packing_WOSendList_ODOnly WHERE NEO_ODTime > GETDATE() - 2   
  ]]> 
  </select>
