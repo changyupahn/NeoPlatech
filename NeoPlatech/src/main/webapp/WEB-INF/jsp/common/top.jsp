@@ -131,10 +131,10 @@ function fnLogout() {
 		<% } %>		
 		<% if (topGrantReadYnArr.indexOf("KP2100") > -1) { %>
 		<li class="">
-			<a href="javascript:;" onclick="fnTopMenu('/kp2100/kp2110.do')">물품취득관리</a>
+			<a href="javascript:;" onclick="fnTopMenu('/kp2100/kp2111.do')">물품취득관리</a>
 			<ol>
-				<% if (topGrantReadYnArr.indexOf("KP2110") > -1) { %>
-				<li><a href="/kp2100/kp2110.do" style="color:#ffffff">부자재입고관리</a></li>
+				<% if (topGrantReadYnArr.indexOf("KP2111") > -1) { %>
+				<li><a href="/kp2100/kp2111.do" style="color:#ffffff">부자재입고관리</a></li>
 				<% } %>
 				<% if (topGrantReadYnArr.indexOf("KP2130") > -1) { %>
 				<li><a href="/kp2100/kp2130.do" style="color:#ffffff">포장재입고관리</a></li>
@@ -147,25 +147,22 @@ function fnLogout() {
 				<% } %>
 			</ol>
 		</li>
-		<% } %>
-		<% if (topGrantReadYnArr.indexOf("KP1900") > -1) { %>
+		<% } %>		
+		<% if (topGrantReadYnArr.indexOf("KP2200") > -1) { %>
 		<li class="">
-			<a href="javascript:;" onclick="fnTopMenu('/kp1900/kp1910.do')">시스템관리</a>
+			<a href="javascript:;" onclick="fnTopMenu('/kp2100/kp2210.do')">물품취득관리</a>
 			<ol>
-				<% if (topGrantReadYnArr.indexOf("KP1910") > -1) { %>
-				<li><a href="/kp1900/kp1910.do" style="color:#ffffff">관리자관리</a></li>
+				<% if (topGrantReadYnArr.indexOf("KP2111") > -1) { %>
+				<li><a href="/kp2100/kp2111.do" style="color:#ffffff">부자재입고관리</a></li>
 				<% } %>
-				<% if (topGrantReadYnArr.indexOf("KP1920") > -1) { %>
-				<li><a href="/kp1900/kp1920.do" style="color:#ffffff">메뉴별권한관리</a></li>
+				<% if (topGrantReadYnArr.indexOf("KP2130") > -1) { %>
+				<li><a href="/kp2100/kp2130.do" style="color:#ffffff">포장재입고관리</a></li>
 				<% } %>
-				<% if (topGrantReadYnArr.indexOf("KP1960") > -1) { %>
-				<li><a href="/kp1900/kp1960.do" style="color:#ffffff">담당지역관리</a></li>
+				<% if (topGrantReadYnArr.indexOf("KP2150") > -1) { %>
+				<li><a href="/kp2100/kp2150.do" style="color:#ffffff">부자재출고관리</a></li>
 				<% } %>
-				<% if (topGrantReadYnArr.indexOf("KP1930") > -1) { %>
-				<li><a href="/kp1900/kp1930.do" style="color:#ffffff">단말기관리</a></li>
-				<% } %>
-				<% if (topGrantReadYnArr.indexOf("KP1970") > -1) { %>
-				<li><a href="/kp1900/kp1970.do" style="color:#ffffff">창고관리</a></li>
+				<% if (topGrantReadYnArr.indexOf("KP2170") > -1) { %>
+				<li><a href="/kp2100/kp2170.do" style="color:#ffffff">포장재출고관리</a></li>
 				<% } %>
 			</ol>
 		</li>
