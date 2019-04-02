@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/jsp/common/doctype.jsp" %>    
 <%@ include file="/WEB-INF/jsp/common/default.jsp" %>    
 <%
-String pageTitle = "부자재입고관리확인";
+String pageTitle = "부자재입고관리";
 String curAction = "/kp2100/kp2111.do";
 String curGridAction = "/kp2100/kp2111DetailAjax.do";
 String curSearchAction = "/kp2100/kp2111Search.do";
