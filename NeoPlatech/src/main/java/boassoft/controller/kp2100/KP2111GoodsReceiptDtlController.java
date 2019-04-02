@@ -161,10 +161,11 @@ public class KP2111GoodsReceiptDtlController {
 		ModelAndView modelAndView = new ModelAndView();
 		CommonMap cmap = new CommonMap(request);
 		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
-
+        System.out.println(" codeId " + " : " + cmap.getString("sRqstVendorCd") ); 
 		CommonList commonCodeList = new CommonList();
 		try {
 			commonCodeList = goodsReceiptService.getOptionItemList(cmap);
+			  System.out.println(" commonCodeList " + " : " + commonCodeList.size() ); 
 		} catch (Exception e) {
 			LOG.error("[" + this.getClass().getName()
 					+ ".Kp2111ComboItemSelect().Exception()]" + e.getMessage());
@@ -172,7 +173,7 @@ public class KP2111GoodsReceiptDtlController {
 		HashMap<String, CommonList> resultMap = new HashMap<String, CommonList>();
 
 		resultMap.put("LIST", commonCodeList);
-
+		System.out.println(" resultMap " + " : " + resultMap.toString() ); 
 		modelAndView.addAllObjects(resultMap);
 		modelAndView.setViewName("jsonView");
 
@@ -186,6 +187,8 @@ public class KP2111GoodsReceiptDtlController {
 		CommonMap cmap = new CommonMap(request);
 		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
 		cmap.put("sltValue", cmap.getString("sRqstItemCd"));
+		System.out.println(" codeId " + " : " + cmap.getString("sRqstVendorCd") ); 
+		System.out.println(" sltValue " + " : " + cmap.getString("sRqstItemCd") ); 
 		CommonList commonCodeList = new CommonList();
 		try {
 			commonCodeList = goodsReceiptService.getOptionPNoList(cmap);
@@ -273,27 +276,38 @@ public class KP2111GoodsReceiptDtlController {
 					if (maxCnt > 0) {
 						System.out.println("000 maxCnt " + " : " + maxCnt);
 						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
-						if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
+						if(maxCnt == sumQty){
+							gmap.put("qtyOnHand",0);
+							gmap.put("preQtyOnHand", maxCnt);
+							resultCnt = goodsReceiptService
+									.updateQtyOnHand(gmap);
+							// 양품창고로 보낸다. 
+							goodsReceiptService.insertRfidCInOrder(gmap);
+							goodsReceiptService.insertRfidCInOrderLine(gmap);
+							
+							continue;
+						}
+						else if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
 							disCnt = maxCnt - sumQty; // 150
+							System.out.println("111 disCnt " + " : " + disCnt);
+							gmap.put("qtyOnHand",0);
+							gmap.put("preQtyOnHand", disCnt);
+							resultCnt = goodsReceiptService
+									.updateQtyOnHand(gmap);
+							// 양품창고로 보낸다. 
+							goodsReceiptService.insertRfidCInOrder(gmap);
+							goodsReceiptService.insertRfidCInOrderLine(gmap);
 
-							// 재고가 있을때 주문량 적으면 50
-							if (disCnt - gmap.getInt("qtyOnHand", 0) >= 0) {
-								gmap.put("qtyOnHand",
-										disCnt - gmap.getInt("qtyOnHand", 0));
-								gmap.put(gmap.getInt("preQtyOnHand", 0), "0");
-								resultCnt = goodsReceiptService
-										.updateQtyOnHand(gmap);
-							} else { // 재고가 잇을때 주문량 보다 많으면
-								gmap.put("qtyOnHand",
-										gmap.getInt("qtyOnHand", 0));
-								gmap.put("preQtyOnHand", disCnt);
-								resultCnt = goodsReceiptService
-										.updateQtyOnHand(gmap);
-							}
-							maxCnt = maxCnt - disCnt;
+							continue;
 
-							resultCnt++;
-
+						}else{ // 소요량이 입고량보다 많으면
+							gmap.put("qtyOnHand",0);
+							gmap.put("preQtyOnHand", maxCnt);
+							resultCnt = goodsReceiptService
+									.updateQtyOnHand(gmap);
+							// 양품창고로 보낸다. 
+							goodsReceiptService.insertRfidCInOrder(gmap);
+							goodsReceiptService.insertRfidCInOrderLine(gmap);
 						}
 					} else {
 						continue;

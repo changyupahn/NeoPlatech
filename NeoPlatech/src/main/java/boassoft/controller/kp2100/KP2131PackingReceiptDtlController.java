@@ -152,7 +152,7 @@ public class KP2131PackingReceiptDtlController {
 		ModelAndView modelAndView = new ModelAndView();	
 		CommonMap cmap = new CommonMap(request);		
 		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
-
+	
 		CommonList commonCodeList = new CommonList();
 		try{
 			commonCodeList = packingReceiptService.getOptionItemList(cmap);
@@ -172,10 +172,9 @@ public class KP2131PackingReceiptDtlController {
 	public ModelAndView Kp2111ComboPNoSelect(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		ModelAndView modelAndView = new ModelAndView();	
 		CommonMap cmap = new CommonMap(request);
-		cmap.put("codeId", cmap.getString("paramCodeId"));
-		cmap.put("sltValue", cmap.getString("paramSltValue"));
-		System.out.println (" codeId " + " : " + cmap.getString("codeId"));
-		System.out.println (" sltValue " + " : " + cmap.getString("sltValue"));
+		cmap.put("codeId", cmap.getString("sRqstVendorCd"));
+		cmap.put("sltValue", cmap.getString("sRqstItemCd"));
+		
 		CommonList commonCodeList = new CommonList();
 		try{
 			commonCodeList = packingReceiptService.getOptionPNoList(cmap);
@@ -418,27 +417,13 @@ public class KP2131PackingReceiptDtlController {
     		cmap.put("sUserName", cmap.getString("sUserName", SessionUtil.getString("userName")));
     		cmap.put("sDeptNo", cmap.getString("sDeptNo", SessionUtil.getString("deptNo")));
     		cmap.put("sDeptName", cmap.getString("sDeptName", SessionUtil.getString("deptName")));
-    	}
+    	}    	    		
     	
-    	System.out.println("  pageIdx" + " : " + cmap.getString("pageIdx", "0"));
-    	System.out.println("  pageSize" + " : " + cmap.getString("pageSize", "0"));
-    	System.out.println("  pageLimit" + " : " + cmap.getString("pageLimit", "0"));
-    	System.out.println("  dataOrder" + " : " + cmap.getString("dataOrder", "0"));
-    	System.out.println("  dataOrderArrow" + " : " + cmap.getString("dataOrderArrow", "0"));
-    	System.out.println("  sRqstVendorCd" + " : " + cmap.getString("sRqstVendorCd", "") );
-    	System.out.println("  sRqstItemCd" + " : " + cmap.getString("sRqstItemCd", ""));
-    	System.out.println("  sRqstPNoCd" + " : " + cmap.getString("sRqstPNoCd", ""));
-		
-    	
-    	CommonList resultList = packingReceiptService.getPackingReceiptDetailList(cmap);
-    	
-    	System.out.println("  resultList.size()" + " : " + resultList.size());
+    	CommonList resultList = packingReceiptService.getPackingReceiptDetailList(cmap);    	    	
     	
     	//화면표시관리 (자산목록)
     	cmap.put("dispType", "PACKING_RECEIPT_DETAIL_LIST_EXCEL");
-    	CommonList dispMngList = systemService.getDispMngList(cmap);
-    	
-    	System.out.println("  resultList.size()" + " : " + resultList.size());
+    	CommonList dispMngList = systemService.getDispMngList(cmap);    	    
     	
     	int headerSize = dispMngList.size();
     	String[] headerListLgc1 = new String[headerSize];
