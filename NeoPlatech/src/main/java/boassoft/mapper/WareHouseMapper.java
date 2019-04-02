@@ -10,4 +10,9 @@ public interface WareHouseMapper {
 	public CommonList getWareHouseList(CommonMap cmap) throws Exception;
 
 	public int getWareHouseListCnt(CommonMap cmap) throws Exception;
+
+	public CommonList getWareHouseDetailList(CommonMap cmap) throws  Exception;
+
+	public int getWareHouseDetailListCnt(CommonMap cmap) throws  Exception;
+
 }
