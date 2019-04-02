@@ -18,7 +18,7 @@ if (!ssAuthManager) {
 %>
 <script type="text/javascript"> 
 $(document).ready(function(){
-	 $("#sRqstVendorCd").change(function(){
+	$("select#sRqstVendorCd").change(function(){
 		   if($("#sRqstVendorCd").val == ''){
 			   $("#sRqstItemCd option[value='']").attr("select", "true");
 			   $("#sRqstItemCd").attr("disabled", "true");
@@ -28,7 +28,7 @@ $(document).ready(function(){
 		   }	
 		});
 		
-		$("#sRqstItemCd").change(function(){
+	$("select#sRqstItemCd").change(function(){
 			   if($("#sRqstPNoCd").val == ''){
 				   $("#sRqstPNoCd option[value='']").attr("select", "true");
 				   $("#sRqstPNoCd").attr("disabled", "true");
@@ -43,7 +43,7 @@ $(document).ready(function(){
 
 function fnItemCdChange(obj){
 	var value = "sRqstVendorCd=" + obj;
-	
+
 	$.ajax({
 		type:'POST',
 		url:'<%=curComboItemAction%>',
@@ -52,15 +52,20 @@ function fnItemCdChange(obj){
 			sRqstVendorCd : $("select[name=sRqstVendorCd]").val() 			
 		},
 		success:function(data){
-			if(data.LIST.length > 0){
-				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>선택</option>");
+			
+			console.log(data.LIST)
+			if(data.LIST != null){
+			
+				$("select#sRqstItemCd option").remove();
+				$("select#sRqstItemCd").append("<option value=''>선택</option>");
 				
 				$.each(data.LIST, function(key,value){
-				
-					$("#sRqstItemCd").find("option").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					$("select#sRqstItemCd").append("<option value='" + value.code + "'>" + value.codeName+"</option>");	
 				});
 			}else{
-				$("#sRqstItemCd").find("option").remove().end().append("<option value=''>NO ITEM!</option>");
+				
+				$("select#sRqstItemCd option").remove();
+				$("select#sRqstItemCd").append("<option value=''>NO ITEM!</option>");	
 				return;
 			}			
 		},
@@ -74,8 +79,7 @@ function fnItemCdChange(obj){
 function fnPNoChange(obj){
 	
 	var value = "sRqstPNoCd=" + obj;
-	
-	
+
 	$.ajax({
 		type:'POST',
 		url:'<%=curComboPNoAction%>',
@@ -86,15 +90,19 @@ function fnPNoChange(obj){
 		},
 		success:function(data){
 			
-			if(data.LIST.length > 0){
-				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>선택</option>");
+			if(data.LIST != null){
+				
+				$("select#sRqstPNoCd option").remove();
+				$("select#sRqstPNoCd").append("<option value=''>선택</option>");		
 				
 				$.each(data.LIST, function(key,value){
 				
-					$("#sRqstPNoCd").find("option").append("<option vlaue=" + value.code + "'>" + value.codeName+ "<option>");
+					$("select#sRqstPNoCd").append("<option value='" + value.code + "'>" + value.codeName+"</option>");
 				});
 			}else{
-				$("#sRqstPNoCd").find("option").remove().end().append("<option value=''>NO PNO!</option>");
+				
+				$("select#sRqstPNoCd option").remove();
+				$("select#sRqstPNoCd").append("<option value=''>NO PNO!</option>");	
 				return;
 			}			
 		},
@@ -147,7 +155,7 @@ function fnPNoChange(obj){
 	 <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>		
 		<th>업체명 :</th>
 		<td>
-			<select id="sRqstVendorCd" name="sRqstVendorCd" style="min-width:80px" >
+			<select id="sRqstVendorCd" name="sRqstVendorCd" style="min-width:80px" onchange="fnItemCdChange(this);">
 			<option value="">전체</option>
 			<c:import url="/code/comboVendorList.do" charEncoding="utf-8">
 			<c:param name="paramCodeId" value="" />
@@ -158,7 +166,7 @@ function fnPNoChange(obj){
      <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
 	    <th>ITEM :</th>
 		<td>
-			<select id="sRqstItemCd" name="sRqstItemCd" style="min-width:80px" >
+			<select id="sRqstItemCd" name="sRqstItemCd" style="min-width:80px" onchange="fnPNoChange(this);">
 			<option value="">전체</option>
 			<c:import url="/code/comboItemList.do" charEncoding="utf-8">
 			<c:param name="paramCodeId" value="" />
@@ -179,7 +187,7 @@ function fnPNoChange(obj){
 		</td>
 			</td>	
   <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>입고량 :</th>
+		<th>수량 :</th>
 		<td>
 			<input type="text" id="sReceiptCnt" name="sReceiptCnt" value="<%=cmRequest.getString("sReceiptCnt")%>" class="def" />
 		</td>			
