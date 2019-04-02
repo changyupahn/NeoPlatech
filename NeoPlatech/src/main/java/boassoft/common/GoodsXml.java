@@ -46,6 +46,104 @@ public class GoodsXml implements Serializable {
 	private String od_key;
 	private String prim_key;
 	private String lg_line;	
+	private String pg_od_id;
+	public String getPg_od_id() {
+		return pg_od_id;
+	}
+	public void setPg_od_id(String pg_od_id) {
+		this.pg_od_id = pg_od_id;
+	}
+	public String getPkg_po_no() {
+		return pkg_po_no;
+	}
+	public void setPkg_po_no(String pkg_po_no) {
+		this.pkg_po_no = pkg_po_no;
+	}
+	public String getTool_name() {
+		return tool_name;
+	}
+	public void setTool_name(String tool_name) {
+		this.tool_name = tool_name;
+	}
+	public String getLine() {
+		return line;
+	}
+	public void setLine(String line) {
+		this.line = line;
+	}
+	public String getFinal_vendor() {
+		return final_vendor;
+	}
+	public void setFinal_vendor(String final_vendor) {
+		this.final_vendor = final_vendor;
+	}
+	public String getClazz() {
+		return clazz;
+	}
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
+	}
+	public String getPart_number() {
+		return part_number;
+	}
+	public void setPart_number(String part_number) {
+		this.part_number = part_number;
+	}
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+	public String getResult_qty() {
+		return result_qty;
+	}
+	public void setResult_qty(String result_qty) {
+		this.result_qty = result_qty;
+	}
+	public String getNeo_od_time() {
+		return neo_od_time;
+	}
+	public void setNeo_od_time(String neo_od_time) {
+		this.neo_od_time = neo_od_time;
+	}
+	public String getNeo_od_day() {
+		return neo_od_day;
+	}
+	public void setNeo_od_day(String neo_od_day) {
+		this.neo_od_day = neo_od_day;
+	}
+	public String getNeo_od_qty() {
+		return neo_od_qty;
+	}
+	public void setNeo_od_qty(String neo_od_qty) {
+		this.neo_od_qty = neo_od_qty;
+	}
+	public String getQty_on_hand() {
+		return qty_on_hand;
+	}
+	public void setQty_on_hand(String qty_on_hand) {
+		this.qty_on_hand = qty_on_hand;
+	}
+	public String getPre_qty_on_hand() {
+		return pre_qty_on_hand;
+	}
+	public void setPre_qty_on_hand(String pre_qty_on_hand) {
+		this.pre_qty_on_hand = pre_qty_on_hand;
+	}
+	private String pkg_po_no;
+    private String tool_name;
+    private String line;
+    private String final_vendor;
+    private String clazz;
+    private String part_number;
+    private String desc;
+    private String result_qty;
+    private String neo_od_time;
+    private String neo_od_day;
+    private String neo_od_qty;
+    private String qty_on_hand;
+    private String pre_qty_on_hand;
 	
 	
 	public String getPt_od_id() {
