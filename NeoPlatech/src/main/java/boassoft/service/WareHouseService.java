@@ -6,6 +6,8 @@ import boassoft.util.CommonMap;
 public interface WareHouseService {
 
 	public CommonList getWareHouseList(CommonMap cmap) throws Exception;
+
+	public CommonList getWareHouseDetailList(CommonMap cmap) throws Exception;
 	
 	
 }
