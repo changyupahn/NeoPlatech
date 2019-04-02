@@ -15,6 +15,10 @@ public interface PackingReceiptService {
 	
 	public CommonList getPackingReceiptDetailList(CommonMap cmap) throws Exception;
 
-	public int updateQtyOnHand(CommonMap gmap) throws Exception;
+	public int updateQtyOnHand(CommonMap cmap) throws Exception;
+
+	public int insertCRecall(CommonMap cmap) throws Exception;
+
+	public int insertCRecallLine(CommonMap cmap) throws Exception;
 
 }
