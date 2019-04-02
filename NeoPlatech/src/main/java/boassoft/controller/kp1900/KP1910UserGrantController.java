@@ -165,8 +165,12 @@ public class KP1910UserGrantController {
 	    	//조회
 	    	CommonMap user = userService.getUserView(cmap);
 
-	    	if (user.isEmpty()) {
-		    	
+	    	if (user != null) {
+		    
+	    		//수정
+		    	resultCnt = userService.updateUser(cmap);
+		    	resultMap.put("retmsg", "수정되었습니다.");
+	    	} else {
 		    	if ("".equals(cmap.getString("userPw"))) {
 		    		resultMap.put("ret", "ERR");
 		    		resultMap.put("retmsg", "필수 입력값이 누락되었습니다.");
@@ -179,10 +183,7 @@ public class KP1910UserGrantController {
 			    	resultCnt = userService.insertUser(cmap);
 			    	resultMap.put("retmsg", "등록되었습니다.");
 		    	}
-	    	} else {
-	    		//수정
-		    	resultCnt = userService.updateUser(cmap);
-		    	resultMap.put("retmsg", "수정되었습니다.");
+	    	
 	    	}
 
     	} catch (Exception e) {
