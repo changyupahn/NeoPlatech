@@ -146,28 +146,28 @@
 	    <include refid="pagingHeader"/>
 	    <![CDATA[
 	    SELECT 
-                  A.OD_ID
-                 , A.DEMAND_ID
-                 , A.LGE_DATE
-                 , A.NEO_DATE
-                 , A.GAP_DAY
-                 , A.LG_LINE
-                 , A.TOOL
-                 , A.M_PART_NO                 
+                  A.OD_ID AS OD_ID
+                 , A.DEMAND_ID AS DEMAND_ID
+                 , LEFT(A.LGE_DATE,10) AS LGE_DATE
+                 , LEFT(A.NEO_DATE,10) AS NEO_DATE
+                 , A.GAP_DAY AS GAP_DAY
+                 , A.LG_LINE AS LG_LINE
+                 , A.TOOL AS TOOL
+                 , A.M_PART_NO AS M_PART_NO               
                  , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
-                 , A.LGM_PART_NAME
-                 , A.SUB_PART_NO
-                 , A.SUB_PART_NAME
+                 , A.LGM_PART_NAME AS LGM_PART_NAME
+                 , A.SUB_PART_NO AS SUB_PART_NO 
+                 , A.SUB_PART_NAME AS SUB_PART_NAME
                  , COALESCE(A.BOM_QTY,0) AS BOM_QTY
                  , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
                  , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
                    ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
-                 , A.UNIT
-                 , A.VENDOR
-                 , A.OSP
-                 , A.OUT_PLACE
-                 , A.CHK_DAY
-                 , A.IN_DATE 
+                 , A.UNIT AS UNIT
+                 , A.VENDOR AS VENDOR
+                 , A.OSP AS OSP
+                 , A.OUT_PLACE AS OUT_PLACE
+                 , LEFT(A.CHK_DAY,10) AS CHK_DAY
+                 , LEFT(A.IN_DATE,10)  AS IN_DATE                 
                  , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
                  , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
@@ -240,6 +240,117 @@
 				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
         WHERE 	OD_ID = #{odId}				
     </update>
+          
+    <insert id="insertRfidCInOrder" parameterType="cmap" >
+        INSERT IGNORE INTO RFID_C_IN_ORDER (
+          C_IN_ORDER_ID
+        , DOCSTATUS
+        , DESCRIPTION
+        , ISDELIVERED
+        , ISPRINTED
+        , DATEORDERED
+        , DATEPROMISED
+        , DATEPRINTED
+        , M_WAREHOUSE_ID
+        , COUNT
+        , GROSSQTY
+        , C_PURCHASE_ORDER_ID
+        , ISSUPPLIED
+        , RSLTDATE
+        , RSLTSTATE
+        , READDATE
+        , READSTATE
+        , USE_YN
+        , FRST_REGIST_PNTTM
+        , FRST_REGISTER_ID
+        , LAST_UPDT_PNTTM
+        , LAST_UPDUSR_ID
+       )        
+        VALUES
+        (
+          #{odId}
+          , NULL
+          , NULL
+          , 'Y'
+          , 'Y'
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , 1
+          , 1
+          , #{preQtyOnHand}
+          , NULL
+          , 'Y'
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , '0'
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , '0'
+          , 'Y'
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{frstRegisterId}				
+		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{lastUpdusrId}
+        )
+     </insert>   
+            
+      <insert id="insertRfidCInOrderLine" parameterType="cmap" >
+      <selectKey resultType="string" keyProperty="cInOrderLineId" order="BEFORE">
+        SELECT get_seq('cInOrderline')     
+      </selectKey>
+        INSERT IGNORE INTO RFID_C_IN_ORDER (
+          C_IN_ORDERLINE_ID     
+         , DATEORDERED
+         , DATEPROMISED
+         , DATERECEIPTED
+         , DESCRIPTION
+         , M_PRODUCT_ID
+         , M_WAREHOUSE_ID
+         , C_UOM_ID
+         , C_IN_ORDER_ID
+         , C_PURCHASE_ORDERLINE_ID
+         , QTYRECEIPTED
+         , ISDELIVERED
+         , FAULT_REASON
+         , ISSUPPLIED
+         , FAULT_COMMENT
+         , RSLTDATE
+         , RSLTSTATE
+         , READDATE
+         , READSTATE
+         , USE_YN
+         , FRST_REGIST_PNTTM
+         , FRST_REGISTER_ID
+         , LAST_UPDT_PNTTM
+         , LAST_UPDUSR_ID
+        )
+        VALUES
+        ( 
+          #{cInOrderLineId}
+          , #{neoDate}
+          , #{chkDay}
+          , #{lgeDate}
+          , NULL
+          , #{odId}
+          , 1
+          , 1
+          , #{cInOrderId}
+          , NULL
+          , #{preQtyOnHand}
+          , 'Y'
+          , NULL
+          , 'Y'
+          , NULL
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , '0'
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , '0'
+          , 'Y'
+          ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{frstRegisterId}				
+		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{lastUpdusrId}
+        ) 
+       </insert> 
             
 </mapper>
 
