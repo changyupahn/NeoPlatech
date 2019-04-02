@@ -201,7 +201,7 @@ function fnPNoChange(obj){
 			</select>
 		</td>		
 	 <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>입고량 :</th>
+		<th>수량 :</th>
 		<td>
 			<input type="text" id="sReceiptCnt" name="sReceiptCnt" value="<%=cmRequest.getString("sReceiptCnt")%>" class="def" />
 		</td>		    
