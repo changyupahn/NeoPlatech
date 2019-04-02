@@ -105,5 +105,82 @@
     	   AND SUB_PT_OD_ID = #{subPtOdId}
       ]]>
     </update>	    
-    	
+    
+   
+      <select id="getPackingReceptListXml" parameterType="cmap" resultType="commonXml" >
+        <include refid="pagingHeader"/>
+     <![CDATA[
+	      SELECT A.OD_ID
+             , A.OD_QTY_ID
+             , A.PKG_PO_NO
+             , A.DEMAND_ID
+             , A.TOOL_NAME
+             , A.LG_PART_NO
+             , COALESCE(A.LG_OD_QTY,0) AS LG_OD_QTY
+             , A.LINE
+             , A.FINAL_VENDOR
+             , A.CLASS
+             , A.PART_NUMBER
+             , A.DESC
+             , COALESCE(A.RESULT_QTY,0) AS RESULT_QTY
+             , A.NEO_OD_TIME
+             , A.NEO_OD_DAY
+             , COALESCE(A.NEO_OD_QTY,0) AS NEO_OD_QTY
+             , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
+             , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+        FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
+              WHERE 1 = 1 
+          ]]>                 
+          <if test="final_vendor != null and final_vendor != ''">              
+          AND A.FINAL_VENDOR LIKE concat('%',#{final_vendor},'%')
+          </if>
+          <if test="od_day != null and od_day != ''"> 	
+          AND A.NEO_OD_DAY LIKE concat('%',#{od_day},'%')	
+         </if>
+         <if test="pkg_po_no != null and pkg_po_no != ''"> 	
+          AND A.PKG_PO_NO LIKE concat('%',#{pkg_po_no},'%')	
+         </if>
+        GROUP BY A.FINAL_VENDOR
+	    ORDER BY A.NEO_OD_DAY
+	     <include refid="pagingFooter"/> 	           
+      </select>
+      
+      <select id="getPackingReceptListXmlCnt" parameterType="cmap" resultType="int">   
+      <![CDATA[      
+         SELECT COUNT(*) FROM 
+           (
+                 SELECT A.OD_ID
+             , A.OD_QTY_ID
+             , A.PKG_PO_NO
+             , A.DEMAND_ID
+             , A.TOOL_NAME
+             , A.LG_PART_NO
+             , COALESCE(A.LG_OD_QTY,0) AS LG_OD_QTY
+             , A.LINE
+             , A.FINAL_VENDOR
+             , A.CLASS
+             , A.PART_NUMBER
+             , A.DESC
+             , COALESCE(A.RESULT_QTY,0) AS RESULT_QTY
+             , A.NEO_OD_TIME
+             , A.NEO_OD_DAY
+             , COALESCE(A.NEO_OD_QTY,0) AS NEO_OD_QTY
+             , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
+             , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+        FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
+              WHERE 1 = 1 
+             ]]>            
+             <if test="final_vendor != null and final_vendor != ''">              
+          AND A.FINAL_VENDOR LIKE concat('%',#{final_vendor},'%')
+          </if>
+          <if test="od_day != null and od_day != ''"> 	
+          AND A.NEO_OD_DAY LIKE concat('%',#{sRqstItemCd},'%')	
+         </if>
+         <if test="pkg_po_no != null and pkg_po_no != ''"> 	
+          AND A.PKG_PO_NO LIKE concat('%',#{sRqstPNoCd},'%')	
+         </if>
+              GROUP BY A.FINAL_VENDOR
+	         ORDER BY A.NEO_OD_DAY
+          ) X	             
+     </select>      	
 </mapper> 

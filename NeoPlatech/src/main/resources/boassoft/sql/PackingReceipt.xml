@@ -204,4 +204,68 @@
         WHERE 	OD_ID = #{odId}				
     </update>
 	   
+	   
+	<insert id="insertCRecall" parameterType="cmap" >
+	  INSERT IGNORE INTO RFID_C_RECALL (
+	    C_RECALL_ID
+	    , DATESELECTED
+	    , RECALL_NAME
+	    , RECALL_METHOD
+	    , M_PRODUCT_ID
+	    , DATE_SALE_START
+	    , DATE_SALE_END
+	    , USE_YN
+	    , FRST_REGIST_PNTTM
+	    , FRST_REGISTER_ID
+	    , LAST_UPDT_PNTTM
+	    , LAST_UPDUSR_ID
+	  )
+	  VALUES
+	  ( 
+	    #{odId}
+	   , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+	   , NULL
+	   , '00'
+	   , #{demandId}
+	   , NULL
+	   , NULL
+	   , 'Y'
+       ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+	   ,#{frstRegisterId}				
+	   ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+	   ,#{lastUpdusrId}
+	  )	  	  
+	</insert>
+	
+	<insert id="insertRfidCRecallLine" parameterType="cmap" >
+      <selectKey resultType="string" keyProperty="cRecallLineId" order="BEFORE">
+        SELECT get_seq('cRecallLine')     
+      </selectKey>
+       INSERT IGNORE INTO RFID_C_RECALLLINE (
+       C_RECALLLINE_ID
+       , C_RECALL_ID
+       , DATESHIP
+       , ISRECALL
+       , DATERECALL
+       , USE_YN
+       , FRST_REGIST_PNTTM
+       , FRST_REGISTER_ID
+       , LAST_UPDT_PNTTM
+       , LAST_UPDUSR_ID
+      )
+      VALUES
+      ( 
+        #{cRecallLineId}
+        , #{odId}
+        , NULL
+        , 'Y'
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+        , 'Y'
+        ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+	    ,#{frstRegisterId}				
+	    ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+	    ,#{lastUpdusrId}
+       ) 
+   </insert>    
+	   
 </mapper>      
