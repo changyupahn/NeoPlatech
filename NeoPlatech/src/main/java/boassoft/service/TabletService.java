@@ -15,4 +15,6 @@ public interface TabletService {
 	public void updateGoodsShipment(CommonMap inv) throws Exception;
 
 	public GoodsXmlList getPackingReceptListXml(CommonMap cmap) throws Exception;
+
+	public GoodsXmlList getPackingShipmentOutListXml(CommonMap cmap) throws Exception;
 }
