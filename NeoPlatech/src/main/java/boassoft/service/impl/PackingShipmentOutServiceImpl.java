@@ -25,4 +25,36 @@ public class PackingShipmentOutServiceImpl extends EgovAbstractServiceImpl imple
 		return list;
 	}
 
+	@Override
+	public int insertMOutOrder(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = packingShipmentOutMapper.insertMOutOrder(cmap);
+		return resultCnt;
+	}
+
+	@Override
+	public int insertMOutOrderLine(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = packingShipmentOutMapper.insertMOutOrderLine(cmap);
+		return resultCnt;
+	}
+
+	@Override
+	public int insertCInvoicePo(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = packingShipmentOutMapper.insertCInvoicePo(cmap);
+		return resultCnt;
+	}
+
+	@Override
+	public int insertCInvoicePoLine(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = packingShipmentOutMapper.insertCInvoicePo(cmap);
+		return resultCnt;
+	}
+
 }
