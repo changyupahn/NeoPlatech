@@ -83,6 +83,186 @@
         FROM 	RFID_IF_PACKING_WOSENDLIST_ALL A 
           WHERE 1 = 1
 		     <include refid="getPackingShipmentOutWhere" />      
-      </select>
+      </select>                 
+      
+      	<insert id="insertMOutOrder" parameterType="cmap" >
+      	    INSERT IGNORE INTO RFID_M_OUT_ORDER (
+      	     M_OUTER_ORDER_ID
+      	     , COUT
+      	     , ISDELIVERED
+      	     , ISPRINTED
+      	     , DATEORDERED
+      	     , DATEPROMISED
+      	     , DATEPRINTED
+      	     , M_WAREHOUSE_ID
+      	     , GROSSQTY
+      	     , RSLTDATE
+      	     , RSLTSTATE
+      	     , READDATE
+      	     , READSTATE
+      	     , USE_YN
+      	     , FRST_REGIST_PNTTM
+      	     , FRST_REGISTER_ID
+      	     , LAST_UPDT_PNTTM
+      	     , LAST_UPDUSR_ID
+      	   )
+      	   VALUES
+      	   (
+      	     #{odId}
+      	     , #{receiptCnt}
+      	     , 'Y'
+      	     , 'N'
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')) 
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     , 1
+      	     , #{receiptCnt}
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     , '0'
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     ,'0'
+      	     , 'Y'
+      	     ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		     ,#{frstRegisterId}				
+		     ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		     ,#{lastUpdusrId}
+      	    )      	         	           	           	       	
+      	</insert>
+      	
+      	<insert id="insertMOutOrderLine" parameterType="cmap" >
+      <selectKey resultType="string" keyProperty="mOutOrderLineId" order="BEFORE">
+        SELECT get_seq('mOutOrderline')     
+      </selectKey>
+        INSERT IGNORE INTO RFID_M_OUT_ORDERLINE (
+        M_OUT_ORDERLINE_ID
+        , DATEORDERED
+        , DATEPRIOMISED
+        , DATESHIPMENT
+        , DESCRIPTION
+        , M_PRODUCT_ID
+        , M_WAREHOUSE_ID
+        , C_UOM_ID
+        , QTYOUTORDERED
+        , M_OUT_ORDER_ID
+        , C_SALES_ORDERLINE_ID
+        , QTYSHIPMENT
+        , ISDELIVERED
+        , ISREPLACED
+        , ISDISTRIBUTED
+        , RSLTDATE
+        , RSLTSTATE
+        , READDATE
+        , READSTATE
+        , USE_YN
+        , FRST_REGIST_PNTTM
+        , FRST_REGISTER_ID
+        , LAST_UPDT_PNTTM
+        , LAST_UPDUSR_ID
+        )
+        VALUES        
+        ( 
+          #{mOutOrderLineId}
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')) 
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , NULL
+          , #{odId}
+          , 1
+          , 1
+          , #{receiptCnt}
+          , #{preQtyOnHand}
+          , 'Y'
+          , 'N'
+          , 'N'
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	  , '0'
+      	  , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	  ,'0'
+      	  , 'Y'
+      	  ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{frstRegisterId}				
+		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{lastUpdusrId} 
+        )      
+      </insert>
+                 
+      <insert id="insertCInvoicePo" parameterType="cmap" >
+          INSERT IGNORE INTO RFID_C_INVOICEPO (
+            C_INVOICEPO_ID
+          , COUNT
+          , GROSSQTY
+          , DATEINVOICED
+          , DATEPRINTED
+          , ISCLOSED
+          , ISTRANSFERED
+          , ISPAID
+          , ISPRINTED
+          , C_PURCHASE_ORDER_ID
+          , M_IN_ID
+          , DESCRIPTION
+          , USE_YN
+          , FRST_REGIST_PNTTM
+          , FRST_REGISTER_ID
+          , LAST_UPDT_PNTTM
+          , LAST_UPDUSR_ID
+          )
+          VALUES
+          ( 
+            #{odId}
+            , #{receiptCnt}
+            , #{preQtyOnHand}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+            , 'N'
+            , 'N'
+            , 'N'
+            , 'Y'
+            , #{demandId}
+            , NULL
+            , NULL
+            , 'Y'
+            ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		    ,#{frstRegisterId}				
+		    ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		    ,#{lastUpdusrId}
+		  )   
+      </insert>
+      
+      <insert id="insertCInvoicePoLine" parameterType="cmap" >
+      <selectKey resultType="string" keyProperty="mOutOrderLineId" order="BEFORE">
+        SELECT get_seq('cInvoicePoLine')     
+      </selectKey>
+        INSERT IGNORE INTO RFID_C_INVOICEPOLINE (
+           C_INVOICEPOLINE_ID
+           , C_INVOICEPO_ID
+           , M_PRODUCT_ID
+           , QTYINVOICED
+           , C_UOM_ID
+           , C_PURCHASE_ORDERLINE_ID
+           , M_INLINE_ID
+           , DESCRIPTION
+           , USE_YN
+           , FRST_REGIST_PNTTM
+           , FRST_REGISTER_ID
+           , LAST_UPDT_PNTTM
+           , LAST_UPDUSR_ID
+        )
+        VALUES
+        ( 
+          #{cInvoicePoLine}
+          , #{odId}
+          , #{lgPartNo}
+          , #{preQtyOnHand}
+          , 1
+          , #{odQtyId}
+          , #{rowNum}
+          , NULL
+          , 'Y'
+          ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{frstRegisterId}				
+		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		  ,#{lastUpdusrId}
+        )                
+      </insert>
       
 </mapper>      
