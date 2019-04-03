@@ -143,7 +143,7 @@
              , COALESCE(A.LG_OD_QTY,0) AS lg_od_qty
              , COALESCE(A.LINE,' ') AS line
              , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
-             , COALESCE(A.CLASS,' ') AS class
+             , COALESCE(A.CLASS,' ') AS clazz
              , COALESCE(A.PART_NUMBER,' ') AS part_number
              , COALESCE(A.DESC,' ') AS desc
              , COALESCE(A.RESULT_QTY,0) AS result_qty
@@ -219,20 +219,13 @@
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A  
                WHERE 1 = 1 
            ]]>            
-            <include refid="getPackingShipmentOutWhere" /> 
-               <if test="histOrder != null and histOrder != ''"> 
-		        <choose>
-                 <when test="histOrder == 'ASC'">			
-				  ORDER A.OD_ID ASC			
-			     </when>
-			     <when test="histOrder == 'DESC'">					
-				  ORDER BY A.OD_ID DESC			
-		         </when>
-		         </choose>  
-		    </if>  
-		     <if test="histOrder == null and histOrder == ''"> 		
-			ORDER BY A.DEMAND_ID DESC		
-        </if>
+            <include refid="getPackingShipmentOutWhere" />       		    		    		          
+            <if test="dataOrder != null and dataOrder != ''">        
+        	 ORDER BY ${dataOrder} ${dataOrderArrow},  ORDER A.OD_ID ASC      
+             </if>
+             <if test="dataOrder == null or dataOrder == ''">       
+        	  ORDER BY A.DEMAND_ID DESC  
+           </if>
         <include refid="pagingFooter"/>
     </select>
     
@@ -243,4 +236,82 @@
 		     <include refid="getPackingShipmentOutWhere" />      
       </select>
       
+      
+     <select id="goodsShipmentDetailKitItemOutXml" parameterType="cmap" resultType="goodsXml"> 
+      <include refid="pagingHeader"/>
+       <![CDATA[
+      SELECT    COALESCE(A.PT_OD_ID ,' ') AS pt_od_id
+            , COALESCE(A.SUB_PT_OD_ID,' ') AS sub_pt_od_id 
+            , COALESCE(A.DEMAND_ID,' ') AS demand_id 
+            , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
+            , COALESCE(A.LG_OD_QTY,' ') AS lg_od_qty
+            , COALESCE(A.PROD_TYPE,' ') AS prod_type
+            , COALESCE(A.NEO_LINE,' ') AS neo_line
+            , COALESCE(A.NEO_PLAN_KEY,' ') AS neo_plan_key            
+            , COALESCE(LEFT(A.SEND_TIME,10),' ') AS send_time
+            , COALESCE(A.SENDING_PC_NAME,' ') AS sending_pc_name
+            , COALESCE(A.GO_WITH,' ') AS go_with
+            , COALESCE(A.RE_PRINT,' ') As re_print
+            , COALESCE(A.SUB_PART_NO,' ') AS sub_part_no
+            , COALESCE(A.SUB_PART_DESC,' ') AS sub_part_desc
+            , COALESCE(A.VENDOR,' ') AS vendor
+            , COALESCE(A.BOM_QTY,0) AS bom_qty
+            , COALESCE(A.SUB_UNIT,' ') AS sub_unit  
+            , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_unit
+            , COALESCE(A.DEMAND_FLOOR,' ') AS demand_floor
+            , COALESCE(A.OSP,' ') AS osp
+            , COALESCE(A.RSLTDATE,' ') AS rsltdate
+            , COALESCE(A.RSLTSTATE,' ') AS rsltstate
+            , COALESCE(A.RSLT_USER_NO,' ') AS rslt_user_no
+            , COALESCE(A.READDATE,' ') AS readdate
+            , COALESCE(A.READSTATE,' ') AS readstate
+            , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
+            , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand			
+        FROM RFID_IF_SUBPART_SENDLIST_ALL A
+       WHERE A.PT_OD_ID  LIKE concat('%',#{pt_od_id},'%')
+		 AND A.DEMAND_FLOOR = 1			
+       ORDER BY A.PT_OD_ID, A.SUB_PART_NO
+      ]]>  
+      <include refid="pagingFooter"/>
+      </select>
+      
+      <select id="goodsShipmentDetailRefItemOutXml" parameterType="cmap" resultType="goodsXml"> 
+        <include refid="pagingHeader"/>
+       <![CDATA[
+        SELECT   COALESCE(A.PT_OD_ID ,' ') AS pt_od_id
+            , COALESCE(A.SUB_PT_OD_ID,' ') AS sub_pt_od_id 
+            , COALESCE(A.DEMAND_ID,' ') AS demand_id 
+            , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
+            , COALESCE(A.LG_OD_QTY,' ') AS lg_od_qty
+            , COALESCE(A.PROD_TYPE,' ') AS prod_type
+            , COALESCE(A.NEO_LINE,' ') AS neo_line
+            , COALESCE(A.NEO_PLAN_KEY,' ') AS neo_plan_key            
+            , COALESCE(LEFT(A.SEND_TIME,10),' ') AS send_time
+            , COALESCE(A.SENDING_PC_NAME,' ') AS sending_pc_name
+            , COALESCE(A.GO_WITH,' ') AS go_with
+            , COALESCE(A.RE_PRINT,' ') As re_print
+            , COALESCE(A.SUB_PART_NO,' ') AS sub_part_no
+            , COALESCE(A.SUB_PART_DESC,' ') AS sub_part_desc
+            , COALESCE(A.VENDOR,' ') AS vendor
+            , COALESCE(A.BOM_QTY,0) AS bom_qty
+            , COALESCE(A.SUB_UNIT,' ') AS sub_unit  
+            , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_qty
+            , COALESCE(A.DEMAND_FLOOR,' ') AS demand_floor
+            , COALESCE(A.OSP,' ') AS osp
+            , COALESCE(A.RSLTDATE,' ') AS rsltdate
+            , COALESCE(A.RSLTSTATE,' ') AS rsltstate
+            , COALESCE(A.RSLT_USER_NO,' ') AS rslt_user_no
+            , COALESCE(A.READDATE,' ') AS readdate
+            , COALESCE(A.READSTATE,' ') AS readstate
+            , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
+            , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
+        FROM RFID_IF_SUBPART_SENDLIST_ALL A
+       WHERE A.PT_OD_ID  LIKE concat('%',#{pt_od_id},'%')
+		 AND DEMAND_FLOOR = 2			
+       ORDER BY A.PT_OD_ID, A.SUB_PART_NO
+       ]]>  
+      <include refid="pagingFooter"/>
+      </select>
 </mapper> 
