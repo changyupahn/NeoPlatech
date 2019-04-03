@@ -9,8 +9,8 @@ import boassoft.util.CommonMap;
 @Mapper("TabletMapper")
 public interface TabletMapper {
 
-	@SuppressWarnings("rawtypes")
-	public List getGoodsShipmentOutListXml(CommonMap cmap) throws Exception;
+	
+	public GoodsXmlList getGoodsShipmentOutListXml(CommonMap cmap) throws Exception;
 	
 	public int getGoodsShipmentOutListXmlCnt(CommonMap cmap) throws Exception;
 
@@ -18,5 +18,12 @@ public interface TabletMapper {
 	
 	public GoodsXmlList getPackingReceptListXml(CommonMap cmap) throws Exception;
 
-	public GoodsXmlList getPackingShipmentOutListXml(CommonMap cmap)throws Exception;
+	public GoodsXmlList getPackingShipmentOutListXml(CommonMap cmap) throws Exception;
+
+	public GoodsXmlList getGoodsShipmentDetailOutXml(CommonMap cmap) throws Exception;
+
+	public GoodsXmlList goodsShipmentDetailKitItemOutXml(CommonMap cmap) throws Exception;
+
+	public GoodsXmlList goodsShipmentDetailRefItemOutXml(CommonMap cmap) throws Exception;
+
 }
