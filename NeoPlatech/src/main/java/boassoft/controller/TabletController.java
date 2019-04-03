@@ -386,7 +386,7 @@ public class TabletController {
 		
     	cmap.put("od_day", cmap.getString("od_day", "").trim());
     	cmap.put("final_vendor", cmap.getString("final_vendor", ""));
-    	cmap.put("pkg_po_no", cmap.getString("pkg_po_no", ""));
+    	cmap.put("tool_name", cmap.getString("tool_name", ""));
 		
     	GoodsXmlList goodsXmlList = new GoodsXmlList();
     	String xmlString = "";
@@ -420,11 +420,7 @@ public class TabletController {
 		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
     	cmap.put("pageSize", cmap.getString("page_size", "10"));
-		
-    	cmap.put("od_day", cmap.getString("od_day", "").trim());
-    	cmap.put("final_vendor", cmap.getString("final_vendor", ""));
-    	cmap.put("pkg_po_no", cmap.getString("pkg_po_no", ""));
-    	
+		        	
     	cmap.put("od_id", cmap.getString("od_id", ""));
     	cmap.put("demand_id", cmap.getString("demand_id", ""));
     	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
@@ -512,11 +508,7 @@ public class TabletController {
 		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
     	cmap.put("pageSize", cmap.getString("page_size", "10"));
-		
-    	cmap.put("od_day", cmap.getString("od_day", "").trim());
-    	cmap.put("final_vendor", cmap.getString("final_vendor", ""));
-    	cmap.put("pkg_po_no", cmap.getString("pkg_po_no", ""));
-    	
+		      	
     	cmap.put("od_id", cmap.getString("od_id", ""));
     	cmap.put("demand_id", cmap.getString("demand_id", ""));
     	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
@@ -685,4 +677,69 @@ public class TabletController {
 				
 	}
 	
+	@RequestMapping(value="/goods/shipment/goodsShipmentDetailKitItemOutXml.do")
+	public String goodsShipmentDetailKitItemOutXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		
+		CommonMap cmap = new CommonMap(request);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/shipment/goodsShipmentDetailKitItemOutXml.do" + " - " + cmap);
+		
+		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+    	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
+    	cmap.put("pageSize", cmap.getString("page_size", "10"));
+		
+    	cmap.put("pt_od_id", cmap.getString("pt_od_id", "").trim());
+		
+    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	String xmlString = "";
+    	
+    	try{
+    		goodsXmlList = tabletService.goodsShipmentDetailKitItemOutXml(cmap);
+    		if( goodsXmlList.size() > 0 ){
+    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+    		}else{
+    			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    		}
+    	}catch(Exception e){
+    		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		e.printStackTrace();
+   	   }
+    	
+    	model.addAttribute("xmlString", xmlString);
+    	
+    	 return "common/commonXml";				
+								
+	}
+	
+	@RequestMapping(value="/goods/shipment/goodsShipmentDetailRefItemOutXml.do")
+	public String goodsShipmentDetailRefItemOutXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		
+		CommonMap cmap = new CommonMap(request);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/shipment/goodsShipmentDetailRefItemOutXml.do" + " - " + cmap);
+		
+		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+    	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
+    	cmap.put("pageSize", cmap.getString("page_size", "10"));
+		
+    	cmap.put("pt_od_id", cmap.getString("pt_od_id", "").trim());
+		
+    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	String xmlString = "";
+    	
+    	try{
+    		goodsXmlList = tabletService.goodsShipmentDetailRefItemOutXml(cmap);
+    		if( goodsXmlList.size() > 0 ){
+    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+    		}else{
+    			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    		}
+    	}catch(Exception e){
+    		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		e.printStackTrace();
+   	   }
+    	
+    	model.addAttribute("xmlString", xmlString);
+    	
+    	 return "common/commonXml";
+	
+	}
 }
