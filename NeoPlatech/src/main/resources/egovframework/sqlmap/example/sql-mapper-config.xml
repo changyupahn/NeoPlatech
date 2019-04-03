@@ -14,6 +14,7 @@
 		<typeAlias alias="cmap" type="boassoft.util.CommonMap" />	
 		<typeAlias  alias="appcmap" type="boassoft.util.AppCommonMap"/>
         <typeAlias  alias="commonXml" type="boassoft.common.CommonXml"/>
+        <typeAlias  alias="goodsXml" type="boassoft.common.GoodsXml"/>
         <typeAlias  alias="omap" type="org.apache.commons.collections.map.ListOrderedMap"/>
         <!-- <typeAlias  alias="ComDefaultCodeVO" type="egovframework.com.cmm.ComDefaultCodeVO"/> -->
         <typeAlias  alias="UserInfVO" type="egovframework.com.cop.com.service.UserInfVO"/>	
