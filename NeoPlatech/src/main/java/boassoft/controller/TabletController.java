@@ -22,6 +22,7 @@ import boassoft.service.DeviceLogService;
 import boassoft.service.DeviceService;
 import boassoft.service.GoodsReceiptService;
 import boassoft.service.PackingReceiptService;
+import boassoft.service.PackingShipmentOutService;
 import boassoft.service.TabService;
 import boassoft.service.TabletService;
 import boassoft.service.UserService;
@@ -66,6 +67,10 @@ public class TabletController {
 	
 	@Resource(name = "packingReceiptService")
 	private PackingReceiptService packingReceiptService;
+	
+	@Resource(name = "packingShipmentOutService")
+	private PackingShipmentOutService packingShipmentOutService;
+		
 	
 	/** log */
     protected static final Log LOG = LogFactory.getLog(TabletController.class);
@@ -473,6 +478,7 @@ public class TabletController {
   						    // 불량창고로 보낸다. 
   							packingReceiptService.insertCRecall(resultMap);
   							packingReceiptService.insertCRecallLine(resultMap);
+  							continue;
   						}
   					} else {
   						continue;
@@ -494,4 +500,189 @@ public class TabletController {
    	   return "common/commonXml";	
 		
 	}
+	
+	@RequestMapping(value="/packing/shipment/packingShipmentXml.do")
+	public String packingShipmentXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		
+		CommonMap cmap = new CommonMap(request);
+		CommonMap resultMap = new CommonMap();
+		int resultCnt = 0;
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/receipt/packingReceiptXml.do" + " - " + cmap);
+		
+		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+    	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
+    	cmap.put("pageSize", cmap.getString("page_size", "10"));
+		
+    	cmap.put("od_day", cmap.getString("od_day", "").trim());
+    	cmap.put("final_vendor", cmap.getString("final_vendor", ""));
+    	cmap.put("pkg_po_no", cmap.getString("pkg_po_no", ""));
+    	
+    	cmap.put("od_id", cmap.getString("od_id", ""));
+    	cmap.put("demand_id", cmap.getString("demand_id", ""));
+    	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
+		
+    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	String xmlString = "";
+    	
+    	try{
+    		goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
+    		    		
+    		if( goodsXmlList.size() > 0 ){
+    			double maxCnt = cmap.getDouble("sReceiptCnt", 0);
+    			double disCnt = 0;
+    			if (!goodsXmlList.isEmpty() && goodsXmlList.size() > 0) {
+    				for(int i = 0; i < goodsXmlList.size(); i++){
+    				  GoodsXml goods = (GoodsXml)goodsXmlList.get(i);
+    				  double sumQty = Double.parseDouble(goods.getSum_qty());
+    				  
+    				  if (maxCnt > 0) {
+  						System.out.println("000 maxCnt " + " : " + maxCnt);
+  						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
+  						if(maxCnt == sumQty){
+  							resultMap.put("qtyOnHand",0);
+  							resultMap.put("preQtyOnHand", maxCnt);
+  							resultCnt = packingReceiptService
+  									.updateQtyOnHand(resultMap);
+  							// 출고지시를 한다. 
+  							packingShipmentOutService.insertMOutOrder(resultMap);
+  							packingShipmentOutService.insertMOutOrderLine(resultMap);
+  							
+  							continue;
+  						}
+  						else if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
+  							disCnt = maxCnt - sumQty; // 150
+  							System.out.println("111 disCnt " + " : " + disCnt);
+  							resultMap.put("qtyOnHand",0);
+  							resultMap.put("preQtyOnHand", disCnt);
+  							resultCnt = packingReceiptService
+  									.updateQtyOnHand(resultMap);
+  							// 출고지시를 한다.
+  							packingShipmentOutService.insertMOutOrder(resultMap);
+  							packingShipmentOutService.insertMOutOrderLine(resultMap);
+
+  							continue;
+
+  						}else{ // 소요량이 입고량보다 많으면
+  							resultMap.put("qtyOnHand",0);
+  							resultMap.put("preQtyOnHand", maxCnt);
+  							resultCnt = packingReceiptService
+  									.updateQtyOnHand(resultMap);
+  						    // 출고지시를 한다. 
+  							packingShipmentOutService.insertMOutOrder(resultMap);
+  							packingShipmentOutService.insertMOutOrderLine(resultMap);
+  							continue;
+  						}
+  					} else {
+  						continue;
+  					}
+  				
+  			       }
+    			}
+    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+    		}else{
+    			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    		}
+    	}catch(Exception e){
+    		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		e.printStackTrace();
+   	   }
+    	
+       model.addAttribute("xmlString", xmlString);
+    	
+   	   return "common/commonXml";	
+		
+	}
+
+	@RequestMapping(value="/packing/shipment/packingShipmentOutXml.do")
+	public String packingShipmentOutXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		 
+		CommonMap cmap = new CommonMap(request);
+		CommonMap resultMap = new CommonMap();
+		int resultCnt = 0;
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/receipt/packingReceiptXml.do" + " - " + cmap);
+		
+		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+    	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
+    	cmap.put("pageSize", cmap.getString("page_size", "10"));
+		
+    	cmap.put("od_day", cmap.getString("od_day", "").trim());
+    	cmap.put("final_vendor", cmap.getString("final_vendor", ""));
+    	cmap.put("pkg_po_no", cmap.getString("pkg_po_no", ""));
+    	
+    	cmap.put("od_id", cmap.getString("od_id", ""));
+    	cmap.put("demand_id", cmap.getString("demand_id", ""));
+    	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
+		
+    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	String xmlString = "";
+    	
+    	try{
+    		goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
+    		    		
+    		if( goodsXmlList.size() > 0 ){
+    			double maxCnt = cmap.getDouble("sReceiptCnt", 0);
+    			double disCnt = 0;
+    			if (!goodsXmlList.isEmpty() && goodsXmlList.size() > 0) {
+    				for(int i = 0; i < goodsXmlList.size(); i++){
+    				  GoodsXml goods = (GoodsXml)goodsXmlList.get(i);
+    				  double sumQty = Double.parseDouble(goods.getSum_qty());
+    				  
+    				  if (maxCnt > 0) {
+  						System.out.println("000 maxCnt " + " : " + maxCnt);
+  						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
+  						if(maxCnt == sumQty){
+  							resultMap.put("qtyOnHand",0);
+  							resultMap.put("preQtyOnHand", maxCnt);
+  							resultCnt = packingReceiptService
+  									.updateQtyOnHand(resultMap);
+  							// 매입지시를 한다. 
+  							packingShipmentOutService.insertCInvoicePo(resultMap);
+  							packingShipmentOutService.insertCInvoicePoLine(resultMap);
+  							
+  							continue;
+  						}
+  						else if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
+  							disCnt = maxCnt - sumQty; // 150
+  							System.out.println("111 disCnt " + " : " + disCnt);
+  							resultMap.put("qtyOnHand",0);
+  							resultMap.put("preQtyOnHand", disCnt);
+  							resultCnt = packingReceiptService
+  									.updateQtyOnHand(resultMap);
+  						    // 매입지시를 한다.
+  							packingShipmentOutService.insertCInvoicePo(resultMap);
+  							packingShipmentOutService.insertCInvoicePoLine(resultMap);
+
+  							continue;
+
+  						}else{ // 소요량이 입고량보다 많으면
+  							resultMap.put("qtyOnHand",0);
+  							resultMap.put("preQtyOnHand", maxCnt);
+  							resultCnt = packingReceiptService
+  									.updateQtyOnHand(resultMap);
+  						    // 매입지시를 한다.. 
+  							packingShipmentOutService.insertCInvoicePo(resultMap);
+  							packingShipmentOutService.insertCInvoicePoLine(resultMap);
+  							continue;
+  						}
+  					} else {
+  						continue;
+  					}
+  				
+  			       }
+    			}
+    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+    		}else{
+    			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    		}
+    	}catch(Exception e){
+    		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		e.printStackTrace();
+   	   }
+		
+	   model.addAttribute("xmlString", xmlString);
+	    	
+	   return "common/commonXml";
+				
+	}
+	
 }
