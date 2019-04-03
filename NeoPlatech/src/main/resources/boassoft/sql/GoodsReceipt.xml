@@ -297,7 +297,7 @@
       <selectKey resultType="string" keyProperty="cInOrderLineId" order="BEFORE">
         SELECT get_seq('cInOrderline')     
       </selectKey>
-        INSERT IGNORE INTO RFID_C_IN_ORDER (
+        INSERT IGNORE INTO RFID_C_IN_ORDERLINE (
           C_IN_ORDERLINE_ID     
          , DATEORDERED
          , DATEPROMISED
