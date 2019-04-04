@@ -269,7 +269,7 @@
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand			
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
-       WHERE A.PT_OD_ID  LIKE concat('%',#{pt_od_id},'%')
+       WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
 		 AND A.DEMAND_FLOOR = 1			
        ORDER BY A.PT_OD_ID, A.SUB_PART_NO
       ]]>  
@@ -308,10 +308,23 @@
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
-       WHERE A.PT_OD_ID  LIKE concat('%',#{pt_od_id},'%')
+       WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
 		 AND DEMAND_FLOOR = 2			
        ORDER BY A.PT_OD_ID, A.SUB_PART_NO
        ]]>  
       <include refid="pagingFooter"/>
       </select>
+      
+      <select id="optionVendorListXml" parameterType="cmap" resultType="goodsXml"> 
+      SELECT @rownum:=@rownum+1 AS row_num 
+         , A.FINAL_VENDOR AS code
+		 , A.FINAL_VENDOR AS code_name 
+		 FROM RFID_IF_PACKING_WOSENDLIST_ALL A		 
+		 , (SELECT @rownum:=0) TMP
+         WHERE 1 = 1
+         AND A.FINAL_VENDOR IS NOT NULL
+         GROUP BY A.FINAL_VENDOR
+		 ORDER BY ROW_NUM 
+	  </select>	 
+	   
 </mapper> 
