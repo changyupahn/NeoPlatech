@@ -70,7 +70,9 @@ public class GoodsXml implements Serializable {
 	private String rslt_user_no;
 	private String readdate;
 	private String readstate;
-	private String read_user_no;	
+	private String read_user_no;		
+	private String code;
+	private String code_name;
 			
 	
 	public String getDemand_floor() {
@@ -445,6 +447,17 @@ public class GoodsXml implements Serializable {
 	public void setRead_user_no(String read_user_no) {
 		this.read_user_no = read_user_no;
 	}
-	
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getCode_name() {
+		return code_name;
+	}
+	public void setCode_name(String code_name) {
+		this.code_name = code_name;
+	}
 	
 }
