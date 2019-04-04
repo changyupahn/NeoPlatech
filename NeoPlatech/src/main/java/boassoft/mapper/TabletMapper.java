@@ -1,7 +1,5 @@
 package boassoft.mapper;
 
-import java.util.List;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import boassoft.common.GoodsXmlList;
 import boassoft.util.CommonMap;
@@ -25,5 +23,7 @@ public interface TabletMapper {
 	public GoodsXmlList goodsShipmentDetailKitItemOutXml(CommonMap cmap) throws Exception;
 
 	public GoodsXmlList goodsShipmentDetailRefItemOutXml(CommonMap cmap) throws Exception;
+
+	public GoodsXmlList optionVendorListXml(CommonMap cmap) throws Exception;
 
 }
