@@ -123,9 +123,9 @@
       	     ,'0'
       	     , 'Y'
       	     ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		     ,#{frstRegisterId}				
+		     ,COALESCE(#{frstRegisterId},'SYSTEM')				
 		     ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		     ,#{lastUpdusrId}
+		     ,COALESCE(#{lastUpdusrId},'SYSTEM')
       	    )      	         	           	           	       	
       	</insert>
       	
@@ -180,9 +180,9 @@
       	  ,'0'
       	  , 'Y'
       	  ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,#{frstRegisterId}				
+		  ,COALESCE(#{frstRegisterId},'SYSTEM')				
 		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,#{lastUpdusrId} 
+		  ,COALESCE(#{lastUpdusrId},'SYSTEM') 
         )      
       </insert>
                  
@@ -222,9 +222,9 @@
             , NULL
             , 'Y'
             ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		    ,#{frstRegisterId}				
+		    ,COALESCE(#{frstRegisterId},'SYSTEM')				
 		    ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		    ,#{lastUpdusrId}
+		    ,COALESCE(#{lastUpdusrId},'SYSTEM')
 		  )   
       </insert>
       
@@ -259,9 +259,9 @@
           , NULL
           , 'Y'
           ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,#{frstRegisterId}				
+		  ,COALESCE(#{frstRegisterId},'SYSTEM')				
 		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,#{lastUpdusrId}
+		  ,COALESCE(#{lastUpdusrId},'SYSTEM')
         )                
       </insert>
       
