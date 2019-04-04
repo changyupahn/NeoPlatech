@@ -742,4 +742,36 @@ public class TabletController {
     	 return "common/commonXml";
 	
 	}
+	
+	
+	@RequestMapping(value="/packing/code/optionVendorListXml.do")
+	public String optionVendorList(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		CommonMap cmap = new CommonMap(request);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/code/optionVendorListXml.do" + " - " + cmap);
+		
+		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+		
+		GoodsXmlList goodsXmlList = new GoodsXmlList();
+		String xmlString = "";
+		
+		
+		try{
+			goodsXmlList = tabletService.optionVendorListXml(cmap);
+			if( goodsXmlList.size() > 0 ){
+				xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+			}else{
+				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+			}
+			
+		}catch(Exception e){
+    		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		e.printStackTrace();
+   	   }
+		
+		model.addAttribute("xmlString", xmlString);
+		
+		return xmlString;
+				
+	}
+	
 }
