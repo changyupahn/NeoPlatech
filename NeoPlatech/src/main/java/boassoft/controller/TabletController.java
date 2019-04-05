@@ -930,7 +930,7 @@ public class TabletController {
 
 		model.addAttribute("xmlString", xmlString);
 
-		return xmlString;
+		return "common/commonXml";
 
 	}
 
@@ -964,7 +964,7 @@ public class TabletController {
 
 		model.addAttribute("xmlString", xmlString);
 
-		return xmlString;
+		return "common/commonXml";
 
 	}
 
@@ -1019,7 +1019,7 @@ public class TabletController {
 
 		model.addAttribute("xmlString", xmlString);
 
-		return xmlString;
+		return "common/commonXml";
 	}
 	
 	@RequestMapping(value = "/packing/packingReceiptDetailXml.do")
