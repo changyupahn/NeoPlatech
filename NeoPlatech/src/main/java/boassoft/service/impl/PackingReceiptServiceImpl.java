@@ -62,9 +62,9 @@ public class PackingReceiptServiceImpl extends EgovAbstractServiceImpl implement
 	public int updateQtyOnHand(CommonMap cmap) throws Exception {
 		// TODO Auto-generated method stub
 		int resultCnt = 0;
-
+        System.out.println(" cmap 111 updateQtyOnHand " + " : " + cmap.toString());   
 		resultCnt = packingReceiptMapper.updateQtyOnHand(cmap);
-		
+		 System.out.println(" cmap 222 updateQtyOnHand resultCnt " + " : " + resultCnt);
 		return resultCnt;
 	}
 
