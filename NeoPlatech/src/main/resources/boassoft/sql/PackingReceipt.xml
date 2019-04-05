@@ -197,10 +197,11 @@
      </select>  
      
      <update id="updateQtyOnHand" parameterType="cmap" >
-        UPDATE 	RFID_IF_PACKING_WOSENDLIST_ODONLY
+        UPDATE 	RFID_IF_PACKING_WOSENDLIST_ALL
         SET
 				QTY_ON_HAND = #{qtyOnHand}
-				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
+				,PRE_QTY_ON_HAND = #{preQtyOnHand}	
+				, QTYINVOICED = #{qtyinvoiced}			
         WHERE 	OD_ID = #{odId}				
     </update>
 	   

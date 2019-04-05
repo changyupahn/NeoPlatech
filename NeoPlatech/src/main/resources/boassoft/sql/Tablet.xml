@@ -40,16 +40,7 @@
          </if>
     </sql>
     
-     <sql id="getPackingShipmentOutWhere">
-        <if test="final_vendor != null and final_vendor != ''">              
-          AND A.FINAL_VENDOR LIKE concat('%',#{final_vendor},'%')
-          </if>
-          <if test="od_day != null and od_day != ''"> 	
-          AND A.NEO_OD_DAY LIKE concat('%',#{od_day},'%')	
-         </if>
-         <if test="pkg_po_no != null and pkg_po_no != ''"> 	
-          AND A.PKG_PO_NO LIKE concat('%',#{pkg_po_no},'%')	
-         </if> 
+     <sql id="getPackingShipmentOutWhere">                  
     </sql>
     
     <select id="getGoodsShipmentOutListXml" parameterType="cmap" resultType="goodsXml" >
@@ -193,7 +184,7 @@
      </select>      
         
      
-     <select id="getPackingShipmentOutListXml" parameterType="cmap" resultType="goodsXml">
+     <select id="getPackingShipmentOutListXml" parameterType="cmap" resultType="cmap">
        <include refid="pagingHeader"/>
        <![CDATA[
          SELECT 
@@ -207,7 +198,7 @@
            , COALESCE(A.VENDOR,' ') AS vendor
            , COALESCE(A.SUB_PART_NAME,' ') AS sub_part_name
            , COALESCE(A.PART_NUMBER,' ') AS part_number
-           , COALESCE(A.DESC,' ') AS desc
+           , COALESCE(A.DESC,' ') AS desc_no
            , COALESCE(A.RESULT_QTY,0) AS result_qty
            , COALESCE(A.ROW_NUM,' ') AS row_num
            , COALESCE(A.CALCU_TRUE,' ') AS calcu_true
@@ -216,16 +207,15 @@
            , COALESCE(LEFT(A.NEO_OD_DAY,10),' ') AS neo_od_day
            , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
            , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
+           , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
+           , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
+           , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A  
                WHERE 1 = 1 
            ]]>            
-            <include refid="getPackingShipmentOutWhere" />       		    		    		          
-            <if test="dataOrder != null and dataOrder != ''">        
-        	 ORDER BY ${dataOrder} ${dataOrderArrow},  ORDER A.OD_ID ASC      
-             </if>
-             <if test="dataOrder == null or dataOrder == ''">       
-        	  ORDER BY A.DEMAND_ID DESC  
-           </if>
+          <if test="odId != null and odId != ''">              
+          AND A.Od_ID LIKE concat('%',#{odId},'%')
+          </if>     		    		    		                    
         <include refid="pagingFooter"/>
     </select>
     

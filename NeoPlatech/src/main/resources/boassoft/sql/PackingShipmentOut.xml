@@ -112,14 +112,14 @@
       	     , #{receiptCnt}
       	     , 'Y'
       	     , 'N'
-      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')) 
-      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s') 
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     , 1
       	     , #{receiptCnt}
-      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     , '0'
-      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     ,'0'
       	     , 'Y'
       	     ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
@@ -162,9 +162,9 @@
         VALUES        
         ( 
           #{mOutOrderLineId}
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')) 
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s') 
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
           , NULL
           , #{odId}
           , 1
@@ -174,9 +174,9 @@
           , 'Y'
           , 'N'
           , 'N'
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	  , '0'
-      	  , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+      	  , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	  ,'0'
       	  , 'Y'
       	  ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
@@ -211,8 +211,8 @@
             #{odId}
             , #{receiptCnt}
             , #{preQtyOnHand}
-            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
             , 'N'
             , 'N'
             , 'N'
