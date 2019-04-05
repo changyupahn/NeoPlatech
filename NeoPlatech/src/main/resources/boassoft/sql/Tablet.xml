@@ -29,14 +29,14 @@
     </sql>
     
      <sql id="getPackingReceiptWhere">    
-        <if test="final_vendor != null and final_vendor != ''">              
-          AND A.FINAL_VENDOR LIKE concat('%',#{final_vendor},'%')
+        <if test="finalVendor != null and finalVendor != ''">              
+          AND A.FINAL_VENDOR LIKE concat('%',#{finalVendor},'%')
           </if>
-          <if test="od_day != null and od_day != ''"> 	
-          AND A.NEO_OD_DAY LIKE concat('%',#{od_day},'%')	
+          <if test="odDay != null and odDay != ''"> 	
+          AND A.NEO_OD_DAY LIKE concat('%',#{odDay},'%')	
          </if>
-         <if test="pkg_po_no != null and pkg_po_no != ''"> 	
-          AND A.PKG_PO_NO LIKE concat('%',#{pkg_po_no},'%')	
+         <if test="pkgPoNo != null and pkgPoNo != ''"> 	
+          AND A.LG_PART_NO LIKE concat('%',#{pkgPoNo},'%')	
          </if>
     </sql>
     
@@ -115,6 +115,9 @@
     	     , READDATE = #{readdate}
     	     , READSTATE = #{readstate}
     	     , READ_USER_ID = #{read_user_id}
+    	     , QTY_ON_HAND = #{qty_on_hand}
+    	     , PRE_QTY_ON_HAND = #{pre_qty_on_hand}
+    	     , QTYINVOICED = #{qtyinvoiced}
     	  WHERE 
     	   PT_OD_ID = #{ptOdId}
     	   AND SUB_PT_OD_ID = #{subPtOdId}
@@ -125,25 +128,30 @@
       <select id="getPackingReceptListXml" parameterType="cmap" resultType="goodsXml" >
         <include refid="pagingHeader"/>
      <![CDATA[
-	      SELECT COALESCE(A.OD_ID,' ')  AS od_id 
-             , COALESCE(A.OD_QTY_ID,' ') AS od_qty_id
-             , COALESCE(A.PKG_PO_NO,' ') AS pkg_po_no
-             , COALESCE(A.DEMAND_ID,' ') AS demand_id
-             , COALESCE(A.TOOL_NAME, ' ') AS tool_name
-             , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
-             , COALESCE(A.LG_OD_QTY,0) AS lg_od_qty
-             , COALESCE(A.LINE,' ') AS line
-             , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
-             , COALESCE(A.CLASS,' ') AS clazz
-             , COALESCE(A.PART_NUMBER,' ') AS part_number
-             , COALESCE(A.DESC,' ') AS desc
-             , COALESCE(A.RESULT_QTY,0) AS result_qty
-             , COALESCE(A.NEO_OD_TIME,' ') AS neo_od_time
-             , COALESCE(A.NEO_OD_DAY,' ') AS neo_od_day
-             , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
-             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
-             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand 
-        FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
+	      SELECT 
+           COALESCE(A.OD_ID,' ') AS od_id
+           , COALESCE(A.DEMAND_ID,' ') AS demand_id
+           , COALESCE(LEFT(A.IN_DATE,10),' ') AS in_date
+           , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
+           , COALESCE(A.LG_OD_QTY,0) AS lg_od_qty
+           , COALESCE(A.TOOL_NAME,' ') AS tool_name 
+           , COALESCE(A.DRAW_NO,' ') AS draw_no
+           , COALESCE(A.VENDOR,' ') AS vendor
+           , COALESCE(A.SUB_PART_NAME,' ') AS sub_part_name
+           , COALESCE(A.PART_NUMBER,' ') AS part_number
+           , COALESCE(A.DESC,' ') AS desc_no
+           , COALESCE(A.RESULT_QTY,0) AS result_qty
+           , COALESCE(A.ROW_NUM,' ') AS row_num
+           , COALESCE(A.CALCU_TRUE,' ') AS calcu_true
+           , COALESCE(A.OD_QTY_ID,' ') AS od_qty_id
+           , COALESCE(A.NEO_OD_TIME,' ') AS neo_od_time
+           , COALESCE(LEFT(A.NEO_OD_DAY,10),' ') AS neo_od_day
+           , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
+           , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
+           , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
+           , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
+           , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           FROM RFID_IF_PACKING_WOSENDLIST_ALL A               
               WHERE 1 = 1 
           ]]>                 
           <include refid="getPackingReceiptWhere" />  
@@ -156,25 +164,30 @@
       <![CDATA[      
          SELECT COUNT(*) FROM 
            (
-                 SELECT A.OD_ID
-             , A.OD_QTY_ID
-             , A.PKG_PO_NO
-             , A.DEMAND_ID
-             , A.TOOL_NAME
-             , A.LG_PART_NO
-             , COALESCE(A.LG_OD_QTY,0) AS LG_OD_QTY
-             , A.LINE
-             , A.FINAL_VENDOR
-             , A.CLASS
-             , A.PART_NUMBER
-             , A.DESC
-             , COALESCE(A.RESULT_QTY,0) AS RESULT_QTY
-             , A.NEO_OD_TIME
-             , A.NEO_OD_DAY
-             , COALESCE(A.NEO_OD_QTY,0) AS NEO_OD_QTY
-             , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
-             , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
-        FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
+            SELECT 
+           COALESCE(A.OD_ID,' ') AS od_id
+           , COALESCE(A.DEMAND_ID,' ') AS demand_id
+           , COALESCE(LEFT(A.IN_DATE,10),' ') AS in_date
+           , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
+           , COALESCE(A.LG_OD_QTY,0) AS lg_od_qty
+           , COALESCE(A.TOOL_NAME,' ') AS tool_name 
+           , COALESCE(A.DRAW_NO,' ') AS draw_no
+           , COALESCE(A.VENDOR,' ') AS vendor
+           , COALESCE(A.SUB_PART_NAME,' ') AS sub_part_name
+           , COALESCE(A.PART_NUMBER,' ') AS part_number
+           , COALESCE(A.DESC,' ') AS desc_no
+           , COALESCE(A.RESULT_QTY,0) AS result_qty
+           , COALESCE(A.ROW_NUM,' ') AS row_num
+           , COALESCE(A.CALCU_TRUE,' ') AS calcu_true
+           , COALESCE(A.OD_QTY_ID,' ') AS od_qty_id
+           , COALESCE(A.NEO_OD_TIME,' ') AS neo_od_time
+           , COALESCE(LEFT(A.NEO_OD_DAY,10),' ') AS neo_od_day
+           , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
+           , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
+           , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
+           , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
+           , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           FROM RFID_IF_PACKING_WOSENDLIST_ALL A                  
               WHERE 1 = 1 
              ]]>            
             <include refid="getPackingReceiptWhere" />  
@@ -257,7 +270,8 @@
             , COALESCE(A.READSTATE,' ') AS readstate
             , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
-            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand			
+            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
+            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced		
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
 		 AND A.DEMAND_FLOOR = 1			
@@ -297,6 +311,7 @@
             , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
+            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
 		 AND DEMAND_FLOOR = 2			
@@ -312,9 +327,68 @@
 		 FROM RFID_IF_PACKING_WOSENDLIST_ALL A		 
 		 , (SELECT @rownum:=0) TMP
          WHERE 1 = 1
-         AND A.FINAL_VENDOR IS NOT NULL
+         AND A.VENDOR IS NOT NULL
+         <if test="neoOdDay != null and neoOdDay != ''">              
+          AND A.NEO_ID_DAY LIKE concat('%',#{neoOdDay},'%')
+          </if> 
          GROUP BY A.FINAL_VENDOR
 		 ORDER BY ROW_NUM 
 	  </select>	 
-	   
+	  
+	  <select id="optionPartNoListXml" parameterType="cmap" resultType="goodsXml"> 
+	 	  SELECT @rownum:=@rownum+1 AS row_num 
+         , A.LG_PART_NO AS code
+		 , A.LG_PART_NO AS code_name 
+		 FROM RFID_IF_PACKING_WOSENDLIST_ALL A		 
+		 , (SELECT @rownum:=0) TMP
+         WHERE 1 = 1
+         AND A.FINAL_VENDOR IS NOT NULL
+          <if test="neoOdDay != null and neoOdDay != ''">
+          AND A.NEO_OD_DAY LIKE concat('%',#{neoOdDay},'%')
+          </if>                
+          <if test="finalVendor != null and finalVendor != ''">
+          AND A.FINAL_VENDOR LIKE concat('%',#{finalVendor},'%')
+        </if>
+         GROUP BY A.FINAL_VENDOR
+		 ORDER BY ROW_NUM  	  
+	  </select>
+	  	 
+	  
+	   <select id="getPackingShipmentOutDetailListXml" parameterType="cmap" resultType="goodsXml"> 
+        <include refid="pagingHeader"/>
+         <![CDATA[
+             SELECT  
+               , COALESCE(A.SUB_PT_OD_ID,' ') AS sub_pt_od_id 
+               , COALESCE(A.DEMAND_ID,' ') AS demand_id 
+               , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
+               , COALESCE(A.LG_OD_QTY,' ') AS lg_od_qty
+               , COALESCE(A.PROD_TYPE,' ') AS prod_type
+               , COALESCE(A.NEO_LINE,' ') AS neo_line
+               , COALESCE(A.NEO_PLAN_KEY,' ') AS neo_plan_key            
+               , COALESCE(LEFT(A.SEND_TIME,10),' ') AS send_time
+               , COALESCE(A.SENDING_PC_NAME,' ') AS sending_pc_name
+               , COALESCE(A.GO_WITH,' ') AS go_with
+               , COALESCE(A.RE_PRINT,' ') As re_print
+               , COALESCE(A.SUB_PART_NO,' ') AS sub_part_no
+            , COALESCE(A.SUB_PART_DESC,' ') AS sub_part_desc
+            , COALESCE(A.VENDOR,' ') AS vendor
+            , COALESCE(A.BOM_QTY,0) AS bom_qty
+            , COALESCE(A.SUB_UNIT,' ') AS sub_unit  
+            , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_qty
+            , COALESCE(A.DEMAND_FLOOR,' ') AS demand_floor
+            , COALESCE(A.OSP,' ') AS osp
+            , COALESCE(A.RSLTDATE,' ') AS rsltdate
+            , COALESCE(A.RSLTSTATE,' ') AS rsltstate
+            , COALESCE(A.RSLT_USER_NO,' ') AS rslt_user_no
+            , COALESCE(A.READDATE,' ') AS readdate
+            , COALESCE(A.READSTATE,' ') AS readstate
+            , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
+            , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
+            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
+        FROM RFID_IF_SUBPART_SENDLIST_ALL A
+       WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
+          ]]>  
+         <include refid="pagingFooter"/>
+	  </select> 
 </mapper> 
