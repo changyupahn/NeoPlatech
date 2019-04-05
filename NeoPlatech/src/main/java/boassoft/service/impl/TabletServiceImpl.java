@@ -1,6 +1,5 @@
 package boassoft.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -77,12 +76,19 @@ public class TabletServiceImpl extends EgovAbstractServiceImpl implements Tablet
 		cmap.put("pageSize", cmap.getString("pageSize","10"));
 		cmap.put("pageStartNum", (cmap.getInt("pageIdx") - 1) * cmap.getInt("pageSize") + 1 + "");
 		cmap.put("pageEndNum", cmap.getInt("pageIdx") * cmap.getInt("pageSize") + "");
+		
+		System.out.println("  dataOrder " + " : " +cmap.getString("dataOrder", ""));
+		System.out.println(" dataOrderArrow " + " : " + cmap.getString("dataOrderArrow", ""));
+    	System.out.println(" pageLimit " + " : " + cmap.getString("pageLimit", ""));
+    	System.out.println(" pageSize " + " : " + cmap.getString("pageSize", ""));
+    	System.out.println(" pageStartNum " + " : " + cmap.getString("pageStartNum", ""));
+    	System.out.println(" pageEndNum " + " : " + cmap.getString("pageEndNum", ""));
     	
 		GoodsXmlList list = new GoodsXmlList();		
 		
         list.addList( (List)tabletMapper.getPackingReceptListXml(cmap) );
 		
-		System.out.println("  ddd " + " : " +list.size());
+		System.out.println("  ccc " + " : " +list.size());
 		if(list != null ){
 			for(int i = 0; i < list.size();i++){
 				
@@ -201,5 +207,55 @@ public class TabletServiceImpl extends EgovAbstractServiceImpl implements Tablet
 		return list;
 	}
 
+	@Override
+	public GoodsXmlList optionPartNoListXml(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		
+		System.out.println("  aaa " + " : " +cmap);
+		cmap.put("dataOrder", cmap.getString("dataOrder").replaceAll("[^0-9a-zA-Z_.]",""));
+    	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow", "asc").toLowerCase().replaceAll("^(asc|desc)$","$1"));
+    	System.out.println("  bbb " + " : " +cmap);
+    	cmap.put("pageLimit", (cmap.getInt("pageIdx") - 1) * cmap.getInt("pageSize",10));
+		cmap.put("pageSize", cmap.getString("pageSize","10"));
+		cmap.put("pageStartNum", (cmap.getInt("pageIdx") - 1) * cmap.getInt("pageSize") + 1 + "");
+		cmap.put("pageEndNum", cmap.getInt("pageIdx") * cmap.getInt("pageSize") + "");
+		System.out.println("  ccc " + " : " +cmap);
+		
+		GoodsXmlList list = new GoodsXmlList();
+		
+		list.addList( (List<GoodsXml>)tabletMapper.optionPartNoListXml(cmap) );
+		
+		System.out.println("  ddd " + " : " +list.size());
+		if(list != null ){
+			for(int i = 0; i < list.size();i++){
+				
+				System.out.println("  eee " + " : " +list.size());
+			   
+			}
+			
+		}
+		
+		return list;
+	}
+
+	@Override
+	public CommonList getGoodsShipmentOutDetailListXml(CommonMap cmap)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+		cmap.put("dataOrder", cmap.getString("dataOrder").replaceAll("[^0-9a-zA-Z_.]",""));
+    	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow", "asc").toLowerCase().replaceAll("^(asc|desc)$","$1"));
+		
+    	cmap.put("pageLimit", (cmap.getInt("pageIdx") - 1) * cmap.getInt("pageSize",10));
+		cmap.put("pageSize", cmap.getString("pageSize","10"));
+		cmap.put("pageStartNum", (cmap.getInt("pageIdx") - 1) * cmap.getInt("pageSize") + 1 + "");
+		cmap.put("pageEndNum", cmap.getInt("pageIdx") * cmap.getInt("pageSize") + "");
+		
+		CommonList list = tabletMapper.getPackingShipmentOutDetailListXml(cmap);
+		
+		return list;
+	}
+
+	
 	
 }
