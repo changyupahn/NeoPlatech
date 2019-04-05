@@ -15,9 +15,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import boassoft.common.CommonXmlList;
 import boassoft.common.CommonXmlManage;
+import boassoft.common.GoodsXmlList;
+import boassoft.common.GoodsXmlManage;
 import boassoft.service.DeviceLogService;
 import boassoft.service.DeviceService;
 import boassoft.service.TabService;
+import boassoft.service.TabletService;
 import boassoft.service.UserService;
 import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
@@ -44,11 +47,17 @@ public class TabController {
 	@Resource(name = "commonXmlManage")
     private CommonXmlManage commonXmlManage;
 	
+	@Resource(name = "goodsXmlManage")
+	private GoodsXmlManage goodsXmlManage;
+	
 	@Resource(name = "deviceLogService")
     private DeviceLogService deviceLogService;
 
 	@Resource(name = "deviceLogSeqIdGnrService")
     private EgovIdGnrService deviceLogSeqIdGnrService;
+	
+	@Resource(name = "tabletService")
+	private TabletService tabletService;
 
 	/** log */
     protected static final Log LOG = LogFactory.getLog(TabController.class);
@@ -714,5 +723,6 @@ public class TabController {
 //
 //		return "common/commonXml";
 //	}
-
+    
+    
 }
