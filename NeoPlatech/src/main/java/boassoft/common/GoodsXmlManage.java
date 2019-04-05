@@ -67,13 +67,13 @@ public class GoodsXmlManage {
 		 String str = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 		 
 		 XStream xstream = new XStream(new CustomizedXppDriver(new XmlFriendlyReplacer("__", "_")));
-		 
+		 System.out.println(" aaa  2222 " + " : " + str );
 		 xstream.alias("item", GoodsXml.class);
 	     xstream.alias("data", GoodsXmlList.class);
 	     xstream.addImplicitCollection(GoodsXmlList.class, "list");
-	     
+	     System.out.println(" bbb 3333 " + " : " + str );
 	     str = str + xstream.toXML(goodsXmlList);
-	     
+	     System.out.println(" ccc 444 " + " : " + str );
 	     return str;
 	 }
 	 
