@@ -2,6 +2,7 @@ package boassoft.service;
 
 import boassoft.common.CommonXmlList;
 import boassoft.common.GoodsXmlList;
+import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 
 public interface TabletService {
@@ -16,9 +17,11 @@ public interface TabletService {
 
 	public GoodsXmlList getPackingReceptListXml(CommonMap cmap) throws Exception;
 
-	public GoodsXmlList getPackingShipmentOutListXml(CommonMap cmap) throws Exception;
+	public CommonList getPackingShipmentOutListXml(CommonMap cmap) throws Exception;
 	
 	public GoodsXmlList goodsShipmentDetailKitItemOutXml(CommonMap cmap) throws Exception;
 
 	public GoodsXmlList goodsShipmentDetailRefItemOutXml(CommonMap cmap) throws Exception;
+
+	public GoodsXmlList optionVendorListXml(CommonMap cmap) throws Exception;
 }
