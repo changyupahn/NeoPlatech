@@ -131,7 +131,7 @@ public class TabletController {
 		
 	}
 	
-	@RequestMapping(value="/goods/detail/selectInventoryListXml.do")
+	@RequestMapping(value="/goods/selectInventoryListXml.do")
 	public String inventoryDetailSelectListXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
     	System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/inventory/detail/selectListXml.do" + " - " + cmap);
@@ -218,7 +218,7 @@ public class TabletController {
     	    			
 	}
 	
-	@RequestMapping(value="/goods/sync/inventorUypload.do")
+	@RequestMapping(value="/goods/inventorUypload.do")
 	public String inventorySyncUpload(final MultipartHttpServletRequest multiRequest, HttpServletRequest request, ModelMap model) throws Exception {
 		String xmlString = "";
 				
@@ -280,7 +280,7 @@ public class TabletController {
 	
 	
 	
-	@RequestMapping(value="/goods/shipment/selecGoodsShipmentOutListXml.do")
+	@RequestMapping(value="/goods/selecGoodsShipmentOutListXml.do")
 	public String goodsselecGoodsShipmentOutListXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
 		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/selecGoodsShipmentOutListXml.do" + " - " + cmap);
@@ -312,7 +312,7 @@ public class TabletController {
 		
 	}
 	
-	@RequestMapping(value="/goods/shipment/uploadGoodsShipmentOut.do")
+	@RequestMapping(value="/goods/uploadGoodsShipmentOut.do")
 	public String goodsShipmentSyncUpload(final MultipartHttpServletRequest multiRequest, HttpServletRequest request, ModelMap model) throws Exception {
     	String xmlString = "";
     	
@@ -374,7 +374,7 @@ public class TabletController {
 		return "common/commonXml";
 	}
 	
-	@RequestMapping(value="/packing/receipt/selectPackingReceiptListXml.do")
+	@RequestMapping(value="/packing/selectPackingReceiptListXml.do")
 	public String selectPackingReceptListXml(final MultipartHttpServletRequest multiRequest, HttpServletRequest request, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
@@ -393,7 +393,7 @@ public class TabletController {
     	
     	try{
     		goodsXmlList = tabletService.getPackingReceptListXml(cmap);
-    		if( goodsXmlList.size() > 0 ){
+    		if( goodsXmlList != null ){
     			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
     		}else{
     			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
@@ -409,279 +409,394 @@ public class TabletController {
 		
 	}
 	
-	@RequestMapping(value="/packing/receipt/recallPackingReceiptXml.do")
+	@RequestMapping(value="/packing/recallPackingReceiptXml.do")
 	public String recallPackingReceiptXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
 		CommonMap resultMap = new CommonMap();
 		int resultCnt = 0;
-		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/receipt/recallPackingReceiptXml.do" + " - " + cmap);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/recallPackingReceiptXml.do" + " - " + cmap);
 		
 		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
     	cmap.put("pageSize", cmap.getString("page_size", "10"));
 		        	
-    	cmap.put("od_id", cmap.getString("od_id", ""));
-    	cmap.put("demand_id", cmap.getString("demand_id", ""));
-    	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
+    	cmap.put("odId", cmap.getString("od_id", ""));    	
+    	cmap.put("receiptCnt", cmap.getString("receipt_cnt", ""));
+    	System.out.println(" deviceno " + " : " + cmap.getString("deviceno", ""));
+		System.out.println(" pageIdx " + " : " + cmap.getString("pageIdx", ""));
+		System.out.println(" pageSize " + " : " + cmap.getString("pageSize", ""));		
+		System.out.println(" odId " + " : " + cmap.getString("odId", ""));		
+		System.out.println(" receiptCnt " + " : " + cmap.getString("receiptCnt", ""));
     	
-    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	
+    	CommonList goodsXmlList = new CommonList();
+    	
     	String xmlString = "";
+    	String part_number = "";
+		String lg_part_no = "";
+		String neo_od_day = "";
+		String neo_od_qty = "";
+		String result = "1";
     	
     	try{
-    		goodsXmlList = tabletService.getPackingReceptListXml(cmap);
-    		    		
+    		goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
+    		System.out.println(" goodsXmlList.size() " + " : " + goodsXmlList.size());     		
     		if( goodsXmlList.size() > 0 ){
-    			double maxCnt = cmap.getDouble("sReceiptCnt", 0);
+    			double maxCnt = cmap.getDouble("receiptCnt", 0);
     			double disCnt = 0;
-    			if (!goodsXmlList.isEmpty() && goodsXmlList.size() > 0) {
+    			System.out.println(" maxCnt " + " : " + maxCnt);    
     				for(int i = 0; i < goodsXmlList.size(); i++){
-    				  GoodsXml goods = (GoodsXml)goodsXmlList.get(i);
-    				  double sumQty = Double.parseDouble(goods.getSum_qty());
+    				  CommonMap gmap = (CommonMap)goodsXmlList.get(i);
+    				  double sumQty = Double.parseDouble(gmap.getString("neoOdQty"));
     				  
     				  if (maxCnt > 0) {
+    					  
+    					  System.out.println(" receipt_cnt 444 " + " : " + gmap.toString());	
+    					  part_number = gmap.getString("partNumber");
+    					  lg_part_no = gmap.getString("lgPartNo");
+    	  				  neo_od_day = gmap.getString("neoOdDay");
+    	  				  neo_od_qty = gmap.getString("neoOdQty");
+    	  				  result = "0";
+    	  				  System.out.println(" part_number 444 " + " : " + part_number);
+    	  				  System.out.println(" lg_part_no 444 " + " : " + lg_part_no);
+    	  				  System.out.println(" neo_od_day 444 " + " : " + neo_od_day);
+    	  				  System.out.println(" neo_od_qty 444 " + " : " + neo_od_qty);
+    	  				  System.out.println(" result 444 " + " : " + result);    
+    					      					      					  
   						System.out.println("000 maxCnt " + " : " + maxCnt);
   						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
   						if(maxCnt == sumQty){
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", maxCnt);
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", maxCnt);
+  							gmap.put("qtyinvoiced", maxCnt);  	
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   							// 불량창고로 보낸다. 
-  							packingReceiptService.insertCRecall(resultMap);
-  							packingReceiptService.insertCRecallLine(resultMap);
-  							
-  							continue;
+  							packingReceiptService.insertCRecall(gmap);
+  							packingReceiptService.insertCRecallLine(gmap);
+  							System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());
+  							  							
+  							break;
   						}
   						else if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
-  							disCnt = maxCnt - sumQty; // 150
+  							disCnt = maxCnt - sumQty; // 150  부족 1개 
   							System.out.println("111 disCnt " + " : " + disCnt);
   							resultMap.put("qtyOnHand",0);
   							resultMap.put("preQtyOnHand", disCnt);
+  							gmap.put("qtyinvoiced", sumQty);
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   						    // 불량창고로 보낸다.
-  							packingReceiptService.insertCRecall(resultMap);
-  							packingReceiptService.insertCRecallLine(resultMap);
-
-  							continue;
+  							packingReceiptService.insertCRecall(gmap);
+  							packingReceiptService.insertCRecallLine(gmap);
+  							System.out.println(" receipt_cnt 2222 " + " : " + gmap.toString());
+  							
+  							break;
 
   						}else{ // 소요량이 입고량보다 많으면
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", maxCnt);
+  							disCnt = sumQty - maxCnt; // 150  부족 1개 
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", sumQty);
+  							gmap.put("qtyinvoiced", disCnt);
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   						    // 불량창고로 보낸다. 
-  							packingReceiptService.insertCRecall(resultMap);
-  							packingReceiptService.insertCRecallLine(resultMap);
-  							continue;
+  							packingReceiptService.insertCRecall(gmap);
+  							packingReceiptService.insertCRecallLine(gmap);
+  							System.out.println(" receipt_cnt 333 " + " : " + gmap.toString());
+  							break;
   						}
-  					} else {
-  						continue;
   					}
-  				
-  			       }
-    			}
-    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+  			     }
+    			    			 			    		
+    			
+    				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+  	    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+  	    					+ "<lg_part_no><![CDATA["+lg_part_no+"]]></lg_part_no>"
+  	    					+ "<neo_od_day><![CDATA["+neo_od_day+"]]></neo_od_day>"
+  	    					+ "<neo_od_qty><![CDATA["+neo_od_qty+"]]></neo_od_qty>"
+  	    					+ "<result><![CDATA["+result+"]]></result>"
+  	    					+ "</data>";  	
+    				System.out.println(" xmlString 555 " + " : " + xmlString);
     		}else{
     			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    			System.out.println(" xmlString 666 " + " : " + xmlString);
     		}
     	}catch(Exception e){
     		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		System.out.println(" xmlString 777 " + " : " + xmlString);
     		e.printStackTrace();
    	   }
-    	
+      System.out.println(" xmlString 888 " + " : " + xmlString);		
        model.addAttribute("xmlString", xmlString);
     	
    	   return "common/commonXml";	
 		
 	}
 	
-	@RequestMapping(value="/packing/shipment/packingShipmentXml.do")
+	@RequestMapping(value="/packing/packingShipmentXml.do")
 	public String packingShipmentXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
-		CommonMap resultMap = new CommonMap();
 		int resultCnt = 0;
-		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/receipt/packingReceiptXml.do" + " - " + cmap);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/packingShipmentXml.do" + " - " + cmap);
 		
 		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
     	cmap.put("pageSize", cmap.getString("page_size", "10"));
 		      	
-    	cmap.put("od_id", cmap.getString("od_id", ""));
-    	cmap.put("demand_id", cmap.getString("demand_id", ""));
-    	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
-		
-    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	cmap.put("odId", cmap.getString("od_id", ""));    	
+    	cmap.put("receiptCnt", cmap.getString("receipt_cnt", ""));
+    	System.out.println(" deviceno " + " : " + cmap.getString("deviceno", ""));
+		System.out.println(" pageIdx " + " : " + cmap.getString("pageIdx", ""));
+		System.out.println(" pageSize " + " : " + cmap.getString("pageSize", ""));		
+		System.out.println(" odId " + " : " + cmap.getString("odId", ""));		
+		System.out.println(" receiptCnt " + " : " + cmap.getString("receiptCnt", ""));
+    	
+    	
+    	CommonList goodsXmlList = new CommonList();
+    	
     	String xmlString = "";
+    	String part_number = "";
+		String lg_part_no = "";
+		String neo_od_day = "";
+		String neo_od_qty = "";
+		String result = "1";
     	
     	try{
-    		goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
-    		    		
+    		 goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
+    		 System.out.println(" goodsXmlList.size() " + " : " + goodsXmlList.size());    	    		
     		if( goodsXmlList.size() > 0 ){
-    			double maxCnt = cmap.getDouble("sReceiptCnt", 0);
+    			double maxCnt = cmap.getDouble("receiptCnt", 0);
     			double disCnt = 0;
-    			if (!goodsXmlList.isEmpty() && goodsXmlList.size() > 0) {
+    			
     				for(int i = 0; i < goodsXmlList.size(); i++){
-    				  GoodsXml goods = (GoodsXml)goodsXmlList.get(i);
-    				  double sumQty = Double.parseDouble(goods.getSum_qty());
+    				  CommonMap gmap = (CommonMap)goodsXmlList.get(i);
+    				  double sumQty = Double.parseDouble(gmap.getString("neoOdQty"));
     				  
     				  if (maxCnt > 0) {
-  						System.out.println("000 maxCnt " + " : " + maxCnt);
+    					  
+    					  System.out.println(" receipt_cnt 444 " + " : " + gmap.toString());	
+    					  part_number = gmap.getString("partNumber");
+    					  lg_part_no = gmap.getString("lgPartNo");
+    	  				  neo_od_day = gmap.getString("neoOdDay");
+    	  				  neo_od_qty = gmap.getString("neoOdQty");
+    	  				  result = "0";
+    	  				  System.out.println(" part_number 444 " + " : " + part_number);
+    	  				  System.out.println(" lg_part_no 444 " + " : " + lg_part_no);
+    	  				  System.out.println(" neo_od_day 444 " + " : " + neo_od_day);
+    	  				  System.out.println(" neo_od_qty 444 " + " : " + neo_od_qty);
+    	  				  System.out.println(" result 444 " + " : " + result);  
+    					  
+    					  
+    	  				System.out.println("000 maxCnt " + " : " + maxCnt);
   						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
   						if(maxCnt == sumQty){
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", maxCnt);
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", maxCnt);
+  							gmap.put("qtyinvoiced", maxCnt);  
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   							// 출고지시를 한다. 
-  							packingShipmentOutService.insertMOutOrder(resultMap);
-  							packingShipmentOutService.insertMOutOrderLine(resultMap);
+  							packingShipmentOutService.insertMOutOrder(gmap);
+  							packingShipmentOutService.insertMOutOrderLine(gmap);
+  							System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());
   							
-  							continue;
+  							break;
   						}
   						else if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
-  							disCnt = maxCnt - sumQty; // 150
+  							disCnt = maxCnt - sumQty; // 150  부족 1개 
   							System.out.println("111 disCnt " + " : " + disCnt);
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", disCnt);
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", disCnt);
+  							gmap.put("qtyinvoiced", sumQty);
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   							// 출고지시를 한다.
-  							packingShipmentOutService.insertMOutOrder(resultMap);
-  							packingShipmentOutService.insertMOutOrderLine(resultMap);
-
-  							continue;
+  							packingShipmentOutService.insertMOutOrder(gmap);
+  							packingShipmentOutService.insertMOutOrderLine(gmap);
+  							System.out.println(" receipt_cnt 2222 " + " : " + gmap.toString());
+  							break;
 
   						}else{ // 소요량이 입고량보다 많으면
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", maxCnt);
+  							disCnt = sumQty - maxCnt; // 150  부족 1개 
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", sumQty);
+  							gmap.put("qtyinvoiced", disCnt);
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   						    // 출고지시를 한다. 
-  							packingShipmentOutService.insertMOutOrder(resultMap);
-  							packingShipmentOutService.insertMOutOrderLine(resultMap);
-  							continue;
+  							packingShipmentOutService.insertMOutOrder(gmap);
+  							packingShipmentOutService.insertMOutOrderLine(gmap);
+  							System.out.println(" receipt_cnt 333 " + " : " + gmap.toString());
+  							break;
   						}
-  					} else {
-  						continue;
-  					}
+    				  }
   				
   			       }
-    			}
-    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+    			
+    				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+  	    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+  	    					+ "<lg_part_no><![CDATA["+lg_part_no+"]]></lg_part_no>"
+  	    					+ "<neo_od_day><![CDATA["+neo_od_day+"]]></neo_od_day>"
+  	    					+ "<neo_od_qty><![CDATA["+neo_od_qty+"]]></neo_od_qty>"
+  	    					+ "<result><![CDATA["+result+"]]></result>"
+  	    					+ "</data>";  	
+    				System.out.println(" xmlString 555 " + " : " + xmlString);
+    				
     		}else{
     			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    			System.out.println(" xmlString 666 " + " : " + xmlString);
     		}
     	}catch(Exception e){
     		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		System.out.println(" xmlString 777 " + " : " + xmlString);
     		e.printStackTrace();
    	   }
-    	
+    	System.out.println(" xmlString 888 " + " : " + xmlString);	 	
        model.addAttribute("xmlString", xmlString);
     	
    	   return "common/commonXml";	
 		
 	}
 
-	@RequestMapping(value="/packing/shipment/packingShipmentOutXml.do")
+	@RequestMapping(value="/packing/packingShipmentOutXml.do")
 	public String packingShipmentOutXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		 
 		CommonMap cmap = new CommonMap(request);
-		CommonMap resultMap = new CommonMap();
 		int resultCnt = 0;
-		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/receipt/packingReceiptXml.do" + " - " + cmap);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/packingShipmentOutXml.do" + " - " + cmap);
 		
 		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
-    	cmap.put("pageSize", cmap.getString("page_size", "10"));
-		
-    	cmap.put("od_day", cmap.getString("od_day", "").trim());
-    	cmap.put("final_vendor", cmap.getString("final_vendor", ""));
-    	cmap.put("pkg_po_no", cmap.getString("pkg_po_no", ""));
+    	cmap.put("pageSize", cmap.getString("page_size", "10"));		    
     	
-    	cmap.put("od_id", cmap.getString("od_id", ""));
-    	cmap.put("demand_id", cmap.getString("demand_id", ""));
-    	cmap.put("receipt_cnt", cmap.getString("receipt_cnt", ""));
-		
-    	GoodsXmlList goodsXmlList = new GoodsXmlList();
+    	cmap.put("odId", cmap.getString("od_id", ""));    	
+    	cmap.put("receiptCnt", cmap.getString("receipt_cnt", ""));
+		System.out.println(" deviceno " + " : " + cmap.getString("deviceno", ""));
+		System.out.println(" pageIdx " + " : " + cmap.getString("pageIdx", ""));
+		System.out.println(" pageSize " + " : " + cmap.getString("pageSize", ""));		
+		System.out.println(" odId " + " : " + cmap.getString("odId", ""));		
+		System.out.println(" receiptCnt " + " : " + cmap.getString("receiptCnt", ""));
+    	
+    	CommonList goodsXmlList = new CommonList();
+    	
     	String xmlString = "";
+    	String part_number = "";
+		String lg_part_no = "";
+		String neo_od_day = "";
+		String neo_od_qty = "";
+		String result = "2";
     	
     	try{
     		goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
-    		    		
+    		System.out.println(" goodsXmlList.size() " + " : " + goodsXmlList.size());    		    		
     		if( goodsXmlList.size() > 0 ){
-    			double maxCnt = cmap.getDouble("sReceiptCnt", 0);
+    			double maxCnt = cmap.getDouble("receiptCnt", 0);
     			double disCnt = 0;
-    			if (!goodsXmlList.isEmpty() && goodsXmlList.size() > 0) {
+    			System.out.println(" maxCnt " + " : " + maxCnt);    		  
     				for(int i = 0; i < goodsXmlList.size(); i++){
-    				  GoodsXml goods = (GoodsXml)goodsXmlList.get(i);
-    				  double sumQty = Double.parseDouble(goods.getSum_qty());
+    				  CommonMap gmap = (CommonMap)goodsXmlList.get(i);
+    				  double sumQty = Double.parseDouble(gmap.getString("neoOdQty"));
     				  
     				  if (maxCnt > 0) {
+    					  
+    					  System.out.println(" receipt_cnt 444 " + " : " + gmap.toString());	
+    					  part_number = gmap.getString("partNumber");
+    					  lg_part_no = gmap.getString("lgPartNo");
+    	  				  neo_od_day = gmap.getString("neoOdDay");
+    	  				  neo_od_qty = gmap.getString("neoOdQty");
+    	  				  result = "0";
+    	  				  System.out.println(" part_number 444 " + " : " + part_number);
+    	  				  System.out.println(" lg_part_no 444 " + " : " + lg_part_no);
+    	  				  System.out.println(" neo_od_day 444 " + " : " + neo_od_day);
+    	  				  System.out.println(" neo_od_qty 444 " + " : " + neo_od_qty);
+    	  				  System.out.println(" result 444 " + " : " + result);  
+    					  
+    					  
   						System.out.println("000 maxCnt " + " : " + maxCnt);
   						// maxCnt 300 sumQty 150 입고량 소요량 maxCnt 5 sumQty 0
   						if(maxCnt == sumQty){
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", maxCnt);
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", maxCnt);  	
+  							gmap.put("qtyinvoiced", maxCnt);  	
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   							// 매입지시를 한다. 
-  							packingShipmentOutService.insertCInvoicePo(resultMap);
-  							packingShipmentOutService.insertCInvoicePoLine(resultMap);
+  							packingShipmentOutService.insertCInvoicePo(gmap);
+  							packingShipmentOutService.insertCInvoicePoLine(gmap);
+  							System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());
   							
-  							continue;
+  							break;
   						}
   						else if (maxCnt > sumQty) { // 입고량이 소요량보다 많으면
-  							disCnt = maxCnt - sumQty; // 150
+  							disCnt = maxCnt - sumQty; // 150  부족 1개 
   							System.out.println("111 disCnt " + " : " + disCnt);
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", disCnt);
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", disCnt);
+  							gmap.put("qtyinvoiced", sumQty);
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   						    // 매입지시를 한다.
-  							packingShipmentOutService.insertCInvoicePo(resultMap);
-  							packingShipmentOutService.insertCInvoicePoLine(resultMap);
+  							packingShipmentOutService.insertCInvoicePo(gmap);
+  							packingShipmentOutService.insertCInvoicePoLine(gmap);
 
-  							continue;
+  							System.out.println(" receipt_cnt 2222 " + " : " + gmap.toString());
+  							break;
 
-  						}else{ // 소요량이 입고량보다 많으면
-  							resultMap.put("qtyOnHand",0);
-  							resultMap.put("preQtyOnHand", maxCnt);
+  						}else{ // 소요량이 입고량보다 많으면 남는다.
+  							disCnt = sumQty - maxCnt; // 150  부족 1개 
+  							gmap.put("qtyOnHand",0);
+  							gmap.put("preQtyOnHand", sumQty);
+  							gmap.put("qtyinvoiced", disCnt);
   							resultCnt = packingReceiptService
-  									.updateQtyOnHand(resultMap);
+  									.updateQtyOnHand(gmap);
   						    // 매입지시를 한다.. 
-  							packingShipmentOutService.insertCInvoicePo(resultMap);
-  							packingShipmentOutService.insertCInvoicePoLine(resultMap);
-  							continue;
-  						}
-  					} else {
-  						continue;
-  					}
-  				
-  			       }
+  							packingShipmentOutService.insertCInvoicePo(gmap);
+  							packingShipmentOutService.insertCInvoicePoLine(gmap);
+  							
+  							System.out.println(" receipt_cnt 333 " + " : " + gmap.toString());
+  							break;
+  						}  						  						
+  						
+  						
+  					} 
+    				  					  					  									      
+  				  			       
     			}
-    			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+
+    				
+    				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+  	    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+  	    					+ "<lg_part_no><![CDATA["+lg_part_no+"]]></lg_part_no>"
+  	    					+ "<neo_od_day><![CDATA["+neo_od_day+"]]></neo_od_day>"
+  	    					+ "<neo_od_qty><![CDATA["+neo_od_qty+"]]></neo_od_qty>"
+  	    					+ "<result><![CDATA["+result+"]]></result>"
+  	    					+ "</data>";  	
+    				System.out.println(" xmlString 555 " + " : " + xmlString);
+  					    					
     		}else{
     			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
+    			System.out.println(" xmlString 666 " + " : " + xmlString);
     		}
     	}catch(Exception e){
     		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
+    		System.out.println(" xmlString 777 " + " : " + xmlString);
     		e.printStackTrace();
    	   }
-		
+       System.out.println(" xmlString 888 " + " : " + xmlString);	
 	   model.addAttribute("xmlString", xmlString);
 	    	
 	   return "common/commonXml";
 				
 	}
 	
-	@RequestMapping(value="/goods/shipment/goodsShipmentDetailKitItemOutXml.do")
+	@RequestMapping(value="/goods/goodsShipmentDetailKitItemOutXml.do")
 	public String goodsShipmentDetailKitItemOutXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
-		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/shipment/goodsShipmentDetailKitItemOutXml.do" + " - " + cmap);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/goodsShipmentDetailKitItemOutXml.do " + " - " + cmap);
 		
 		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
@@ -694,7 +809,7 @@ public class TabletController {
     	
     	try{
     		goodsXmlList = tabletService.goodsShipmentDetailKitItemOutXml(cmap);
-    		if( goodsXmlList.size() > 0 ){
+    		if( goodsXmlList != null ){
     			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
     		}else{
     			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
@@ -710,24 +825,29 @@ public class TabletController {
 								
 	}
 	
-	@RequestMapping(value="/goods/shipment/goodsShipmentDetailRefItemOutXml.do")
+	@RequestMapping(value="/goods/goodsShipmentDetailRefItemOutXml.do")
 	public String goodsShipmentDetailRefItemOutXml(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		
 		CommonMap cmap = new CommonMap(request);
-		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/shipment/goodsShipmentDetailRefItemOutXml.do" + " - " + cmap);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/goods/goodsShipmentDetailRefItemOutXml.do" + " - " + cmap);
 		
-		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+		cmap.put("deviceno", cmap.getString("deviceno", ""));
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
     	cmap.put("pageSize", cmap.getString("page_size", "10"));
 		
     	cmap.put("pt_od_id", cmap.getString("pt_od_id", "").trim());
 		
+    	System.out.println(" deviceno " + " : " + cmap.getString("deviceno", ""));
+    	System.out.println(" page_idx " + " : " + cmap.getString("page_idx", ""));
+    	System.out.println(" page_size " + " : " + cmap.getString("page_size", ""));
+    	System.out.println(" pt_od_id " + " : " + cmap.getString("pt_od_id", ""));
+    	
     	GoodsXmlList goodsXmlList = new GoodsXmlList();
     	String xmlString = "";
     	
     	try{
     		goodsXmlList = tabletService.goodsShipmentDetailRefItemOutXml(cmap);
-    		if( goodsXmlList.size() > 0 ){
+    		if( goodsXmlList != null ){	
     			xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
     		}else{
     			xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
@@ -744,12 +864,12 @@ public class TabletController {
 	}
 	
 	
-	@RequestMapping(value="/packing/code/optionVendorListXml.do")
+	@RequestMapping(value="/packing/optionVendorListXml.do")
 	public String optionVendorList(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 		CommonMap cmap = new CommonMap(request);
-		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/code/optionVendorListXml.do" + " - " + cmap);
+		System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/packing/optionVendorListXml.do" + " - " + cmap);
 		
-		cmap.put("deviceno", cmap.getString("deviceno", "").trim());
+		cmap.put("deviceno", cmap.getString("deviceno", ""));
 		
 		GoodsXmlList goodsXmlList = new GoodsXmlList();
 		String xmlString = "";
@@ -757,8 +877,10 @@ public class TabletController {
 		
 		try{
 			goodsXmlList = tabletService.optionVendorListXml(cmap);
-			if( goodsXmlList.size() > 0 ){
-				xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
+			System.out.println(" goodsXmlList.size() " + goodsXmlList.size());
+			
+			if( goodsXmlList != null ){					
+				xmlString = goodsXmlManage.writeXmlString(goodsXmlList);			    
 			}else{
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
 			}
