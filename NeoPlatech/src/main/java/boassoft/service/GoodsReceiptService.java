@@ -15,10 +15,12 @@ public interface GoodsReceiptService {
 
 	public CommonList getGoodsReceiptDetailList(CommonMap cmap) throws Exception;
 
-	public int updateQtyOnHand(CommonMap gmap) throws Exception;
+	public int updateQtyOnHand(CommonMap cmap) throws Exception;
 
-	public int insertRfidCInOrder(CommonMap gmap) throws Exception;
+	public int insertRfidCInOrder(CommonMap cmap) throws Exception;
 
-	public int insertRfidCInOrderLine(CommonMap gmap) throws Exception;
+	public int insertRfidCInOrderLine(CommonMap cmap) throws Exception;
+
+	public int updateQtyInvoiced(CommonMap cmap) throws Exception;
 				
 }
