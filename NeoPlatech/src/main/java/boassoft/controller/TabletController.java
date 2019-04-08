@@ -1,6 +1,7 @@
 package boassoft.controller;
 
 import java.io.File;
+import java.net.URLEncoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -436,7 +437,9 @@ public class TabletController {
 		String lg_part_no = "";
 		String neo_od_day = "";
 		String neo_od_qty = "";
-		String result = "1";
+		String od_id = "";
+		String qtyinvoiced = "";		
+		String result = "0";
 
 		try {
 			goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
@@ -459,7 +462,8 @@ public class TabletController {
 						lg_part_no = gmap.getString("lgPartNo");
 						neo_od_day = gmap.getString("neoOdDay");
 						neo_od_qty = gmap.getString("neoOdQty");
-						result = "0";
+						od_id = gmap.getString("od_id");
+						result = gmap.getString("result");
 						System.out.println(" part_number 444 " + " : "
 								+ part_number);
 						System.out.println(" lg_part_no 444 " + " : "
@@ -468,6 +472,8 @@ public class TabletController {
 								+ neo_od_day);
 						System.out.println(" neo_od_qty 444 " + " : "
 								+ neo_od_qty);
+						System.out.println(" od_id 444 " + " : "
+								+ od_id);
 						System.out.println(" result 444 " + " : " + result);
 
 						System.out.println("000 maxCnt " + " : " + maxCnt);
@@ -476,6 +482,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", maxCnt);
 							gmap.put("qtyinvoiced", maxCnt);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 불량창고로 보낸다.
@@ -491,6 +498,7 @@ public class TabletController {
 							resultMap.put("qtyOnHand", 0);
 							resultMap.put("preQtyOnHand", disCnt);
 							gmap.put("qtyinvoiced", sumQty);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 불량창고로 보낸다.
@@ -506,6 +514,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", sumQty);
 							gmap.put("qtyinvoiced", disCnt);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 불량창고로 보낸다.
@@ -515,15 +524,14 @@ public class TabletController {
 									+ gmap.toString());
 							break;
 						}
+						
+						
 					}
 				}
-
+				
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-						+ "<part_number><![CDATA[" + part_number
-						+ "]]></part_number>" + "<lg_part_no><![CDATA["
-						+ lg_part_no + "]]></lg_part_no>"
-						+ "<neo_od_day><![CDATA[" + neo_od_day
-						+ "]]></neo_od_day>" + "<neo_od_qty><![CDATA["
+						+ "<od_id><![CDATA[" + od_id
+						+ "]]></od_id>" + "<neo_od_qty><![CDATA["
 						+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
 						+ result + "]]></result>" + "</data>";
 				System.out.println(" xmlString 555 " + " : " + xmlString);
@@ -574,7 +582,9 @@ public class TabletController {
 		String lg_part_no = "";
 		String neo_od_day = "";
 		String neo_od_qty = "";
-		String result = "1";
+		String od_id = "";
+		String qtyinvoiced = "";
+		String result = "0";
 
 		try {
 			goodsXmlList = tabletService.getPackingShipmentOutListXml(cmap);
@@ -596,8 +606,10 @@ public class TabletController {
 						part_number = gmap.getString("partNumber");
 						lg_part_no = gmap.getString("lgPartNo");
 						neo_od_day = gmap.getString("neoOdDay");
-						neo_od_qty = gmap.getString("neoOdQty");
-						result = "0";
+						neo_od_qty = gmap.getString("neoOdQty");	
+						od_id = gmap.getString("odId");
+						result = gmap.getString("result");
+						
 						System.out.println(" part_number 444 " + " : "
 								+ part_number);
 						System.out.println(" lg_part_no 444 " + " : "
@@ -606,6 +618,8 @@ public class TabletController {
 								+ neo_od_day);
 						System.out.println(" neo_od_qty 444 " + " : "
 								+ neo_od_qty);
+						System.out.println(" od_id 444 " + " : "
+								+ od_id);
 						System.out.println(" result 444 " + " : " + result);
 
 						System.out.println("000 maxCnt " + " : " + maxCnt);
@@ -614,6 +628,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", maxCnt);
 							gmap.put("qtyinvoiced", maxCnt);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 출고지시를 한다.
@@ -629,6 +644,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", disCnt);
 							gmap.put("qtyinvoiced", sumQty);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 출고지시를 한다.
@@ -643,6 +659,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", sumQty);
 							gmap.put("qtyinvoiced", disCnt);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 출고지시를 한다.
@@ -657,11 +674,8 @@ public class TabletController {
 				}
 
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-						+ "<part_number><![CDATA[" + part_number
-						+ "]]></part_number>" + "<lg_part_no><![CDATA["
-						+ lg_part_no + "]]></lg_part_no>"
-						+ "<neo_od_day><![CDATA[" + neo_od_day
-						+ "]]></neo_od_day>" + "<neo_od_qty><![CDATA["
+						+ "<od_id><![CDATA[" + od_id
+						+ "]]></od_id>" + "<neo_od_qty><![CDATA["
 						+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
 						+ result + "]]></result>" + "</data>";
 				System.out.println(" xmlString 555 " + " : " + xmlString);
@@ -713,6 +727,8 @@ public class TabletController {
 		String lg_part_no = "";
 		String neo_od_day = "";
 		String neo_od_qty = "";
+		String od_id = "";
+		String qtyinvoiced = "";
 		String result = "2";
 
 		try {
@@ -736,7 +752,8 @@ public class TabletController {
 						lg_part_no = gmap.getString("lgPartNo");
 						neo_od_day = gmap.getString("neoOdDay");
 						neo_od_qty = gmap.getString("neoOdQty");
-						result = "0";
+						od_id = gmap.getString("odId");
+						result = gmap.getString("result");
 						System.out.println(" part_number 444 " + " : "
 								+ part_number);
 						System.out.println(" lg_part_no 444 " + " : "
@@ -753,6 +770,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", maxCnt);
 							gmap.put("qtyinvoiced", maxCnt);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 매입지시를 한다.
@@ -769,6 +787,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", disCnt);
 							gmap.put("qtyinvoiced", sumQty);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 매입지시를 한다.
@@ -785,6 +804,7 @@ public class TabletController {
 							gmap.put("qtyOnHand", 0);
 							gmap.put("preQtyOnHand", sumQty);
 							gmap.put("qtyinvoiced", disCnt);
+							qtyinvoiced = gmap.getString("qtyinvoiced");
 							resultCnt = packingReceiptService
 									.updateQtyOnHand(gmap);
 							// 매입지시를 한다..
@@ -802,11 +822,8 @@ public class TabletController {
 				}
 
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-						+ "<part_number><![CDATA[" + part_number
-						+ "]]></part_number>" + "<lg_part_no><![CDATA["
-						+ lg_part_no + "]]></lg_part_no>"
-						+ "<neo_od_day><![CDATA[" + neo_od_day
-						+ "]]></neo_od_day>" + "<neo_od_qty><![CDATA["
+						+ "<od_id><![CDATA[" + od_id
+						+ "]]></od_id>" + "<neo_od_qty><![CDATA["
 						+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
 						+ result + "]]></result>" + "</data>";
 				System.out.println(" xmlString 555 " + " : " + xmlString);
@@ -917,7 +934,7 @@ public class TabletController {
 
 		cmap.put("deviceno", cmap.getString("deviceno", ""));
 		cmap.put("neoOdDay", cmap.getString("neo_od_day", ""));
-		cmap.put("partNumber", cmap.getString("part_number", ""));
+		cmap.put("lgPartNo", cmap.getString("lg_part_no", ""));
 
 		GoodsXmlList goodsXmlList = new GoodsXmlList();
 		String xmlString = "";
@@ -952,9 +969,14 @@ public class TabletController {
 				+ " - " + "/packing/optionPartNoListXml.do" + " - " + cmap);
 
 		cmap.put("deviceno", cmap.getString("deviceno", ""));
-		cmap.put("sendTime", cmap.getString("send_time", ""));
-		cmap.put("vendor", cmap.getString("vendor", ""));
+		cmap.put("neoOdDay", cmap.getString("neo_od_day", ""));
+		cmap.put("finalVendor", URLEncoder.encode(cmap.getString("final_vendor", ""), "UTF-8"));		
+		
 
+		System.out.println("deviceno  " + " : " + cmap.getString("deviceno", ""));
+		System.out.println("neoOdDay  " + " : " + cmap.getString("neoOdDay", ""));
+		System.out.println("finalVendor  " + " : " + cmap.getString("finalVendor", ""));
+		
 		GoodsXmlList goodsXmlList = new GoodsXmlList();
 		String xmlString = "";
 		try {
@@ -1013,6 +1035,7 @@ public class TabletController {
 		String sub_sum_qty = "";
 		String sub_unit = "";
 		String qtyinvoiced = "";
+		String od_id = "";
 		String result = "0";
 
 		try {
@@ -1036,7 +1059,8 @@ public class TabletController {
 						  sub_sum_qty = gmap.getString("subSumQty");
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
-						  result = "0";
+						  od_id = gmap.getString("odId");
+						  result = "1";
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1091,12 +1115,8 @@ public class TabletController {
 					  
 				}
 				
-				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-	    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
-	    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
-	    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
-	    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
-	    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
+				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"	    			
+	    					+ "<od_Id><![CDATA["+od_id+"]]></od+id>"
 	    					+ "<qtyinvoiced><![CDATA["+qtyinvoiced+"]]></qtyinvoiced>"
 	    					+ "<result><![CDATA["+result+"]]></result>"
 	    					+ "</data>";  	
