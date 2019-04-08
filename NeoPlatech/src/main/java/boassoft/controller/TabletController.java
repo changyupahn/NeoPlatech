@@ -1060,7 +1060,7 @@ public class TabletController {
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
 						  od_id = gmap.getString("odId");
-						  result = "1";
+						  result = gmap.getString("result");
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1219,7 +1219,7 @@ public class TabletController {
 		String pt_od_id = cmap.getString("ptOdId", "");
         String order_type = cmap.getString("orderType", "");
         String receiptCnt = cmap.getString("receiptCnt","0");
-		String result = "1";
+		String result = "0";
 		
 		try {
 			goodsXmlList = tabletService.getGoodsShipmentOutDetailListXml(cmap);
@@ -1245,7 +1245,7 @@ public class TabletController {
 						  sub_sum_qty = gmap.getString("subSumQty");
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
-						  result = "0";
+						  result = gmap.getString("result");
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
