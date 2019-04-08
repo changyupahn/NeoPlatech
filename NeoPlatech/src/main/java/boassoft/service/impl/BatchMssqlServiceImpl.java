@@ -101,6 +101,14 @@ public class BatchMssqlServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		batchMssqlMapper.insertPackingWoSendListAllCngInputQty(cmap);
 	}
+
+	@Override
+	public int insertAssayOrderQty(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = batchMssqlMapper.insertAssayOrderQty(cmap);
+		return resultCnt;
+	}
 	
 	
 
