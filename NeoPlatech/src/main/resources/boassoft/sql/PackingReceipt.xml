@@ -224,21 +224,21 @@
 	  VALUES
 	  ( 
 	    #{odId}
-	   , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+	   , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
 	   , NULL
 	   , '00'
-	   , #{demandId}
+	   , #{odId}
 	   , NULL
 	   , NULL
 	   , 'Y'
-       ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-	   ,COALESCE(#{frstRegisterId},'SYSTEM')				
-	   ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-	   ,COALESCE(#{lastUpdusrId},'SYSTEM')
+       ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	   ,'SYSTEM'				
+	   ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	   ,'SYSTEM'
 	  )	  	  
 	</insert>
 	
-	<insert id="insertRfidCRecallLine" parameterType="cmap" >
+	<insert id="insertCRecallLine" parameterType="cmap" >
       <selectKey resultType="string" keyProperty="cRecallLineId" order="BEFORE">
         SELECT get_seq('cRecallLine')     
       </selectKey>
@@ -257,15 +257,15 @@
       VALUES
       ( 
         #{cRecallLineId}
-        , #{odId}
+        , #{od_id}
         , NULL
         , 'Y'
-        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
         , 'Y'
-        ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-	    ,COALESCE(#{frstRegisterId},'SYSTEM')				
-	    ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-	    ,COALESCE(#{lastUpdusrId},'SYSTEM')
+        ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	    ,'SYSTEM'				
+	    ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	    ,'SYSTEM'
        ) 
    </insert>    
 	   

@@ -87,8 +87,8 @@
       
       	<insert id="insertMOutOrder" parameterType="cmap" >
       	    INSERT IGNORE INTO RFID_M_OUT_ORDER (
-      	     M_OUTER_ORDER_ID
-      	     , COUT
+      	     M_OUT_ORDER_ID
+      	     , COUNT
       	     , ISDELIVERED
       	     , ISPRINTED
       	     , DATEORDERED
@@ -122,10 +122,10 @@
       	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     ,'0'
       	     , 'Y'
-      	     ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		     ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		     ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		     ,COALESCE(#{lastUpdusrId},'SYSTEM')
+      	     ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		     ,'SYSTEM'				
+		     ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		     ,'SYSTEM'
       	    )      	         	           	           	       	
       	</insert>
       	
@@ -169,8 +169,10 @@
           , #{odId}
           , 1
           , 1
-          , #{receiptCnt}
-          , #{preQtyOnHand}
+          , #{receiptCnt}  
+          , #{odId}
+          , NULL
+          , #{qtyInvoiced}    
           , 'Y'
           , 'N'
           , 'N'
@@ -179,10 +181,10 @@
       	  , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	  ,'0'
       	  , 'Y'
-      	  ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{lastUpdusrId},'SYSTEM') 
+      	  ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'				
+		  ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM' 
         )      
       </insert>
                  
@@ -221,10 +223,10 @@
             , NULL
             , NULL
             , 'Y'
-            ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		    ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		    ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		    ,COALESCE(#{lastUpdusrId},'SYSTEM')
+            ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		    ,'SYSTEM'				
+		    ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		    ,'SYSTEM'
 		  )   
       </insert>
       
@@ -258,10 +260,10 @@
           , #{rowNum}
           , NULL
           , 'Y'
-          ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{lastUpdusrId},'SYSTEM')
+          ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'				
+		  ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'
         )                
       </insert>
       
