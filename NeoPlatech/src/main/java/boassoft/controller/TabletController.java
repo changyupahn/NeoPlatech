@@ -986,7 +986,7 @@ public class TabletController {
 			System.out.println(" goodsXmlList.size() " + goodsXmlList.size());
 
 			if (goodsXmlList != null) {
-
+				xmlString = goodsXmlManage.writeXmlString(goodsXmlList);
 			} else {
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
 			}
