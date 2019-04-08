@@ -36,7 +36,7 @@
           AND A.NEO_OD_DAY LIKE concat('%',#{odDay},'%')	
          </if>
          <if test="pkgPoNo != null and pkgPoNo != ''"> 	
-          AND A.LG_PART_NO LIKE concat('%',#{pkgPoNo},'%')	
+          AND A.PART_NUMBER LIKE concat('%',#{pkgPoNo},'%')	
          </if>
     </sql>
     
@@ -329,8 +329,11 @@
          WHERE 1 = 1
          AND A.VENDOR IS NOT NULL
          <if test="neoOdDay != null and neoOdDay != ''">              
-          AND A.NEO_ID_DAY LIKE concat('%',#{neoOdDay},'%')
+          AND A.NEO_OD_DAY LIKE concat('%',#{neoOdDay},'%')
           </if> 
+          <if test="partNumber != null and partNumber != ''">              
+          AND A.PART_NUMBER LIKE concat('%',#{partNumber},'%')
+          </if>
          GROUP BY A.FINAL_VENDOR
 		 ORDER BY ROW_NUM 
 	  </select>	 
@@ -370,25 +373,28 @@
                , COALESCE(A.GO_WITH,' ') AS go_with
                , COALESCE(A.RE_PRINT,' ') As re_print
                , COALESCE(A.SUB_PART_NO,' ') AS sub_part_no
-            , COALESCE(A.SUB_PART_DESC,' ') AS sub_part_desc
-            , COALESCE(A.VENDOR,' ') AS vendor
-            , COALESCE(A.BOM_QTY,0) AS bom_qty
-            , COALESCE(A.SUB_UNIT,' ') AS sub_unit  
-            , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_qty
-            , COALESCE(A.DEMAND_FLOOR,' ') AS demand_floor
-            , COALESCE(A.OSP,' ') AS osp
-            , COALESCE(A.RSLTDATE,' ') AS rsltdate
-            , COALESCE(A.RSLTSTATE,' ') AS rsltstate
-            , COALESCE(A.RSLT_USER_NO,' ') AS rslt_user_no
-            , COALESCE(A.READDATE,' ') AS readdate
-            , COALESCE(A.READSTATE,' ') AS readstate
-            , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
-            , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
-            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
-            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
-        FROM RFID_IF_SUBPART_SENDLIST_ALL A
-       WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
+               , COALESCE(A.SUB_PART_DESC,' ') AS sub_part_desc
+               , COALESCE(A.VENDOR,' ') AS vendor
+               , COALESCE(A.BOM_QTY,0) AS bom_qty
+               , COALESCE(A.SUB_UNIT,' ') AS sub_unit  
+               , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_qty
+               , COALESCE(A.DEMAND_FLOOR,' ') AS demand_floor
+               , COALESCE(A.OSP,' ') AS osp
+               , COALESCE(A.RSLTDATE,' ') AS rsltdate
+               , COALESCE(A.RSLTSTATE,' ') AS rsltstate
+               , COALESCE(A.RSLT_USER_NO,' ') AS rslt_user_no
+               , COALESCE(A.READDATE,' ') AS readdate
+               , COALESCE(A.READSTATE,' ') AS readstate
+               , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
+               , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+               , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
+               , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
+           FROM RFID_IF_SUBPART_SENDLIST_ALL A
+           WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
           ]]>  
          <include refid="pagingFooter"/>
 	  </select> 
+	  
+	  
+	
 </mapper> 
