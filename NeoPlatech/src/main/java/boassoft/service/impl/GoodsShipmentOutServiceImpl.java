@@ -33,6 +33,24 @@ public class GoodsShipmentOutServiceImpl extends EgovAbstractServiceImpl impleme
 		CommonList list = goodsShipmentOutMapper.getGoodsShipmentOutDetailList(cmap);
 		list.totalRow = goodsShipmentOutMapper.getGoodsShipmentOutDetailListCnt(cmap);
 		return list;
+	}
+
+
+	@Override
+	public int insertRridMOut(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = goodsShipmentOutMapper.insertRridMOut(cmap);
+		return resultCnt;
+	}
+
+
+	@Override
+	public int insertRridMOutLine(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = goodsShipmentOutMapper.insertRridMOutLine(cmap);
+		return resultCnt;
 	}	
 	
 	

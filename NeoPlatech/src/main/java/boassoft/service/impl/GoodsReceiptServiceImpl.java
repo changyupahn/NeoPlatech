@@ -80,6 +80,16 @@ public class GoodsReceiptServiceImpl extends EgovAbstractServiceImpl implements 
 		resultCnt = goodsReceiptMapper.insertRfidCInOrderLine(cmap);
 		return resultCnt;
 	}
+
+	@Override
+	public int updateQtyInvoiced(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		
+		resultCnt = goodsReceiptMapper.updateQtyInvoiced(cmap);
+		
+		return resultCnt;
+	}
 	
 
 }
