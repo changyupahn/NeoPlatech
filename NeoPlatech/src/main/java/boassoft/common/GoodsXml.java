@@ -73,8 +73,15 @@ public class GoodsXml implements Serializable {
 	private String read_user_no;		
 	private String code;
 	private String code_name;
+	private String result;
 			
 	
+	public String getResult() {
+		return result;
+	}
+	public void setResult(String result) {
+		this.result = result;
+	}
 	public String getDemand_floor() {
 		return demand_floor;
 	}
