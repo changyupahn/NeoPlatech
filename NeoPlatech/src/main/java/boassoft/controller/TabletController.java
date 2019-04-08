@@ -1115,8 +1115,12 @@ public class TabletController {
 					  
 				}
 				
-				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"	    			
-	    					+ "<od_Id><![CDATA["+od_id+"]]></od+id>"
+				 xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+	    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+	    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
+	    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
+	    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
+	    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
 	    					+ "<qtyinvoiced><![CDATA["+qtyinvoiced+"]]></qtyinvoiced>"
 	    					+ "<result><![CDATA["+result+"]]></result>"
 	    					+ "</data>";  	
@@ -1246,6 +1250,7 @@ public class TabletController {
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
 						  result = gmap.getString("result");
+						  gmap.put("orderType",order_type);
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1256,13 +1261,6 @@ public class TabletController {
 						  
 						  System.out.println("000 maxCnt " + " : " + maxCnt);
 						  
-						  gmap.put("PartNo",part_number);
-						  gmap.put("Gowith",go_with);
-						  gmap.put("PtodID",pt_od_id);
-						  gmap.put("OrderType",order_type);
-						  gmap.put("OrderTime","");
-						  gmap.put("remark","");
-						  gmap.put("Atrribute01","");
 						  
 						  
 						  resultCnt =  batchMssqlService.insertAssayOrderQty(gmap);
