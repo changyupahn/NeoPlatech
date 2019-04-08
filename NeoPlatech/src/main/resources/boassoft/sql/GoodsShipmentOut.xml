@@ -124,5 +124,97 @@
            WHERE A.GO_WITH  LIKE concat('%',#{goWith},'%')	
 		<include refid="getGoodsShipmentOutWhere"/>
     </select>          
+    
+      <insert id="insertRridMOut" parameterType="cmap" >
+       INSERT IGNORE INTO RFID_M_OUT (
+          M_OUT_ID
+          , COUNT
+          , MOVEMENTTYPE
+          , DATEORDERED
+          , DATEMOVEMENT
+          , ISINVOICED
+          , ISPRINTED
+          , M_OUT_ORDEREOUT_ID
+          , M_MOVEMENT_ID
+          , C_SALES_ORDER_ID
+          , DESCRIPTION
+          , USE_YN
+          , FRST_REGIST_PNTTM
+          , FRST_REGISTER_ID
+          , LAST_UPDT_PNTTM
+          , LAST_UPDUSR_ID
+       )       
+       VALUES
+       (
+         #{ptOdId}
+        , #{subPtOdId}
+        , 'V+'              /*수불유형  정상입고  */
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+        , 'Y'
+        , 'Y'
+        , NULL
+        , NULL 
+        , NULL
+        , NULL
+        , 'Y'
+        ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		,COALESCE(#{frstRegisterId},'SYSTEM')				
+		,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		,COALESCE(#{lastUpdusrId},'SYSTEM')
+        )       
+      </insert>
+         
+      <insert id="insertRridMOutLine" parameterType="cmap" >\
+       <selectKey resultType="string" keyProperty="mOutLineId" order="BEFORE">
+        SELECT get_seq('mOutline')     
+      </selectKey>
+         INSERT IGNORE INTO RFID_M_OUTLINE (
+           M_OUTLINE_ID
+         , M_OUT_ID
+         , M_PRODUCT_ID
+         , QTYMOVEMENT
+         , QTYINVOICED
+         , C_UOM_ID
+         , ISINVOICED
+         , M_WAREHOUSE_ID
+         , M_OUT_ORDERELINE_ID
+         , C_SALES_ORDERLINE_ID
+         , DESCRIPTION
+         , M_MOVEMENTLINE_ID
+         , REFERENCELINE_ID
+         , USE_YN
+         , FRST_REGIST_PNTTM
+         , FRST_REGISTER_ID
+         , LAST_UPDT_PNTTM
+         , LAST_UPDUSR_ID         
+         )
+         VALUES
+         (  
+            #{mOutLineId}
+           , #{ptOdId}
+           , #{subPtOdId}
+           , #{preQtyOnHand}
+           , #{qtyInvoiced}
+           , NULL           
+           , 'Y'
+           , 1
+           , NULL
+           , #{qtyInvoiced}
+           , 'Y'
+           , 'N'
+           , 'N'
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+           , '0'
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+           , '0'
+           , 'Y'
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+           ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		   ,COALESCE(#{frstRegisterId},'SYSTEM')				
+		   ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+		   ,COALESCE(#{lastUpdusrId},'SYSTEM')
+         )     
+      </insert>
 
 </mapper>

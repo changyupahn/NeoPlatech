@@ -240,6 +240,15 @@
 				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
         WHERE 	OD_ID = #{odId}				
     </update>
+    
+    <update id="updateQtyInvoiced" parameterType="cmap" >
+        UPDATE 	RFID_IF_SUBPART_WOSENDLIST_ALL
+        SET
+				QTY_ON_HAND = #{qtyOnHand}
+				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
+				,QTYINVOICED = #{qtyinvoiced}
+        WHERE 	OD_ID = #{odId}				
+    </update>
           
     <insert id="insertRfidCInOrder" parameterType="cmap" >
         INSERT IGNORE INTO RFID_C_IN_ORDER (
