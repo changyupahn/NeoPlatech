@@ -26,6 +26,8 @@ public interface GoodsReceiptMapper {
 	public int insertRfidCInOrder(CommonMap cmap) throws Exception;
 
 	public int insertRfidCInOrderLine(CommonMap cmap) throws Exception;
+
+	public int updateQtyInvoiced(CommonMap cmap) throws Exception;
 	
 
 }

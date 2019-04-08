@@ -14,6 +14,10 @@ public interface GoodsShipmentOutMapper {
 	public CommonList getGoodsShipmentOutDetailList(CommonMap cmap) throws Exception;
 
 	public int getGoodsShipmentOutDetailListCnt(CommonMap cmap) throws Exception;
+
+	public int insertRridMOut(CommonMap cmap) throws Exception;
+
+	public int insertRridMOutLine(CommonMap cmap) throws Exception;
 	
 	
 
