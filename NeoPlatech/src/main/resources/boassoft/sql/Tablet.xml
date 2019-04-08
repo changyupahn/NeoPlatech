@@ -36,7 +36,7 @@
           AND A.NEO_OD_DAY LIKE concat('%',#{odDay},'%')	
          </if>
          <if test="pkgPoNo != null and pkgPoNo != ''"> 	
-          AND A.PART_NUMBER LIKE concat('%',#{pkgPoNo},'%')	
+          AND A.LG_PART_NO LIKE concat('%',#{pkgPoNo},'%')	
          </if>
     </sql>
     
@@ -151,6 +151,7 @@
            , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
            , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
            , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result   
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A               
               WHERE 1 = 1 
           ]]>                 
@@ -223,6 +224,7 @@
            , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
            , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
            , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result                  
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A  
                WHERE 1 = 1 
            ]]>            
@@ -331,8 +333,8 @@
          <if test="neoOdDay != null and neoOdDay != ''">              
           AND A.NEO_OD_DAY LIKE concat('%',#{neoOdDay},'%')
           </if> 
-          <if test="partNumber != null and partNumber != ''">              
-          AND A.PART_NUMBER LIKE concat('%',#{partNumber},'%')
+          <if test="lgPartNo != null and lgPartNo != ''">              
+          AND A.LG_PART_NO LIKE concat('%',#{lgPartNo},'%')
           </if>
          GROUP BY A.FINAL_VENDOR
 		 ORDER BY ROW_NUM 
@@ -357,10 +359,10 @@
 	  </select>
 	  	 
 	  
-	   <select id="getPackingShipmentOutDetailListXml" parameterType="cmap" resultType="goodsXml"> 
+	   <select id="getPackingShipmentOutDetailListXml" parameterType="cmap" resultType="cmap"> 
         <include refid="pagingHeader"/>
          <![CDATA[
-             SELECT  
+             SELECT  COALESCE(A.PT_OD_ID,' ') AS pt_od_id 
                , COALESCE(A.SUB_PT_OD_ID,' ') AS sub_pt_od_id 
                , COALESCE(A.DEMAND_ID,' ') AS demand_id 
                , COALESCE(A.LG_PART_NO,' ') AS lg_part_no
@@ -388,7 +390,8 @@
                , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
                , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
                , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
-               , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
+               , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced 
+               , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result                                                                         
            FROM RFID_IF_SUBPART_SENDLIST_ALL A
            WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
           ]]>  
