@@ -148,9 +148,9 @@
        (
          #{ptOdId}
         , #{subPtOdId}
-        , 'V+'              /*수불유형  정상입고  */
-        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+        , 'V+'             
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
         , 'Y'
         , 'Y'
         , NULL
@@ -158,14 +158,14 @@
         , NULL
         , NULL
         , 'Y'
-        ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		,COALESCE(#{frstRegisterId},'SYSTEM')				
-		,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		,COALESCE(#{lastUpdusrId},'SYSTEM')
+        ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		,'SYSTEM'				
+		,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		,'SYSTEM'
         )       
       </insert>
          
-      <insert id="insertRridMOutLine" parameterType="cmap" >\
+      <insert id="insertRridMOutLine" parameterType="cmap" >
        <selectKey resultType="string" keyProperty="mOutLineId" order="BEFORE">
         SELECT get_seq('mOutline')     
       </selectKey>
@@ -204,16 +204,16 @@
            , 'Y'
            , 'N'
            , 'N'
-           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
            , '0'
-           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
            , '0'
            , 'Y'
-           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-           ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		   ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		   ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		   ,COALESCE(#{lastUpdusrId},'SYSTEM')
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		   ,'SYSTEM'				
+		   , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		   ,'SYSTEM'
          )     
       </insert>
 

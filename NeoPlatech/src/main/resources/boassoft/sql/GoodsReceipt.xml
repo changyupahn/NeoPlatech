@@ -242,12 +242,13 @@
     </update>
     
     <update id="updateQtyInvoiced" parameterType="cmap" >
-        UPDATE 	RFID_IF_SUBPART_WOSENDLIST_ALL
+        UPDATE 	RFID_IF_SUBPART_SENDLIST_ALL
         SET
 				QTY_ON_HAND = #{qtyOnHand}
 				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
 				,QTYINVOICED = #{qtyinvoiced}
-        WHERE 	OD_ID = #{odId}				
+        WHERE 	PT_OD_ID = #{ptOdId}
+        AND SUB_PT_OD_ID = #{subPtOdId}				
     </update>
           
     <insert id="insertRfidCInOrder" parameterType="cmap" >
@@ -282,23 +283,23 @@
           , NULL
           , 'Y'
           , 'Y'
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
           , 1
           , 1
           , #{preQtyOnHand}
           , NULL
           , 'Y'
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
           , '0'
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
           , '0'
           , 'Y'
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-          ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{lastUpdusrId},'SYSTEM')
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+          ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'				
+		  ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'
         )
      </insert>   
             
@@ -349,15 +350,15 @@
           , NULL
           , 'Y'
           , NULL
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
           , '0'
-          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
+          , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
           , '0'
           , 'Y'
-          ,COALESCE(#{frstRegistPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{frstRegisterId},'SYSTEM')				
-		  ,COALESCE(#{lastUpdtPnttm},DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s'))
-		  ,COALESCE(#{lastUpdusrId},'SYSTEM')
+          ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'				
+		  ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		  ,'SYSTEM'
         ) 
        </insert> 
             
