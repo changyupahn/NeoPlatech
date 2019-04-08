@@ -1033,6 +1033,7 @@ public class TabletController {
 		String go_with = "";
 		String vendor = "";
 		String sub_sum_qty = "";
+		String bom_qty = ""; 
 		String sub_unit = "";
 		String qtyinvoiced = "";
 		String od_id = "";
@@ -1059,7 +1060,8 @@ public class TabletController {
 						  sub_sum_qty = gmap.getString("subSumQty");
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
-						  od_id = gmap.getString("odId");
+						  bom_qty = gmap.getString("bom_qty");
+						  od_id = gmap.getString("odId");						  
 						  result = gmap.getString("result");
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
@@ -1067,6 +1069,7 @@ public class TabletController {
 						  System.out.println(" sub_sum_qty 444 " + " : " + sub_sum_qty);
 						  System.out.println(" sub_unit 444 " + " : " + sub_unit);
 						  System.out.println(" qtyinvoiced 444 " + " : " + qtyinvoiced);
+						  System.out.println(" bom_qty 444 " + " : " + bom_qty);
 						  System.out.println(" result 444 " + " : " + result);  
 						  
 						  System.out.println("000 maxCnt " + " : " + maxCnt);
@@ -1121,7 +1124,7 @@ public class TabletController {
 	    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
 	    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
 	    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
-	    					+ "<qtyinvoiced><![CDATA["+qtyinvoiced+"]]></qtyinvoiced>"
+	    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
 	    					+ "<result><![CDATA["+result+"]]></result>"
 	    					+ "</data>";  	
 				System.out.println(" xmlString 555 " + " : " + xmlString);
@@ -1220,6 +1223,7 @@ public class TabletController {
 		String sub_sum_qty = "";
 		String sub_unit = "";
 		String qtyinvoiced = "";
+		String bom_qty = "";
 		String pt_od_id = cmap.getString("ptOdId", "");
         String order_type = cmap.getString("orderType", "");
         String receiptCnt = cmap.getString("receiptCnt","0");
@@ -1249,6 +1253,7 @@ public class TabletController {
 						  sub_sum_qty = gmap.getString("subSumQty");
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
+						  bom_qty = gmap.getString("bomQty");
 						  result = gmap.getString("result");
 						  gmap.put("orderType",order_type);
 						  System.out.println(" part_number 444 " + " : " + part_number);
@@ -1257,6 +1262,7 @@ public class TabletController {
 						  System.out.println(" sub_sum_qty 444 " + " : " + sub_sum_qty);
 						  System.out.println(" sub_unit 444 " + " : " + sub_unit);
 						  System.out.println(" qtyinvoiced 444 " + " : " + qtyinvoiced);
+						  System.out.println(" bom_qty 444 " + " : " + bom_qty);
 						  System.out.println(" result 444 " + " : " + result);  
 						  
 						  System.out.println("000 maxCnt " + " : " + maxCnt);
@@ -1276,7 +1282,7 @@ public class TabletController {
 		    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
 		    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
 		    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
-		    					+ "<qtyinvoiced><![CDATA["+qtyinvoiced+"]]></qtyinvoiced>"
+		    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
 		    					+ "<result><![CDATA["+result+"]]></result>"
 		    					+ "</data>";  	
 					System.out.println(" xmlString 555 " + " : " + xmlString);
