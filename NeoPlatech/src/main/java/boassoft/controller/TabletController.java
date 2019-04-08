@@ -1,6 +1,7 @@
 package boassoft.controller;
 
 import java.io.File;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import javax.annotation.Resource;
@@ -970,12 +971,13 @@ public class TabletController {
 
 		cmap.put("deviceno", cmap.getString("deviceno", ""));
 		cmap.put("neoOdDay", cmap.getString("neo_od_day", ""));
-		cmap.put("finalVendor", URLEncoder.encode(cmap.getString("final_vendor", ""), "UTF-8"));		
+		cmap.put("finalVendor", URLDecoder.decode(cmap.getString("final_vendor", ""), "UTF-8"));						
 		
-
 		System.out.println("deviceno  " + " : " + cmap.getString("deviceno", ""));
 		System.out.println("neoOdDay  " + " : " + cmap.getString("neoOdDay", ""));
 		System.out.println("finalVendor  " + " : " + cmap.getString("finalVendor", ""));
+	
+	
 		
 		GoodsXmlList goodsXmlList = new GoodsXmlList();
 		String xmlString = "";
