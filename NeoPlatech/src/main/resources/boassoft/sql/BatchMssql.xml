@@ -354,5 +354,18 @@
      <insert id="insertPackingWoSendListAllCngInputQty" parameterType="cmap">
       CALL MWHS_Packing_WoSendList_cng_InputQty(#{qty},#{odId})
      </insert>
+      
+     
+     <insert id="insertAssayOrderQty" parameterType="cmap">
+      CALL Assay_Input_Order_Data(#{PartNo, mode=IN, jdbcType=NVARCHAR, javaType=java.lang.String}
+                                  ,#{Gowith, mode=IN, jdbcType=NVARCHAR, java=java.lang.String}
+                                  ,#{PtodID, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}
+                                  ,#{OrderType, mode=IN, jdbcType=NVARCHAR, javaType=java.lang.String}
+                                  ,#{Qty, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}
+                                  ,#{remark, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}
+                                  ,#{Qty, mode=IN, jdbcType=NVARCHAR, javaType=java.lang.String}
+                                  ,#{Atrribute01, mode=IN, jdbcType=NVARCHAR, javaType=java.lang.String}
+                                  )                                
+     </insert>
     
 </mapper>
