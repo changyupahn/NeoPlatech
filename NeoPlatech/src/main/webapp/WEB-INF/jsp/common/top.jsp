@@ -147,6 +147,16 @@ function fnLogout() {
 				<% } %>
 			</ol>
 		</li>
+		<% } %>		
+		<% if (topGrantReadYnArr.indexOf("KP2200") > -1) { %>
+		<li class="">
+			<a href="javascript:;" onclick="fnTopMenu('/kp2100/kp2201.do')">부자재재고관리</a>
+			<ol>
+				<% if (topGrantReadYnArr.indexOf("KP2210") > -1) { %>
+				<li><a href="/kp2200/kp2210.do" style="color:#ffffff">부자재입고폼</a></li>
+				<% } %>		
+			</ol>
+		</li>
 		<% } %>	
 			<% if (topGrantReadYnArr.indexOf("KP1900") > -1) { %>
 		<li class="">
