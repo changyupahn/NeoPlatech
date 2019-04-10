@@ -399,9 +399,9 @@ public class KP2131PackingReceiptDtlController {
     	cmap.put("pageLimit", "0"); 
     	cmap.put("dataOrder", CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
     	cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-    	cmap.put("sRqstVendorCd", (cmap.getString("sRqstVendorCd", "")).substring(1));
-		cmap.put("sRqstItemCd", (cmap.getString("sRqstItemCd", "")).substring(1));
-		cmap.put("sRqstPNoCd", (cmap.getString("sRqstPNoCd", "")).substring(1));
+    	cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd", ""));
+		cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd", ""));
+		cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ""));
     	
     	//그리드 세션 체크 및 메뉴 권한 설정
     	CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);    	
