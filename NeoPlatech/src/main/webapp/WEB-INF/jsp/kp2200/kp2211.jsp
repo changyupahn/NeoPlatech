@@ -1,0 +1,283 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/common/doctype.jsp" %>    
+<%@ include file="/WEB-INF/jsp/common/default.jsp" %> 
+<%
+String pageTitle = "부자재재고입고관리";
+String curAction = "/kp2200/kp2211.do";
+String curGridAction = "/kp2200/kp2211Ajax.do";
+String curSearchAction = "/kp2200/kp2211Search.do";
+String xlsDnAction = "/kp2200/kp2211Excel.do";
+String detailAction = "/kp2200/kp2211.do";
+CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
+
+int colbasewid = 320; //검색 폼 동적 사이즈 구성을 위한 넓이 값
+%>  
+<html>
+<head>
+<%@ include file="/WEB-INF/jsp/common/head.jsp" %>
+<%@ include file="/WEB-INF/jsp/common/jqCalendar.jsp" %>
+<%@ include file="/WEB-INF/jsp/common/jqGrid.jsp" %>
+<script type="text/javascript">
+
+var widthHip = 5;
+var heightHip = 300;
+
+$(window).resize(function(){
+	fnGridResize()
+});
+
+function fnGridResize() {
+	$("#listInfo01").setGridWidth($(window).width() - widthHip);
+	$("#listInfo01").setGridHeight($(window).height() - $('#SearchBox').height() - heightHip);
+}
+
+var colNames01 = ['rowNum'
+                  , 'LG주문번호'                                
+                  , '모델명'                   
+                  , 'LG일정'
+                  , '선행일정'
+                  , 'NEO일정'
+                  , '업체명'
+                  , '실제주문품번'
+                  , '부품명칭' 
+                  , '발주진행일자'   
+                  , '확정일자'  
+                  , '제품번호'
+                  , '제품명'                               
+                  , '단위'
+                  , '일련번호'
+                  , '사급여부'                                                                                                                      
+                  , '공급방향'               
+                  , '담당자'
+                  , '생산LINE'
+                  , '소요수량'
+                  , '단위소요수량'
+                  , '주문수량'
+                  , '재고대기량'   
+                  , '총소요량'                 
+                  , '현재고량' 
+                  , '현재입고량'
+                  ];
+                  var colModel01 = [
+                  {name:'rowNum', index:'rowNum', width:'0px', hidden:true}
+                  ,{name:'demandId', index:'demandId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                                
+                  ,{name:'tool', index:'tool', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                 
+                  ,{name:'lgeDate', index:'lgeDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'gapDay', index:'gapDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER' , hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'neoDate', index:'neoDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                  ,{name:'vendor', index:'vendor', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
+                  ,{name:'subPartNo', index:'subPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
+                  ,{name:'subPartName', index:'subPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
+                  ,{name:'inDate', index:'inDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true} 
+                  ,{name:'chkDay', index:'chkDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}  
+                  ,{name:'mPartNo', index:'mPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'lgmPartName', index:'lgmPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                
+                  ,{name:'unit', index:'unit', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'odId', index:'odId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
+                  ,{name:'osp', index:'osp', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                                                                                                                       
+                  ,{name:'outPlace', index:'outPlace', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}                  
+                  ,{name:'myCom', index:'myCom', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}
+                  ,{name:'lgLine', index:'lgLine', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}
+                  ,{name:'sumQty', index:'sumQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'bomQty', index:'bomQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'planQty', index:'planQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'preQtyOnHand', index:'preQtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'sumQtyCng', index:'sumQtyCng', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'qtyOnHand', index:'qtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}               
+                  ,{name:'qtyinvoiced', index:'qtyinvoiced', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}              
+                  ];
+                  
+				  
+var groupHeaders01 = [];  
+
+function fnGridList() {
+	$("#listInfo01").jqGrid("GridUnload");
+	
+	$("#listInfo01").jqGrid({
+		datatype : 'json',
+		url : "<%=curGridAction%>",
+		postData : $('#sForm').serializeObject(),
+		mtype:'POST',
+		jsonReader : {
+			root    : "resultList",
+			repeatitems : false
+		},
+		colNames : colNames01,
+		colModel : colModel01,
+		rownumbers: false,
+		rowNum:-1,
+		gridview:true,
+		viewrecords: true,
+//		shrinkToFit: false,
+		cellEdit : false,
+// 		sortname: 'repoDt',
+// 		sortorder: 'desc',
+		sortable : true,
+		width: $(window).width() - widthHip,
+		height: $(window).height() - heightHip,
+		multiselect: false,
+		loadError: function(xhr,status,error){
+			alert(status+'\n'+error);
+		},
+		onSortCol : function(index, columnIndex, sortOrder) {
+ 			//alert(index + " : " + columnIndex + " : " + sortOrder);
+ 			$('#dataOrder').val(index);
+ 			$('#dataOrderArrow').val(sortOrder);
+ 			fnGridReload("1");
+		},
+		loadComplete : function(data) {
+			//paging 처리
+			pagingUtil.setHTML($('#pageIdx').val(), $('#pageSize').val(), data.totalRow, 'paginate');
+
+			//totalRow
+			$('#spanTotalRow').html(data.totalRow);
+
+			fnGridInvalidSession(data.totalRow);
+
+		},
+		gridComplete : function() {
+		}
+	});
+}
+
+function fnGridReload(pageIdx){
+	var frm = document.sForm;
+	if (pageIdx) {
+		frm.pageIdx.value = pageIdx;
+	}
+	
+	frm.sRqstVendorCd.value = $("select[name=sRqstVendorCd]").val();
+	frm.sRqstItemCd.value = $("select[name=sRqstItemCd]").val();
+	frm.sRqstPNoCd.value = $("select[name=sRqstPNoCd]").val();
+
+	$("#listInfo01").setGridParam({
+		postData: $('#sForm').serializeObject()
+	}).trigger("reloadGrid");
+}
+
+function fnSearch(){
+	//fnGridReload("1");
+	fnGridList();
+}
+
+function fnXlsDn(){
+	var frm = document.sForm;
+	frm.pageIdx.value = "1";
+	frm.action = "<%=xlsDnAction%>";
+	frm.target = "_self";
+	frm.submit();
+}
+
+function fnDetail(rowId) {
+	
+	var selRowId = "";
+	if (rowId) {
+		selRowId = rowId;
+	} else {
+		selRowId = $("#listInfo01").getGridParam('selrow');
+	}
+
+	if (selRowId) {
+		var obj = $("#listInfo01").jqGrid('getRowData', selRowId);
+
+		$('#layerPop').click();
+		$('#iframe').attr("src", "<%=detailAction%>?mOdId=" + obj.mOdId);
+		$('#layer_iframe').show();
+	} else {
+		alert("상세보기 할 내역을 선택해 주세요");
+		return;
+	}
+}
+
+$(document).ready(function(){
+	
+	fnGridList();
+	fnInitSearchForm();
+	fnInitLayerPopup();
+});
+
+function fnInitSearchForm() {
+	var hdWinWidth = $(window).width();
+	var colcnt = parseInt(hdWinWidth / <%=colbasewid%>);
+	$.ajax({
+		type : "POST",
+		url : "<%=curSearchAction%>",
+		data : {
+			colcnt : colcnt
+		},
+		success:function(data)
+		{
+			$('#SearchBox').html(data);
+		},
+		error:function(xhr, ajaxOptions, thrownError)
+		{
+		},
+		complete:function()
+		{
+			fnInitCalc();
+			fnGridResize();
+		}
+	});
+}
+
+</script>
+
+</head>
+<body>
+<%@ include file="/WEB-INF/jsp/common/top.jsp" %>
+
+	<h2 class="title_left"><%=pageTitle%></h2>
+
+	<form id="sForm" name="sForm" method="post" action="<%=curAction%>" onsubmit="return false">
+	<input type="hidden" id="pageIdx" name="pageIdx" value="<%=cmRequest.getString("pageIdx")%>" />
+	<input type="hidden" id="dataOrder" name="dataOrder" value="<%=cmRequest.getString("dataOrder")%>" />
+	<input type="hidden" id="dataOrderArrow" name="dataOrderArrow" value="<%=cmRequest.getString("dataOrderArrow", "asc")%>" />
+    <input type="hidden" id="sRqstVendorCd" name="sRqstVendorCd" value="<%=cmRequest.getString("sRqstVendorCd", "")%>" />
+	<input type="hidden" id="sRqstItemCd" name="sRqstItemCd" value="<%=cmRequest.getString("sRqstItemCd", "")%>" />
+	<input type="hidden" id="sRqstPNoCd" name="sRqstPNoCd" value="<%=cmRequest.getString("sRqstPNoCd", "")%>" />
+	<div id="divPopupLayer"></div>
+
+	<div id="SearchBox" class="SearchBox"></div>
+
+	<table style="width:100%">
+	<tr>
+	<td width="50%">
+		&nbsp;
+	</td>
+	<td width="50%" style="text-align: right;">
+		<span class="button"><input type="submit" value="<spring:message code="button.search"/>" onclick="fnSearch();"></span>
+		<span class="button"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
+		<span class="button"><input type="button" value="<spring:message code="button.download.excel"/>" onclick="fnXlsDn();"></span>
+		&nbsp;
+	</td>
+	</tr>
+	</table>
+
+	<p><spring:message code="count.total"/> : <span id="spanTotalRow"></span></p>
+
+	<table id="listInfo01" class="scroll"></table>
+
+	<table style="width:100%;border-collapse:collapse;border:0;">
+	<tr>
+	<td width="">
+		<div id="paginate" class="paginate"></div>
+	</td>
+	<td width="150px" class="r">
+		<select id="pageSize" name="pageSize" onchange="fnSearch()" style="border:1px solid gray;">
+		<option value="15" <%="15".equals(cmRequest.getString("pageSize","15"))?"selected":""%>><spring:message code="count.paging" arguments="15" /></option>
+		<option value="30" <%="30".equals(cmRequest.getString("pageSize"))?"selected":""%>><spring:message code="count.paging" arguments="30" /></option>
+		<option value="50" <%="50".equals(cmRequest.getString("pageSize"))?"selected":""%>><spring:message code="count.paging" arguments="50" /></option>
+		<option value="100" <%="100".equals(cmRequest.getString("pageSize"))?"selected":""%>><spring:message code="count.paging" arguments="100" /></option>
+		<option value="500" <%="500".equals(cmRequest.getString("pageSize"))?"selected":""%>><spring:message code="count.paging" arguments="500" /></option>
+		</select>
+	</td>
+	</tr>
+	</table>
+
+	</form>
+
+	<%@ include file="/WEB-INF/jsp/common/bottom.jsp" %>
+
+</body>
+</html>
