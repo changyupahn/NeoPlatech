@@ -19,8 +19,11 @@ public class SubsiDiaryReceiptServiceImpl extends EgovAbstractServiceImpl implem
 	@Override
 	public CommonList getSubsiDiaryReceiptList(CommonMap cmap) throws Exception {
 		// TODO Auto-generated method stub
+		
 		CommonList list = subsiDiaryReceiptMapper.getSubsiDiaryReceiptList(cmap);
+	
 		list.totalRow = subsiDiaryReceiptMapper.getSubsiDiaryReceiptListCnt(cmap);
+		
 		return list;
 	}
 
