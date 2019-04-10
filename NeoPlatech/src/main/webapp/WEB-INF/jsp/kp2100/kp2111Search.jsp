@@ -8,7 +8,6 @@ CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색�
 int idx = 0;
 int colmax = 0;
 int colcnt = cmRequest.getInt("colcnt");
-
 if (!ssAuthManager) {
 	cmRequest.put("sUserNo", cmRequest.getString("sUserNo", SessionUtil.getString("userNo")));
 	cmRequest.put("sUserName", cmRequest.getString("sUserName", SessionUtil.getString("userName")));
@@ -48,8 +47,6 @@ $(document).ready(function(){
 			});
 	
  });
-
-
 function fnItemCdChange(obj){
 	var value = "sRqstVendorCd=" + obj;
 	
@@ -88,7 +85,6 @@ function fnItemCdChange(obj){
 	});
 	
 }
-
 function fnPNoChange(obj){
 	
 	var value = "sRqstPNoCd=" + obj;
@@ -110,7 +106,6 @@ function fnPNoChange(obj){
 				$("select#sRqstPNoCd").append("<option value=''>선택</option>");														
 								
 				$.each(data.LIST, function(key,value){
-
 					$("select#sRqstPNoCd").append("<option value='" + value.code + "'>" + value.codeName+"</option>");					
 					
 				});
@@ -127,9 +122,6 @@ function fnPNoChange(obj){
 	});
 	
 }
-
-
-
 </script>
 <table class="search01">
 	<colgroup>
@@ -207,4 +199,4 @@ function fnPNoChange(obj){
 		</td>		    
 <% idx++; if (idx % colcnt > 0) { %><td colspan="<%=(colmax * 2) - ((idx % colcnt) * 2)%>">&nbsp;</td><% } %>		
 		</tr>
-	</table>		
+	</table>
