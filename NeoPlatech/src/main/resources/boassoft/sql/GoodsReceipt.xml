@@ -63,6 +63,24 @@
 		</if>  
      </sql>
      
+      <sql id="getSubsiDiaryReceiptWhere"> 
+        <if test="sRqstVendorCd != null and sRqstVendorCd != ''"> 			 
+             AND A.VENDOR LIKE concat('%',#{sRqstVendorCd},'%')
+        </if>
+        <if test="sRqstItemCd != null and sRqstItemCd != ''"> 	
+             AND A.SUB_PART_NAME LIKE concat('%',#{sRqstItemCd},'%')	          
+        </if>  
+        <if test="sRqstPNoCd != null and sRqstPNoCd != ''"> 	
+             AND A.SUB_PART_NO LIKE concat('%',#{sRqstPNoCd},'%')	          
+        </if>  
+        <if test="searchDtKeywordS != null and searchDtKeywordS != ''">
+             AND LEFT(A.NEO_DATE,10) <![CDATA[ >= ]]> #{searchDtKeywordS}
+        </if>
+        <if test="searchDtKeywordE != null and searchDtKeywordE != ''">
+             AND LEFT(A.NEO_DATE,10) <![CDATA[ <= ]]> #{searchDtKeywordE}
+        </if>
+    </sql>
+     
      <select id="getGoodsReceiptList" parameterType="cmap" resultType="cmap">
           <include refid="pagingHeader"/>
               SELECT A.OD_KEY
@@ -170,18 +188,12 @@
                  , LEFT(A.IN_DATE,10)  AS IN_DATE                 
                  , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
                  , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+                 , COALESCE(A.QTYINVOICED,0) AS QTYINVOICED
+                 , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result    
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1      
           ]]>                 
-          <if test="sRqstVendorCd != null and sRqstVendorCd != ''"> 			 
-             AND A.VENDOR LIKE concat('%',#{sRqstVendorCd},'%')
-          </if>
-          <if test="sRqstItemCd != null and sRqstItemCd != ''"> 	
-             AND A.SUB_PART_NAME LIKE concat('%',#{sRqstItemCd},'%')	          
-          </if>  
-          <if test="sRqstPNoCd != null and sRqstPNoCd != ''"> 	
-             AND A.SUB_PART_NO LIKE concat('%',#{sRqstPNoCd},'%')	          
-          </if>  
+            <include refid="getSubsiDiaryReceiptWhere" /> 
         GROUP BY A.VENDOR
 	    ORDER BY A.LGE_DATE
 	     <include refid="pagingFooter"/> 	   
@@ -194,8 +206,8 @@
                SELECT 
                   A.OD_ID
                  , A.DEMAND_ID
-                 , A.LGE_DATE
-                 , A.NEO_DATE
+                 , LEFT(A.LGE_DATE,10) AS LGE_DATE
+                 , LEFT(A.NEO_DATE,10) AS NEO_DATE
                  , A.GAP_DAY
                  , A.LG_LINE
                  , A.TOOL
@@ -215,19 +227,13 @@
                  , A.CHK_DAY
                  , A.IN_DATE 
                  , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
-                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND                
+                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND   
+                 , COALESCE(A.QTYINVOICED,0) AS QTYINVOICED
+                 , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS RESULT              
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1        
              ]]>            
-               <if test="sRqstVendorCd != null and sRqstVendorCd != ''"> 			 
-                 AND A.VENDOR LIKE concat('%',#{sRqstVendorCd},'%')
-               </if>
-               <if test="sRqstItemCd != null and sRqstItemCd != ''"> 	
-                 AND A.SUB_PART_NAME LIKE concat('%',#{sRqstItemCd},'%')	          
-                </if>  
-                 <if test="sRqstPNoCd != null and sRqstPNoCd != ''"> 	
-                 AND A.SUB_PART_NO LIKE concat('%',#{sRqstPNoCd},'%')	          
-                </if>  
+               <include refid="getSubsiDiaryReceiptWhere" /> 
               GROUP BY A.VENDOR
 	         ORDER BY A.LGE_DATE
           ) X	             
@@ -237,7 +243,8 @@
         UPDATE 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
         SET
 				QTY_ON_HAND = #{qtyOnHand}
-				,PRE_QTY_ON_HAND = #{preQtyOnHand}				
+				,PRE_QTY_ON_HAND = #{preQtyOnHand}
+				,QTYINVOICED = #{qtyinvoiced}				
         WHERE 	OD_ID = #{odId}				
     </update>
     
