@@ -78,7 +78,17 @@ public class KP2111GoodsReceiptDtlController {
 		cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd", ""));
 		cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd", ""));
 		cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ""));
+		cmap.put("searchDtKeyword", cmap.getString("searchDtKeyword", ""));
 
+		System.out.println(" dataOrder " + "  : "  +cmap.getString("dataOrder", "") );
+		System.out.println(" dataOrderArrow " + "  : "  +cmap.getString("dataOrderArrow", "") );
+		System.out.println(" pageLimit " + "  : "  +cmap.getString("pageLimit", "") );
+		System.out.println(" sRqstVendorCd " + "  : "  +cmap.getString("sRqstVendorCd", "") );
+		System.out.println(" sRqstItemCd " + "  : "  +cmap.getString("sRqstItemCd", "") );
+		System.out.println(" sRqstPNoCd " + "  : "  +cmap.getString("sRqstPNoCd", "") );
+		System.out.println(" searchDtKeyword " + "  : "  +cmap.getString("searchDtKeyword", "") );
+		
+		
 		// 그리드 세션 체크 및 메뉴 권한 설정
 		CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
 
@@ -443,9 +453,9 @@ public class KP2111GoodsReceiptDtlController {
 		cmap.put("dataOrder",
 				CamelUtil.deconvert2CamelCase(cmap.getString("dataOrder")));
 		cmap.put("dataOrderArrow", cmap.getString("dataOrderArrow"));
-		cmap.put("sRqstVendorCd", (cmap.getString("sRqstVendorCd", "")).substring(1));
-		cmap.put("sRqstItemCd", (cmap.getString("sRqstItemCd", "")).substring(1));
-		cmap.put("sRqstPNoCd", (cmap.getString("sRqstPNoCd", "")).substring(1));
+		cmap.put("sRqstVendorCd", cmap.getString("sRqstVendorCd", ""));
+		cmap.put("sRqstItemCd", cmap.getString("sRqstItemCd", ""));
+		cmap.put("sRqstPNoCd", cmap.getString("sRqstPNoCd", ""));
 
 		// 그리드 세션 체크 및 메뉴 권한 설정
 		CommonMap gridSessionChk = userService.gridSessionChk(cmap, request);
