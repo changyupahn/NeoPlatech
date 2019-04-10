@@ -200,16 +200,11 @@
            , 'Y'
            , 1
            , NULL
-           , #{qtyInvoiced}
-           , 'Y'
-           , 'N'
-           , 'N'
-           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
-           , '0'
-           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
-           , '0'
-           , 'Y'
-           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+           , NULL
+           , NULL
+           , NULL
+           , NULL
+           , 'Y'          
            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
 		   ,'SYSTEM'				
 		   , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
