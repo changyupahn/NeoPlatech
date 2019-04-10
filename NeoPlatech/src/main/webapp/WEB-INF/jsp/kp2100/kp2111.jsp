@@ -12,7 +12,6 @@ String detailAction = "/kp2100/kp2111.do";
 String stockAction = "/kp2100/kp2111Stock.do";
 String recallAction = "/kp2100/kp2111Recall.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
-
 int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
 %>  
 <html>
@@ -21,19 +20,15 @@ int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
 <%@ include file="/WEB-INF/jsp/common/jqCalendar.jsp" %>
 <%@ include file="/WEB-INF/jsp/common/jqGrid.jsp" %>
 <script type="text/javascript">
-
 var widthHip = 5;
 var heightHip = 300;
-
 $(window).resize(function(){
 	fnGridResize()
 });
-
 function fnGridResize() {
 	$("#listInfo01").setGridWidth($(window).width() - widthHip);
 	$("#listInfo01").setGridHeight($(window).height() - $('#SearchBox').height() - heightHip);
 }
-
 var colNames01 = ['rowNum'
                   , 'LG주문번호'
                   , '실제주문품번'
@@ -59,8 +54,8 @@ var colNames01 = ['rowNum'
                   , '현재고량'
                   , '주문수량'
                   , '재고대기량'                 
+                  , '현재입고량'
                   ];
-
                   var colModel01 = [
                   {name:'rowNum', index:'rowNum', width:'0px', hidden:true}
                   ,{name:'demandId', index:'demandId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
@@ -87,10 +82,10 @@ var colNames01 = ['rowNum'
                   ,{name:'qtyOnHand', index:'qtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'planQty', index:'planQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'preQtyOnHand', index:'preQtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}                 
+                  ,{name:'qtyinvoiced', index:'qtyinvoiced', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ];
                   
 var groupHeaders01 = [];
-
 function fnGridList() {
 	$("#listInfo01").jqGrid("GridUnload");
 	
@@ -132,19 +127,15 @@ function fnGridList() {
 		loadComplete : function(data) {
 			//paging 처리
 			pagingUtil.setHTML($('#pageIdx').val(), $('#pageSize').val(), data.totalRow, 'paginate');
-
 			//totalRow
 			$('#spanTotalRow').html(data.totalRow);
-
 			fnGridInvalidSession(data.totalRow);
-
 		},
 		gridComplete : function() {
 			fnGridResize();
 		}
 	});
 }
-
 function fnGridReload(pageIdx){
 	var frm = document.sForm;
 	
@@ -162,13 +153,11 @@ function fnGridReload(pageIdx){
 	}).trigger("reloadGrid");
 	
 }
-
 function fnSearch(){
 	 	
 	//fnGridReload("1");	
 	fnGridList();
 }
-
 function fnXlsDn(){
 	var frm = document.sForm;
 	frm.pageIdx.value = "1";	
@@ -179,19 +168,15 @@ function fnXlsDn(){
 	frm.target = "_self";
 	frm.submit();
 }
-
 function fnDetail(rowId) {
-
 	var selRowId = "";
 	if (rowId) {
 		selRowId = rowId;
 	} else {
 		selRowId = $("#listInfo01").getGridParam('selrow');
 	}
-
 	if (selRowId) {
 		var obj = $("#listInfo01").jqGrid('getRowData', selRowId);
-
 		$('#layerPop').click();
 		$('#iframe').attr("src", "<%=detailAction%>?goWith=" + obj.goWith);
 		$('#layer_iframe').show();
@@ -201,14 +186,11 @@ function fnDetail(rowId) {
 	}
 	
 }
-
 $(document).ready(function(){
-
 	fnGridList();
 	fnInitSearchForm();
 	fnInitLayerPopup();
 });
-
 function fnInitSearchForm() {
 	var hdWinWidth = $(window).width();
 	var colcnt = parseInt(hdWinWidth / <%=colbasewid%>);
@@ -232,11 +214,9 @@ function fnInitSearchForm() {
 		}
 	});
 }
-
 function fnStock(){
 	var ids = $('#listInfo01').jqGrid('getGridParam', 'selarrrow');
 	var saveJsonArray = [];
-
 	if (ids.length == 0) {
 		alert("입고 처리할 행을 선택해주세요.");
 		return;
@@ -292,16 +272,13 @@ function fnStock(){
 		}
 	}
 }
-
 function fnRecall(){
 	var ids = $('#listInfo01').jqGrid('getGridParam', 'selarrrow');
 	var saveJsonArray = [];
-
 	if (ids.length == 0) {
 		alert("반품 처리할 행을 선택해주세요.");
 		return;
 	}
-
 	if (ids.length > 0) {
 		for (var i=0; i<ids.length; i++) {
 			var obj = $("#listInfo01").jqGrid('getRowData', ids[i]);
@@ -311,10 +288,8 @@ function fnRecall(){
 			};
 			saveJsonArray.push(saveJsonObj);
 		}
-
 		if (confirm("반품 처리 하시겠습니까?")) {
 			fnLoadingS2();
-
 			$.ajax({
 				type : "POST",
 				url : "<%=recallAction%>",
