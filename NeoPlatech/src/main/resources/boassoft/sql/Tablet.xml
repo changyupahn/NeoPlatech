@@ -148,9 +148,9 @@
            , COALESCE(LEFT(A.NEO_OD_DAY,10),' ') AS neo_od_day
            , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
            , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
-           , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
-           , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
-           , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand
+           , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+           , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
            , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result   
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A               
               WHERE 1 = 1 
@@ -185,9 +185,9 @@
            , COALESCE(LEFT(A.NEO_OD_DAY,10),' ') AS neo_od_day
            , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
            , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
-           , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
-           , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
-           , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand
+           , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+           , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A                  
               WHERE 1 = 1 
              ]]>            
@@ -221,9 +221,9 @@
            , COALESCE(LEFT(A.NEO_OD_DAY,10),' ') AS neo_od_day
            , COALESCE(A.NEO_OD_QTY,0) AS neo_od_qty
            , COALESCE(A.FINAL_VENDOR,' ') AS final_vendor
-           , COALESCE(A.PRE_QTY_ON_HAND,' ') AS pre_qty_on_hand
-           , COALESCE(A.QTY_ON_HAND,' ') AS qty_on_hand
-           , COALESCE(A.QTYINVOICED,' ') AS qtyinvoiced
+           , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand
+           , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
+           , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
            , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result                  
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A  
                WHERE 1 = 1 
