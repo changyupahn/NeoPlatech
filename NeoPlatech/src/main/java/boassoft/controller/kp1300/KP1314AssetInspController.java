@@ -21,6 +21,7 @@ import boassoft.util.CommonList;
 import boassoft.util.CommonMap;
 import egovframework.com.cmm.EgovMessageSource;
 
+@SuppressWarnings("unused")
 @Controller
 public class KP1314AssetInspController {
 
