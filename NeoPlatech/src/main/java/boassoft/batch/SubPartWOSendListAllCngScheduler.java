@@ -48,8 +48,10 @@ public class SubPartWOSendListAllCngScheduler {
 	   System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 	   String batchId = "batch_014";	
-	   String batchCycle = "* /5 * * * *"; //매  5분마다
+	   //String batchCycle = "* 0/1 * * * ?"; //매  5분마다
+	   String batchCycle = "0 0/1 * * * ?"; //매  5분마다
 	   
+	 
 	   HashMap<String, Object> jobMap = new HashMap<String, Object>();
 	   
 	   jobMap.put("batchMssqlService", batchMssqlService);
