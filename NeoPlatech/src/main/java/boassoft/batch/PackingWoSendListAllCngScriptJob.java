@@ -68,9 +68,45 @@ public class PackingWoSendListAllCngScriptJob  implements Job {
 				for (int i = 0; i < clist.size(); i++) {
 					
 					CommonMap gmap = clist.getMap(i);
+					
+					System.out.println(" OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("odId"));
+					System.out.println(" OD_QTY_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("odQtyId"));
+					System.out.println(" PKG_PO_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("pkgPoNo"));
+					System.out.println(" DEMAND_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("demandId"));
+					System.out.println(" TOOL_NAME " + " : " + i + " + 번째 " + " : " + gmap.getString("toolName"));
+					System.out.println(" LG_PART_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("lgPartNo"));
+					System.out.println(" LG_OD_QTY " + " : " + i + " + 번째 " + " : " + gmap.getString("lgOdQty"));
+					System.out.println(" LINE " + " : " + i + " + 번째 " + " : " + gmap.getString("line"));
+					System.out.println(" FINAL_VENDOR " + " : " + i + " + 번째 " + " : " + gmap.getString("finalVendor"));
+					
+					System.out.println(" CLASS " + " : " + i + " + 번째 " + " : " + gmap.getString("class"));
+					System.out.println(" PART_NUMBER " + " : " + i + " + 번째 " + " : " + gmap.getString("partNumber"));
+					System.out.println(" DESC " + " : " + i + " + 번째 " + " : " + gmap.getString("desc"));
+					System.out.println(" RESULT_QTY " + " : " + i + " + 번째 " + " : " + gmap.getString("resultQty"));
+					
+					System.out.println(" NEO_OD_TIME " + " : " + i + " + 번째 " + " : " + gmap.getString("neoOdTime"));
+					System.out.println(" NEO_OD_DAY " + " : " + i + " + 번째 " + " : " + gmap.getString("neoOdDay"));
+					System.out.println(" NEO_OD_QTY " + " : " + i + " + 번째 " + " : " + gmap.getString("neoOdQty"));
+					System.out.println(" QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyOnHand"));
+					
+					System.out.println(" PRE_QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getString("preQtyOnHand"));
+					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyinvoiced"));
+				
+					if(("".equals(gmap.getString("qtyOnHand")) ||("0".equals(gmap.getString("qtyOnHand"))))){
+						int qtyOnHand = gmap.getInt("preQtyOnHand") - gmap.getInt("qtyinvoiced");
+						System.out.println(" 1111 qtyOnHand" + qtyOnHand);
+						gmap.put("qtyOnHand",qtyOnHand);
+					}
+					batchMysqlInterfaceService.updatePackingWoSendListQtyOnHand(gmap);
+					System.out.println(" gmap insertPackingWoSendListAllCngMStock " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertPackingWoSendListAllCngMStock(gmap);
+					System.out.println(" gmap insertPackingWoSendListAllCngMStock " + " : " + i + " + 번째 " + " : " + " END " );
+					System.out.println(" gmap insertPackingWoSendListAllCngMTransaction " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertPackingWoSendListAllCngMTransaction(gmap);
+					System.out.println(" gmap insertPackingWoSendListAllCngMTransaction " + " : " + i + " + 번째 " + " : " + " END " );
+					System.out.println(" gmap insertPackingWoSendListAllCngInputQty " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMssqlService.insertPackingWoSendListAllCngInputQty(gmap);
+					System.out.println(" gmap insertPackingWoSendListAllCngInputQty " + " : " + i + " + 번째 " + " : " + " END " );
 				}
 			}	
 		} catch (Exception e) {

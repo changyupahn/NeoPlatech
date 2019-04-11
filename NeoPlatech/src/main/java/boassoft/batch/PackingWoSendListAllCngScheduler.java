@@ -47,7 +47,8 @@ public class PackingWoSendListAllCngScheduler {
         System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 		String batchId = "batch_015";	
-		String batchCycle = "* /5 * * * *"; //매  5분마다 
+		//String batchCycle = "* /5 * * * ?"; //매  5분마다 
+		String batchCycle = "0 0/1 * * * ?"; //매  5분마다
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		   
