@@ -655,6 +655,7 @@
                  , A.IN_DATE 
                  , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
                  , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
+                 , COALESCE(A.QTYINVOICED,0) AS QTYINVOICED
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1 
                 AND A.PRE_QTY_ON_HAND IS NOT NULL
@@ -674,6 +675,7 @@
              , C_UOM_ID
              , QTYONHAND
              , PREQTYONHAND
+             , QTYINVOICED
              , DATELASTINVENTORY
              , USE_YN
              , FRST_REGIST_PNTTM
@@ -683,18 +685,19 @@
           )
           VALUES
           (
-            #{mStockId}
-            , #{mProductId}
-            , #{mWareHouseId}
-            , #{cUomId}
-            , #{qtyonhand}
-            , #{preqtyOnHand}
-            , #{dateLastInventory}
-            , #{useYn}
-            , #{frstRegistPnttm}
-            , #{frstRegisterId}
-            , #{lastUpdtPnttm}
-            , #{lastUpdusrId}
+          #{mStockId}
+            , #{odId}
+            , 1
+            , 1
+            , #{qtyOnHand}
+            , #{preQtyOnHand}
+            , #{qtyinvoiced}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , 'Y'
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'				
+	        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'
           )          
       </insert>
     
@@ -702,7 +705,7 @@
        <selectKey resultType="string" keyProperty="mTransactionId" order="BEFORE">
            SELECT get_seq('mTransaction')     
         </selectKey>
-         INSERT INTO RFID_M_TRNASACTION
+         INSERT INTO RFID_M_TRANSACTION
           (
             M_TRANSACTION_ID
             , MOVEMETTYPE
@@ -723,22 +726,22 @@
           )
           VALUES
           (
-            #{mTransactionId}
-            , #{moveMentType}
-            , #{mLocatorId}
-            , #{mProductId}
-            , #{movementdate}
-            , #{movementqty}
-            , #{mInlineId}
-            , #{mOutlineId}
-            , #{mMovementlineId}
-            , #{mInventorylineId}
-            , #{cUomId}
-            , #{useYn}
-            , #{frstRegistPnttm}
-            , #{frstRegisterId}
-            , #{lastUpdtPnttm}
-            , #{lastUpdusrId}
+           #{mTransactionId}
+            , 'V+'
+            , 1
+            , #{odId}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , #{qtyOnHand}
+            , NULL
+            , #{odId}
+            , NULL
+            , NULL
+            , NULL
+            , 'Y'
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'				
+	        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'
           )          
       </insert>
            
@@ -764,6 +767,12 @@
             , A.SUB_SUM_QTY
             , A.DEMAND_FLOOR
             , A.OSP			
+            , A.READDATE
+            , A.READSTATE
+            , A.READ_USER_NO
+            , A.QTY_ON_HAND
+            , A.PRE_QTY_ON_HAND
+            , A.QTYINVOICED
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE 1 = 1	
        AND A.PRE_QTY_ON_HAND IS NOT NULL		
@@ -783,6 +792,7 @@
              , C_UOM_ID
              , QTYONHAND
              , PREQTYONHAND
+             , QTYINVOICED
              , DATELASTINVENTORY
              , USE_YN
              , FRST_REGIST_PNTTM
@@ -792,18 +802,19 @@
           )
           VALUES
           (
-            #{mStockId}
-            , #{mProductId}
-            , #{mWareHouseId}
-            , #{cUomId}
-            , #{qtyonhand}
-            , #{preqtyOnHand}
-            , #{dateLastInventory}
-            , #{useYn}
-            , #{frstRegistPnttm}
-            , #{frstRegisterId}
-            , #{lastUpdtPnttm}
-            , #{lastUpdusrId}
+           #{mStockId}
+            , #{ptOdId}
+            , 1
+            , 1
+            , #{qtyOnHand}
+            , #{preQtyOnHand}
+            , #{qtyinvoiced}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , 'Y'
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'				
+	        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'
           )          
       </insert>
     
@@ -811,7 +822,7 @@
        <selectKey resultType="string" keyProperty="mTransactionId" order="BEFORE">
            SELECT get_seq('mTransaction')     
         </selectKey>
-         INSERT INTO RFID_M_TRNASACTION
+         INSERT INTO RFID_M_TRANSACTION
           (
             M_TRANSACTION_ID
             , MOVEMETTYPE
@@ -832,22 +843,22 @@
           )
           VALUES
           (
-            #{mTransactionId}
-            , #{moveMentType}
-            , #{mLocatorId}
-            , #{mProductId}
-            , #{movementdate}
-            , #{movementqty}
-            , #{mInlineId}
-            , #{mOutlineId}
-            , #{mMovementlineId}
-            , #{mInventorylineId}
-            , #{cUomId}
-            , #{useYn}
-            , #{frstRegistPnttm}
-            , #{frstRegisterId}
-            , #{lastUpdtPnttm}
-            , #{lastUpdusrId}
+          #{mTransactionId}
+            , 'C-'
+            , 1
+            , #{ptOdId}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , #{qtyOnHand}
+            , NULL
+            , #{subPtOdId}
+            , NULL
+            , NULL
+            , NULL
+            , 'Y'
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'				
+	        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'
           )          
       </insert>
       
@@ -874,7 +885,6 @@
         FROM RFID_IF_PACKING_WOSENDLIST_ODONLY A  
               WHERE 1 = 1        
         AND A.PRE_QTY_ON_HAND IS NOT NULL               
-        GROUP BY A.FINAL_VENDOR
 	    ORDER BY A.NEO_OD_DAY     
       ]]>      
      </select>
@@ -891,6 +901,7 @@
              , C_UOM_ID
              , QTYONHAND
              , PREQTYONHAND
+             , QTYINVOICED
              , DATELASTINVENTORY
              , USE_YN
              , FRST_REGIST_PNTTM
@@ -901,17 +912,18 @@
           VALUES
           (
             #{mStockId}
-            , #{mProductId}
-            , #{mWareHouseId}
-            , #{cUomId}
-            , #{qtyonhand}
-            , #{preqtyOnHand}
-            , #{dateLastInventory}
-            , #{useYn}
-            , #{frstRegistPnttm}
-            , #{frstRegisterId}
-            , #{lastUpdtPnttm}
-            , #{lastUpdusrId}
+            , #{odId}
+            , 1
+            , 1
+            , #{qtyOnHand}
+            , #{preQtyOnHand}
+            , #{qtyinvoiced}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , 'Y'
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'				
+	        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'
           )          
       </insert>
     
@@ -919,7 +931,7 @@
        <selectKey resultType="string" keyProperty="mTransactionId" order="BEFORE">
            SELECT get_seq('mTransaction')     
         </selectKey>
-         INSERT INTO RFID_M_TRNASACTION
+         INSERT INTO RFID_M_TRANSACTION
           (
             M_TRANSACTION_ID
             , MOVEMETTYPE
@@ -941,22 +953,45 @@
           VALUES
           (
             #{mTransactionId}
-            , #{moveMentType}
-            , #{mLocatorId}
-            , #{mProductId}
-            , #{movementdate}
-            , #{movementqty}
-            , #{mInlineId}
-            , #{mOutlineId}
-            , #{mMovementlineId}
-            , #{mInventorylineId}
-            , #{cUomId}
-            , #{useYn}
-            , #{frstRegistPnttm}
-            , #{frstRegisterId}
-            , #{lastUpdtPnttm}
-            , #{lastUpdusrId}
+            , 'V+'
+            , 1
+            , #{odId}
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+            , #{qtyOnHand}
+            , NULL
+            , #{odQtyId}
+            , NULL
+            , NULL
+            , NULL
+            , 'Y'
+            , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'				
+	        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+	        , 'SYSTEM'
           )          
       </insert>
+      
+      
+      <update id="updateSubPartQtyOnHand" parameterType="cmap" >
+        UPDATE 	RFID_IF_SUBPART_SENDLIST_ALL
+        SET
+				QTY_ON_HAND = #{preQtyOnHand}-#{qtyinvoiced}
+        WHERE 	PT_OD_ID = #{ptOdId}
+        AND SUB_PT_OD_ID = #{subPtOdId}				
+    </update>
+    
+     <update id="updateSubPartOdOnlyQtyOnHand" parameterType="cmap" >
+        UPDATE 	RFID_IF_SUBPART_WOSENDLIST_ODONLY
+        SET
+				QTY_ON_HAND = #{preQtyOnHand}-#{qtyinvoiced}				
+        WHERE 	OD_ID = #{odId}				
+    </update>
+    
+    <update id="updatePackingWoSendListQtyOnHand" parameterType="cmap" >
+        UPDATE 	rfid_if_packing_wosendlist_odonly
+        SET
+				QTY_ON_HAND = #{preQtyOnHand}-#{qtyinvoiced}				
+        WHERE 	OD_ID = #{odId}
+    </update>
      
 </mapper>
