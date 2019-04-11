@@ -56,9 +56,9 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 			String strToday = sdf.format(c2.getTime());
 
 			cmap.put("startDate", strYesterDay);
-			//System.out.println(" row startDate  : "+ strYesterDay + " ");
+			System.out.println(" row startDate  : "+ strYesterDay + " ");
 			cmap.put("endDate", strToday);
-			//System.out.println(" row endDate  : "+ strToday + " ");
+			System.out.println(" row endDate  : "+ strToday + " ");
 			
 			CommonList clist = new CommonList();
 			
@@ -68,11 +68,58 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 				for (int i = 0; i < clist.size(); i++) {
 					
 					CommonMap gmap = clist.getMap(i);
-					batchMysqlInterfaceService.insertSubPartWoSendListAllMStock(gmap);
-					batchMysqlInterfaceService.insertSubPartWoSendListAllMTransaction(gmap);
-					batchMssqlService.insertSubPartWoSendListAllInputQty(gmap);
 					
-				}					
+					System.out.println(" PT_OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("ptOdId"));
+					System.out.println(" SUB_PT_OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("subPtOdId"));
+					System.out.println(" DEMAND_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("demandId"));
+					System.out.println(" LG_PART_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("lgPartNo"));
+					System.out.println(" LG_OD_QTY " + " : " + i + " + 번째 " + " : " + gmap.getString("lgOdQty"));
+					System.out.println(" PROD_TYPE " + " : " + i + " + 번째 " + " : " + gmap.getString("prodType"));
+					System.out.println(" NEO_LINE " + " : " + i + " + 번째 " + " : " + gmap.getString("neoLine"));
+					System.out.println(" NEO_PLAN_KEY " + " : " + i + " + 번째 " + " : " + gmap.getString("neoPlanKey"));
+					System.out.println(" SEND_TIME " + " : " + i + " + 번째 " + " : " + gmap.getString("sendTime"));
+					System.out.println(" SENDING_PC_NAME " + " : " + i + " + 번째 " + " : " + gmap.getString("sendingPcName"));
+					System.out.println(" GO_WITH " + " : " + i + " + 번째 " + " : " + gmap.getString("goWith"));
+					System.out.println(" RE_PRINT " + " : " + i + " + 번째 " + " : " + gmap.getString("rePrint"));
+					System.out.println(" SUB_PART_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("subPartNo"));
+					System.out.println(" SUB_PART_DESC " + " : " + i + " + 번째 " + " : " + gmap.getString("subPartDesc"));
+					System.out.println(" VENDOR " + " : " + i + " + 번째 " + " : " + gmap.getString("vendor"));
+					System.out.println(" BOM_QTY " + " : " + i + " + 번째 " + " : " + gmap.getString("bomQty"));
+					System.out.println(" SUB_UNIT " + " : " + i + " + 번째 " + " : " + gmap.getString("subUnit"));
+					System.out.println(" SUB_SUM_QTY " + " : " + i + " + 번째 " + " : " + gmap.getString("subSumQty"));
+					System.out.println(" DEMAND_FLOOR " + " : " + i + " + 번째 " + " : " + gmap.getString("demandFloor"));
+					System.out.println(" OSP " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					System.out.println(" RSLTDATE " + " : " + i + " + 번째 " + " : " + gmap.getString("rsltdate"));
+					System.out.println(" RSLTSTATE " + " : " + i + " + 번째 " + " : " + gmap.getString("rsltstate"));
+					System.out.println(" RSLT_USER_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("rsltUserNo"));
+					System.out.println(" READDATE " + " : " + i + " + 번째 " + " : " + gmap.getString("readdate"));
+					System.out.println(" READSTATE " + " : " + i + " + 번째 " + " : " + gmap.getString("readstate"));
+					System.out.println(" READ_USER_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("readUserNo"));
+					System.out.println(" QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyOnHand"));
+					System.out.println(" PRE_QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getInt("preQtyOnHand"));
+					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getInt("qtyinvoiced"));
+					
+					if("".equals(gmap.getString("qtyOnHand"))){
+						int qtyOnHand = gmap.getInt("preQtyOnHand") - gmap.getInt("qtyinvoiced");
+						System.out.println(" 1111 qtyOnHand" + qtyOnHand);
+						gmap.put("qtyOnHand",qtyOnHand);
+					}
+					
+					batchMysqlInterfaceService.updateQtyOnHand(gmap);
+					
+					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " START " );
+					batchMysqlInterfaceService.insertSubPartWoSendListAllMStock(gmap);
+					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " END " );
+					System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + " START " );
+					batchMysqlInterfaceService.insertSubPartWoSendListAllMTransaction(gmap);
+					System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + " END " );
+					System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + " START " );
+					batchMssqlService.insertSubPartWoSendListAllInputQty(gmap);
+					System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + " END " );
+				}			
 									
 		     }
 			
