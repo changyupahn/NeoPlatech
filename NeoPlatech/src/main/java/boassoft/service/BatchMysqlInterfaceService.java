@@ -63,7 +63,13 @@ public interface BatchMysqlInterfaceService {
 
 	public void insertPackingWoSendListAllCngMStock(CommonMap cmap) throws Exception;
 
-	public void insertPackingWoSendListAllCngMTransaction(CommonMap gmap) throws Exception;
+	public void insertPackingWoSendListAllCngMTransaction(CommonMap cmap) throws Exception;
+
+	public void updateSubPartQtyOnHand(CommonMap cmap) throws Exception;
+
+	public void updateSubPartOdOnlyQtyOnHand(CommonMap gmap) throws Exception;
+
+	public void updatePackingWoSendListQtyOnHand(CommonMap gmap) throws Exception;
 	
 
 
