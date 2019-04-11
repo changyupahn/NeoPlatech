@@ -7,6 +7,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
 
 import boassoft.service.BatchMssqlService;
 import boassoft.service.BatchMysqlInterfaceService;
@@ -46,7 +47,8 @@ public class SubPartWOSendListCngScheduler {
 		System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 		String batchId = "batch_013";	
-		String batchCycle = "* /5 * * * *"; //매  5분마다 
+		String batchCycle = "* /2 * * * ?"; //매  5분마다 
+		//String batchCycle = "* /1 * * * *"; //매  1분마다 
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		
@@ -79,5 +81,52 @@ public class SubPartWOSendListCngScheduler {
 		}	
 	}
 	
+	/**
+	 * 배치스케줄러에 batchSchdul 파라미터를 이용하여 Job , Trigger를 갱신 한다.
+	 *
+	 * @param batchSchdul  배치스케줄러에 갱신할 스케줄정보
+	 * @exception Exception Exception
+	 */
+	public void updateBatchSchdul() throws Exception {
+		//TODO
+	}
 	
+	/**
+	 * 배치스케줄러에 batchSchdul 파라미터를 이용하여 Job , Trigger를 삭제한다.
+	 *
+	 * @param batchSchdul  배치스케줄러에 삭제할 스케줄정보
+	 * @exception Exception Exception
+	 */
+	public void deleteBatchSchdul() throws Exception {
+		//TODO
+	}
+	
+	/**
+	 * 클래스 초기화메소드.
+	 * 배치스케줄테이블을 읽어서 Quartz 스케줄러를 초기화한다.
+	 *
+	 */
+	public void init() throws Exception {
+		
+		// 스케줄러 생성하기
+		SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
+		sched = schedFact.getScheduler();
+		
+		// Set up the listener
+		SubPartWOSendListCngListener listener = new SubPartWOSendListCngListener();
+		sched.addJobListener(listener);
+		
+		insertBatchSchdul();
+
+		sched.start();
+	}
+	
+	/**
+	 * 클래스 destroy메소드.
+	 * Quartz 스케줄러를 shutdown한다.
+	 *
+	 */
+	public void destroy() throws Exception {
+		sched.shutdown();
+	}
 }

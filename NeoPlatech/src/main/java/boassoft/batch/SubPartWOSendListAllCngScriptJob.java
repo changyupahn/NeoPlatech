@@ -99,13 +99,13 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 					System.out.println(" PRE_QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getInt("preQtyOnHand"));
 					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getInt("qtyinvoiced"));
 					
-					if("".equals(gmap.getString("qtyOnHand"))){
+					if(("".equals(gmap.getString("qtyOnHand")) ||("0".equals(gmap.getString("qtyOnHand"))))){
 						int qtyOnHand = gmap.getInt("preQtyOnHand") - gmap.getInt("qtyinvoiced");
 						System.out.println(" 1111 qtyOnHand" + qtyOnHand);
 						gmap.put("qtyOnHand",qtyOnHand);
 					}
 					
-					batchMysqlInterfaceService.updateQtyOnHand(gmap);
+					batchMysqlInterfaceService.updateSubPartQtyOnHand(gmap);
 					
 					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertSubPartWoSendListAllMStock(gmap);
