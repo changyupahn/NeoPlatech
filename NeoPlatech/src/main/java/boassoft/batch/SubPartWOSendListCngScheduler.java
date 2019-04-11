@@ -47,7 +47,7 @@ public class SubPartWOSendListCngScheduler {
 		System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 		String batchId = "batch_013";	
-		String batchCycle = "* /2 * * * ?"; //매  5분마다 
+		String batchCycle = "30 /10 * * * ?"; //매  5분마다 
 		//String batchCycle = "* /1 * * * *"; //매  1분마다 
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
