@@ -211,4 +211,22 @@ public class BatchMysqlInterfaceServiceImpl extends EgovAbstractServiceImpl impl
 		batchMysqlInterfaceMapper.insertPackingWoSendListAllCngMTransaction(cmap);
 	}
 
+	@Override
+	public void updateSubPartQtyOnHand(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.updateSubPartQtyOnHand(cmap);
+	}
+
+	@Override
+	public void updateSubPartOdOnlyQtyOnHand(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.updateSubPartOdOnlyQtyOnHand(cmap);
+	}
+
+	@Override
+	public void updatePackingWoSendListQtyOnHand(CommonMap cmap) throws Exception{
+		// TODO Auto-generated method stub
+		batchMysqlInterfaceMapper.updatePackingWoSendListQtyOnHand(cmap);
+	}
+
 }
