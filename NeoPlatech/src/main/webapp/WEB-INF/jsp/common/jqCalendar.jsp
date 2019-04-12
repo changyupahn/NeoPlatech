@@ -31,7 +31,7 @@ function fnInitCalc(){
 		, changeMonth : true
 		, currentText : '오늘'
 		, closeText : '닫기'
-		//, showButtonPanel : true
+		, showButtonPanel : true
 	});
 
 	$(".datepicker2").datepicker({
