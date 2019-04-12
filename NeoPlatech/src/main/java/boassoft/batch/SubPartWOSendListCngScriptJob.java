@@ -73,7 +73,7 @@ public class SubPartWOSendListCngScriptJob implements Job{
 					
 					CommonMap gmap = clist.getMap(i);
 					
-					System.out.println(" OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("odId"));
+					/*System.out.println(" OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("odId"));
 					System.out.println(" DEMAND_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("demandId"));
 					System.out.println(" LGE_DATE " + " : " + i + " + 번째 " + " : " + gmap.getString("lgeDate"));
 					System.out.println(" NEO_DATE " + " : " + i + " + 번째 " + " : " + gmap.getString("neoDate"));
@@ -98,7 +98,7 @@ public class SubPartWOSendListCngScriptJob implements Job{
 					System.out.println(" IN_DATE " + " : " + i + " + 번째 " + " : " + gmap.getString("inDate"));
 					System.out.println(" QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyOnHand"));
 					System.out.println(" PRE_QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getString("preQtyOnHand"));
-					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyinvoiced"));
+					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyinvoiced"));*/
 					
 					if(("".equals(gmap.getString("qtyOnHand")) ||("0".equals(gmap.getString("qtyOnHand"))))){
 						int qtyOnHand = gmap.getInt("preQtyOnHand") - gmap.getInt("qtyinvoiced");
@@ -106,15 +106,15 @@ public class SubPartWOSendListCngScriptJob implements Job{
 						gmap.put("qtyOnHand",qtyOnHand);
 					}
 					batchMysqlInterfaceService.updateSubPartOdOnlyQtyOnHand(gmap);
-					System.out.println(" gmap insertSubPartWoSendListOdOnlyMStock " + " : " + i + " + 번째 " + " : " + " START " );
+					//System.out.println(" gmap insertSubPartWoSendListOdOnlyMStock " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertSubPartWoSendListOdOnlyMStock(gmap);
-					System.out.println(" gmap insertSubPartWoSendListOdOnlyMStock " + " : " + i + " + 번째 " + " : " + " END " );
-					System.out.println(" gmap insertSubPartWoSendListOdOnlyMTransaction " + " : " + i + " + 번째 " + " : " + " START " );
+					//System.out.println(" gmap insertSubPartWoSendListOdOnlyMStock " + " : " + i + " + 번째 " + " : " + " END " );
+					//System.out.println(" gmap insertSubPartWoSendListOdOnlyMTransaction " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertSubPartWoSendListOdOnlyMTransaction(gmap);
-					System.out.println(" gmap insertSubPartWoSendListOdOnlyMTransaction " + " : " + i + " + 번째 " + " : " + " END " );
-					System.out.println(" gmap insertSubPartWoSendListOdOnlyInputQty " + " : " + i + " + 번째 " + " : " + " START " );
+					//System.out.println(" gmap insertSubPartWoSendListOdOnlyMTransaction " + " : " + i + " + 번째 " + " : " + " END " );
+					//System.out.println(" gmap insertSubPartWoSendListOdOnlyInputQty " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMssqlService.insertSubPartWoSendListOdOnlyInputQty(gmap);
-					System.out.println(" gmap insertSubPartWoSendListOdOnlyInputQty " + " : " + i + " + 번째 " + " : " + " END " );
+					//System.out.println(" gmap insertSubPartWoSendListOdOnlyInputQty " + " : " + i + " + 번째 " + " : " + " END " );
 				}
 			}
 			} catch (Exception e) {
