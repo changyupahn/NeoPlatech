@@ -48,8 +48,8 @@ public class PackingWoSendListODOnlyScheduler {
 	System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 		String batchId = "batch_006";	
-		String batchCycle = "0 0 7 * * ?"; //매일 아침 7시 
-	
+		String batchCycle = "0 0 0/1 * * ?"; //매일 1시간 마다
+		                      
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();			
 		jobMap.put("batchMssqlService", batchMssqlService);
 		jobMap.put("batchMysqlInterfaceService", batchMysqlInterfaceService);
