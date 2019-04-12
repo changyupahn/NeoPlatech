@@ -49,7 +49,7 @@ public class SubPartWOSendListAllCngScheduler {
 		
 	   String batchId = "batch_014";	
 	   //String batchCycle = "* 0/1 * * * ?"; //매  5분마다
-	   String batchCycle = "20 0/10 * * * ?"; //매  5분마다
+	   String batchCycle = "20 0/10 * * * ?"; //매  10분마다
 	   
 	 
 	   HashMap<String, Object> jobMap = new HashMap<String, Object>();

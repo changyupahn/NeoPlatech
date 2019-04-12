@@ -56,9 +56,9 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 			String strToday = sdf.format(c2.getTime());
 
 			cmap.put("startDate", strYesterDay);
-			System.out.println(" row startDate  : "+ strYesterDay + " ");
+			//System.out.println(" row startDate  : "+ strYesterDay + " ");
 			cmap.put("endDate", strToday);
-			System.out.println(" row endDate  : "+ strToday + " ");
+			//System.out.println(" row endDate  : "+ strToday + " ");
 			
 			CommonList clist = new CommonList();
 			
@@ -69,7 +69,7 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 					
 					CommonMap gmap = clist.getMap(i);
 					
-					System.out.println(" PT_OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("ptOdId"));
+					/*System.out.println(" PT_OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("ptOdId"));
 					System.out.println(" SUB_PT_OD_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("subPtOdId"));
 					System.out.println(" DEMAND_ID " + " : " + i + " + 번째 " + " : " + gmap.getString("demandId"));
 					System.out.println(" LG_PART_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("lgPartNo"));
@@ -97,7 +97,7 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 					System.out.println(" READ_USER_NO " + " : " + i + " + 번째 " + " : " + gmap.getString("readUserNo"));
 					System.out.println(" QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getString("qtyOnHand"));
 					System.out.println(" PRE_QTY_ON_HAND " + " : " + i + " + 번째 " + " : " + gmap.getInt("preQtyOnHand"));
-					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getInt("qtyinvoiced"));
+					System.out.println(" QTYINVOICED " + " : " + i + " + 번째 " + " : " + gmap.getInt("qtyinvoiced"));*/
 					
 					if(("".equals(gmap.getString("qtyOnHand")) ||("0".equals(gmap.getString("qtyOnHand"))))){
 						int qtyOnHand = gmap.getInt("preQtyOnHand") - gmap.getInt("qtyinvoiced");
@@ -107,18 +107,18 @@ public class SubPartWOSendListAllCngScriptJob implements Job {
 					
 					batchMysqlInterfaceService.updateSubPartQtyOnHand(gmap);
 					
-					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " START " );
+					//System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertSubPartWoSendListAllMStock(gmap);
-					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
-					System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " END " );
-					System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + " START " );
+					//System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					//System.out.println(" gmap insertSubPartWoSendListAllMStock " + " : " + i + " + 번째 " + " : " + " END " );
+					//System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMysqlInterfaceService.insertSubPartWoSendListAllMTransaction(gmap);
-					System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
-					System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + " END " );
-					System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + " START " );
+					//System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					//System.out.println(" gmap insertSubPartWoSendListAllMTransaction " + " : " + i + " + 번째 " + " : " + " END " );
+					//System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + " START " );
 					batchMssqlService.insertSubPartWoSendListAllInputQty(gmap);
-					System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
-					System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + " END " );
+					//System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + gmap.getString("osp"));
+					//System.out.println(" gmap insertSubPartWoSendListAllInputQty " + " : " + i + " + 번째 " + " : " + " END " );
 				}			
 									
 		     }
