@@ -55,7 +55,7 @@ public class PackingWoSendListScheduler {
 		System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 		String batchId = "batch_003";
-		String batchCycle = "0 0 4 * * ?"; //매일 새벽 4시 마다
+		String batchCycle = "10 0 0/1 * * ?"; //매일 1시간 마다
 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();	
 		jobMap.put("batchMssqlService", batchMssqlService);
