@@ -49,9 +49,8 @@ public class SubPartSendListScheduler {
 		System.out.println("insertBatchSchdul : " + DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 		
 		String batchId = "batch_008";	
-		String batchCycle = "0 0 5 * * ?"; //매일 새벽 5시 마다
-		
-		
+		String batchCycle = "0 0/30 * * * ?"; //매일 30분마다 
+		 		
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();		
 		jobMap.put("batchMssqlService", batchMssqlService);
 		jobMap.put("batchMysqlInterfaceService", batchMysqlInterfaceService);
