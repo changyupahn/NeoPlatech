@@ -63,8 +63,6 @@
                  , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result     
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1
-                AND A.OD_ID = #{odId}
-                AND A.DEMAND_ID = #{demandId}
                ]]> 
           <include refid="getSubsiDiaryReceiptWhere" />   
               <if test="histOrder != null and histOrder != ''"> 
@@ -87,8 +85,6 @@
          SELECT	COUNT(*)
         FROM 	RFID_IF_SUBPART_WOSENDLIST_ODONLY A 
           WHERE 1 = 1
-           AND A.OD_ID = #{odId}
-           AND A.DEMAND_ID = #{demandId}
 		     <include refid="getSubsiDiaryReceiptWhere" />     
      </select>  
 </mapper>    
