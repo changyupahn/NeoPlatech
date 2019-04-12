@@ -83,11 +83,6 @@ function fnLogout() {
 }
 </script>
 <div id="header">
-	 <a href="javascript:;" class="logo" ><img src="/images/logo/neo_logo1_533_80.png" alt="네오플라텍창고/수불/재고시스템 " width="300" /></a>
-	<div class="login">
-		<span><spring:message code="common.login.result" arguments="<%=topUserNm%>" /></span>
-		<span class="btn_black"><a href="javascript:fnLogout();"><spring:message code="button.logout"/></a></span>
-	</div>
 	<div class="gnb">
 		<ul>
 		<% if (topGrantReadYnArr.indexOf("KP1300") > -1) { %>
