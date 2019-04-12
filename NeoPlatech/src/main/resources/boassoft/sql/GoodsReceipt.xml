@@ -164,37 +164,37 @@
 	    <include refid="pagingHeader"/>
 	    <![CDATA[
 	    SELECT 
-                  A.OD_ID AS OD_ID
-                 , A.DEMAND_ID AS DEMAND_ID
-                 , LEFT(A.LGE_DATE,10) AS LGE_DATE
-                 , LEFT(A.NEO_DATE,10) AS NEO_DATE
-                 , A.GAP_DAY AS GAP_DAY
-                 , A.LG_LINE AS LG_LINE
-                 , A.TOOL AS TOOL
-                 , A.M_PART_NO AS M_PART_NO               
-                 , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
-                 , A.LGM_PART_NAME AS LGM_PART_NAME
+                  MAX(A.OD_ID) AS OD_ID
+                 , MAX(A.DEMAND_ID) AS DEMAND_ID
+                 , MAX(LEFT(A.LGE_DATE,10)) AS LGE_DATE
+                 , MAX(LEFT(A.NEO_DATE,10)) AS NEO_DATE
+                 , MAX(A.GAP_DAY) AS GAP_DAY
+                 , MAX(A.LG_LINE) AS LG_LINE
+                 , MAX(A.TOOL) AS TOOL
+                 , MAX(A.M_PART_NO) AS M_PART_NO               
+                 , SUM(COALESCE(A.PLAN_QTY,0)) AS PLAN_QTY 
+                 , MAX(A.LGM_PART_NAME) AS LGM_PART_NAME
                  , A.SUB_PART_NO AS SUB_PART_NO 
-                 , A.SUB_PART_NAME AS SUB_PART_NAME
-                 , COALESCE(A.BOM_QTY,0) AS BOM_QTY
-                 , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
-                 , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
-                   ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
-                 , A.UNIT AS UNIT
-                 , A.VENDOR AS VENDOR
-                 , A.OSP AS OSP
-                 , A.OUT_PLACE AS OUT_PLACE
-                 , LEFT(A.CHK_DAY,10) AS CHK_DAY
-                 , LEFT(A.IN_DATE,10)  AS IN_DATE                 
-                 , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
-                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND 
-                 , COALESCE(A.QTYINVOICED,0) AS QTYINVOICED
-                 , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result    
+                 , MAX(A.SUB_PART_NAME) AS SUB_PART_NAME
+                 , SUM(COALESCE(A.BOM_QTY,0)) AS BOM_QTY
+                 , SUM(COALESCE(A.SUM_QTY,0)) AS SUM_QTY                  
+                 , CASE WHEN SUM(COALESCE(A.SUM_QTY_CNG,0)) > 0 THEN SUM(COALESCE(A.SUM_QTY_CNG,0))
+                   ELSE  SUM(COALESCE(A.SUM_QTY,0)) END AS SUM_QTY_CNG
+                 , MAX(A.UNIT) AS UNIT
+                 , MAX(A.VENDOR) AS VENDOR
+                 , MAX(A.OSP) AS OSP
+                 , MAX(A.OUT_PLACE) AS OUT_PLACE
+                 , MAX(LEFT(A.CHK_DAY,10)) AS CHK_DAY
+                 , MAX(LEFT(A.IN_DATE,10))  AS IN_DATE                 
+                 , SUM(COALESCE(A.QTY_ON_HAND,0)) AS QTY_ON_HAND
+                 , SUM(COALESCE(A.PRE_QTY_ON_HAND,0)) AS PRE_QTY_ON_HAND 
+                 , SUM(COALESCE(A.QTYINVOICED,0)) AS QTYINVOICED
+                 , FN_GET_INVOICED(SUM(COALESCE(A.QTY_ON_HAND,0)),SUM(COALESCE(A.QTYINVOICED,0))) AS result    
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1      
           ]]>                 
             <include refid="getSubsiDiaryReceiptWhere" /> 
-        GROUP BY A.VENDOR
+        GROUP BY A.SUB_PART_NO
 	    ORDER BY A.LGE_DATE
 	     <include refid="pagingFooter"/> 	   
 	   </select>
@@ -204,37 +204,37 @@
          SELECT COUNT(*) FROM 
            (
                SELECT 
-                  A.OD_ID
-                 , A.DEMAND_ID
-                 , LEFT(A.LGE_DATE,10) AS LGE_DATE
-                 , LEFT(A.NEO_DATE,10) AS NEO_DATE
-                 , A.GAP_DAY
-                 , A.LG_LINE
-                 , A.TOOL
-                 , A.M_PART_NO                 
-                 , COALESCE(A.PLAN_QTY,0) AS PLAN_QTY 
-                 , A.LGM_PART_NAME
-                 , A.SUB_PART_NO
-                 , A.SUB_PART_NAME
-                 , COALESCE(A.BOM_QTY,0) AS BOM_QTY
-                 , COALESCE(A.SUM_QTY,0) AS SUM_QTY                  
-                 , CASE WHEN COALESCE(A.SUM_QTY_CNG,0) > 0 THEN COALESCE(A.SUM_QTY_CNG,0)
-                   ELSE  COALESCE(A.SUM_QTY,0) END AS SUM_QTY_CNG
-                 , A.UNIT
-                 , A.VENDOR
-                 , A.OSP
-                 , A.OUT_PLACE
-                 , A.CHK_DAY
-                 , A.IN_DATE 
-                 , COALESCE(A.QTY_ON_HAND,0) AS QTY_ON_HAND
-                 , COALESCE(A.PRE_QTY_ON_HAND,0) AS PRE_QTY_ON_HAND   
-                 , COALESCE(A.QTYINVOICED,0) AS QTYINVOICED
-                 , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS RESULT              
+                  MAX(A.OD_ID) AS OD_ID
+                 , MAX(A.DEMAND_ID) AS DEMAND_ID
+                 , MAX(LEFT(A.LGE_DATE,10)) AS LGE_DATE
+                 , MAX(LEFT(A.NEO_DATE,10)) AS NEO_DATE
+                 , MAX(A.GAP_DAY) AS GAP_DAY
+                 , MAX(A.LG_LINE) AS LG_LINE
+                 , MAX(A.TOOL) AS TOOL
+                 , MAX(A.M_PART_NO) AS M_PART_NO               
+                 , MAX(COALESCE(A.PLAN_QTY,0)) AS PLAN_QTY 
+                 , MAX(A.LGM_PART_NAME) AS LGM_PART_NAME
+                 , A.SUB_PART_NO AS SUB_PART_NO 
+                 , MAX(A.SUB_PART_NAME) AS SUB_PART_NAME
+                 , SUM(COALESCE(A.BOM_QTY,0)) AS BOM_QTY
+                 , SUM(COALESCE(A.SUM_QTY,0)) AS SUM_QTY                  
+                 , CASE WHEN SUM(COALESCE(A.SUM_QTY_CNG,0)) > 0 THEN SUM(COALESCE(A.SUM_QTY_CNG,0))
+                   ELSE  SUM(COALESCE(A.SUM_QTY,0)) END AS SUM_QTY_CNG
+                 , MAX(A.UNIT) AS UNIT
+                 , MAX(A.VENDOR) AS VENDOR
+                 , MAX(A.OSP) AS OSP
+                 , MAX(A.OUT_PLACE) AS OUT_PLACE
+                 , MAX(LEFT(A.CHK_DAY,10)) AS CHK_DAY
+                 , MAX(LEFT(A.IN_DATE,10))  AS IN_DATE                 
+                 , SUM(COALESCE(A.QTY_ON_HAND,0)) AS QTY_ON_HAND
+                 , SUM(COALESCE(A.PRE_QTY_ON_HAND,0)) AS PRE_QTY_ON_HAND 
+                 , SUM(COALESCE(A.QTYINVOICED,0)) AS QTYINVOICED
+                 , FN_GET_INVOICED(SUM(COALESCE(A.QTY_ON_HAND,0)),SUM(COALESCE(A.QTYINVOICED,0))) AS result    
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
-                WHERE 1 = 1        
+                WHERE 1 = 1  
              ]]>            
                <include refid="getSubsiDiaryReceiptWhere" /> 
-              GROUP BY A.VENDOR
+              GROUP BY A.SUB_PART_NO
 	         ORDER BY A.LGE_DATE
           ) X	             
      </select>               
