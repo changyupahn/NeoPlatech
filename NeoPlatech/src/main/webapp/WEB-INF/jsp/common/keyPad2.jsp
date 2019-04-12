@@ -7,10 +7,10 @@
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title> jQuery numberKeypad demo</title>
-	<link rel="stylesheet" href="/common/css/base-min.css"/>
-	<link rel="stylesheet" href="/common/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/base-min.css"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<link href="/common/css/jquery.numberKeypad.css" rel="stylesheet" type="text/css" />
-	<script src="/common/css/jquery-latest.min.js"></script>
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript" src="/common/js/jquery.numberKeypad.js"></script>
 	<script type="text/javascript">
 		$(function(){
