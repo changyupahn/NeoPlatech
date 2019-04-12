@@ -642,4 +642,30 @@ public class kp2210GoodsInvoiceController {
 		
 	}
 	
+	
+	
+	@RequestMapping(value="/kp2210/kp2210KeyPad.do")
+    public String kp2210KeyPad(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+    	CommonMap cmap = new CommonMap(request);
+    
+    	cmap.put("orgNo", SessionUtil.getString("orgNo"));
+    	cmap.put("addrUserId", SessionUtil.getString("userId"));
+    	
+    	//검색값 유지
+    	model.addAttribute("cmRequest",cmap);
+    	return "common/keyPad";
+	}
+
+	
+	@RequestMapping(value="/kp2210/kp2211KeyPad.do")
+	public String kp2211KeyPad(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+    	CommonMap cmap = new CommonMap(request);
+    	
+    	cmap.put("orgNo", SessionUtil.getString("orgNo"));
+    	cmap.put("addrUserId", SessionUtil.getString("userId"));
+    	
+    	//검색값 유지
+    	model.addAttribute("cmRequest",cmap);
+    	return "common/keyPad2";
+	}
 }
