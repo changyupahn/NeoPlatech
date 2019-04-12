@@ -16,15 +16,65 @@ if (!ssAuthManager) {
 	cmRequest.put("sDeptName", cmRequest.getString("sDeptName", SessionUtil.getString("deptName")));
 }
 %>
-<html>
-<head>
-<%@ include file="/WEB-INF/jsp/common/head.jsp" %>
-<%@ include file="/WEB-INF/jsp/common/jqCalendar.jsp" %>
-<%@ include file="/WEB-INF/jsp/common/jqGrid.jsp" %>
 <script type="text/javascript"> 
 $(document).ready(function(){
-   
-	 $("#currentDay").delegate("click", function () { $(this).datepicker(); });
+	
+	
+	$("#searchDtKeywordS").datepicker({
+		dayNamesMin : ["일","월","화","수","목","금","토"]
+		, monthNames : ["년 1월","년 2월","년 3월","년 4월","년 5월","년 6월","년 7월","년 8월","년 9월","년 10월","년 11월","년 12월"]
+		, monthNamesShort : ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]
+		//, showOn : "both"
+		, duration : 200
+		, dateFormat : "yy-mm-dd"
+		//, buttonImage : false
+		//, buttonText : '달력'
+		//, buttonImageOnly : false
+		, showMonthAfterYear : true
+		, yearRange: "1950:+2"
+		, changeYear : true
+		, changeMonth : true
+		, currentText : '오늘'
+		, closeText : '닫기'
+		, onSelect : function(dateText, inst) {
+			var minDate = $(this).datepicker('getDate');
+            minDate.setDate(minDate.getDate()+2); //add two days
+            $("#searchDtKeywordE").datepicker( "option", "minDate", minDate);
+            $("#searchDtKeywordS").val(this.value);  
+           var dt =  document.getElementById('searchDtKeywordS').value;
+           //$('#searchDtKeywordE').val(dt);
+           $('#searchDtKeywordS').datepicker('setDate', dt); 
+		}
+		, showButtonPanel : true
+	}).datepicker();
+	
+	$("#searchDtKeywordE").datepicker({
+		dayNamesMin : ["일","월","화","수","목","금","토"]
+		, monthNames : ["년 1월","년 2월","년 3월","년 4월","년 5월","년 6월","년 7월","년 8월","년 9월","년 10월","년 11월","년 12월"]
+		, monthNamesShort : ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]
+		//, showOn : "both"
+		, duration : 200
+		, dateFormat : "yy-mm-dd"
+		//, buttonImage : false
+		//, buttonText : '달력'
+		//, buttonImageOnly : false
+		, showMonthAfterYear : true
+		, yearRange: "1950:+2"
+		, changeYear : true
+		, changeMonth : true
+		, currentText : '오늘'
+		, closeText : '닫기'
+		, onSelect : function(dateText, inst) {
+			var maxDate = $(this).datepicker('getDate');
+            maxDate.setDate(maxDate.getDate()-2);
+            $("#searchDtKeywordS").datepicker( "option", "maxDate", maxDate);
+            var dt =  document.getElementById('searchDtKeywordE').value;
+            //$('#searchDtKeywordE').val(dt);
+            $('#searchDtKeywordE').datepicker('setDate', dt); 
+		}
+		, showButtonPanel : true
+	}).datepicker();
+	
 	
 	$("select#sRqstVendorCd").change(function(){
 	
@@ -52,6 +102,18 @@ $(document).ready(function(){
 	
  });
 
+
+function updateDtKeywordS(value){
+	alert("111");
+	alert("222" + " : " + value);
+    $('#searchDtKeywordS').val(value);    
+}
+
+function updateDtKeywordE(value){  
+	alert("111");
+	alert("222" + " : " + value);
+    $('#searchDtKeywordE').val(value);   
+}
 
 function fnItemCdChange(obj){
 	var value = "sRqstVendorCd=" + obj;
@@ -208,8 +270,8 @@ function fnPNoChange(obj){
 			날짜: 
 		</th>				
 		<td>
-			<input type="text" id="searchDtKeywordS" name="searchDtKeywordS" value="<%=cmRequest.getString("searchDtKeywordS")%>" class="datepicker dt1" />
-			- <input type="text" id="searchDtKeywordE" name="searchDtKeywordE" value="<%=cmRequest.getString("searchDtKeywordE")%>" class="datepicker dt2" />
+			<input type="text" id="searchDtKeywordS" name="searchDtKeywordS" value="<%=cmRequest.getString("searchDtKeywordS")%>" class="datepicker dt1" onclick="javascript:updateDtKeywordS(this);"/>
+			- <input type="text" id="searchDtKeywordE" name="searchDtKeywordE" value="<%=cmRequest.getString("searchDtKeywordE")%>" class="datepicker dt2" onclick="javascript:updateDtKeywordE(this);"/>
 		</td>			    
 <% idx++; if (idx % colcnt > 0) { %><td colspan="<%=(colmax * 2) - ((idx % colcnt) * 2)%>">&nbsp;</td><% } %>		
 		</tr>
