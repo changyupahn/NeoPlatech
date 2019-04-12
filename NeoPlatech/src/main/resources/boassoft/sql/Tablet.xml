@@ -151,7 +151,10 @@
            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand
            , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
-           , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result   
+           , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result
+           , FN_GET_RECEIPT_ENABLED(COALESCE(A.OD_ID,'')) AS receipt_status
+           , FN_GET_RECALL_ENABLED(COALESCE(A.OD_ID,'')) AS recall_status 
+           , FN_GET_OUT_ENABLED(COALESCE(A.OD_ID,'')) AS out_status  
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A               
               WHERE 1 = 1 
           ]]>                 
@@ -188,6 +191,10 @@
            , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand
            , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
+           , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result
+           , FN_GET_RECEIPT_ENABLED(COALESCE(A.OD_ID,'')) AS receipt_status
+           , FN_GET_RECALL_ENABLED(COALESCE(A.OD_ID,'')) AS recall_status 
+           , FN_GET_OUT_ENABLED(COALESCE(A.OD_ID,'')) AS out_status  
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A                  
               WHERE 1 = 1 
              ]]>            
@@ -273,7 +280,9 @@
             , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
-            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced		
+            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
+            , FN_GET_BUTTON_ENABLED(COALESCE(A.PRE_QTY_ON_HAND,0)) AS ng_status
+            , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0))  AS ok_status 		
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
 		 AND A.DEMAND_FLOOR = 1			
@@ -314,6 +323,8 @@
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
             , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
+            , FN_GET_BUTTON_ENABLED(COALESCE(A.PRE_QTY_ON_HAND,0)) AS ng_status
+            , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0))  AS ok_status 
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
 		 AND DEMAND_FLOOR = 2			
