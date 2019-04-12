@@ -24,6 +24,8 @@ if (!ssAuthManager) {
 <script type="text/javascript"> 
 $(document).ready(function(){
    
+	 $("#currentDay").delegate("click", function () { $(this).datepicker(); });
+	
 	$("select#sRqstVendorCd").change(function(){
 	
 	
@@ -46,6 +48,7 @@ $(document).ready(function(){
 				   fnPNoChange($(this).val());
 			   }	
 			});
+	   
 	
  });
 
@@ -201,17 +204,13 @@ function fnPNoChange(obj){
 			</select>
 		</td>		
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>날짜 :</th>					
-		<td>		
+		<th>
+			날짜: 
+		</th>				
+		<td>
 			<input type="text" id="searchDtKeywordS" name="searchDtKeywordS" value="<%=cmRequest.getString("searchDtKeywordS")%>" class="datepicker dt1" />
 			- <input type="text" id="searchDtKeywordE" name="searchDtKeywordE" value="<%=cmRequest.getString("searchDtKeywordE")%>" class="datepicker dt2" />
-		</td>		
-		</td>	
-  <% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>수량 :</th>
-		<td>
-			<input type="text" id="sReceiptCnt" name="sReceiptCnt" value="<%=cmRequest.getString("sReceiptCnt")%>" class="def" />
-		</td>		    
+		</td>			    
 <% idx++; if (idx % colcnt > 0) { %><td colspan="<%=(colmax * 2) - ((idx % colcnt) * 2)%>">&nbsp;</td><% } %>		
 		</tr>
 	</table>		
