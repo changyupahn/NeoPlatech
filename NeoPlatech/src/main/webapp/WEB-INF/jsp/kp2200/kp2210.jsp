@@ -11,7 +11,6 @@ String xlsDnAction = "/kp2200/kp2210Excel.do";
 String detailAction = "/kp2200/kp2210DetailAjax.do";
 String stockAction = "/kp2200/kp2210Stock.do";
 String recallAction = "/kp2200/kp2210Recall.do";
-String writeAction = "/kp1700/kp1710.do";
 CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색값 유지
 int colbasewid = 220; //검색 폼 동적 사이즈 구성을 위한 넓이 값
 %>  
@@ -50,11 +49,9 @@ var colNames01 = ['rowNum'
                   , '공급방향'               
                   , '담당자'
                   , '생산LINE'
-                  , '소요수량'
                   , '단위소요수량'
                   , '주문수량'
-                  , '재고대기량'   
-                  , '총소요량'                 
+                  , '재고대기량'                  
                   , '현재고량' 
                   , '현재입고량'
                   , '관리'
@@ -80,11 +77,9 @@ var colNames01 = ['rowNum'
                   ,{name:'outPlace', index:'outPlace', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}                  
                   ,{name:'myCom', index:'myCom', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}
                   ,{name:'lgLine', index:'lgLine', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT', hidden:true}
-                  ,{name:'sumQty', index:'sumQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'bomQty', index:'bomQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
-                  ,{name:'planQty', index:'planQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
+                  ,{name:'sumQtyCng', index:'sumQty', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'preQtyOnHand', index:'preQtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', editable:false, formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
-                  ,{name:'sumQtyCng', index:'sumQtyCng', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', editable:false, formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'qtyOnHand', index:'qtyOnHand', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER', editable:false, formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}               
                   ,{name:'qtyinvoiced', index:'qtyinvoiced', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER',editable:false, formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                   ,{name:'mgr', index:'mgr', align:'CENTER', width:'200px', columntype:'text', classes:'grid-col-TEXT', sortable:false, editable:false,
@@ -187,8 +182,10 @@ function fnGridList() {
 // 		sortname: 'repoDt',
 // 		sortorder: 'desc',
 		sortable : true,
-		width: $(window).width() - widthHip,
-		height: $(window).height() - heightHip,
+		//width: $(window).width() - widthHip,
+		//height: $(window).height() - heightHip,
+		width: $(window).width() ,
+		height: $(window).height() ,
 		multiselect: true,
 		loadError: function(xhr,status,error){
 			alert(status+'\n'+error);
@@ -312,9 +309,9 @@ function fnGridList() {
 	   		   postData :{
 	   			odId: obj.odId ,	
 	   			demandId : obj.demandId,
-				sRqstVendorCd : $("select[name=sRqstVendorCd]").val(),
-				sRqstItemCd : 	$("select[name=sRqstItemCd]").val(),
-				sRqstPNoCd : $("select[name=sRqstPNoCd]").val()	,
+				sRqstVendorCd : obj.vendor,
+				sRqstItemCd : 	obj.subPartName,
+				sRqstPNoCd : obj.subPartNo	,
 				searchDtKeywordS : $("#searchDtKeywordS").val(),
 				searchDtKeywordE : $("#searchDtKeywordE").val()	
 			  },
@@ -434,9 +431,16 @@ function fnInitSearchForm() {
 	});
 }
 
+//위치코드 팝업
+function kp2210Pop() {
+	
+	fnOpenPop("/kp2210/kp2210KeyPad.do", "kp2210Pop", "400", "600","");
+	//fnOpenPop("/kp2210/kp2210KeyPad.do", "kp2210Pop");
+}
 
-
-function fnStock(row_id, odId, qtyinvoiced){
+function fnQtyInvoiced(qty){
+	var frm = document.sForm;			
+	frm.qtyinvoiced.value = qty;
 	
 	var ids = $('#listInfo01').jqGrid('getGridParam', 'selarrrow');
 	var saveJsonArray = [];
@@ -444,14 +448,15 @@ function fnStock(row_id, odId, qtyinvoiced){
 		alert("입고 처리할 행을 선택해주세요.");
 		return;
 	}
-		
+	//alert(frm.qtyinvoiced.value);
+    if(frm.qtyinvoiced.value != null){    	
 	
 	if (ids.length > 0) {
 		for (var i=0; i<ids.length; i++) {
 			var obj = $("#listInfo01").jqGrid('getRowData', ids[i]);
 			var saveJsonObj = {
 					odId: odId ,					
-					sReceiptCnt : $('#sReceiptCnt').val(), 
+					sReceiptCnt : document.sForm.qtyinvoiced.value, 
 					sRqstVendorCd : $("select[name=sRqstVendorCd]").val(),
 					sRqstItemCd : 	$("select[name=sRqstItemCd]").val(),
 					sRqstPNoCd : $("select[name=sRqstPNoCd]").val()						
@@ -459,8 +464,7 @@ function fnStock(row_id, odId, qtyinvoiced){
 			saveJsonArray.push(saveJsonObj);
 		}
 	}
-	
-        
+	 
 		if (confirm("입고 처리 하시겠습니까?")) {
 			fnLoadingS2();
 			$.ajax({
@@ -488,11 +492,29 @@ function fnStock(row_id, odId, qtyinvoiced){
 					fnLoadingE2();
 				}
 			});
-		}
+		}  
+    }
+
+} 
+
+function fnStock(row_id, odId, qtyinvoiced){
+	var frm = document.sForm;
+	kp2210Pop();
+	
 	
 }
 
-function fnRecall(row_id, odId,  qtyinvoiced){
+//위치코드 팝업
+function kp2211Pop() {
+	
+	fnOpenPop("/kp2210/kp2211KeyPad.do", "kp2211Pop", "400", "600","");
+	//fnOpenPop2("/kp2210/kp2211KeyPad.do", "kp2211Pop");
+}
+
+function fnQtyRecallInvoiced(qty){
+	var frm = document.sForm;			
+	frm.qtyinvoiced.value = qty;
+	
 	var ids = $('#listInfo01').jqGrid('getGridParam', 'selarrrow');
 	var saveJsonArray = [];
 	if (ids.length == 0) {
@@ -500,13 +522,14 @@ function fnRecall(row_id, odId,  qtyinvoiced){
 		return;
 	}
 		
-	
+	//alert(frm.qtyinvoiced.value);
+    if(frm.qtyinvoiced.value != null){ 
 	if (ids.length > 0) {
 		for (var i=0; i<ids.length; i++) {
 			var obj = $("#listInfo01").jqGrid('getRowData', ids[i]);
 			var saveJsonObj = {
 					odId: odId ,					
-					sReceiptCnt : $('#sReceiptCnt').val(), 
+					sReceiptCnt : document.sForm.qtyinvoiced.value, 
 					sRqstVendorCd : $("select[name=sRqstVendorCd]").val(),
 					sRqstItemCd : 	$("select[name=sRqstItemCd]").val(),
 					sRqstPNoCd : $("select[name=sRqstPNoCd]").val()						
@@ -544,6 +567,13 @@ function fnRecall(row_id, odId,  qtyinvoiced){
 				}
 			});
 		}
+	 }
+	
+}
+
+function fnRecall(row_id, odId,  qtyinvoiced){
+	var frm = document.sForm;
+	kp2211Pop();
 	
 }
 
@@ -567,6 +597,7 @@ function fnRecall(row_id, odId,  qtyinvoiced){
 	<input type="hidden" id="searchDtKeywordS" name="searchDtKeywordS" value="<%=cmRequest.getString("searchDtKeywordS", "")%>" />
 	<input type="hidden" id="searchDtKeywordE" name="searchDtKeywordE" value="<%=cmRequest.getString("searchDtKeywordE", "")%>" />
 	<input type="hidden" id="odId" name="odId" value="<%=cmRequest.getString("odId", "")%>" />
+	<input type="hidden" id="qtyinvoiced" name="qtyinvoiced" value="<%=cmRequest.getString("qtyinvoiced", "")%>" />
 	
    
 	<div id="divPopupLayer"></div>
