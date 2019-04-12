@@ -51,7 +51,7 @@ public class SubPartWoSendListODOnlyScheduler {
 				+ DateUtil.getFormatDate("yyyy-MM-dd hh:mm:ss"));
 
 		String batchId = "batch_009";
-		String batchCycle = "0 0 6 * * ?"; // 매일 새벽 6시 마다
+		String batchCycle = "0 0/30 * * * ?"; // 매일 30분마다 실행 
 
 		HashMap<String, Object> jobMap = new HashMap<String, Object>();
 		jobMap.put("batchMssqlService", batchMssqlService);
