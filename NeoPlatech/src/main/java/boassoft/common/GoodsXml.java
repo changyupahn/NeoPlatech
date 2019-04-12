@@ -74,7 +74,12 @@ public class GoodsXml implements Serializable {
 	private String code;
 	private String code_name;
 	private String result;
-			
+	private String receipt_status;
+	private String recall_status;
+	private String out_status;
+	private String ok_status;
+	private String ng_status;
+	
 	
 	public String getResult() {
 		return result;
@@ -466,5 +471,35 @@ public class GoodsXml implements Serializable {
 	public void setCode_name(String code_name) {
 		this.code_name = code_name;
 	}
-	
+	public String getReceipt_status() {
+		return receipt_status;
+	}
+	public void setReceipt_status(String receipt_status) {
+		this.receipt_status = receipt_status;
+	}
+	public String getRecall_status() {
+		return recall_status;
+	}
+	public void setRecall_status(String recall_status) {
+		this.recall_status = recall_status;
+	}
+	public String getOut_status() {
+		return out_status;
+	}
+	public void setOut_status(String out_status) {
+		this.out_status = out_status;
+	}
+	public String getOk_status() {
+		return ok_status;
+	}
+	public void setOk_status(String ok_status) {
+		this.ok_status = ok_status;
+	}
+	public String getNg_status() {
+		return ng_status;
+	}
+	public void setNg_status(String ng_status) {
+		this.ng_status = ng_status;
+	}
+
 }
