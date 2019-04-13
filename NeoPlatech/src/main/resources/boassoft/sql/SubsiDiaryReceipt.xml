@@ -64,20 +64,13 @@
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1
                ]]> 
-          <include refid="getSubsiDiaryReceiptWhere" />   
-              <if test="histOrder != null and histOrder != ''"> 
-		        <choose>
-                 <when test="histOrder == 'ASC'">			
-				  ORDER A.OD_ID ASC			
-			     </when>
-			     <when test="histOrder == 'DESC'">					
-				  ORDER BY A.OD_ID DESC			
-		         </when>
-		         </choose>  
-		    </if> 
-		    <if test="histOrder == null and histOrder == ''"> 		
-			ORDER BY A.DEMAND_ID DESC		
-           </if>
+          <include refid="getSubsiDiaryReceiptWhere" />  
+          <if test="dataOrder != null and dataOrder != ''">			
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, A.DEMAND_ID DESC         
+          </if>
+          <if test="dataOrder == null or dataOrder == ''">       
+        	ORDER BY A.DEMAND_ID DESC		       
+          </if>         
         <include refid="pagingFooter"/>
      </select> 
      
