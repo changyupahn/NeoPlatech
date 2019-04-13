@@ -109,6 +109,12 @@ public class BatchMssqlServiceImpl extends EgovAbstractServiceImpl implements
 		resultCnt = batchMssqlMapper.insertAssayOrderQty(cmap);
 		return resultCnt;
 	}
+
+	@Override
+	public CommonList selectAssayOrderQty(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		return batchMssqlMapper.selectAssayOrderQty(cmap);
+	}
 	
 	
 
