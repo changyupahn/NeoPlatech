@@ -251,7 +251,7 @@ public class kp2210GoodsInvoiceController {
 			 commonCodeList = subsiDiaryReceiptService.getSubsiDiaryReceiptList(cmap);
 			  System.out.println(" commonCodeList " + " : " + commonCodeList.size() ); 
 			 
-		    	if(commonCodeList.size() > 0){
+		    	/*if(commonCodeList.size() > 0){
 		    		for(int i = 0; i <  commonCodeList.size(); i++){
 		    		CommonMap map = (CommonMap)commonCodeList.get(i);
 		    		System.out.println(" OD_ID " + " : " + map.getString("odId"));
@@ -260,7 +260,7 @@ public class kp2210GoodsInvoiceController {
 		    		System.out.println(" NEO_DATE " + " : " + map.getString("neoDate"));
 		    		}
 		    		
-		    	}
+		    	}*/
 		} catch (Exception e) {
 			LOG.error("[" + this.getClass().getName()
 					+ ".kp2210DetailAjax().Exception()]" + e.getMessage());
