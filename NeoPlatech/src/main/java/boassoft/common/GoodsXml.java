@@ -78,8 +78,12 @@ public class GoodsXml implements Serializable {
 	private String recall_status;
 	private String out_status;
 	private String ok_status;
-	private String ng_status;
-	
+	private String ng_status;  
+	private String ng_excess_status;
+    private String ng_lack_status;
+    private String inventory_status;
+    private String release_status;
+    
 	
 	public String getResult() {
 		return result;
@@ -501,5 +505,28 @@ public class GoodsXml implements Serializable {
 	public void setNg_status(String ng_status) {
 		this.ng_status = ng_status;
 	}
-
+	public String getNg_excess_status() {
+		return ng_excess_status;
+	}
+	public void setNg_excess_status(String ng_excess_status) {
+		this.ng_excess_status = ng_excess_status;
+	}
+	public String getNg_lack_status() {
+		return ng_lack_status;
+	}
+	public void setNg_lack_status(String ng_lack_status) {
+		this.ng_lack_status = ng_lack_status;
+	}
+	public String getInventory_status() {
+		return inventory_status;
+	}
+	public void setInventory_status(String inventory_status) {
+		this.inventory_status = inventory_status;
+	}
+	public String getRelease_status() {
+		return release_status;
+	}
+	public void setRelease_status(String release_status) {
+		this.release_status = release_status;
+	}
 }
