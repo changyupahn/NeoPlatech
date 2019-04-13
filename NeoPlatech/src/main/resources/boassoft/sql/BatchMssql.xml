@@ -367,5 +367,20 @@
         (PartNo,Gowith,PtodID,OrderType,Qty)
         values(#{subPartNo},#{goWith},#{ptOdId},#{orderType},#{qtyinvoiced})                                                            
      </insert>
+     
+      <select id="selectAssayOrderQty" parameterType="cmap" resultType="cmap" >
+    <![CDATA[    
+        SELECT MAX(OrderID) AS ORDER_ID
+      , PartNo AS PART_NO
+      , MAX(Gowith) AS GO_WITH
+      , PtodID AS PT_OD_ID
+      , MAX(OrderType) AS ORDER_TYPE
+      , MAX(remark) AS REMARK
+      , MAX(Atrribute01) AS ATRRIBUTE01
+      FROM dbo.Assay_Order_Qty
+      WHERE PtodID = #{ptOdId}      
+       GROUP BY PartNo, PtodID;
+     ]]>
+    </select>
     
 </mapper>
