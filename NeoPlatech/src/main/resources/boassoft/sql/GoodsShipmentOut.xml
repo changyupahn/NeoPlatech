@@ -195,7 +195,7 @@
            , #{ptOdId}
            , #{subPtOdId}
            , #{preQtyOnHand}
-           , #{qtyInvoiced}
+           , #{qtyinvoiced}
            , NULL           
            , 'Y'
            , 1

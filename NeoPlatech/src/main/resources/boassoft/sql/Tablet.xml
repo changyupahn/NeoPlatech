@@ -154,13 +154,19 @@
            , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result
            , FN_GET_RECEIPT_ENABLED(COALESCE(A.OD_ID,'')) AS receipt_status
            , FN_GET_RECALL_ENABLED(COALESCE(A.OD_ID,'')) AS recall_status 
-           , FN_GET_OUT_ENABLED(COALESCE(A.OD_ID,'')) AS out_status  
+           , FN_GET_OUT_ENABLED(COALESCE(A.OD_ID,'')) AS out_status
+           , FN_GET_INVENTORY_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) AS inventory_status
+           , FN_GET_RELEASE_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) AS release_status   
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A               
               WHERE 1 = 1 
           ]]>                 
-          <include refid="getPackingReceiptWhere" />  
+          <include refid="getPackingReceiptWhere" /> 
+           <![CDATA[
+         AND (FN_GET_INVENTORY_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) <> '1' 
+        OR FN_GET_RELEASE_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) <> '1' )   
         GROUP BY A.FINAL_VENDOR
 	    ORDER BY A.NEO_OD_DAY
+	    ]]>
 	     <include refid="pagingFooter"/> 	           
       </select>
       
@@ -198,7 +204,11 @@
            FROM RFID_IF_PACKING_WOSENDLIST_ALL A                  
               WHERE 1 = 1 
              ]]>            
-            <include refid="getPackingReceiptWhere" />  
+            <include refid="getPackingReceiptWhere" /> 
+            <![CDATA[     
+             AND (FN_GET_INVENTORY_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) <> '1' 
+            OR FN_GET_RELEASE_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) <> '1' )
+            ]]>   
               GROUP BY A.FINAL_VENDOR
 	         ORDER BY A.NEO_OD_DAY
           ) X	             
@@ -402,7 +412,9 @@
                , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
                , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
                , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced 
-               , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result                                                                         
+               , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS result
+               , FN_GET_NG_EXCESS_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_excess_status
+               , FN_GET_NG_LACK_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_lack_status                                                                
            FROM RFID_IF_SUBPART_SENDLIST_ALL A
            WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
           ]]>  

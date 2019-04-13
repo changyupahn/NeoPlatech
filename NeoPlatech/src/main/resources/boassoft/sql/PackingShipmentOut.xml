@@ -109,14 +109,14 @@
       	   VALUES
       	   (
       	     #{odId}
-      	     , #{receiptCnt}
+      	     , #{preQtyOnHand}
       	     , 'Y'
       	     , 'N'
       	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s') 
       	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     , 1
-      	     , #{receiptCnt}
+      	     , #{qtyinvoiced}
       	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
       	     , '0'
       	     , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
@@ -169,10 +169,10 @@
           , #{odId}
           , 1
           , 1
-          , #{receiptCnt}  
+          , #{preQtyOnHand}  
           , #{odId}
           , NULL
-          , #{qtyInvoiced}    
+          , #{qtyinvoiced}    
           , 'Y'
           , 'N'
           , 'N'
@@ -211,8 +211,8 @@
           VALUES
           ( 
             #{odId}
-            , #{receiptCnt}
             , #{preQtyOnHand}
+            , #{qtyinvoiced}
             , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
             , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
             , 'N'
@@ -254,7 +254,7 @@
           #{cInvoicePoLine}
           , #{odId}
           , #{lgPartNo}
-          , #{preQtyOnHand}
+          , #{qtyinvoiced}
           , 1
           , #{odQtyId}
           , #{rowNum}
