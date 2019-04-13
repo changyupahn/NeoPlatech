@@ -96,12 +96,12 @@ var colNames01 = ['rowNum'
     					}}
                   ];
                   
-                  var colNames02 = ['rowNum'
-                                    , 'LG주문번호'                                
+                  var colNames02 = ['rowNum'                                  
                                     , '모델명'                   
                                     , 'LG일정'
                                     , '선행일정'
                                     , 'NEO일정'
+                                    , 'LG주문번호'                                
                                     , '업체명'
                                     , '실제주문품번'
                                     , '부품명칭' 
@@ -124,12 +124,12 @@ var colNames01 = ['rowNum'
                                     , '현재입고량'                                   
                                     ];
                                     var colModel02 = [
-                                    {name:'rowNum', index:'rowNum', width:'0px', hidden:true}
-                                    ,{name:'demandId', index:'demandId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                                
+                                    {name:'rowNum', index:'rowNum', width:'0px', hidden:true}                                                                   
                                     ,{name:'tool', index:'tool', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}                 
                                     ,{name:'lgeDate', index:'lgeDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' , hidden:true}
                                     ,{name:'gapDay', index:'gapDay', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-NUMBER' , hidden:true , formatter:'currency', formatoptions:{thousandsSeparator:",", decimalPlaces: 0}}
                                     ,{name:'neoDate', index:'neoDate', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT'}
+                                    ,{name:'demandId', index:'demandId', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
                                     ,{name:'vendor', index:'vendor', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
                                     ,{name:'subPartNo', index:'subPartNo', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
                                     ,{name:'subPartName', index:'subPartName', width:'100px', align:'CENTER', columntype:'text', classes:'grid-col-TEXT' }
@@ -182,8 +182,8 @@ function fnGridList() {
 // 		sortname: 'repoDt',
 // 		sortorder: 'desc',
 		sortable : true,
-		//width: $(window).width() - widthHip,
-		//height: $(window).height() - heightHip,
+		width: $(window).width() - widthHip,
+		height: $(window).height() - heightHip,
 		width: $(window).width() ,
 		height: $(window).height() ,
 		multiselect: true,
