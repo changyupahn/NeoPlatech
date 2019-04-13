@@ -167,7 +167,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}
 .ui-jqgrid .ui-jqgrid-view {border:1px solid #c6c7d0; border-top:2px solid #2a73ac;}
 .ui-jqgrid .ui-jqgrid-hdiv {background-color:#EEEEEF}
 .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {font-weight:bold}
-.ui-jqgrid tr.jqgrow td {height:27px}
+.ui-jqgrid tr.jqgrow td {height:50px}
 .ui-jqgrid .ui-icon-seek-first {background-image:url("/images/ses/button/btn_arrow_dleft.gif"); background-position: 0px; width:18px; border:0px}
 .ui-jqgrid .ui-icon-seek-prev {background-image:url("/images/ses/button/btn_arrow_left.gif"); background-position: 0px; width:15px}
 .ui-jqgrid .ui-separator {border:0px}
