@@ -1040,7 +1040,8 @@ public class TabletController {
 		String qtyinvoiced = "";
 		String od_id = "";
 		String result = "0";
-
+        String ng_excess_status = "";
+        String ng_lack_status = "";
 		try {
 			goodsXmlList = tabletService.getGoodsShipmentOutDetailListXml(cmap);
 			System.out.println(" goodsXmlList.size() " + " : "
@@ -1065,6 +1066,8 @@ public class TabletController {
 						  bom_qty = gmap.getString("bom_qty");
 						  od_id = gmap.getString("odId");						  
 						  result = gmap.getString("result");
+						  ng_excess_status = gmap.getString("ngExcessStatus");
+						  ng_lack_status = gmap.getString("ngLackStatus"); 		  
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1073,6 +1076,8 @@ public class TabletController {
 						  System.out.println(" qtyinvoiced 444 " + " : " + qtyinvoiced);
 						  System.out.println(" bom_qty 444 " + " : " + bom_qty);
 						  System.out.println(" result 444 " + " : " + result);  
+						  System.out.println(" ng_excess_status 444 " + " : " + ng_excess_status);  
+						  System.out.println(" ng_lack_status 444 " + " : " + ng_lack_status);  
 						  
 						  System.out.println("000 maxCnt " + " : " + maxCnt);
 	  					  // maxCnt 300 sumQty 150 출고량 소요량 maxCnt 5 sumQty 0
@@ -1128,6 +1133,8 @@ public class TabletController {
 	    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
 	    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
 	    					+ "<result><![CDATA["+result+"]]></result>"
+	    					//+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
+	    					//+ "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
 	    					+ "</data>";  	
 				System.out.println(" xmlString 555 " + " : " + xmlString);
 			}else{
@@ -1217,6 +1224,7 @@ public class TabletController {
 				+ cmap.getString("orderType", ""));
 		
 		CommonList goodsXmlList = new CommonList();			
+		CommonList commonList = new CommonList();			
 
 		String xmlString = "";
 		String part_number = "";
@@ -1230,7 +1238,9 @@ public class TabletController {
         String order_type = cmap.getString("orderType", "");
         String receiptCnt = cmap.getString("receiptCnt","0");
 		String result = "0";
-		
+		String ng_excess_status = "";
+	    String ng_lack_status = "";
+	    String orderType = "";
 		try {
 			goodsXmlList = tabletService.getGoodsShipmentOutDetailListXml(cmap);
 			
@@ -1258,6 +1268,9 @@ public class TabletController {
 						  bom_qty = gmap.getString("bomQty");
 						  result = gmap.getString("result");
 						  gmap.put("orderType",order_type);
+						  gmap.put("qtyinvoiced",maxCnt);
+						  //ng_excess_status = gmap.getString("ngExcessStatus");
+						  //ng_lack_status = gmap.getString("ngLackStatus"); 	
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1265,16 +1278,30 @@ public class TabletController {
 						  System.out.println(" sub_unit 444 " + " : " + sub_unit);
 						  System.out.println(" qtyinvoiced 444 " + " : " + qtyinvoiced);
 						  System.out.println(" bom_qty 444 " + " : " + bom_qty);
-						  System.out.println(" result 444 " + " : " + result);  
-						  
+						  System.out.println(" result 444 " + " : " + result);  						  
 						  System.out.println("000 maxCnt " + " : " + maxCnt);
-						  
+						  System.out.println(" ng_excess_status 444 " + " : " + ng_excess_status);  
+						  System.out.println(" ng_lack_status 444 " + " : " + ng_lack_status);  
 						  
 						  
 						  resultCnt =  batchMssqlService.insertAssayOrderQty(gmap);
 						  
-						  System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());
-							
+						  System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());						
+						  
+						  if("Lack".equalsIgnoreCase(order_type)){
+							  ng_excess_status = "0";
+							  ng_lack_status = "1";
+						  }else if("Over".equalsIgnoreCase(order_type)){
+							  ng_excess_status = "1";
+							  ng_lack_status = "0";
+						  }else{
+							  ng_excess_status = "0";
+							  ng_lack_status = "0";							 
+						  }
+						  
+						  System.out.println(" ng_excess_status 1111 " + " : " + ng_excess_status);	
+						  System.out.println(" ng_lack_status 1111 " + " : " + ng_lack_status);	
+						  
 						  break;
 					  }
 				}		  
@@ -1286,6 +1313,8 @@ public class TabletController {
 		    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
 		    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
 		    					+ "<result><![CDATA["+result+"]]></result>"
+		    					+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
+	    					    + "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
 		    					+ "</data>";  	
 					System.out.println(" xmlString 555 " + " : " + xmlString);
 				}else{
