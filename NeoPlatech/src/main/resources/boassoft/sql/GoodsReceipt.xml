@@ -193,9 +193,14 @@
                 FROM RFID_IF_SUBPART_WOSENDLIST_ODONLY A
                 WHERE 1 = 1      
           ]]>                 
-            <include refid="getSubsiDiaryReceiptWhere" /> 
+            <include refid="getSubsiDiaryReceiptWhere" />          
         GROUP BY A.SUB_PART_NO
-	    ORDER BY A.LGE_DATE
+         <if test="dataOrder != null and dataOrder != ''">			
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, A.LGE_DATE        
+        </if>
+        <if test="dataOrder == null or dataOrder == ''">       
+        	ORDER BY A.LGE_DATE        
+        </if>	   
 	     <include refid="pagingFooter"/> 	   
 	   </select>
        
