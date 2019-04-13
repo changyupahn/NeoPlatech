@@ -32,6 +32,8 @@ public interface BatchMssqlService {
 	public void insertPackingWoSendListAllCngInputQty(CommonMap cmap) throws Exception;
 	
 	public int insertAssayOrderQty(CommonMap cmap) throws Exception;
+
+	public CommonList selectAssayOrderQty(CommonMap gmap) throws Exception;
 	
 	
 
