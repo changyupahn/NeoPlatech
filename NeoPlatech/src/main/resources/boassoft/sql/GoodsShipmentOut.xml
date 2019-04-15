@@ -127,16 +127,16 @@
     
       <insert id="insertRfidMIn" parameterType="cmap" >
        INSERT IGNORE INTO RFID_M_IN (
-          M_OUT_ID
+          M_IN_ID
           , COUNT
           , MOVEMENTTYPE
           , DATEORDERED
-          , DATEMOVEMENT
+          , MOVEMENTDATE
           , ISINVOICED
           , ISPRINTED
-          , M_OUT_ORDEREOUT_ID
+          , C_IN_ORDER_ID
           , M_MOVEMENT_ID
-          , C_SALES_ORDER_ID
+          , C_PURCHASE_ORDER_ID
           , DESCRIPTION
           , USE_YN
           , FRST_REGIST_PNTTM
@@ -170,16 +170,15 @@
         SELECT get_seq('mInline')     
       </selectKey>
          INSERT IGNORE INTO RFID_M_INLINE (
-           M_OUTLINE_ID
-         , M_OUT_ID
+           M_IN_ID
+         , M_INLINE_ID
          , M_PRODUCT_ID
-         , QTYMOVEMENT
+         , MOVEMENTQTY
          , QTYINVOICED
          , C_UOM_ID
          , ISINVOICED
-         , M_WAREHOUSE_ID
-         , M_OUT_ORDERELINE_ID
-         , C_SALES_ORDERLINE_ID
+         , M_WAREHOUSE_ID         
+         , C_IN_ORDERLINE_ID
          , DESCRIPTION
          , M_MOVEMENTLINE_ID
          , REFERENCELINE_ID
@@ -198,8 +197,7 @@
            , #{qtyinvoiced}
            , NULL           
            , 'Y'
-           , 1
-           , NULL
+           , 1           
            , NULL
            , NULL
            , NULL
