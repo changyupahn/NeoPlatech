@@ -8,7 +8,6 @@ CommonMap cmRequest = RequestUtil.getCommonMap(request, "cmRequest"); //검색�
 int idx = 0;
 int colmax = 0;
 int colcnt = cmRequest.getInt("colcnt");
-
 if (!ssAuthManager) {
 	cmRequest.put("sUserNo", cmRequest.getString("sUserNo", SessionUtil.getString("userNo")));
 	cmRequest.put("sUserName", cmRequest.getString("sUserName", SessionUtil.getString("userName")));
@@ -101,18 +100,36 @@ $(document).ready(function(){
 	   
 	
  });
-
-
 function updateDtKeywordS(value){
-	alert("111");
-	alert("222" + " : " + value);
-    $('#searchDtKeywordS').val(value);    
+	   
+    $( "#searchDtKeywordS" ).datepicker("setDate", value );
+   
+}
+function updateDtKeywordE(value){  
+	
+	$( "#searchDtKeywordS" ).datepicker("setDate", value );
 }
 
-function updateDtKeywordE(value){  
-	alert("111");
-	alert("222" + " : " + value);
-    $('#searchDtKeywordE').val(value);   
+function getDateStr(myDate){
+	return (myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate())
+}
+
+/* 오늘로부터 1개월전 날짜 반환 */
+function lastMonth() {
+	 var d = new Date();
+	    var lastDayofLastMonth = ( new Date( d.getYear(), d.getMonth(), 0) ).getDate();
+	    if(d.getDate() > lastDayofLastMonth) {
+	        d.setDate(lastDayofLastMonth);
+	    }
+	    var month = d.getMonth() -1;
+	    d.setMonth(month);
+  return getDateStr(d);
+}
+
+/* 오늘 날짜를 문자열로 반환 */
+function today() {
+  var d = new Date();
+  return getDateStr(d);
 }
 
 function fnItemCdChange(obj){
@@ -153,7 +170,6 @@ function fnItemCdChange(obj){
 	});
 	
 }
-
 function fnPNoChange(obj){
 	
 	var value = "sRqstPNoCd=" + obj;
@@ -175,7 +191,6 @@ function fnPNoChange(obj){
 				$("select#sRqstPNoCd").append("<option value=''>선택</option>");														
 								
 				$.each(data.LIST, function(key,value){
-
 					$("select#sRqstPNoCd").append("<option value='" + value.code + "'>" + value.codeName+"</option>");					
 					
 				});
@@ -192,9 +207,6 @@ function fnPNoChange(obj){
 	});
 	
 }
-
-
-
 </script>
 <table class="search01">
 	<colgroup>
@@ -270,8 +282,8 @@ function fnPNoChange(obj){
 			날짜: 
 		</th>				
 		<td>
-			<input type="text" id="searchDtKeywordS" name="searchDtKeywordS" value="<%=cmRequest.getString("searchDtKeywordS")%>" class="datepicker dt1" onclick="javascript:updateDtKeywordS(this);"/>
-			- <input type="text" id="searchDtKeywordE" name="searchDtKeywordE" value="<%=cmRequest.getString("searchDtKeywordE")%>" class="datepicker dt2" onclick="javascript:updateDtKeywordE(this);"/>
+			<input type="text" id="searchDtKeywordS" name="searchDtKeywordS" value="<%=cmRequest.getString("searchDtKeywordS")%>" class="datepicker dt1" onclick="javascript:updateDtKeywordS(lastMonth());"/>
+			- <input type="text" id="searchDtKeywordE" name="searchDtKeywordE" value="<%=cmRequest.getString("searchDtKeywordE")%>" class="datepicker dt2" onclick="javascript:updateDtKeywordE(today());"/>
 		</td>			    
 <% idx++; if (idx % colcnt > 0) { %><td colspan="<%=(colmax * 2) - ((idx % colcnt) * 2)%>">&nbsp;</td><% } %>		
 		</tr>
