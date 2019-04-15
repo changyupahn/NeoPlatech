@@ -12,4 +12,10 @@ public interface GoodsShipmentOutService {
 	public int insertRridMOut(CommonMap gmap) throws Exception;
 
 	public int insertRridMOutLine(CommonMap gmap) throws Exception;
+
+	public int insertRfidMIn(CommonMap gmap) throws Exception;
+
+	public int insertRfidMInLine(CommonMap gmap) throws Exception;
+	
+	
 }
