@@ -35,4 +35,6 @@ public interface TabletMapper {
 
 	public CommonList getPackingResultListXml(CommonMap cmap) throws Exception;
 
+	public CommonList getGoodsResultListXml(CommonMap cmap) throws Exception;
+
 }
