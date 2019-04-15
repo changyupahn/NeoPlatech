@@ -432,14 +432,17 @@ public class TabletController {
 				+ cmap.getString("receiptCnt", ""));
 
 		CommonList goodsXmlList = new CommonList();
-
+		CommonList goodsResultList = new CommonList();
 		String xmlString = "";
 		String part_number = "";
 		String lg_part_no = "";
 		String neo_od_day = "";
 		String neo_od_qty = "";
 		String od_id = "";
-		String qtyinvoiced = "";		
+		String qtyinvoiced = "";	
+		String inventory_status = "0";
+		String release_status = "0";
+		
 		String result = "0";
 
 		try {
@@ -530,11 +533,38 @@ public class TabletController {
 					}
 				}
 				
-				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+				goodsResultList = tabletService.getPackingResultListXml(cmap);
+				System.out.println(" getPackingResultListXml.size() " + " : "
+						+ goodsResultList.size());
+				
+				if(goodsResultList.size() > 0){
+					
+					for(int j = 0; j < goodsResultList.size(); j++){
+					     
+						 CommonMap packingMap = (CommonMap)goodsResultList.get(j);
+						 inventory_status = packingMap.getString("inventoryStatus");
+						 release_status = packingMap.getString("releaseStatus");
+						 
+				    xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
 						+ "<od_id><![CDATA[" + od_id
 						+ "]]></od_id>" + "<neo_od_qty><![CDATA["
 						+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
-						+ result + "]]></result>" + "</data>";
+						+ result + "]]></result>"  
+						+ "<qtyinvoiced><![CDATA["+ qtyinvoiced + "]]></qtyinvoiced>"
+						+ "<inventory_status><![CDATA["+ inventory_status + "]]></inventory_status>" 
+						+ "<release_status><![CDATA["+ release_status + "]]></release_status>" +"</data>";
+				    
+					}
+				}else{
+					xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+							+ "<od_id><![CDATA[" + od_id
+							+ "]]></od_id>" + "<neo_od_qty><![CDATA["
+							+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
+							+ result + "]]></result>"  
+							+ "<qtyinvoiced><![CDATA["+ qtyinvoiced + "]]></qtyinvoiced>"
+							+ "<inventory_status><![CDATA["+ inventory_status + "]]></inventory_status>" 
+							+ "<release_status><![CDATA["+ release_status + "]]></release_status>" +"</data>";
+				}
 				System.out.println(" xmlString 555 " + " : " + xmlString);
 			} else {
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
@@ -577,7 +607,7 @@ public class TabletController {
 				+ cmap.getString("receiptCnt", ""));
 
 		CommonList goodsXmlList = new CommonList();
-
+		CommonList goodsResultList = new CommonList();
 		String xmlString = "";
 		String part_number = "";
 		String lg_part_no = "";
@@ -585,6 +615,8 @@ public class TabletController {
 		String neo_od_qty = "";
 		String od_id = "";
 		String qtyinvoiced = "";
+		String inventory_status = "0";
+		String release_status = "0";
 		String result = "0";
 
 		try {
@@ -674,11 +706,37 @@ public class TabletController {
 
 				}
 
-				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-						+ "<od_id><![CDATA[" + od_id
-						+ "]]></od_id>" + "<neo_od_qty><![CDATA["
-						+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
-						+ result + "]]></result>" + "</data>";
+				goodsResultList = tabletService.getPackingResultListXml(cmap);
+				System.out.println(" getPackingResultListXml.size() " + " : "
+						+ goodsResultList.size());
+				
+				if(goodsResultList.size() > 0){
+					
+					for(int j = 0; j < goodsResultList.size(); j++){
+						 CommonMap packingMap = (CommonMap)goodsResultList.get(j);
+						 inventory_status = packingMap.getString("inventoryStatus");
+						 release_status = packingMap.getString("releaseStatus");
+						 
+						  xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+									+ "<od_id><![CDATA[" + od_id
+									+ "]]></od_id>" + "<neo_od_qty><![CDATA["
+									+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
+									+ result + "]]></result>"  
+									+ "<qtyinvoiced><![CDATA["+ qtyinvoiced + "]]></qtyinvoiced>"
+									+ "<inventory_status><![CDATA["+ inventory_status + "]]></inventory_status>" 
+									+ "<release_status><![CDATA["+ release_status + "]]></release_status>" +"</data>";
+					}
+				}else{
+					xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+							+ "<od_id><![CDATA[" + od_id
+							+ "]]></od_id>" + "<neo_od_qty><![CDATA["
+							+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
+							+ result + "]]></result>"  
+							+ "<qtyinvoiced><![CDATA["+ qtyinvoiced + "]]></qtyinvoiced>"
+							+ "<inventory_status><![CDATA["+ inventory_status + "]]></inventory_status>" 
+							+ "<release_status><![CDATA["+ release_status + "]]></release_status>" +"</data>";
+				}
+				
 				System.out.println(" xmlString 555 " + " : " + xmlString);
 
 			} else {
@@ -722,7 +780,7 @@ public class TabletController {
 				+ cmap.getString("receiptCnt", ""));
 
 		CommonList goodsXmlList = new CommonList();
-
+		CommonList goodsResultList = new CommonList();
 		String xmlString = "";
 		String part_number = "";
 		String lg_part_no = "";
@@ -730,6 +788,8 @@ public class TabletController {
 		String neo_od_qty = "";
 		String od_id = "";
 		String qtyinvoiced = "";
+		String inventory_status = "0";
+		String release_status = "0";
 		String result = "2";
 
 		try {
@@ -821,12 +881,39 @@ public class TabletController {
 					}
 
 				}
-
-				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-						+ "<od_id><![CDATA[" + od_id
-						+ "]]></od_id>" + "<neo_od_qty><![CDATA["
-						+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
-						+ result + "]]></result>" + "</data>";
+				
+				goodsResultList = tabletService.getPackingResultListXml(cmap);
+				System.out.println(" getPackingResultListXml.size() " + " : "
+						+ goodsResultList.size());
+				
+				if(goodsResultList.size() > 0){
+					for(int j = 0; j < goodsResultList.size(); j++){
+						
+						 CommonMap packingMap = (CommonMap)goodsResultList.get(j);
+						 inventory_status = packingMap.getString("inventoryStatus");
+						 release_status = packingMap.getString("releaseStatus");
+						
+						 xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+									+ "<od_id><![CDATA[" + od_id
+									+ "]]></od_id>" + "<neo_od_qty><![CDATA["
+									+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
+									+ result + "]]></result>"  
+									+ "<qtyinvoiced><![CDATA["+ qtyinvoiced + "]]></qtyinvoiced>"
+									+ "<inventory_status><![CDATA["+ inventory_status + "]]></inventory_status>" 
+									+ "<release_status><![CDATA["+ release_status + "]]></release_status>" +"</data>";
+					}
+					
+				}else{
+					xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+							+ "<od_id><![CDATA[" + od_id
+							+ "]]></od_id>" + "<neo_od_qty><![CDATA["
+							+ neo_od_qty + "]]></neo_od_qty>" + "<result><![CDATA["
+							+ result + "]]></result>"  
+							+ "<qtyinvoiced><![CDATA["+ qtyinvoiced + "]]></qtyinvoiced>"
+							+ "<inventory_status><![CDATA["+ inventory_status + "]]></inventory_status>" 
+							+ "<release_status><![CDATA["+ release_status + "]]></release_status>" +"</data>";
+				}
+			
 				System.out.println(" xmlString 555 " + " : " + xmlString);
 
 			} else {
