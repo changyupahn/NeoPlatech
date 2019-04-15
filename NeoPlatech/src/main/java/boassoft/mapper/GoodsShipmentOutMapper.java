@@ -18,7 +18,10 @@ public interface GoodsShipmentOutMapper {
 	public int insertRridMOut(CommonMap cmap) throws Exception;
 
 	public int insertRridMOutLine(CommonMap cmap) throws Exception;
-	
+
+	public int insertRfidMIn(CommonMap cmap) throws Exception;
+
+	public int insertRfidMInLine(CommonMap cmap) throws Exception;
 	
 
 }
