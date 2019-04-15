@@ -83,8 +83,15 @@ public class GoodsXml implements Serializable {
     private String ng_lack_status;
     private String inventory_status;
     private String release_status;
+    private String qtyinvoiced;
     
 	
+	public String getQtyinvoiced() {
+		return qtyinvoiced;
+	}
+	public void setQtyinvoiced(String qtyinvoiced) {
+		this.qtyinvoiced = qtyinvoiced;
+	}
 	public String getResult() {
 		return result;
 	}
