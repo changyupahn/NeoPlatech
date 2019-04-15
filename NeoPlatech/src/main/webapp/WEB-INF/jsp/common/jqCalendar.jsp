@@ -85,10 +85,10 @@ function fnInitCalcToShow(nm) {
 		, changeMonth : true
 		, currentText : '오늘'
 		, closeText : '닫기'
-		, onSelect : function() {
-			//alert(ths);
-			//$('input[name="'+ $(ths).attr("name") +'"]').val('111');
-			//$(ths).val('111');
+		, onSelect : function(dateText, inst) {
+			//alert(this);
+			//$('input[name="'+ $(ths).attr("nm") +'"]').val(dateText);
+			//$(this).val(dateText);
 		}
 		//, showButtonPanel : true
 	}).datepicker('show');
