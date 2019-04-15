@@ -279,7 +279,7 @@
             , COALESCE(A.VENDOR,' ') AS vendor
             , COALESCE(A.BOM_QTY,0) AS bom_qty
             , COALESCE(A.SUB_UNIT,' ') AS sub_unit  
-            , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_unit
+            , COALESCE(A.SUB_SUM_QTY,0) AS sub_sum_qty
             , COALESCE(A.DEMAND_FLOOR,' ') AS demand_floor
             , COALESCE(A.OSP,' ') AS osp
             , COALESCE(A.RSLTDATE,' ') AS rsltdate
