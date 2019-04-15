@@ -27,5 +27,7 @@ public interface TabletService {
 
 	public GoodsXmlList optionPartNoListXml(CommonMap cmap) throws Exception; 
 	
-	public CommonList getGoodsShipmentOutDetailListXml(CommonMap cmap) throws Exception; 
+	public CommonList getGoodsShipmentOutDetailListXml(CommonMap cmap) throws Exception;
+
+	public CommonList getPackingResultListXml(CommonMap cmap) throws Exception; 
 }
