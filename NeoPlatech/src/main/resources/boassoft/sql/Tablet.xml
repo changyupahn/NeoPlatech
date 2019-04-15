@@ -421,6 +421,13 @@
          <include refid="pagingFooter"/>
 	  </select> 
 	  
-	  
+	  <select id="getPackingResultListXml" parameterType="cmap" resultType="cmap">
+	  SELECT        COALESCE(A.OD_ID,' ') AS od_id
+       , FN_GET_INVENTORY_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) AS inventory_status 
+       , FN_GET_RELEASE_STATUS(COALESCE(A.OD_ID,''),COALESCE(A.NEO_OD_QTY,0)) AS release_status
+       FROM RFID_IF_PACKING_WOSENDLIST_ALL A     
+		  WHERE 1 = 1
+		  AND A.OD_ID = #{odId}		  
+	  </select>
 	
 </mapper> 
