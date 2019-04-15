@@ -1116,7 +1116,8 @@ public class TabletController {
 				+ cmap.getString("subPtOdId", ""));
 
 		CommonList goodsXmlList = new CommonList();
-
+		CommonList goodsResultList = new CommonList();
+		
 		String xmlString = "";
 		String part_number = "";
 		String go_with = "";
@@ -1127,8 +1128,13 @@ public class TabletController {
 		String qtyinvoiced = "";
 		String od_id = "";
 		String result = "0";
-        String ng_excess_status = "";
-        String ng_lack_status = "";
+        String ng_excess_status = "0";
+        String ng_lack_status = "0";
+        String ok_status = "0";
+        String pt_od_id = "";
+        String sub_pt_od_id = "";
+                
+        
 		try {
 			goodsXmlList = tabletService.getGoodsShipmentOutDetailListXml(cmap);
 			System.out.println(" goodsXmlList.size() " + " : "
@@ -1154,7 +1160,10 @@ public class TabletController {
 						  od_id = gmap.getString("odId");						  
 						  result = gmap.getString("result");
 						  ng_excess_status = gmap.getString("ngExcessStatus");
-						  ng_lack_status = gmap.getString("ngLackStatus"); 		  
+						  ng_lack_status = gmap.getString("ngLackStatus"); 	
+						  pt_od_id = gmap.getString("ptOdId");
+						  sub_pt_od_id = gmap.getString("subPtOdId"); 	
+						  
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1165,6 +1174,8 @@ public class TabletController {
 						  System.out.println(" result 444 " + " : " + result);  
 						  System.out.println(" ng_excess_status 444 " + " : " + ng_excess_status);  
 						  System.out.println(" ng_lack_status 444 " + " : " + ng_lack_status);  
+						  System.out.println(" pt_od_id 444 " + " : " + pt_od_id);  
+						  System.out.println(" sub_pt_od_id 444 " + " : " + sub_pt_od_id);  
 						  
 						  System.out.println("000 maxCnt " + " : " + maxCnt);
 	  					  // maxCnt 300 sumQty 150 출고량 소요량 maxCnt 5 sumQty 0
@@ -1212,17 +1223,54 @@ public class TabletController {
 					  
 				}
 				
-				 xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-	    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
-	    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
-	    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
-	    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
-	    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
-	    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
-	    					+ "<result><![CDATA["+result+"]]></result>"
-	    					//+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
-	    					//+ "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
-	    					+ "</data>";  	
+				goodsResultList = tabletService.getGoodsResultListXml(cmap);
+				System.out.println(" getPackingResultListXml.size() " + " : "
+						+ goodsResultList.size());
+				
+                   if(goodsResultList.size() > 0){
+					
+					for(int j = 0; j < goodsResultList.size(); j++){
+						CommonMap goodsMap = (CommonMap)goodsResultList.get(j);
+						ng_excess_status = goodsMap.getString("ngExcessStatus");
+						ng_lack_status = goodsMap.getString("ngLackStatus");
+						qtyinvoiced = goodsMap.getString("qtyinvoiced");
+						ok_status = goodsMap.getString("okStatus");
+						pt_od_id = goodsMap.getString("ptOdId");
+						sub_pt_od_id = goodsMap.getString("subPtOdId");
+						
+						 xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+			    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+			    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
+			    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
+			    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
+			    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
+			    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
+			    					+ "<result><![CDATA["+result+"]]></result>"
+			    					+ "<ok_status><![CDATA["+ok_status+"]]></ok_status>"
+			    					+ "<pt_od_id><![CDATA["+pt_od_id+"]]></pt_od_id>"
+			    					+ "<sub_pt_od_id><![CDATA["+sub_pt_od_id+"]]></sub_pt_od_id>"
+			    					+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
+			    					+ "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
+			    					+ "</data>";  	
+						
+					}
+                   }else{
+                	   xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+		    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+		    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
+		    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
+		    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
+		    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
+		    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
+		    					+ "<result><![CDATA["+result+"]]></result>"
+		    					+ "<ok_status><![CDATA["+ok_status+"]]></ok_status>"
+		    					+ "<pt_od_id><![CDATA["+pt_od_id+"]]></pt_od_id>"
+		    					+ "<sub_pt_od_id><![CDATA["+sub_pt_od_id+"]]></sub_pt_od_id>"
+		    					+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
+		    					+ "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
+		    					+ "</data>";
+                   }
+                   									
 				System.out.println(" xmlString 555 " + " : " + xmlString);
 			}else{
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
@@ -1310,9 +1358,9 @@ public class TabletController {
 		System.out.println(" orderType " + " : "
 				+ cmap.getString("orderType", ""));
 		
-		CommonList goodsXmlList = new CommonList();			
-		CommonList commonList = new CommonList();			
-
+		CommonList goodsXmlList = new CommonList();							
+		CommonList goodsResultList = new CommonList();
+		
 		String xmlString = "";
 		String part_number = "";
 		String go_with = "";
@@ -1321,13 +1369,18 @@ public class TabletController {
 		String sub_unit = "";
 		String qtyinvoiced = "";
 		String bom_qty = "";
+		String od_id = "";
+		
 		String pt_od_id = cmap.getString("ptOdId", "");
         String order_type = cmap.getString("orderType", "");
         String receiptCnt = cmap.getString("receiptCnt","0");
 		String result = "0";
-		String ng_excess_status = "";
-	    String ng_lack_status = "";
+		String ng_excess_status = "0";
+	    String ng_lack_status = "0";
 	    String orderType = "";
+	    String ok_status = "0";      
+        String sub_pt_od_id = "";      
+	    
 		try {
 			goodsXmlList = tabletService.getGoodsShipmentOutDetailListXml(cmap);
 			
@@ -1343,8 +1396,7 @@ public class TabletController {
 					  double sumQty = Double.parseDouble(gmap.getString("subSumQty"));
 					  
 					  if (maxCnt > 0) {
-						
-						  System.out.println(" receipt_cnt 444 " + " : " + gmap.toString());
+						  System.out.println(" receipt_cnt 444 " + " : " + gmap.toString());	
 						  
 						  part_number = gmap.getString("partNumber");
 						  go_with = gmap.getString("goWith"); 
@@ -1352,12 +1404,11 @@ public class TabletController {
 						  sub_sum_qty = gmap.getString("subSumQty");
 						  sub_unit = gmap.getString("subUnit");
 						  qtyinvoiced = gmap.getString("qtyinvoiced");
-						  bom_qty = gmap.getString("bomQty");
+						  bom_qty = gmap.getString("bom_qty");
+						  od_id = gmap.getString("odId");						  
 						  result = gmap.getString("result");
-						  gmap.put("orderType",order_type);
-						  gmap.put("qtyinvoiced",maxCnt);
-						  //ng_excess_status = gmap.getString("ngExcessStatus");
-						  //ng_lack_status = gmap.getString("ngLackStatus"); 	
+						  ng_excess_status = gmap.getString("ngExcessStatus");
+						  ng_lack_status = gmap.getString("ngLackStatus"); 		  
 						  System.out.println(" part_number 444 " + " : " + part_number);
 						  System.out.println(" go_with 444 " + " : " + go_with);
 						  System.out.println(" vendor 444 " + " : " + vendor);
@@ -1365,44 +1416,123 @@ public class TabletController {
 						  System.out.println(" sub_unit 444 " + " : " + sub_unit);
 						  System.out.println(" qtyinvoiced 444 " + " : " + qtyinvoiced);
 						  System.out.println(" bom_qty 444 " + " : " + bom_qty);
-						  System.out.println(" result 444 " + " : " + result);  						  
-						  System.out.println("000 maxCnt " + " : " + maxCnt);
+						  System.out.println(" result 444 " + " : " + result);  
 						  System.out.println(" ng_excess_status 444 " + " : " + ng_excess_status);  
 						  System.out.println(" ng_lack_status 444 " + " : " + ng_lack_status);  
 						  
-						  
-						  resultCnt =  batchMssqlService.insertAssayOrderQty(gmap);
-						  
-						  System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());						
-						  
-						  if("Lack".equalsIgnoreCase(order_type)){
-							  ng_excess_status = "0";
-							  ng_lack_status = "1";
-						  }else if("Over".equalsIgnoreCase(order_type)){
-							  ng_excess_status = "1";
-							  ng_lack_status = "0";
-						  }else{
-							  ng_excess_status = "0";
-							  ng_lack_status = "0";							 
-						  }
-						  
-						  System.out.println(" ng_excess_status 1111 " + " : " + ng_excess_status);	
-						  System.out.println(" ng_lack_status 1111 " + " : " + ng_lack_status);	
-						  
-						  break;
+						  System.out.println("000 maxCnt " + " : " + maxCnt);
+	  					  // maxCnt 300 sumQty 150 출고량 소요량 maxCnt 5 sumQty 0
+	  					  if(maxCnt == sumQty){
+	  						  gmap.put("qtyOnHand",0);
+							  gmap.put("preQtyOnHand", maxCnt);  	
+							  gmap.put("qtyinvoiced", maxCnt);
+							  
+							resultCnt = goodsReceiptService.updateQtyInvoiced(gmap);
+							
+						  // 출고를 한다.
+							goodsShipmentOutService.insertRfidMIn(gmap);
+							goodsShipmentOutService.insertRfidMInLine(gmap);
+							System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());
+							
+							break;
+	  					  }else if(maxCnt > sumQty) { // 출고량이 소요량보다 많으면
+	  						disCnt = maxCnt - sumQty; // 150  부족 1개 
+	  						System.out.println("111 disCnt " + " : " + disCnt);
+	  						gmap.put("qtyOnHand",0);
+							gmap.put("preQtyOnHand", disCnt);
+							gmap.put("qtyinvoiced", sumQty);
+							resultCnt = goodsReceiptService.updateQtyInvoiced(gmap);
+							
+						    // 출고를 한다.
+							goodsShipmentOutService.insertRfidMIn(gmap);
+							goodsShipmentOutService.insertRfidMInLine(gmap);  						
+							
+							System.out.println(" receipt_cnt 2222 " + " : " + gmap.toString());
+							break;
+	  					}else{ // 소요량이 출고량보다 많으면 남는다.
+	  						disCnt = sumQty - maxCnt; // 150  부족 1개 
+	  						gmap.put("qtyOnHand",0);
+							gmap.put("preQtyOnHand", sumQty);
+							gmap.put("qtyinvoiced", disCnt);
+							resultCnt = goodsReceiptService.updateQtyInvoiced(gmap);
+							
+							goodsShipmentOutService.insertRfidMIn(gmap);
+							goodsShipmentOutService.insertRfidMInLine(gmap);
+							
+							System.out.println(" receipt_cnt 333 " + " : " + gmap.toString());
+							break;
+	  					}
 					  }
-				}		  
-					  xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
-		    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
-		    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
-		    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
-		    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
-		    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
-		    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
-		    					+ "<result><![CDATA["+result+"]]></result>"
-		    					+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
-	    					    + "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
-		    					+ "</data>";  	
+					  
+					  resultCnt =  batchMssqlService.insertAssayOrderQty(gmap);
+					  
+					  System.out.println(" receipt_cnt 1111 " + " : " + gmap.toString());						
+					  
+					  if("Lack".equalsIgnoreCase(order_type)){
+						  ng_excess_status = "0";
+						  ng_lack_status = "1";
+					  }else if("Over".equalsIgnoreCase(order_type)){
+						  ng_excess_status = "1";
+						  ng_lack_status = "0";
+					  }else{
+						  ng_excess_status = "0";
+						  ng_lack_status = "0";							 
+					  }
+					  
+				}
+				 
+			
+				  
+				  System.out.println(" ng_excess_status 1111 " + " : " + ng_excess_status);	
+				  System.out.println(" ng_lack_status 1111 " + " : " + ng_lack_status);	
+				
+				  goodsResultList = tabletService.getGoodsResultListXml(cmap);
+					System.out.println(" getPackingResultListXml.size() " + " : "
+							+ goodsResultList.size());
+				  
+					  if(goodsResultList.size() > 0){
+							
+							for(int j = 0; j < goodsResultList.size(); j++){
+								CommonMap goodsMap = (CommonMap)goodsResultList.get(j);
+								ng_excess_status = goodsMap.getString("ngExcessStatus");
+								ng_lack_status = goodsMap.getString("ngLackStatus");
+								qtyinvoiced = goodsMap.getString("qtyinvoiced");
+								ok_status = goodsMap.getString("okStatus");
+								pt_od_id = goodsMap.getString("ptOdId");
+								sub_pt_od_id = goodsMap.getString("subPtOdId");
+								
+								 xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+					    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+					    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
+					    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
+					    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
+					    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
+					    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
+					    					+ "<result><![CDATA["+result+"]]></result>"
+					    					+ "<ok_status><![CDATA["+ok_status+"]]></ok_status>"
+					    					+ "<pt_od_id><![CDATA["+pt_od_id+"]]></pt_od_id>"
+					    					+ "<sub_pt_od_id><![CDATA["+sub_pt_od_id+"]]></sub_pt_od_id>"
+					    					+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
+					    					+ "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
+					    					+ "</data>";  	
+							}
+	                   }else{
+	                	   xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data>"
+			    					+ "<part_number><![CDATA["+part_number+"]]></part_number>"
+			    					+ "<go_with><![CDATA["+go_with+"]]></go_with>"
+			    					+ "<vendor><![CDATA["+vendor+"]]></vendor>"
+			    					+ "<sub_sum_qty><![CDATA["+sub_sum_qty+"]]></sub_sum_qty>"
+			    					+ "<sub_unit><![CDATA["+sub_unit+"]]></sub_unit>"
+			    					+ "<bom_qty><![CDATA["+bom_qty+"]]></bom_qty>"
+			    					+ "<result><![CDATA["+result+"]]></result>"
+			    					+ "<ok_status><![CDATA["+ok_status+"]]></ok_status>"
+			    					+ "<pt_od_id><![CDATA["+pt_od_id+"]]></pt_od_id>"
+			    					+ "<sub_pt_od_id><![CDATA["+sub_pt_od_id+"]]></sub_pt_od_id>"
+			    					+ "<ng_excess_status><![CDATA["+ng_excess_status+"]]></ng_excess_status>"
+			    					+ "<ng_lack_status><![CDATA["+ng_lack_status+"]]></ng_lack_status>"
+			    					+ "</data>";
+	                   }
+					
 					System.out.println(" xmlString 555 " + " : " + xmlString);
 				}else{
 					xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data></data>";
