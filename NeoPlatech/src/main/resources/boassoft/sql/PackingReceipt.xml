@@ -213,6 +213,7 @@
 	    , RECALL_NAME
 	    , RECALL_METHOD
 	    , M_PRODUCT_ID
+	    , GROSSQTY
 	    , DATE_SALE_START
 	    , DATE_SALE_END
 	    , USE_YN
@@ -228,6 +229,7 @@
 	   , NULL
 	   , '00'
 	   , #{odId}
+	   , #{qtyinvoiced}
 	   , NULL
 	   , NULL
 	   , 'Y'
