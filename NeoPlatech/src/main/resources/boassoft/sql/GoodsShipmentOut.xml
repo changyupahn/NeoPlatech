@@ -125,7 +125,94 @@
 		<include refid="getGoodsShipmentOutWhere"/>
     </select>          
     
-      <insert id="insertRridMOut" parameterType="cmap" >
+      <insert id="insertRfidMIn" parameterType="cmap" >
+       INSERT IGNORE INTO RFID_M_IN (
+          M_OUT_ID
+          , COUNT
+          , MOVEMENTTYPE
+          , DATEORDERED
+          , DATEMOVEMENT
+          , ISINVOICED
+          , ISPRINTED
+          , M_OUT_ORDEREOUT_ID
+          , M_MOVEMENT_ID
+          , C_SALES_ORDER_ID
+          , DESCRIPTION
+          , USE_YN
+          , FRST_REGIST_PNTTM
+          , FRST_REGISTER_ID
+          , LAST_UPDT_PNTTM
+          , LAST_UPDUSR_ID
+       )       
+       VALUES
+       (
+         #{ptOdId}
+        , #{subPtOdId}
+        , 'V-'             
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+        , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+        , 'Y'
+        , 'Y'
+        , NULL
+        , NULL 
+        , NULL
+        , NULL
+        , 'Y'
+        ,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		,'SYSTEM'				
+		,DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		,'SYSTEM'
+        )       
+      </insert>
+         
+      <insert id="insertRfidMInLine" parameterType="cmap" >
+       <selectKey resultType="string" keyProperty="mInLineId" order="BEFORE">
+        SELECT get_seq('mInline')     
+      </selectKey>
+         INSERT IGNORE INTO RFID_M_INLINE (
+           M_OUTLINE_ID
+         , M_OUT_ID
+         , M_PRODUCT_ID
+         , QTYMOVEMENT
+         , QTYINVOICED
+         , C_UOM_ID
+         , ISINVOICED
+         , M_WAREHOUSE_ID
+         , M_OUT_ORDERELINE_ID
+         , C_SALES_ORDERLINE_ID
+         , DESCRIPTION
+         , M_MOVEMENTLINE_ID
+         , REFERENCELINE_ID
+         , USE_YN
+         , FRST_REGIST_PNTTM
+         , FRST_REGISTER_ID
+         , LAST_UPDT_PNTTM
+         , LAST_UPDUSR_ID         
+         )
+         VALUES
+         (  
+            #{mInLineId}
+           , #{ptOdId}
+           , #{subPtOdId}
+           , #{preQtyOnHand}
+           , #{qtyinvoiced}
+           , NULL           
+           , 'Y'
+           , 1
+           , NULL
+           , NULL
+           , NULL
+           , NULL
+           , NULL
+           , 'Y'          
+           , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		   ,'SYSTEM'				
+		   , DATE_FORMAT(SYSDATE(), '%Y%m%d%H%i%s')
+		   ,'SYSTEM'
+         )     
+      </insert>
+      
+       <insert id="insertRridMOut" parameterType="cmap" >
        INSERT IGNORE INTO RFID_M_OUT (
           M_OUT_ID
           , COUNT

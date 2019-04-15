@@ -290,8 +290,9 @@
             , COALESCE(A.READ_USER_NO,' ') AS read_user_no 
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
-            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
-            , FN_GET_BUTTON_ENABLED(COALESCE(A.PRE_QTY_ON_HAND,0)) AS ng_status
+            , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced           
+            , FN_GET_NG_EXCESS_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_excess_status
+            , FN_GET_NG_LACK_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_lack_status 
             , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0))  AS ok_status 		
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
@@ -333,7 +334,8 @@
             , COALESCE(A.QTY_ON_HAND,0) AS qty_on_hand
             , COALESCE(A.PRE_QTY_ON_HAND,0) AS pre_qty_on_hand	
             , COALESCE(A.QTYINVOICED,0) AS qtyinvoiced
-            , FN_GET_BUTTON_ENABLED(COALESCE(A.PRE_QTY_ON_HAND,0)) AS ng_status
+            , FN_GET_NG_EXCESS_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_excess_status
+            , FN_GET_NG_LACK_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_lack_status
             , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0))  AS ok_status 
         FROM RFID_IF_SUBPART_SENDLIST_ALL A
        WHERE A.PT_OD_ID  LIKE concat('%',#{ptOdId},'%')
@@ -428,6 +430,19 @@
        FROM RFID_IF_PACKING_WOSENDLIST_ALL A     
 		  WHERE 1 = 1
 		  AND A.OD_ID = #{odId}		  
+	  </select>
+	  
+	  <select id="getGoodsResultListXml" parameterType="cmap" resultType="cmap">	  
+	  SELECT        COALESCE(A.PT_OD_ID,' ') AS pt_od_id
+       , COALESCE(A.SUB_PT_OD_ID,' ') AS sub_pt_od_id
+       , FN_GET_NG_EXCESS_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_excess_status   
+       , FN_GET_NG_LACK_STATUS(A.PT_OD_ID,COALESCE(A.SUB_SUM_QTY,0)) AS ng_lack_status 
+	   , FN_GET_INVOICED(COALESCE(A.QTY_ON_HAND,0),COALESCE(A.QTYINVOICED,0)) AS ok_status 
+	   , COALESCE(A.QTYINVOICED,'0') AS qtyinvoiced
+       FROM rfid_if_subpart_sendlist_all A     
+		  WHERE 1 = 1
+		  AND A.PT_OD_ID = #{ptOdId}
+		  AND A.SUB_PT_Od_ID = #{subPtOdId}  
 	  </select>
 	
 </mapper> 
