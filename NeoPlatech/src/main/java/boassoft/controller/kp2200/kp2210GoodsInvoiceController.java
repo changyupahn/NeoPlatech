@@ -404,7 +404,7 @@ public class kp2210GoodsInvoiceController {
 						System.out.println(" receipt_cnt 2222 " + " : "
 								+ gmap.toString());
 						
-						break;
+						continue;
 					} else { // 소요량이 입고량보다 많으면 남는다.
 						disCnt = sumQty - maxCnt; // 150 부족 1개
 						gmap.put("qtyOnHand", 0);
@@ -420,10 +420,12 @@ public class kp2210GoodsInvoiceController {
 						
 						System.out.println(" receipt_cnt 333 " + " : "
 								+ gmap.toString());
-						break;
+						continue;
 					}
         		  }
-        		  
+        		  if(disCnt < 0){
+        			  break;
+        		  }
         	  }
         	} 
         } catch (Exception e) {
@@ -602,7 +604,7 @@ public class kp2210GoodsInvoiceController {
 						System.out.println(" receipt_cnt 2222 " + " : "
 								+ gmap.toString());
 						
-						break;
+						continue;
 						
 					} else { // 소요량이 입고량보다 많으면
 						disCnt = sumQty - maxCnt; // 150 부족 1개
@@ -617,10 +619,13 @@ public class kp2210GoodsInvoiceController {
 						packingReceiptService.insertCRecallLine(gmap);
 						System.out.println(" receipt_cnt 333 " + " : "
 								+ gmap.toString());
-						break;
-					}
-					
+						continue;
+					}					 
             	}
+    		     
+    		     if(disCnt < 0){
+       			  break;
+       		    } 
           	  }
         	}  
         	
