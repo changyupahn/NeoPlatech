@@ -51,6 +51,24 @@ public class GoodsShipmentOutServiceImpl extends EgovAbstractServiceImpl impleme
 		int resultCnt = 0;
 		resultCnt = goodsShipmentOutMapper.insertRridMOutLine(cmap);
 		return resultCnt;
+	}
+
+
+	@Override
+	public int insertRfidMIn(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = goodsShipmentOutMapper.insertRfidMIn(cmap);
+		return resultCnt;
+	}
+
+
+	@Override
+	public int insertRfidMInLine(CommonMap cmap) throws Exception {
+		// TODO Auto-generated method stub
+		int resultCnt = 0;
+		resultCnt = goodsShipmentOutMapper.insertRfidMInLine(cmap);
+		return resultCnt;
 	}	
 	
 	
