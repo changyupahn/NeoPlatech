@@ -30,12 +30,11 @@ $(window).resize(function(){
 });
 
 var colNames01 = [
-				'조사연도','조사차수','조사구분','기준일','비고','조사대상','관리'
+				'조사연도','조사차수','기준일','비고','조사대상','관리'
 				];
 var colModel01 = [
    				{name:'invYear', index:'invYear', width:'120px', align:'CENTER', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
    				{name:'invNo', index:'invNo', width:'80px', align:'CENTER', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
-   				{name:'invType', index:'invType', width:'120px', align:'CENTER', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
    				{name:'invStartDt', index:'invStartDt', width:'120px', align:'CENTER', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
    				{name:'invSummary', index:'invSummary', width:'250px', align:'LEFT', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
    				{name:'targetCount', index:'targetCount', width:'120px', align:'CENTER', columntype:'text', sortable:false, classes:'grid-col-TEXT'},
@@ -208,7 +207,7 @@ $(document).ready(function(){
 				%>
 			</select>
 
-			<span class="button2"><input type="submit" value="검색" onclick="fnSearch();"></span>
+			<span class="button"><input type="submit" value="검색" onclick="fnSearch();"></span>
 		</td>
 	</tr>
 	</table>
@@ -221,7 +220,7 @@ $(document).ready(function(){
 	</td>
 	<td width="50%" style="text-align: right;">
 		<% if (ssAuthManager) { %>
-		<span class="button2"><input type="button" value="신규생성 (<%=invLast.getString("invYear")%>년도 <%=(invLast.getInt("invNo")+1)%>차수)" onclick="fnWrite();"></span>
+		<span class="button"><input type="button" value="신규생성 (<%=invLast.getString("invYear")%>년도 <%=(invLast.getInt("invNo")+1)%>차수)" onclick="fnWrite();"></span>
 		<% } %>
 		&nbsp;
 	</td>
