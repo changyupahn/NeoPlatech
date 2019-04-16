@@ -49,7 +49,7 @@ var colNames01 = ["assetSeq"
                   }
                   %>
                   ];
-                  
+
 var colModel01 = [
   				{name:'assetSeq', index:'assetSeq', width:'0px', hidden:true}
   <%
@@ -270,7 +270,7 @@ function fnPrint() {
 		}
 
 		fnLoadingS2();
-		
+
 		$.ajax({
 			type : "POST",
 			url : "<%=tagPrintAction%>",
@@ -350,17 +350,17 @@ function fnSetKp9040(obj) {
 		&nbsp;
 	</td>
 	<td width="50%" style="text-align: right;">
-		<span class="button2"><input type="submit" value="검색" onclick="fnSearch();"></span>
-		<span class="button2"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
-		<span class="button2"><input type="button" value="상세보기" onclick="fnDetail();"></span>
-		<span class="button2"><input type="button" value="엑셀다운로드" onclick="fnXlsDn();"></span>
-		<span class="button2"><input type="button" value="부서(실)별통계" onclick="fnXlsDnDept();"></span>
-		<!-- <span class="button2"><input type="button" value="자산구분별통계" onclick="fnXlsDnCate();"></span>
-		<span class="button2"><input type="button" value="관리부서별통계" onclick="fnXlsDnDept();"></span> -->
-		<!-- <span class="button2"><input type="button" value="위치별통계" onclick="fnXlsDnHosil();"></span> -->
+		<span class="button"><input type="submit" value="검색" onclick="fnSearch();"></span>
+		<span class="button"><input type="button" value="검색초기화" onclick="fnInitSearchForm();"></span>
+		<span class="button"><input type="button" value="상세보기" onclick="fnDetail();"></span>
+		<span class="button"><input type="button" value="엑셀다운로드" onclick="fnXlsDn();"></span>
+		<span class="button"><input type="button" value="부서(실)별통계" onclick="fnXlsDnDept();"></span>
+		<!-- <span class="button"><input type="button" value="자산구분별통계" onclick="fnXlsDnCate();"></span>
+		<span class="button"><input type="button" value="관리부서별통계" onclick="fnXlsDnDept();"></span> -->
+		<!-- <span class="button"><input type="button" value="위치별통계" onclick="fnXlsDnHosil();"></span> -->
 
 		<% if (ssAuthManager) { %>
-		<span class="button2"><input type="button" value="태그발행" onclick="fnPrint();"></span>
+		<span class="button"><input type="button" value="태그발행" onclick="fnPrint();"></span>
 		<% } %>
 
 		&nbsp;

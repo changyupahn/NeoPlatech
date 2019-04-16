@@ -6,46 +6,46 @@
     </sql>
 
     <sql id="pagingFooter">
-        <if test="pageIdx != null and pageIdx != ''">      
-          <if test="pageSize != null and pageSize != ''">        
+        <if test="pageIdx != null and pageIdx != ''">
+          <if test="pageSize != null and pageSize != ''">
                 LIMIT   ${pageLimit}  , ${pageSize}
           </if>
-       </if> 
+       </if>
     </sql>
 
      <sql id="getAssetListWhere">
-        <if test="sUseYn != null and sUseYn != ''">    		
-			AND ast.use_yn = #{sUseYn}		
+        <if test="sUseYn != null and sUseYn != ''">
+			AND ast.use_yn = #{sUseYn}
 		</if>
-        <if test="sAssetDiv != null and sAssetDiv != ''">  
+        <if test="sAssetDiv != null and sAssetDiv != ''">
           <choose>
 		    <when test="sAssetDiv == '1'">
-			<!-- 고정자산 -->			
-				AND ast.USE_YN = 'Y'			
+			<!-- 고정자산 -->
+				AND ast.USE_YN = 'Y'
 			</when>
 			<when test="sAssetDiv == '2'">
-			<!-- 자산검수 -->			
+			<!-- 자산검수 -->
 				AND ast.USE_YN = 'Y'
-				AND ast.INSP_YN = 'N'			
+				AND ast.INSP_YN = 'N'
 			</when>
 			<when test="sAssetDiv == '3'">
-			<!-- 미배정자산 -->			
+			<!-- 미배정자산 -->
 				AND ast.USE_YN = 'Y'
 				AND NOT EXISTS (SELECT 1 FROM RFID_USER WHERE USER_TYPE = '정상' AND USER_NO = ast.USER_NO)
-				AND ast.DISUSE_YN = 'N'			
+				AND ast.DISUSE_YN = 'N'
 			</when>
 			<when test="sAssetDiv == '4'">
-			<!-- 불용자산 -->			
+			<!-- 불용자산 -->
 				AND ast.USE_YN = 'Y'
-				AND ast.DISUSE_YN = 'Y'			
+				AND ast.DISUSE_YN = 'Y'
 			</when>
 			<when test="sAssetDiv == '5'">
-			<!-- 삭제자산 -->			
+			<!-- 삭제자산 -->
 				AND ast.USE_YN = 'N'
-				AND ast.ASSET_STATUS_CD <![CDATA[ <> ]]> '가자산'			
+				AND ast.ASSET_STATUS_CD <![CDATA[ <> ]]> '가자산'
 			</when>
 			<when test="sAssetDiv == '6'">
-			<!-- 전자결재신청대상 인수인계 -->			
+			<!-- 전자결재신청대상 인수인계 -->
 				AND ast.USE_YN = 'Y'
 				AND ast.DISUSE_YN = 'N'
 				AND ast.ASSET_STATUS_CD IN ('정상','반출중')
@@ -56,10 +56,10 @@
 							WHERE 1=1
 							AND T2.RQST_STATUS_CD IN ('2')
 							AND T1.ASSET_SEQ = ast.ASSET_SEQ
-							)			
+							)
 			</when>
 			<when test="sAssetDiv == '7'">
-			<!-- 전자결재신청대상 반출 -->			
+			<!-- 전자결재신청대상 반출 -->
 				AND ast.USE_YN = 'Y'
 				AND ast.DISUSE_YN = 'N'
 				AND ast.ASSET_STATUS_CD IN ('정상')
@@ -72,10 +72,10 @@
 							AND T2.RQST_STATUS_CD IN ('2')
 							AND IFNULL(T3.RQST_STATUS_CD,'0') NOT IN ('3','4')
 							AND T1.ASSET_SEQ = ast.ASSET_SEQ
-							)			
+							)
 			</when>
 			<when test="sAssetDiv == '8'">
-			<!-- 전자결재신청대상 불용 -->			
+			<!-- 전자결재신청대상 불용 -->
 				AND ast.USE_YN = 'Y'
 				AND ast.DISUSE_YN = 'N'
 				AND ast.ASSET_STATUS_CD IN ('정상','반출중')
@@ -86,10 +86,10 @@
 							WHERE 1=1
 							AND T2.RQST_STATUS_CD IN ('2')
 							AND T1.ASSET_SEQ = ast.ASSET_SEQ
-							)			
+							)
 			</when>
 			<when test="sAssetDiv == '9'">
-			<!-- 부속품대상 -->			
+			<!-- 부속품대상 -->
 				AND ast.USE_YN = 'Y'
 				AND ast.DISUSE_YN = 'N'
 				AND ast.ASSET_SEQ <![CDATA[ <> ]]> #{assetSeq}
@@ -98,19 +98,19 @@
 							FROM RFID_ASSET
 							WHERE TOP_ASSET_SEQ = #{assetSeq}
 							AND ASSET_SEQ = ast.ASSET_SEQ
-							)			
+							)
 			</when>
 			<when test="sAssetDiv == '10'">
-			<!-- 부속품목록 -->			
+			<!-- 부속품목록 -->
 				AND ast.USE_YN = 'Y'
-				AND ast.TOP_ASSET_SEQ = #{assetSeq}			
+				AND ast.TOP_ASSET_SEQ = #{assetSeq}
 			</when>
-		</choose>	
+		</choose>
 	</if>
         <if test="sAssetNo != null or sAssetNo != ''">
-            <if test="ssGrantRead != null and ssGrantRead != ''"> 					
+            <if test="ssGrantRead != null and ssGrantRead != ''">
 			   <choose>
-		         <when test="ssGrantRead == 'GRANT_USR'">				
+		         <when test="ssGrantRead == 'GRANT_USR'">
 					AND (
 						ast.USER_NO = #{ssUserNo}
 						OR
@@ -119,200 +119,200 @@
 								FROM	RFID_ASSET
 								WHERE 	USER_NO = #{ssUserNo}
 								)
-						)				
+						)
 				  </when>
-				   <when test="ssGrantRead == 'GRANT_DHD'">				
+				   <when test="ssGrantRead == 'GRANT_DHD'">
 					AND ast.TOP_DEPT_NAME IN (
 							SELECT	sd.DEPT_NAME
 							FROM	RFID_USER_DEPT sd
-									INNER JOIN RFID_USER usr ON sd.USER_ID = usr.USER_ID									 
+									INNER JOIN RFID_USER usr ON sd.USER_ID = usr.USER_ID
 							WHERE	usr.USER_NO = #{ssUserNo}
-							)				
+							)
 				  </when>
-				  <when test="ssGrantRead == 'GRANT_MGR'">					
-					AND 1=1				
+				  <when test="ssGrantRead == 'GRANT_MGR'">
+					AND 1=1
 				   </when>
-				   <when test="ssGrantRead == 'GRANT_NONE'">						
-					AND 1=2				
+				   <when test="ssGrantRead == 'GRANT_NONE'">
+					AND 1=2
 				   </when>
-				  </choose> 
-			</if>	
+				  </choose>
+			</if>
        </if>
-        <if test="sApprRqstYn != null and sApprRqstYn != ''"> 
+        <if test="sApprRqstYn != null and sApprRqstYn != ''">
 		    <choose>
-		     <when test="sApprRqstYn == 'Y'">				
+		     <when test="sApprRqstYn == 'Y'">
 			   AND ast.ASSET_STATUS_CD = '정상'
 			 </when>
 		   </choose>
-		</if>   			
+		</if>
 
-        <if test="sAssetSeq != null and sAssetSeq != ''"> 
+        <if test="sAssetSeq != null and sAssetSeq != ''">
           AND ast.ASSET_SEQ = #{sAssetSeq}
         </if>
-		 
-		
+
+
          <if test="sAssetSeqArr != null and sAssetSeqArr != ''">
-              AND ast.ASSET_SEQ IN  
+              AND ast.ASSET_SEQ IN
              <foreach item="sAssetSeq" index="index" collection="sAssetSeqArr" open="(" close=")" separator=",">
                   #{sAssetSeq}
               </foreach>
           </if>
-		
-        <if test="sAssetNoArr != null and sAssetNoArr != ''">		
-            AND ast.ASSET_NO IN 
-            <foreach item="sAssetNo" index="index" collection="sAssetNoArr" open="(" close=")" separator=",">                         
+
+        <if test="sAssetNoArr != null and sAssetNoArr != ''">
+            AND ast.ASSET_NO IN
+            <foreach item="sAssetNo" index="index" collection="sAssetNoArr" open="(" close=")" separator=",">
             #{sAssetNo}
-            </foreach>                        		
+            </foreach>
 		 </if>
 
-         <if test="sAssetNoMulti != null and sAssetNoMulti != ''">				
-            AND ast.ASSET_NO IN 
-             <foreach item="sAssetNo" index="index" collection="sAssetNoMulti" open="(" close=")" separator=",">                        
-              #{sAssetNo}                      
-             </foreach>                              
+         <if test="sAssetNoMulti != null and sAssetNoMulti != ''">
+            AND ast.ASSET_NO IN
+             <foreach item="sAssetNo" index="index" collection="sAssetNoMulti" open="(" close=")" separator=",">
+              #{sAssetNo}
+             </foreach>
 		</if>
 
 
-        <if test="sPosNoMulti != null and sPosNoMulti != ''">			
-            AND ast.POS_NO IN             
-             <foreach item="sPosNo" index="index" collection="sPosNoMulti" open="(" close=")" separator=",">                        
-              #{sPosNo}                      
-             </foreach>             		
+        <if test="sPosNoMulti != null and sPosNoMulti != ''">
+            AND ast.POS_NO IN
+             <foreach item="sPosNo" index="index" collection="sPosNoMulti" open="(" close=")" separator=",">
+              #{sPosNo}
+             </foreach>
 		</if>
-		
-		<if test="sDeptNoMulti != null and sDeptNoMulti != ''">	
+
+		<if test="sDeptNoMulti != null and sDeptNoMulti != ''">
             AND ast.DEPT_NO IN
-              <foreach item="sDeptNo" index="index" collection="sDeptNoMulti" open="(" close=")" separator=",">                        
-              #{sDeptNo}                      
-             </foreach> 
-        </if>   		
-        
-        <if test="sUserNoMulti != null and sUserNoMulti != ''">	
-            AND ast.USER_NO IN
-            <foreach item="sUserNo" index="index" collection="sUserNoMulti" open="(" close=")" separator=",">                        
-              #{sUserNoMulti}                      
-             </foreach> 
+              <foreach item="sDeptNo" index="index" collection="sDeptNoMulti" open="(" close=")" separator=",">
+              #{sDeptNo}
+             </foreach>
         </if>
-        
+
+        <if test="sUserNoMulti != null and sUserNoMulti != ''">
+            AND ast.USER_NO IN
+            <foreach item="sUserNo" index="index" collection="sUserNoMulti" open="(" close=")" separator=",">
+              #{sUserNoMulti}
+             </foreach>
+        </if>
+
         <if test="sItemNoMulti != null and sItemNoMulti != ''">
             AND ast.ITEM_CD IN
-            <foreach item="sItemNo" index="index" collection="sItemNoMulti" open="(" close=")" separator=",">                        
-              #{sItemNo}                      
-             </foreach> 
-        </if>			
+            <foreach item="sItemNo" index="index" collection="sItemNoMulti" open="(" close=")" separator=",">
+              #{sItemNo}
+             </foreach>
+        </if>
 
-        <if test="sBuSrchYn != null and sBuSrchYn != ''">                        		
+        <if test="sBuSrchYn != null and sBuSrchYn != ''">
 		 <choose>
-           <when test="sBuSrchYn == 'Y'">		
+           <when test="sBuSrchYn == 'Y'">
 			AND 1=1
-           </when> 
-           <when test="sBuSrchYn == 'N'">           
+           </when>
+           <when test="sBuSrchYn == 'N'">
             AND ast.ASSET_TYPE_CD <![CDATA[ <> ]]> 'BU'
-            </when>		
+            </when>
 		 </choose>
 		</if>
 
-        <if test="sAssetTypeCd != null and sAssetTypeCd != ''"> 		
-			AND ast.ASSET_TYPE_CD = #{sAssetTypeCd}		
+        <if test="sAssetTypeCd != null and sAssetTypeCd != ''">
+			AND ast.ASSET_TYPE_CD = #{sAssetTypeCd}
 		</if>
-		
-		<if test="sAssetTypeName != null and sAssetTypeName != ''">				
-			AND ast.ASSET_TYPE_NAME LIKE concat('%', #{sAssetTypeName} ,'%')		
+
+		<if test="sAssetTypeName != null and sAssetTypeName != ''">
+			AND ast.ASSET_TYPE_NAME LIKE concat('%', #{sAssetTypeName} ,'%')
 		</if>
-		
-		<if test="sAssetName != null and sAssetName != ''">				
-			AND ast.ASSET_NAME LIKE concat('%', #{sAssetName} ,'%')		
+
+		<if test="sAssetName != null and sAssetName != ''">
+			AND ast.ASSET_NAME LIKE concat('%', #{sAssetName} ,'%')
 		</if>
-		
-		<if test="sAssetSize != null and sAssetSize != ''">			
-			AND ast.ASSET_SIZE LIKE concat('%', #{sAssetSize} ,'%')		
+
+		<if test="sAssetSize != null and sAssetSize != ''">
+			AND ast.ASSET_SIZE LIKE concat('%', #{sAssetSize} ,'%')
         </if>
-        
-        <if test="sItemCd != null and sItemCd != ''">				
+
+        <if test="sItemCd != null and sItemCd != ''">
 			AND (
 				ast.ITEM_CD LIKE concat(#{sItemCd} , '%')
 				OR
 				ast.ASSET_TYPE_CD = #{sItemCd}
-				)		
+				)
 		</if>
-		<if test="sItemName != null and sItemName != ''">	
-		 <if test="sItemCd == null or sItemCd == ''">	
+		<if test="sItemName != null and sItemName != ''">
+		 <if test="sItemCd == null or sItemCd == ''">
 			AND (
 				ast.ITEM_NAME LIKE concat('%', #{sItemName} ,'%')
-				<if test="sItemName01 != null and sItemName01 != ''">				
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName01} ,'%')		        
+				<if test="sItemName01 != null and sItemName01 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName01} ,'%')
 		        </if>
-		        <if test="sItemName02 != null and sItemName02 != ''">			        
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName02} ,'%')		        
+		        <if test="sItemName02 != null and sItemName02 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName02} ,'%')
 		        </if>
-		        <if test="sItemName03 != null and sItemName03 != ''">			       
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName03} ,'%')		        
+		        <if test="sItemName03 != null and sItemName03 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName03} ,'%')
 		        </if>
-		        <if test="sItemName04 != null and sItemName04 != ''">		        
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName04} ,'%')		        
+		        <if test="sItemName04 != null and sItemName04 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName04} ,'%')
 		        </if>
-		        <if test="sItemName05 != null and sItemName05 != ''">		       
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName05} ,'%')		        
+		        <if test="sItemName05 != null and sItemName05 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName05} ,'%')
 		        </if>
-		        <if test="sItemName06 != null and sItemName06 != ''">		        
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName06} ,'%')		        
+		        <if test="sItemName06 != null and sItemName06 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName06} ,'%')
 		        </if>
-		        <if test="sItemName07 != null and sItemName07 != ''">		        
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName07} ,'%')		        
+		        <if test="sItemName07 != null and sItemName07 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName07} ,'%')
 		        </if>
-		        <if test="sItemName08 != null and sItemName08 != ''">		        
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName08} ,'%')}		        
+		        <if test="sItemName08 != null and sItemName08 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName08} ,'%')}
 		        </if>
-		        <if test="sItemName09 != null and sItemName09 != ''">		        
-		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName09} ,'%')		        
-		        </if>
-				)
-			</if>
-		</if>
-		
-		<if test="sBldngNo != null and sBldngNo != ''">			
-			AND ast.BLDNG_NO LIKE concat(#{sBldngNo} , '%')		
-		</if>
-		<if test="sBldngName != null and sBldngName != ''">		
-		  <if test="sBldngNo == null or sBldngNo == ''">			
-			AND (
-				ast.BLDNG_NAME LIKE concat('%', #{sBldngName} ,'%')
-				<if test="sBldngName01 != null and sBldngName01 != ''">				
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName01} ,'%')		        
-		        </if>
-		        <if test="sBldngName02 != null and sBldngName02 != ''">		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName02} ,'%')		        
-		        </if>
-		        <if test="sBldngName03 != null and sBldngName03 != ''">		   		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName03} ,'%')		        
-		        </if>
-		        <if test="sBldngName04 != null and sBldngName04 != ''">		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName04} ,'%')		        
-		        </if>
-		        <if test="sBldngName05 != null and sBldngName05 != ''">		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName05} ,'%')		        
-		        </if>
-		        <if test="sBldngName06 != null and sBldngName06 != ''">		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName06} ,'%')		       
-		        </if>
-		        <if test="sBldngName07 != null and sBldngName07 != ''">		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName07} ,'%')		        
-		        </if>
-		        <if test="sBldngName08 != null and sBldngName08 != ''">		    		        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName08} ,'%')		        
-		        </if>
-		        <if test="sBldngName09 != null and sBldngName09 != ''">			        
-		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName09} ,'%')		        
+		        <if test="sItemName09 != null and sItemName09 != ''">
+		            OR ast.ITEM_NAME LIKE concat('%', #{sItemName09} ,'%')
 		        </if>
 				)
 			</if>
 		</if>
 
-        <if test="sAssetNo != null and sAssetNo != ''">		
-			AND ast.ASSET_NO = #sAssetNo#		
+		<if test="sBldngNo != null and sBldngNo != ''">
+			AND ast.BLDNG_NO LIKE concat(#{sBldngNo} , '%')
+		</if>
+		<if test="sBldngName != null and sBldngName != ''">
+		  <if test="sBldngNo == null or sBldngNo == ''">
+			AND (
+				ast.BLDNG_NAME LIKE concat('%', #{sBldngName} ,'%')
+				<if test="sBldngName01 != null and sBldngName01 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName01} ,'%')
+		        </if>
+		        <if test="sBldngName02 != null and sBldngName02 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName02} ,'%')
+		        </if>
+		        <if test="sBldngName03 != null and sBldngName03 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName03} ,'%')
+		        </if>
+		        <if test="sBldngName04 != null and sBldngName04 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName04} ,'%')
+		        </if>
+		        <if test="sBldngName05 != null and sBldngName05 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName05} ,'%')
+		        </if>
+		        <if test="sBldngName06 != null and sBldngName06 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName06} ,'%')
+		        </if>
+		        <if test="sBldngName07 != null and sBldngName07 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName07} ,'%')
+		        </if>
+		        <if test="sBldngName08 != null and sBldngName08 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName08} ,'%')
+		        </if>
+		        <if test="sBldngName09 != null and sBldngName09 != ''">
+		            OR ast.BLDNG_NAME LIKE concat('%', #{sBldngName09} ,'%')
+		        </if>
+				)
+			</if>
+		</if>
+
+        <if test="sAssetNo != null and sAssetNo != ''">
+			AND ast.ASSET_NO = #sAssetNo#
         </if>
-        <if test="sAssetNo == null or sAssetNo == ''">		
-          <if test="sUserNo != null and sUserNo != ''">				
+        <if test="sAssetNo == null or sAssetNo == ''">
+          <if test="sUserNo != null and sUserNo != ''">
 				AND (
 					ast.USER_NO = #{sUserNo}
 					OR
@@ -323,81 +323,81 @@
 							)
 					)
 			 </if>
-		</if>	 
+		</if>
 		<if test="sUserName != null and sUserName != ''">
-			 <if test="sAssetNo == null or sAssetNo == ''">				
-				AND (
-					ast.USER_NAME LIKE concat('%', #{sUserName} ,'%')
-					<if test="sUserName01 != null and sUserName01 != ''">					
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName01} ,'%')			        
-			        </if>
-			        <if test="sUserName02 != null and sUserName02 != ''">					
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName02} ,'%')			        
-			        </if>
-			        <if test="sUserName03 != null and sUserName03 != ''">					
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName03} ,'%')			        
-			        </if>
-			         <if test="sUserName04 != null and sUserName04 != ''">						
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName04} ,'%')			        
-			        </if>
-			         <if test="sUserName05 != null and sUserName05 != ''">						
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName05} ,'%')			        
-			        </if>
-			        <if test="sUserName06 != null and sUserName06 != ''">					
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName06} ,'%')			        
-			        </if>
-			        <if test="sUserName07 != null and sUserName07 != ''">
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName07} ,'%')			        
-			        </if>
-			        <if test="sUserName08 != null and sUserName08 != ''">					
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName08} ,'%')			        
-			        </if>
-			         <if test="sUserName09 != null and sUserName09 != ''">						
-			            OR ast.USER_NAME LIKE concat('%', #{sUserName09} ,'%')			        
-			        </if>
-			        )
-				 </if>
+		 <if test="sAssetNo == null or sAssetNo == ''">
+			AND (
+				ast.USER_NAME LIKE concat('%', #{sUserName} ,'%')
+				<if test="sUserName01 != null and sUserName01 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName01} ,'%')
+		        </if>
+		        <if test="sUserName02 != null and sUserName02 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName02} ,'%')
+		        </if>
+		        <if test="sUserName03 != null and sUserName03 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName03} ,'%')
+		        </if>
+		         <if test="sUserName04 != null and sUserName04 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName04} ,'%')
+		        </if>
+		         <if test="sUserName05 != null and sUserName05 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName05} ,'%')
+		        </if>
+		        <if test="sUserName06 != null and sUserName06 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName06} ,'%')
+		        </if>
+		        <if test="sUserName07 != null and sUserName07 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName07} ,'%')
+		        </if>
+		        <if test="sUserName08 != null and sUserName08 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName08} ,'%')
+		        </if>
+		         <if test="sUserName09 != null and sUserName09 != ''">
+		            OR ast.USER_NAME LIKE concat('%', #{sUserName09} ,'%')
+		        </if>
+		        )
 			 </if>
-			
+		 </if>
+
 			<if test="sOrgName != null and sOrgName != ''">
-			 <if test="sOrgNo == null or sOrgNo == ''">			  	
+			 <if test="sOrgNo == null or sOrgNo == ''">
 				AND (
 					ast.ORG_NAME LIKE concat('%', #{sOrgName} ,'%')
-					<if test="sOrgName01 != null and sOrgName01 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName01} ,'%')			        
+					<if test="sOrgName01 != null and sOrgName01 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName01} ,'%')
 			        </if>
-			        <if test="sOrgName02 != null and sOrgName02 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName02} ,'%')			        
+			        <if test="sOrgName02 != null and sOrgName02 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName02} ,'%')
 			        </if>
-			        <if test="sOrgName03 != null and sOrgName03 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName03} ,'%')			        
+			        <if test="sOrgName03 != null and sOrgName03 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName03} ,'%')
 			        </if>
-			        <if test="sOrgName04 != null and sOrgName04 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName04} ,'%')			        
+			        <if test="sOrgName04 != null and sOrgName04 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName04} ,'%')
 			        </if>
-			        <if test="sOrgName05 != null and sOrgName05 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName05} ,'%')			        
+			        <if test="sOrgName05 != null and sOrgName05 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName05} ,'%')
 			        </if>
-			        <if test="sOrgName06 != null and sOrgName06 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName06} ,'%')			        
+			        <if test="sOrgName06 != null and sOrgName06 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName06} ,'%')
 			        </if>
-			        <if test="sOrgName07 != null and sOrgName07 != ''">						
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName07} ,'%')			        
+			        <if test="sOrgName07 != null and sOrgName07 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName07} ,'%')
 			        </if>
-			        <if test="sOrgName08 != null and sOrgName08 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName08} ,'%')			        
+			        <if test="sOrgName08 != null and sOrgName08 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName08} ,'%')
 			        </if>
-			        <if test="sOrgName09 != null and sOrgName09 != ''">					
-			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName09} ,'%')			        
+			        <if test="sOrgName09 != null and sOrgName09 != ''">
+			            OR ast.ORG_NAME LIKE concat('%', #{sOrgName09} ,'%')
 			        </if>
 			        )
 				</if>
 			</if>
-			<if test="sTopDeptName != null and sTopDeptName != ''">			
-				AND ast.TOP_DEPT_NAME LIKE concat('%', #{sTopDeptName} ,'%')			
+			<if test="sTopDeptName != null and sTopDeptName != ''">
+				AND ast.TOP_DEPT_NAME LIKE concat('%', #{sTopDeptName} ,'%')
 			</if>
 			<if test="sDeptNoArr == null or sDeptNoArr == ''">
-			  <if test="sDeptNo != null and sDeptNo != ''">		
+			  <if test="sDeptNo != null and sDeptNo != ''">
 					AND (
 						ast.DEPT_NO = #{sDeptNo}
 						OR
@@ -409,12 +409,12 @@
 						)
 				</if>
 			</if>
-			<if test="sDeptNoArr != null and sDeptNoArr != ''">				
+			<if test="sDeptNoArr != null and sDeptNoArr != ''">
 	            AND (
-	            	ast.DEPT_NO IN (	                      
-	                      <foreach item="sDeptNo" index="index" collection="sDeptNoArr" open="(" close=")" separator=",">                        
-                            #{sDeptNo}                      
-                          </foreach>  	                        
+	            	ast.DEPT_NO IN (
+	                      <foreach item="sDeptNo" index="index" collection="sDeptNoArr" open="(" close=")" separator=",">
+                            #{sDeptNo}
+                          </foreach>
 					OR
 					ast.TOP_ASSET_SEQ IN (
 							SELECT	ASSET_SEQ
@@ -424,321 +424,254 @@
 	                )
 	        </if>
 	        <if test="sDeptName != null and sDeptName != ''">
-	          <if test="sDeptNo == null or sDeptNo == ''">	   
+	          <if test="sDeptNo == null or sDeptNo == ''">
 				AND (
 					ast.DEPT_NAME LIKE concat('%', #{sDeptName} ,'%')
-					<if test="sDeptName01 != null and sDeptName01 != ''">				
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName01} ,'%')			        
+					<if test="sDeptName01 != null and sDeptName01 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName01} ,'%')
 			        </if>
-			        <if test="sDeptName02 != null and sDeptName02 != ''">					
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName02} ,'%')			      
+			        <if test="sDeptName02 != null and sDeptName02 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName02} ,'%')
 			        </if>
-			        <if test="sDeptName03 != null and sDeptName03 != ''">						
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName03} ,'%')			        
+			        <if test="sDeptName03 != null and sDeptName03 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName03} ,'%')
 			        </if>
-			        <if test="sDeptName04 != null and sDeptName04 != ''">						
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName04} ,'%')			        
+			        <if test="sDeptName04 != null and sDeptName04 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName04} ,'%')
 			        </if>
-			        <if test="sDeptName05 != null and sDeptName05 != ''">						
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName05} ,'%')			       
+			        <if test="sDeptName05 != null and sDeptName05 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName05} ,'%')
 			        </if>
-			        <if test="sDeptName06 != null and sDeptName06 != ''">					
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName06} ,'%')			        
+			        <if test="sDeptName06 != null and sDeptName06 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName06} ,'%')
 			        </if>
-			        <if test="sDeptName07 != null and sDeptName07 != ''">					
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName07} ,'%')			        
+			        <if test="sDeptName07 != null and sDeptName07 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName07} ,'%')
 			         </if>
-			        <if test="sDeptName08 != null and sDeptName08 != ''">					
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName08} ,'%')			        
+			        <if test="sDeptName08 != null and sDeptName08 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName08} ,'%')
 			        </if>
-			         <if test="sDeptName09 != null and sDeptName09 != ''">						
-			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName09} ,'%')			        
+			         <if test="sDeptName09 != null and sDeptName09 != ''">
+			            OR ast.DEPT_NAME LIKE concat('%', #{sDeptName09} ,'%')
 			         </if>
 					)
 				</if>
-			</if>		      
-        <if test="sPosNo != null and sPosNo != ''">		
-			AND ast.POS_NO = #{sPosNo}		
+			</if>
+        <if test="sPosNo != null and sPosNo != ''">
+			AND ast.POS_NO = #{sPosNo}
 		</if>
 		<if test="sPosName != null and sPosName != ''">
-		<if test="sPosNo == null or sPosNo == ''">		
+		<if test="sPosNo == null or sPosNo == ''">
 			AND (
 				ast.POS_NAME LIKE concat('%', #{sPosName} ,'%')
-				<if test="sPosName01 != null and sPosName01 != ''">				
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName01} ,'%')		        
+				<if test="sPosName01 != null and sPosName01 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName01} ,'%')
 		        </if>
-		        <if test="sPosName02 != null and sPosName02 != ''">					
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName02} ,'%')		        
+		        <if test="sPosName02 != null and sPosName02 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName02} ,'%')
 		        </if>
-		        <if test="sPosName03 != null and sPosName03 != ''">					
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName03} ,'%')		        
+		        <if test="sPosName03 != null and sPosName03 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName03} ,'%')
 		        </if>
-		        <if test="sPosName04 != null and sPosName04 != ''">				
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName04} ,'%')		        
+		        <if test="sPosName04 != null and sPosName04 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName04} ,'%')
 		        </if>
-		        <if test="sPosName05 != null and sPosName05 != ''">					
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName05} ,'%')		        
+		        <if test="sPosName05 != null and sPosName05 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName05} ,'%')
 		        </if>
-		        <if test="sPosName06 != null and sPosName06 != ''">				
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName06} ,'%')		        
+		        <if test="sPosName06 != null and sPosName06 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName06} ,'%')
 		        </if>
-		         <if test="sPosName07 != null and sPosName07 != ''">					
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName07} ,'%')		        
+		         <if test="sPosName07 != null and sPosName07 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName07} ,'%')
 		        </if>
-		        <if test="sPosName08 != null and sPosName08 != ''">				
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName08} ,'%')		        
+		        <if test="sPosName08 != null and sPosName08 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName08} ,'%')
 		        </if>
-		        <if test="sPosName09 != null and sPosName09 != ''">				
-		            OR ast.POS_NAME LIKE concat('%', #{sPosName09} ,'%')		        
+		        <if test="sPosName09 != null and sPosName09 != ''">
+		            OR ast.POS_NAME LIKE concat('%', #{sPosName09} ,'%')
 		        </if>
 				)
 			</if>
 		</if>
-		
-		<if test="sMkNationCd != null and sMkNationCd != ''">		
-			AND ast.MK_NATION_CD = #{sMkNationCd}		
+
+		<if test="sMkNationCd != null and sMkNationCd != ''">
+			AND ast.MK_NATION_CD = #{sMkNationCd}
 		</if>
-		<if test="sMkCompanyCd != null and sMkCompanyCd != ''">			
-			AND ast.MK_COMPANY_CD = #{sMkCompanyCd}		
+		<if test="sMkCompanyCd != null and sMkCompanyCd != ''">
+			AND ast.MK_COMPANY_CD = #{sMkCompanyCd}
         </if>
-        <if test="sAqusitTypeCd != null and sAqusitTypeCd != ''">		
-			AND ast.AQUSIT_TYPE_CD = #{sAqusitTypeCd}		
+        <if test="sAqusitTypeCd != null and sAqusitTypeCd != ''">
+			AND ast.AQUSIT_TYPE_CD = #{sAqusitTypeCd}
 		</if>
-		<if test="sAssetStatusCd != null and sAssetStatusCd != ''">			
-			AND ast.ASSET_STATUS_CD LIKE concat('%', #{sAssetStatusCd} ,'%')		
+		<if test="sAssetStatusCd != null and sAssetStatusCd != ''">
+			AND ast.ASSET_STATUS_CD LIKE concat('%', #{sAssetStatusCd} ,'%')
 		</if>
-		<if test="sZeusYn != null and sZeusYn != ''">		
-			AND ast.ZEUS_YN = #{sZeusYn}		
+		<if test="sZeusYn != null and sZeusYn != ''">
+			AND ast.ZEUS_YN = #{sZeusYn}
 		</if>
-		<if test="sEtubeYn != null and sEtubeYn != ''">			
-			AND ast.ETUBE_YN = #{sEtubeYn}		
+		<if test="sEtubeYn != null and sEtubeYn != ''">
+			AND ast.ETUBE_YN = #{sEtubeYn}
 		</if>
-		<if test="sAplctnRangeCd != null and sAplctnRangeCd != ''">		
-			AND ast.APLCTN_RANGE_CD = #{sAplctnRangeCd}		
+		<if test="sAplctnRangeCd != null and sAplctnRangeCd != ''">
+			AND ast.APLCTN_RANGE_CD = #{sAplctnRangeCd}
         </if>
         <if test="searchDtKeywordS != null and searchDtKeywordS != ''">
          <choose>
-		    <when test="searchDtGubun == '1'">					
-			AND replace(ast.AQUSIT_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')
+		    <when test="searchDtGubun == '1'">
+			AND replace(ast.AQUSIT_DT,'-','') <![CDATA[ >= ]]> concat(replace(#{searchDtKeywordS},'-',''), '000000')
 			</when>
-			<when test="searchDtGubun == '2'">			
-			AND replace(ast.CONT_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			<when test="searchDtGubun == '2'">
+			AND replace(ast.CONT_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')
 			</when>
-			<when test="searchDtGubun == '3'">			
-			AND replace(ast.DISUSE_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			<when test="searchDtGubun == '3'">
+			AND replace(ast.DISUSE_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')
 			</when>
-			<when test="searchDtGubun == '4'">			
-			AND replace(ast.DISUSE_PROC_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			<when test="searchDtGubun == '4'">
+			AND replace(ast.DISUSE_PROC_DT,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')
 			</when>
-			<when test="searchDtGubun == '5'">			
-			AND replace(ast.FRST_REGIST_PNTTM,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')			
+			<when test="searchDtGubun == '5'">
+			AND replace(ast.FRST_REGIST_PNTTM,'-','') <![CDATA[ >= ]]> replace(#{searchDtKeywordS},'-','')
 			</when>
 		</choose>
-		</if>	
+		</if>
 		<if test="searchDtKeywordE != null and searchDtKeywordE != ''">
 		 <choose>
-		    <when test="searchDtGubun == '1'">					
-			AND replace(ast.AQUSIT_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+		    <when test="searchDtGubun == '1'">
+			AND replace(ast.AQUSIT_DT,'-','') <![CDATA[ <= ]]> concat(replace(#{searchDtKeywordE},'-',''),'235959')
 			</when>
-			<when test="searchDtGubun == '2'">			
-			AND replace(ast.CONT_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			<when test="searchDtGubun == '2'">
+			AND replace(ast.CONT_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')
 			</when>
-			<when test="searchDtGubun == '3'">			
-			AND replace(ast.DISUSE_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			<when test="searchDtGubun == '3'">
+			AND replace(ast.DISUSE_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')
 			</when>
-			<when test="searchDtGubun == '4'">			
-			AND replace(ast.DISUSE_PROC_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
+			<when test="searchDtGubun == '4'">
+			AND replace(ast.DISUSE_PROC_DT,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')
 			</when>
-			<when test="searchDtGubun == '5'">			
-			AND replace(ast.FRST_REGIST_PNTTM,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')			
-			</when>
-			</choose>
-		</if>			
-
-      <if test="searchNumKeywordS != null and searchNumKeywordS != ''">
-          <choose>
-		    <when test="searchNumGubun == '1'">			
-			AND ast.AQUSIT_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
-			</when>
-			<when test="searchNumGubun == '2'">			
-			AND ast.AQUSIT_FOREIGN_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
-			</when>
-			<when test="searchNumGubun == '3'">			
-			AND ast.AQUSIT_REMAIN_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
-			</when>
-			<when test="searchNumGubun == '4'">			
-			AND ast.AQUSIT_UNIT_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
-			</when>
-			<when test="searchNumGubun == '5'">					
-			AND ast.ASSET_CNT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
-			</when>
-			<when test="searchNumGubun == '6'">			
-			AND ast.USEFUL_LIFE <![CDATA[ >= ]]> replace(#searchNumKeywordS},',','')
-			</when>
-			<when test="searchNumGubun == '7'">			
-			AND ast.TAG_PRINT_CNT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
-			</when>
-			<when test="searchNumGubun == '8'">			
-			AND IFNULL(afc.ASSET_FILE_CNT,0) <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')			
+			<when test="searchDtGubun == '5'">
+			AND replace(ast.FRST_REGIST_PNTTM,'-','') <![CDATA[ <= ]]> replace(#{searchDtKeywordE},'-','')
 			</when>
 			</choose>
 		</if>
-		
+
+      <if test="searchNumKeywordS != null and searchNumKeywordS != ''">
+          <choose>
+		    <when test="searchNumGubun == '1'">
+			AND ast.AQUSIT_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '2'">
+			AND ast.AQUSIT_FOREIGN_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '3'">
+			AND ast.AQUSIT_REMAIN_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '4'">
+			AND ast.AQUSIT_UNIT_AMT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '5'">
+			AND ast.ASSET_CNT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '6'">
+			AND ast.USEFUL_LIFE <![CDATA[ >= ]]> replace(#searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '7'">
+			AND ast.TAG_PRINT_CNT <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			<when test="searchNumGubun == '8'">
+			AND IFNULL(afc.ASSET_FILE_CNT,0) <![CDATA[ >= ]]> replace(#{searchNumKeywordS},',','')
+			</when>
+			</choose>
+		</if>
+
 		 <if test="searchNumKeywordE != null and searchNumKeywordE != ''">
           <choose>
-		    <when test="searchNumGubun == '1'">					
-			AND ast.AQUSIT_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+		    <when test="searchNumGubun == '1'">
+			AND ast.AQUSIT_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			 <when test="searchNumGubun == '2'">					
-			AND ast.AQUSIT_FOREIGN_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			 <when test="searchNumGubun == '2'">
+			AND ast.AQUSIT_FOREIGN_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			<when test="searchNumGubun == '3'">			
-			AND ast.AQUSIT_REMAIN_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			<when test="searchNumGubun == '3'">
+			AND ast.AQUSIT_REMAIN_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			<when test="searchNumGubun == '4'">			
-			AND ast.AQUSIT_UNIT_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			<when test="searchNumGubun == '4'">
+			AND ast.AQUSIT_UNIT_AMT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			<when test="searchNumGubun == '5'">				
-			AND ast.ASSET_CNT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			<when test="searchNumGubun == '5'">
+			AND ast.ASSET_CNT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			<when test="searchNumGubun == '6'">			
-			AND ast.USEFUL_LIFE <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			<when test="searchNumGubun == '6'">
+			AND ast.USEFUL_LIFE <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			<when test="searchNumGubun == '7'">			
-			AND ast.TAG_PRINT_CNT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			<when test="searchNumGubun == '7'">
+			AND ast.TAG_PRINT_CNT <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
-			<when test="searchNumGubun == '8'">			
-			AND IFNULL(afc.ASSET_FILE_CNT,0) <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')			
+			<when test="searchNumGubun == '8'">
+			AND IFNULL(afc.ASSET_FILE_CNT,0) <![CDATA[ <= ]]> replace(#{searchNumKeywordE},',','')
 			</when>
 		  </choose>
-		  </if>			
-        
+		  </if>
+
           <if test="sAssetNo == null or sAssetNo == ''">
             <if test="searchKeyword != null and searchKeyword != ''">
              <choose>
-		       <when test="searchGubun == '1'">	                		
-					AND (
-						ast.ASSET_NO like concat('%', #{searchKeyword} ,'%')
-						<if test="searchKeyword01 != null and searchKeyword01 != ''">							
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword01} ,'%')				        
-				        </if>
-				        <if test="searchKeyword02 != null and searchKeyword02 != ''">						
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword02} ,'%')				        
-				        </if>
-				        <if test="searchKeyword03 != null and searchKeyword03 != ''">							
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword03} ,'%')
-				        </if>
-				        <if test="searchKeyword04 != null and searchKeyword04 != ''">							
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword04} ,'%')				        
-				        </if>
-				        <if test="searchKeyword05 != null and searchKeyword05 != ''">						
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword05} ,'%')				        
-				        </if>
-				        <if test="searchKeyword06 != null and searchKeyword06 != ''">						
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword06} ,'%')				        
-				        </if>
-				        <if test="searchKeyword07 != null and searchKeyword07 != ''">						
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword07} ,'%')				        
-				        </if>
-				        <if test="searchKeyword08 != null and searchKeyword08 != ''">						
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword08} ,'%')				       
-				        </if>
-				        <if test="searchKeyword09 != null and searchKeyword09 != ''">							
-				            OR ast.ASSET_NO LIKE concat('%', #{searchKeyword09} ,'%')				        
-				        </if>
-						)
+		        <when test="searchGubun == '1'">
+				AND ast.ASSET_NO like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	             <when test="searchGubun == '2'">	   	            
-					AND (
-						ast.ASSET_NAME like concat('%', #{searchKeyword} ,'%')
-						<if test="searchKeyword01 != null and searchKeyword01 != ''">							
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword01} ,'%')				        
-				        </if>
-				        <if test="searchKeyword02 != null and searchKeyword02 != ''">						
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword02} ,'%')				        
-				        </if>
-				        <if test="searchKeyword03 != null and searchKeyword03 != ''">						
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword03} ,'%')				        
-				        </if>
-				        <if test="searchKeyword04 != null and searchKeyword04 != ''">							
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword04} ,'%')				        
-				        </if>
-				         <if test="searchKeyword05 != null and searchKeyword05 != ''">						
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword05} ,'%')				        
-				        </if>
-				         <if test="searchKeyword06 != null and searchKeyword06 != ''">						
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword06} ,'%')				        
-				        </if>
-				         <if test="searchKeyword07 != null and searchKeyword07 != ''">									
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword07} ,'%')				        
-				        </if>
-				        <if test="searchKeyword08 != null and searchKeyword08 != ''">						
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword08} ,'%')				        
-				        </if>
-				        <if test="searchKeyword09 != null and searchKeyword09 != ''">					
-				            OR ast.ASSET_NAME LIKE concat('%', #{searchKeyword09} ,'%')				        
-				        </if>
-						)
+	            <when test="searchGubun == '2'">
+				AND ast.ASSET_NAME like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '3'">	            
-	            AND ast.ASSET_SIZE like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '3'">
+	            AND ast.ASSET_SIZE like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '4'">	            
-	            AND ast.ACCNT_NUM like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '4'">
+	            AND ast.ACCNT_NUM like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '5'">	           
-	            AND ast.CONT_NO like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '5'">
+	            AND ast.CONT_NO like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '6'">		           
-	            AND ast.CONT_REQ_NO like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '6'">
+	            AND ast.CONT_REQ_NO like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '7'">	            
-	            AND ast.FD_ARTCL_NUM like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '7'">
+	            AND ast.FD_ARTCL_NUM like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '8'">	            
-	            AND ast.USER_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '8'">
+	            AND ast.USER_NAME like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '9'">	            
-	            AND ast.DEPT_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '9'">
+	            AND ast.DEPT_NAME like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '10'">	            
-	            AND ast.CONT_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '10'">
+	            AND ast.CONT_NAME like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '11'">		            
-	            AND ast.ASSET_TYPE_NAME like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '11'">
+	            AND ast.ASSET_TYPE_NAME like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '12'">	            
-	            AND ast.REMARK like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '12'">
+	            AND ast.REMARK like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '13'">	            
-	            AND ast.TOP_ASSET_NO like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '13'">
+	            AND ast.TOP_ASSET_NO like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '14'">	   	            
-	            AND ast.DISUSE_CONT like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '14'">
+	            AND ast.DISUSE_CONT like concat('%', #{searchKeyword} ,'%')
 	            </when>
-	            <when test="searchGubun == '15'">	            
-	            AND ast.PURPOSE_OF_USE like concat('%', #{searchKeyword} ,'%')	            
+	            <when test="searchGubun == '15'">
+	            AND ast.PURPOSE_OF_USE like concat('%', #{searchKeyword} ,'%')
 	            </when>
 	        </choose>
-	      </if>  
-	   </if>       
+	      </if>
+	   </if>
 	</sql>
+
 
 	<select id="getAssetList" parameterType="cmap" resultType="cmap">
 		<include refid="pagingHeader" />
 		SELECT 	ast.*
-				,FN_GET_CMMNCODENAME('COM006', ast.AQUSIT_TYPE_CD) AQUSIT_TYPE_NAME
-				,(CASE
-					WHEN usr.USER_NO IS NULL THEN '사용자정보없음'
-      				WHEN usr.USER_TYPE = '퇴직' THEN '퇴직자소유자산'
-      				ELSE '기타' END) AS NOSET_REASON
-      			,(CASE
-      				WHEN topast.ASSET_SEQ IS NULL THEN ast.ASSET_NO
-      				ELSE '부속품' END) AS TOP_ASSET_NO
       			,afc.asset_file_cnt
 		FROM 	rfid_asset ast
-				LEFT OUTER JOIN rfid_user usr ON ast.USER_NO = usr.USER_NO
-				LEFT OUTER JOIN rfid_asset topast ON ast.TOP_ASSET_SEQ = topast.ASSET_SEQ
 				LEFT OUTER JOIN (
 						SELECT 	asset_no, count(*) asset_file_cnt
 						FROM	rfid_asset_file
@@ -747,20 +680,18 @@
 						) afc ON afc.asset_no = ast.asset_no
 		WHERE	1=1
 		<include refid="getAssetListWhere" />
-		<if test="dataOrder != null and dataOrder != ''">			
-        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.hosil asc, ast.pos_name asc, ast.asset_name asc, ast.asset_no asc        
+		<if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.hosil asc, ast.pos_name asc, ast.asset_name asc, ast.asset_no asc
         </if>
-        <if test="dataOrder == null or dataOrder == ''">       
-        	ORDER BY ast.hosil asc, ast.pos_name asc, ast.asset_name asc, ast.asset_no asc        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY ast.hosil asc, ast.pos_name asc, ast.asset_name asc, ast.asset_no asc
         </if>
 		<include refid="pagingFooter" />
 	</select>
-	
+
 	<select id="getAssetListCnt" parameterType="cmap" resultType="int">
 		SELECT 	count(*)
 		FROM 	rfid_asset ast
-				LEFT OUTER JOIN rfid_user usr ON ast.USER_NO = usr.USER_NO
-				LEFT OUTER JOIN rfid_asset topast ON ast.TOP_ASSET_SEQ = topast.ASSET_SEQ
 				LEFT OUTER JOIN (
 						SELECT 	asset_no, count(*) asset_file_cnt
 						FROM	rfid_asset_file
@@ -774,13 +705,10 @@
   <select id="getAssetTargetList" parameterType="cmap" resultType="cmap">
 		<include refid="pagingHeader" />
 		SELECT 	ast.*
-				,FN_GET_CMMNCODENAME('COM006', ast.AQUSIT_TYPE_CD) AQUSIT_TYPE_NAME
 				,ifnull(inv.INV_TARGET_YN,'N') INV_TARGET_YN
       			,afc.asset_file_cnt
 		FROM 	rfid_asset ast
 				LEFT OUTER JOIN (select * from rfid_inventory where inv_year = #{invYear} and inv_no = #{invNo}) inv ON ast.asset_seq = inv.asset_seq
-				LEFT OUTER JOIN rfid_user usr ON ast.USER_NO = usr.USER_NO
-				LEFT OUTER JOIN rfid_asset topast ON ast.TOP_ASSET_SEQ = topast.ASSET_SEQ
 				LEFT OUTER JOIN (
 						SELECT 	asset_no, count(*) asset_file_cnt
 						FROM	rfid_asset_file
@@ -789,18 +717,18 @@
 						) afc ON afc.asset_no = ast.asset_no
 		WHERE 	ast.use_yn = 'Y'
 		<include refid="getAssetListWhere" />
-		<if test="sInvTargetYn != null and sInvTargetYn != ''">			
-		   and ifnull(inv.INV_TARGET_YN,'N') = #{sInvTargetYn}		
+		<if test="sInvTargetYn != null and sInvTargetYn != ''">
+		   and ifnull(inv.INV_TARGET_YN,'N') = #{sInvTargetYn}
 		</if>
-		<if test="dataOrder != null and dataOrder != ''">		
-			ORDER BY ${dataOrder} ${dataOrderArrow}, ast.asset_seq desc		
+		<if test="dataOrder != null and dataOrder != ''">
+			ORDER BY ${dataOrder} ${dataOrderArrow}, ast.asset_seq desc
 		</if>
-		<if test="dataOrder == null or dataOrder == ''"> 		
-			ORDER BY ast.asset_seq desc		
+		<if test="dataOrder == null or dataOrder == ''">
+			ORDER BY ast.asset_seq desc
 		</if>
 		<include refid="pagingFooter" />
 	</select>
-	
+
 	<select id="getAssetTargetListCnt" parameterType="cmap" resultType="int">
 		SELECT 	count(*)
 		FROM 	rfid_asset ast
@@ -815,11 +743,11 @@
 						) afc ON afc.asset_no = ast.asset_no
 		WHERE 	ast.use_yn = 'Y'
 		<include refid="getAssetListWhere" />
-		<if test="sInvTargetYn != null and sInvTargetYn != ''">		
-		   and ifnull(inv.INV_TARGET_YN,'N') = #{sInvTargetYn}		
+		<if test="sInvTargetYn != null and sInvTargetYn != ''">
+		   and ifnull(inv.INV_TARGET_YN,'N') = #{sInvTargetYn}
 		</if>
 	</select>
-	
+
 	<select id="getAssetListXml" parameterType="cmap"
 		resultType="commonXml">
 		<include refid="pagingHeader" />
@@ -844,45 +772,19 @@
 		<include refid="getAssetListWhere" />
 		<include refid="pagingFooter" />
 	</select>
-	
+
 	<select id="getAssetDetail" parameterType="cmap" resultType="cmap">
 		SELECT 	ast.*
-				,FN_GET_CMMNCODENAME('COM006', ast.AQUSIT_TYPE_CD) AQUSIT_TYPE_NAME
-				,usr.EMP_NO
-        		,C.USER_NO DEPT_HEAD_USER_NO
-        		,C.USER_NAME DEPT_HEAD_USER_NAME
-        		,(CASE WHEN EXISTS (SELECT 1 FROM RFID_DEPRE_ASSET WHERE ASSET_SEQ = ast.ASSET_SEQ) THEN 'Y' ELSE 'N' END) DEPRE_YN
-        		,topast.ASSET_NO TOP_ASSET_NO
-        		,topast.ASSET_NAME TOP_ASSET_NAME
-        		,zeus.EQUIP_ID
 		FROM 	rfid_asset ast
-				LEFT OUTER JOIN RFID_USER usr ON ast.USER_NO = usr.USER_NO
-        		LEFT OUTER JOIN RFID_DEPT B ON ast.DEPT_NO = B.DEPT_NO
-        		LEFT OUTER JOIN RFID_USER C ON B.DEPT_HEAD_USER_NO = C.USER_NO
-        		LEFT OUTER JOIN RFID_ASSET topast ON ast.TOP_ASSET_SEQ = topast.ASSET_SEQ
-				LEFT OUTER JOIN RFID_ZEUS zeus ON ast.ASSET_NO = zeus.ASSET_NO
 		WHERE	ast.asset_seq = #{assetSeq}
 	</select>
-	
+
 	<select id="getAssetDetail2" parameterType="cmap" resultType="cmap">
 		SELECT 	ast.*
-				,FN_GET_CMMNCODENAME('COM006', ast.AQUSIT_TYPE_CD) AQUSIT_TYPE_NAME
-				,usr.EMP_NO
-        		,C.USER_NO DEPT_HEAD_USER_NO
-        		,C.USER_NAME DEPT_HEAD_USER_NAME
-        		,(CASE WHEN EXISTS (SELECT 1 FROM RFID_DEPRE_ASSET WHERE ASSET_SEQ = ast.ASSET_SEQ) THEN 'Y' ELSE 'N' END) DEPRE_YN
-        		,topast.ASSET_NO TOP_ASSET_NO
-        		,topast.ASSET_NAME TOP_ASSET_NAME
-        		,zeus.EQUIP_ID
 		FROM 	rfid_asset ast
-				LEFT OUTER JOIN RFID_USER usr ON ast.USER_NO = usr.USER_NO
-        		LEFT OUTER JOIN RFID_DEPT B ON ast.DEPT_NO = B.DEPT_NO
-        		LEFT OUTER JOIN RFID_USER C ON B.DEPT_HEAD_USER_NO = C.USER_NO
-        		LEFT OUTER JOIN RFID_ASSET topast ON ast.TOP_ASSET_SEQ = topast.ASSET_SEQ
-				LEFT OUTER JOIN RFID_ZEUS zeus ON ast.ASSET_NO = zeus.ASSET_NO
 		WHERE	ast.asset_no = #{assetNo}
 	</select>
-	
+
 	<select id="getMaxAssetNo" parameterType="cmap" resultType="cmap">
 		SELECT 	LPAD((IFNULL((
         			SELECT 	MAX(ASSET_NO)
@@ -891,7 +793,7 @@
         			), concat(substring(#{assetNo},1,4), '00000')) + 1),9,'0') AS MAX_ASSET_NO
 		FROM 	DUAL
 	</select>
-	
+
 	<select id="getAssetImgList" parameterType="cmap" resultType="cmap">
 		SELECT	af.ASSET_NO,
 				af.FILE_DT,
@@ -916,7 +818,7 @@
 							)
 		ORDER BY MAIN_YN DESC, FILE_DT ASC
 	</select>
-	
+
 	<select id="getAssetImg" parameterType="cmap" resultType="cmap">
 		select
 			af.asset_no,
@@ -932,7 +834,7 @@
 		and asset_no = #{assetNo}
 		and file_dt = #{fileDt}
 	</select>
-	
+
 	<insert id="insertPrintHistory" parameterType="cmap" >
     	insert into rfid_print_history( asset_no,rfid_no,asset_name,asset_size,asset_type,aqusit_dt,org_no,inv_year,inv_no,req_system,print_dt,print_type,print_yn,tmp_title )
 		select
@@ -953,14 +855,14 @@
 		from rfid_asset ast
 		where 1=1
 		<include refid="getAssetListWhere" />
-		<if test="dataOrder != null and dataOrder != ''">		
-        	ORDER BY ${dataOrder} ${dataOrderArrow} ast.aqusit_dt desc        
+		<if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow} ast.aqusit_dt desc
         </if>
-        <if test="dataOrder == null or dataOrder == ''">        
-        	ORDER BY ast.aqusit_dt desc        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY ast.aqusit_dt desc
         </if>
     </insert>
-    
+
     <insert id="insertAsset" parameterType="cmap" >
         INSERT IGNORE INTO RFID_ASSET (
         		ASSET_SEQ
@@ -1116,7 +1018,7 @@
 				,'N'
         )
     </insert>
-    
+
     <update id="updateAsset" parameterType="cmap" >
         UPDATE 	RFID_ASSET
         SET
@@ -1169,7 +1071,7 @@
 				,CONT_NAME = #{contName}
         WHERE 	ASSET_SEQ = #{assetSeq}
     </update>
-    
+
     <update id="updateAsset2" parameterType="cmap" >
         UPDATE 	RFID_ASSET
         SET
@@ -1249,7 +1151,7 @@
 				,LAST_UPDUSR_ID = #{lastUpdusrId}
         WHERE 	ASSET_NO = #{assetNo}
     </update>
-    
+
     <update id="updateAssetUsr" parameterType="cmap" >
         UPDATE 	RFID_ASSET
         SET
@@ -1261,55 +1163,55 @@
 				,LAST_UPDUSR_ID = #{lastUpdusrId}
         WHERE 	ASSET_SEQ = #{assetSeq}
     </update>
-    
+
     <update id="updateAssetAll" parameterType="cmap" >
         UPDATE 	RFID_ASSET
         SET
 				LAST_UPDT_PNTTM = #{lastUpdtPnttm}
 				,LAST_UPDUSR_ID = #{lastUpdusrId}
-				<if test="userName != null and userName !== ''">        		
-				,USER_NAME = #{userName}				
+				<if test="userName != null and userName !== ''">
+				,USER_NAME = #{userName}
 				</if>
-				<if test="posName != null and posName !== ''">  				
-				,POS_NAME = #{posName}				
+				<if test="posName != null and posName !== ''">
+				,POS_NAME = #{posName}
 				</if>
         WHERE 	ASSET_SEQ = #{assetSeq}
     </update>
-    
+
     <update id="deleteAsset" parameterType="cmap">
 		UPDATE 	rfid_asset
 		SET
 				USE_YN = 'N'
 		WHERE 	ASSET_SEQ = #{assetSeq}
 	</update>
-	
+
 	<update id="deleteAsset2" parameterType="cmap">
-		DELETE	
+		DELETE
 		FROM	rfid_asset
 		WHERE 	ASSET_NO = #{assetNo}
 	</update>
 
 	<update id="deleteAssetArr" parameterType="cmap">
 		update rfid_asset set
-			use_yn = 'N'			
-		where asset_no in 
-		  <foreach item="assetNo" index="index" collection="AssetNoArr" open="(" close=")" separator=",">  			
-				#{assetNo}						
-		</foreach>				
+			use_yn = 'N'
+		where asset_no in
+		  <foreach item="assetNo" index="index" collection="AssetNoArr" open="(" close=")" separator=",">
+				#{assetNo}
+		</foreach>
 	</update>
-    
+
     <select id="createAssetExcelBackup01" parameterType="cmap" resultType="cmap">
 		create table boasrfid_backup.backup_rfid_asset_#{create_dt} select * from rfid_asset
 	</select>
 
 	<select id="createAssetExcelBackup02" parameterType="cmap" resultType="cmap">
 		create table boasrfid_backup.backup_rfid_asset_addinfo_#{create_dt} select * from rfid_asset_addinfo
-	</select> 
-	
+	</select>
+
 	<insert id="createAssetExcelBackup03" parameterType="cmap">
 		insert into rfid_asset_backup ( create_dt,use_yn ) values ( #{create_dt},'Y' )
 	</insert>
-    
+
     <select id="getAssetExcelBackupList" parameterType="cmap" resultType="cmap">
 		<![CDATA[
 		select *
@@ -1318,7 +1220,7 @@
 		and use_yn = 'Y'
 		]]>
 	</select>
-	
+
 	<select id="dropAssetExcelBackup01" parameterType="cmap" resultType="cmap">
 		drop table boasrfid_backup.backup_rfid_asset_#{create_dt}
 	</select>
@@ -1326,7 +1228,7 @@
 	<select id="dropAssetExcelBackup02" parameterType="cmap" resultType="cmap">
 		drop table boasrfid_backup.backup_rfid_asset_addinfo_#{create_dt}
 	</select>
-	
+
 	<update id="dropAssetExcelBackup03" parameterType="cmap" >
 		update rfid_asset_backup set
 			use_yn = 'N'
@@ -1338,7 +1240,7 @@
 		FROM 	rfid_asset_excel axc
 		WHERE 	tmp_code = #{tmpCode}
 	</select>
-	
+
 	<delete id="deleteAssetExcelAll" parameterType="cmap">
 		delete from rfid_asset_excel
 			where tmp_code = #{tmpCode}
@@ -1347,12 +1249,12 @@
 	<insert id="insertAssetExcel" parameterType="cmap">
 		insert into rfid_asset_excel ( #{colList} )
 		values(
-		<foreach item="colValue" index="index" collection="colValueArr"  separator=",">  			
-				#{colValue[]}						
+		<foreach item="colValue" index="index" collection="colValueArr"  separator=",">
+				#{colValue[]}
 		</foreach>
 		)
 	</insert>
-	
+
 	<insert id="insertAssetExcelAll" parameterType="cmap">
         INSERT IGNORE INTO rfid_asset (
         		ASSET_SEQ
@@ -1529,7 +1431,7 @@
         FROM	rfid_asset_excel
 		WHERE 	TMP_CODE = #{tmpCode}
 	</insert>
-	
+
 	<insert id="insertAssetAdiExcelAll" parameterType="cmap">
 		insert into rfid_asset_addinfo( asset_no,asset_type,asset_cate,asset_state,asset_disp_dt,asset_mng_type,depre_prev_amt,new_aqusit_amt,cpex,asset_disp_amt,depre_trgt_amt,depre_prev_accu_amt,depre_curr_amt,depre_curr_disp_amt,depre_curr_accu_amt,asset_blnc_amt,asset_sell_amt,disp_pnlc_amt )
 		select
@@ -1554,7 +1456,7 @@
 		from rfid_asset_excel axc
 		where ( axc.asset_no is null or axc.asset_no = '' )
 	</insert>
-	
+
 	<update id="updateAssetExcelAll" parameterType="cmap">
 		update rfid_asset ast inner join rfid_asset_excel axc on ast.asset_no = axc.asset_no set
 				ast.CONT_NAME = axc.CONT_NAME
@@ -1583,7 +1485,7 @@
 				, ast.last_updusr_id = #{lastUpdusrId}
 		where tmp_code = #{tmpCode}
 	</update>
-	
+
 	<update id="updateAssetAdiExcelAll" parameterType="cmap">
 		update rfid_asset_addinfo adi inner join rfid_asset_excel axc on adi.asset_no = axc.asset_no set
 				adi.asset_type = axc.asset_type
@@ -1604,7 +1506,7 @@
 				, adi.asset_sell_amt = axc.asset_sell_amt
 				, adi.disp_pnlc_amt = axc.disp_pnlc_amt
 	</update>
-	
+
 	<update id="updateAssetRecovery" parameterType="cmap">
         UPDATE 	rfid_asset
         SET
@@ -1614,7 +1516,7 @@
         WHERE 	ASSET_SEQ = #{assetSeq}
         		AND ASSET_STATUS_CD = '삭제'
 	</update>
-	
+
 	<update id="updateAssetPrint" parameterType="cmap" >
     	UPDATE 	rfid_asset
     	SET
@@ -1636,7 +1538,7 @@
     		tag_print_cnt = IFNULL(tag_print_cnt,0) + 1
 		where asset_seq = #{assetSeq}
     </update>
-    
+
     <select id="getAssetColCodeName" parameterType="cmap" resultType="cmap">
     	SELECT	(
     			SELECT	ITEM_NAME
@@ -1650,5 +1552,5 @@
     			) AS BLDNG_NAME
     	FROM	DUAL
     </select>
-   
+
 </mapper>

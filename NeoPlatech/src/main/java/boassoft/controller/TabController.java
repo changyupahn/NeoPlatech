@@ -46,16 +46,16 @@ public class TabController {
 
 	@Resource(name = "commonXmlManage")
     private CommonXmlManage commonXmlManage;
-	
+
 	@Resource(name = "goodsXmlManage")
 	private GoodsXmlManage goodsXmlManage;
-	
+
 	@Resource(name = "deviceLogService")
     private DeviceLogService deviceLogService;
 
 	@Resource(name = "deviceLogSeqIdGnrService")
     private EgovIdGnrService deviceLogSeqIdGnrService;
-	
+
 	@Resource(name = "tabletService")
 	private TabletService tabletService;
 
@@ -71,14 +71,14 @@ public class TabController {
     	cmap.put("user_id", cmap.getString("user_id", "").trim());
     	cmap.put("user_pw", cmap.getString("user_pw", "").trim());
     	cmap.put("deviceno", cmap.getString("deviceno", "").trim());
-    	
+
     	//사용자ID/비밀번호 대문자 변환
     	cmap.put("user_id", cmap.getString("user_id").toUpperCase());
     	cmap.put("user_pw", cmap.getString("user_pw").toUpperCase());
 
     	String xmlString = "";
 
-    	try{    		
+    	try{
     		//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
@@ -92,19 +92,19 @@ public class TabController {
 	    		model.addAttribute("xmlString", xmlString);
 	    		return "common/commonXml";
 	    	}
-	    	
+
 	    	if (!"".equals(cmap.getString("user_pw"))) {
 	    		cmap.put("user_pw", EgovFileScrty.encryptPassword(cmap.getString("user_pw")));
 //	    		System.out.println("user_pw : " + cmap.getString("user_pw"));
 	    	}
-    		
+
 			CommonMap view = tabService.getRfidLoginView(cmap);
 			if (view == null || view.isEmpty()) {
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>[로그인실패] 아이디 또는 비밀번호가 맞지 않습니다.</retmsg></data>";
 			} else {
 				xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>OK</ret><retmsg>로그인 성공</retmsg><user_key>"+ view.getString("userKey") +"</user_key></data>";
 			}
-    			
+
     	}catch(Exception e){
     		xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><data><ret>ERR</ret><retmsg>서버 오류</retmsg></data>";
     		LOG.debug(e.toString());
@@ -179,7 +179,8 @@ public class TabController {
 
     	cmap.put("deviceno", cmap.getString("deviceno", "").trim());
     	cmap.put("pageIdx", cmap.getString("page_idx", "1"));
-    	cmap.put("pageSize", cmap.getString("page_size", "10"));
+    	//cmap.put("pageSize", cmap.getString("page_size", "10"));
+    	cmap.put("pageSize", "30");
     	cmap.put("inv_year", cmap.getString("inv_year", ""));
     	cmap.put("dataOrder", cmap.getString("sort_option", ""));
     	cmap.put("dataOrderArrow", cmap.getString("order", ""));
@@ -221,7 +222,7 @@ public class TabController {
     	CommonXmlList commonXmlList = new CommonXmlList();
     	String xmlString = "";
 
-    	try{
+try{
     		
     		//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
@@ -437,7 +438,7 @@ public class TabController {
     	String xmlString = "";
 
     	try{
-    		
+
     		//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
@@ -451,7 +452,7 @@ public class TabController {
 	    		model.addAttribute("xmlString", xmlString);
 	    		return "common/commonXml";
 	    	}
-	    	
+
     		commonXmlList = tabService.getImageListXml(cmap);
 
 	    	if( commonXmlList.size() > 0 )
@@ -563,7 +564,7 @@ public class TabController {
 	    	System.out.println(DateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss") + " - " + "/inventory/sync/upload.do" + " - " + cmap);
 
 	    	cmap.put("deviceno", cmap.getString("deviceno", "").trim());
-	    	
+
 	    	//디바이스 접근 로그 기록
     		cmap.put("deviceLogSeq", deviceLogSeqIdGnrService.getNextStringId().replaceAll("^[0]+", ""));
     		cmap.put("accessIp", request.getRemoteAddr());
@@ -723,6 +724,6 @@ public class TabController {
 //
 //		return "common/commonXml";
 //	}
-    
-    
+
+
 }

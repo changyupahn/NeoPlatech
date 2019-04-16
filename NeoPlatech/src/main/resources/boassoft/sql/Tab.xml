@@ -6,18 +6,18 @@
     </sql>
 
     <sql id="pagingFooter">
-        <if test="pageIdx != null and pageIdx != ''">      
-          <if test="pageSize != null and pageSize != ''">        
+        <if test="pageIdx != null and pageIdx != ''">
+          <if test="pageSize != null and pageSize != ''">
                 LIMIT ${pageLimit}, ${pageSize}
           </if>
-       </if> 
+       </if>
     </sql>
 
   <select id="getRfidLoginView" parameterType="cmap" resultType="cmap" >
     	SELECT 	*
     	FROM 	rfid_user
     	WHERE 	user_id = #{userId}
-    			AND user_pw = #{userPw}    	
+    			AND user_pw = #{userPw}
     </select>
 
     <select id="getInventoryLast" parameterType="cmap" resultType="cmap" >
@@ -34,26 +34,26 @@
 
     <sql id="getAssetListXmlWhere">
     	and ast.use_yn = 'Y'
-    	<if test="assetNo != null and assetNo != ''">	    
-		   and ast.asset_no like concat('%',#{assetNo},'%')		
+    	<if test="assetNo != null and assetNo != ''">
+		   and ast.asset_no like concat('%',#{assetNo},'%')
 		</if>
-		<if test="assetName != null and assetName != ''">		
-		   and ast.asset_name like concat('%',#{assetName},'%')		
+		<if test="assetName != null and assetName != ''">
+		   and ast.asset_name like concat('%',#{assetName},'%')
 		</if>
-		<if test="aqusitDtS != null and aqusitDtS != ''">			
-		   and ast.aqusit_dt &gt;= #{aqusitDtS}		
+		<if test="aqusitDtS != null and aqusitDtS != ''">
+		   and ast.aqusit_dt &gt;= #{aqusitDtS}
 		</if>
-		<if test="aqusitDtE != null and aqusitDtE != ''">		
-		   and ast.aqusit_dt &lt;= #{aqusitDtE}		
+		<if test="aqusitDtE != null and aqusitDtE != ''">
+		   and ast.aqusit_dt &lt;= #{aqusitDtE}
 		</if>
-		<if test="deptName != null and deptName != ''">		
-		   and ast.dept_name like concat('%',#{deptName},'%')		
+		<if test="deptName != null and deptName != ''">
+		   and ast.dept_name like concat('%',#{deptName},'%')
 		</if>
-		<if test="userName != null and userName != ''">			
-		   and ast.user_name like concat('%',#{userName},'%')		
+		<if test="userName != null and userName != ''">
+		   and ast.user_name like concat('%',#{userName},'%')
 		</if>
-		<if test="posName != null and posName != ''">		
-		   and ast.pos_name like concat('%',#{posName},'%')		
+		<if test="posName != null and posName != ''">
+		   and ast.pos_name like concat('%',#{posName},'%')
 		</if>
 	</sql>
 
@@ -80,11 +80,11 @@
 		from rfid_asset ast
 		where 1=1
         <include refid="getAssetListXmlWhere"/>
-        <if test="dataOrder != null and dataOrder != ''">        
-        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.asset_no        
+        <if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.asset_no
         </if>
-        <if test="dataOrder == null or dataOrder == ''">       
-        	ORDER BY ast.asset_no        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY ast.asset_no
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -98,8 +98,8 @@
 
     <sql id="getInventoryListWhere">
     	and invm.use_yn = 'Y'
-    	<if test="invYear == null or invYear == ''">     
-    	and invm.inv_year = #{invYear}    	
+    	<if test="invYear != null and invYear != ''">
+    	and invm.inv_year = #{invYear}
     	</if>
 	</sql>
 
@@ -118,11 +118,11 @@
 		from rfid_inventory_master invm
 		where 1=1
 		<include refid="getInventoryListWhere"/>
-		 <if test="dataOrder != null and dataOrder != ''">  		
-        	ORDER BY invm.inv_year ${dataOrderArrow}, ${dataOrder} ${dataOrderArrow}        
+		 <if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY invm.inv_year ${dataOrderArrow}, ${dataOrder} ${dataOrderArrow}
         </if>
-        <if test="dataOrder == null or dataOrder == ''">         
-        	ORDER BY invm.inv_year desc, invm.inv_no desc        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY invm.inv_year desc, invm.inv_no desc
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -139,12 +139,12 @@
     	and inv.inv_year = #{invYear}
 		and inv.inv_no = #{invNo}
 		and inv.inv_target_yn = 'Y'
-		<if test="deptNameArr != null and deptNameArr != ''">       
+		<if test="deptNameArr != null and deptNameArr != ''">
             AND ast.TOP_DEPT_NAME IN (
-                       <foreach item="deptName" index="index" collection="deptNameArr" open="(" close=")" separator=",">                   
-                        #{deptNameArr[]}                        
-                       </foreach> 
-                        )        
+                       <foreach item="deptName" index="index" collection="deptNameArr" open="(" close=")" separator=",">
+                        #{deptNameArr[]}
+                       </foreach>
+                        )
         </if>
 	</sql>
 
@@ -185,16 +185,16 @@
 			ifnull(inv.cng_top_dept_no,' ') cng_top_dept_no,
 			ifnull(inv.cng_top_dept_name,' ') cng_top_dept_name,
 			ifnull(inv.cng_top_user_no,' ') cng_top_user_no,
-			ifnull(inv.cng_top_user_name,' ') cng_top_user_name,			
+			ifnull(inv.cng_top_user_name,' ') cng_top_user_name,
 			ifnull(inv.cng_dept_no,' ') cng_dept_no,
 			ifnull(inv.cng_dept_name,' ') cng_dept_name,
 			ifnull(inv.cng_user_no,' ') cng_user_no,
-			ifnull(inv.cng_user_name,' ') cng_user_name,			
+			ifnull(inv.cng_user_name,' ') cng_user_name,
 			ifnull(inv.cng_bldng_no,' ') cng_bldng_no,
 			ifnull(inv.cng_bldng_name,' ') cng_bldng_name,
 			ifnull(inv.cng_floor_no,' ') cng_floor_no,
 			ifnull(inv.cng_floor_name,' ') cng_floor_name,
-			ifnull(inv.cng_hosil,' ') cng_hosil,			
+			ifnull(inv.cng_hosil,' ') cng_hosil,
 			ifnull(inv.cng_pos_no,' ') cng_pos_no,
 			ifnull(inv.cng_pos_name,' ') cng_pos_name,
 			ifnull(inv.cng_remark,' ') cng_remark,
@@ -213,11 +213,11 @@
 		from rfid_inventory inv inner join rfid_asset ast on inv.asset_no = ast.asset_no
 		where 1=1
 		<include refid="getInventoryDetailListWhere"/>
-		 <if test="dataOrder != null and dataOrder != ''">         
-        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.aqusit_dt desc        
+		 <if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow}, ast.aqusit_dt desc
           </if>
-        <if test="dataOrder == null or dataOrder == ''">           
-        	ORDER BY ast.aqusit_dt desc        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY ast.aqusit_dt desc
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -230,14 +230,14 @@
     </select>
 
     <sql id="getUserListXmlWhere">
-        <if test="userName != null and userName != ''"> 		
-			and usr.user_name like concat('%',#{userName},'%')		
+        <if test="userName != null and userName != ''">
+			and usr.user_name like concat('%',#{userName},'%')
 		</if>
-		<if test="deptNo != null and deptNo != ''">		
-			and dpt.dept_no like concat('%',#{deptNo},'%')		
+		<if test="deptNo != null and deptNo != ''">
+			and dpt.dept_no like concat('%',#{deptNo},'%')
 		</if>
-		<if test="deptName != null and deptName != ''">		
-			and dpt.dept_name like concat('%',#{deptName},'%')		
+		<if test="deptName != null and deptName != ''">
+			and dpt.dept_name like concat('%',#{deptName},'%')
 		</if>
     </sql>
 
@@ -253,11 +253,11 @@
 		from rfid_user usr inner join rfid_dept dpt on usr.dept_no = dpt.dept_no
 		where 1=1
 		<include refid="getUserListXmlWhere"/>
-		<if test="dataOrder != null and dataOrder != ''">		
-        	ORDER BY ${dataOrder} ${dataOrderArrow}        
+		<if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow}
         </if>
-        <if test="dataOrder == null or dataOrder == ''">          
-        	ORDER BY user_name        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY user_name
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -270,8 +270,8 @@
     </select>
 
     <sql id="getDeptListXmlWhere">
-       <if test="deptName != null and deptName != ''">		
-			and dpt.dept_name like concat('%',#{deptName},'%')		
+       <if test="deptName != null and deptName != ''">
+			and dpt.dept_name like concat('%',#{deptName},'%')
 		</if>
     </sql>
 
@@ -285,11 +285,11 @@
 		from rfid_dept dpt
 		where 1=1
 		<include refid="getDeptListXmlWhere"/>
-		<if test="dataOrder != null and dataOrder != ''">		
-        	ORDER BY ${dataOrder} ${dataOrderArrow}        
+		<if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow}
         </if>
-        <if test="dataOrder == null or dataOrder == ''">         
-        	ORDER BY dept_name        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY dept_name
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -303,8 +303,8 @@
 
     <sql id="getPosListXmlWhere">
     	and pos.use_yn = 'Y'
-    	<if test="posName != null and posName != ''">		
-			and pos.pos_name = #{posName}		
+    	<if test="posName != null and posName != ''">
+			and pos.pos_name = #{posName}
 		</if>
     </sql>
 
@@ -316,11 +316,11 @@
 		from rfid_position pos
 		where 1=1
 		<include refid="getPosListXmlWhere"/>
-		<if test="dataOrder != null and dataOrder != ''">			
-        	ORDER BY ${dataOrder} ${dataOrderArrow}        
+		<if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY ${dataOrder} ${dataOrderArrow}
         </if>
-        <if test="dataOrder == null or dataOrder == ''">         
-        	ORDER BY pos.pos_name        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY pos.pos_name
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -334,8 +334,8 @@
 
     <sql id="getOrgListXmlWhere">
     	and org.use_yn = 'Y'
-    	<if test="orgName != null and orgName != ''">			
-			and org.org_name = #{orgName}		
+    	<if test="orgName != null and orgName != ''">
+			and org.org_name = #{orgName}
 		</if>
     </sql>
 
@@ -347,11 +347,11 @@
 		from rfid_org org
 		where 1=1
 		<include refid="getOrgListXmlWhere"/>
-		<if test="dataOrder != null and dataOrder != ''">		
-        	ORDER BY #{dataOrder} #{dataOrderArrow}        
+		<if test="dataOrder != null and dataOrder != ''">
+        	ORDER BY #{dataOrder} #{dataOrderArrow}
         </if>
-        <if test="dataOrder == null or dataOrder == ''">       
-        	ORDER BY org.org_name        
+        <if test="dataOrder == null or dataOrder == ''">
+        	ORDER BY org.org_name
         </if>
         <include refid="pagingFooter"/>
     </select>
@@ -365,11 +365,11 @@
 
     <sql id="getImageListXmlWhere">
     	and af.use_yn = 'Y'
-    	<if test="asset_no != null and asset_no != ''">		
-			and af.asset_no = #{assetNo}		
+    	<if test="asset_no != null and asset_no != ''">
+			and af.asset_no = #{assetNo}
 		</if>
-		<if test="file_dt != null and file_dt != ''">			
-			and af.file_dt = #{fileDt}		
+		<if test="file_dt != null and file_dt != ''">
+			and af.file_dt = #{fileDt}
 		</if>
     </sql>
 
@@ -480,7 +480,7 @@
     	insert into rfid_new_asset( asset_no,dept_name,asset_name,asset_cnt,update_dt,use_yn )
 		values( #{asset_no},#{dept_name},#{asset_name},#{asset_cnt},#{update_dt},#{use_yn} )
     </insert>
-    
+
     <select id="getUserDeptList" parameterType="cmap" resultType="cmap" >
         SELECT	A.*
         FROM 	rfid_user_dept A

@@ -50,49 +50,70 @@ if (!ssAuthManager) {
 		<col width="240px" />
 	</colgroup>
 	<tr>
-		<th>자산분류 :</th>
+		<th>재고종류 :</th>
 		<td>
-			<input type="text" id="sAssetTypeName" name="sAssetTypeName" value="<%=cmRequest.getString("sAssetTypeName")%>" class="cd2" />
+			<select id="sAssetTypeName" name="sAssetTypeName" style="min-width:80px">
+				<option value="" <%="".equals(cmRequest.getString("sAssetTypeName",""))?"selected":""%>>전체</option>
+				<option value="AA" <%="AA".equals(cmRequest.getString("sAssetTypeName"))?"selected":""%>>총조</option>
+				<option value="II" <%="II".equals(cmRequest.getString("sAssetTypeName"))?"selected":""%>>반제품</option>
+				<option value="IC" <%="IC".equals(cmRequest.getString("sAssetTypeName"))?"selected":""%>>사출 CKD</option>
+				<option value="AC" <%="AC".equals(cmRequest.getString("sAssetTypeName"))?"selected":""%>>조립 CKD</option>
+			</select>
 		</td>
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>품목분류 :</th>
-		<td>
-			<input type="text" id="sItemName" name="sItemName" value="<%=cmRequest.getString("sItemName")%>" class="cd2" />
-		</td>
-	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>자산명 :</th>
-		<td>
-			<input type="text" id="sAssetName" name="sAssetName" value="<%=cmRequest.getString("sAssetName")%>" class="cd2" />
-		</td>
-	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>규격 :</th>
-		<td>
-			<input type="text" id="sAssetSize" name="sAssetSize" value="<%=cmRequest.getString("sAssetSize")%>" class="cd2" />
-		</td>
-	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>지역 :</th>
+		<th>P/No :</th>
 		<td>
 			<input type="text" id="sTopDeptName" name="sTopDeptName" value="<%=cmRequest.getString("sTopDeptName")%>" class="cd2" />
 		</td>
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>부서(실) :</th>
+		<th>모델 :</th>
+		<td>
+			<input type="text" id="sAssetSize" name="sAssetSize" value="<%=cmRequest.getString("sAssetSize")%>" class="cd2" />
+		</td>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>Core :</th>
 		<td>
 			<input type="text" id="sDeptName" name="sDeptName" value="<%=cmRequest.getString("sDeptName")%>" class="cd2" />
 		</td>
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>팀 :</th>
+		<th>품명 :</th>
+		<td>
+			<input type="text" id="sItemName" name="sItemName" value="<%=cmRequest.getString("sItemName")%>" class="cd2" />
+		</td>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>Resin :</th>
+		<td>
+			<input type="text" id="sBldngName" name="sBldngName" value="<%=cmRequest.getString("sBldngName")%>" class="cd2" />
+		</td>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>제품색상 :</th>
+		<td>
+			<input type="text" id="sUserNo" name="sUserNo" value="<%=cmRequest.getString("sUserNo")%>" class="cd2" />
+		</td>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>대차번호 :</th>
+		<td>
+			<input type="text" id="sOrgName" name="sOrgName" value="<%=cmRequest.getString("sOrgName")%>" class="cd2" />
+		</td>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>매핑처리LINE :</th>
 		<td>
 			<input type="text" id="sPosName" name="sPosName" value="<%=cmRequest.getString("sPosName")%>" class="cd2" />
 		</td>
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
-		<th>자산상태 :</th>
+		<th>태그이름 :</th>
 		<td>
-			<input type="text" id="sAssetStatusCd" name="sAssetStatusCd" value="<%=cmRequest.getString("sAssetStatusCd")%>" class="cd2" />
+			<input type="text" id="sAssetName" name="sAssetName" value="<%=cmRequest.getString("sAssetName")%>" class="cd2" />
+		</td>
+	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
+		<th>상세위치 :</th>
+		<td>
+			<input type="text" id="sHosil" name="sHosil" value="<%=cmRequest.getString("sHosil")%>" class="cd2" />
 		</td>
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
 		<th>
 			<select id="searchDtGubun" name="searchDtGubun" style="min-width:80px">
-				<option value="1" <%="1".equals(cmRequest.getString("searchDtGubun","1"))?"selected":""%>>취득일자</option>
+				<option value="1" <%="1".equals(cmRequest.getString("searchDtGubun","1"))?"selected":""%>>태그매칭시간</option>
 				<option value="5" <%="5".equals(cmRequest.getString("searchDtGubun"))?"selected":""%>>등록일자</option>
 			</select>
 		</th>
@@ -103,11 +124,8 @@ if (!ssAuthManager) {
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
 		<th>
 			<select id="searchNumGubun" name="searchNumGubun" style="min-width:80px">
-				<option value="1" <%="1".equals(cmRequest.getString("searchNumGubun","1"))?"selected":""%>>취득금액</option>
-				<option value="3" <%="3".equals(cmRequest.getString("searchNumGubun"))?"selected":""%>>미상각액</option>
 				<option value="5" <%="5".equals(cmRequest.getString("searchNumGubun"))?"selected":""%>>수량</option>
-				<option value="7" <%="7".equals(cmRequest.getString("searchNumGubun"))?"selected":""%>>태그출력회수</option>
-				<option value="8" <%="8".equals(cmRequest.getString("searchNumGubun"))?"selected":""%>>사진수</option>				
+				<option value="8" <%="8".equals(cmRequest.getString("searchNumGubun"))?"selected":""%>>사진수</option>
 			</select>
 		</th>
 		<td>
@@ -117,8 +135,7 @@ if (!ssAuthManager) {
 	<% idx++; if (idx % colcnt == 0) { colmax = idx; idx = 0;%></tr><tr><% } %>
 		<th>
 			<select id="searchGubun" name="searchGubun" style="max-width:80px;">
-				<option value="1" <%="1".equals(cmRequest.getString("searchGubun","1"))?"selected":""%>>자산번호</option>		
-				<option value="12" <%="12".equals(cmRequest.getString("searchGubun"))?"selected":""%>>비고</option>		
+				<option value="1" <%="1".equals(cmRequest.getString("searchGubun","1"))?"selected":""%>>바코드</option>
 			</select>
 		</th>
 		<td>

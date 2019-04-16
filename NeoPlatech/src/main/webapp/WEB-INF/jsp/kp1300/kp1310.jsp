@@ -355,7 +355,7 @@ function fnDel() {
 		alert("삭제할 행을 선택해주세요.");
 		return;
 	}
-	
+
 	if (confirm("삭제 하시겠습니까?") == false) {
 		return;
 	}
@@ -464,12 +464,12 @@ function fnSetKp9040(obj) {
 		<span class="button"><input type="button" value="상세보기" onclick="fnDetail();"></span>
 		<span class="button"><input type="button" value="엑셀다운로드" onclick="fnXlsDn();"></span>
 
-		<% if (ssAuthManager) { %>
-		<span class="button"><input type="button" value="태그발행" onclick="fnPrint();"></span>		
+		<%-- if (ssAuthManager) { %>
+		<!-- <span class="button"><input type="button" value="태그발행" onclick="fnPrint();"></span> -->
 		<!-- <span class="button"><input type="button" value="수기등록" onclick="fnWrite();"></span> -->
-		<span class="button"><input type="button" value="등록/수정(엑셀업로드)" onclick="fnWriteXlsUp();"></span>
-		<span class="button"><input type="button" value="삭제" onclick="fnDel();"></span>
-		<% } %>
+		<!-- <span class="button"><input type="button" value="등록/수정(엑셀업로드)" onclick="fnWriteXlsUp();"></span> -->
+		<!-- <span class="button"><input type="button" value="삭제" onclick="fnDel();"></span> -->
+		<% } --%>
 		&nbsp;
 	</td>
 	</tr>
