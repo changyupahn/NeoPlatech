@@ -50,7 +50,7 @@ if (!ssAuthManager) {
 		<col width="240px" />
 	</colgroup>
 	<tr>
-		<th>재고종류 :</th>
+		<th>네이밍 :</th>
 		<td>
 			<select id="sAssetTypeName" name="sAssetTypeName" style="min-width:80px">
 				<option value="" <%="".equals(cmRequest.getString("sAssetTypeName",""))?"selected":""%>>전체</option>
